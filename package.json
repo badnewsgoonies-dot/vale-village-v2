@@ -1,0 +1,25 @@
+{
+  "name": "vale-village-v2",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:typecheck": "tsc && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src --ext .ts,.tsx"
+  },
+  "dependencies": {
+    "preact": "^10.19.3",
+    "zod": "^3.22.4",
+    "zustand": "^4.5.7"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.8.2",
+    "@types/node": "^24.10.1",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.10"
+  }
+}

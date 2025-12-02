@@ -1,0 +1,175 @@
+.main-menu {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255, 216, 127, 0.08), transparent 32%),
+    radial-gradient(circle at 82% 12%, rgba(116, 186, 255, 0.08), transparent 30%),
+    radial-gradient(circle at 30% 78%, rgba(255, 144, 104, 0.05), transparent 34%),
+    linear-gradient(180deg, #080b14 0%, #0c1223 45%, #05070d 100%);
+  color: #f6e9d7;
+  overflow: hidden;
+}
+
+.main-menu::before {
+  content: '';
+  position: absolute;
+  inset: -18%;
+  background:
+    radial-gradient(circle at 35% 40%, rgba(104, 186, 255, 0.14), transparent 42%),
+    radial-gradient(circle at 70% 75%, rgba(255, 216, 127, 0.12), transparent 40%);
+  filter: blur(18px);
+  opacity: 0.85;
+  animation: menuAurora 18s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.main-menu::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 20% 30%, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1px 1px at 55% 80%, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1px 1px at 80% 25%, rgba(255, 255, 255, 0.55), transparent),
+    radial-gradient(1px 1px at 40% 65%, rgba(255, 255, 255, 0.45), transparent);
+  opacity: 0.4;
+  animation: starField 26s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.main-menu-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 3rem 3.5rem;
+  border-radius: 20px;
+  background: linear-gradient(145deg, rgba(22, 25, 36, 0.94), rgba(12, 14, 24, 0.96));
+  border: 1px solid rgba(255, 216, 127, 0.28);
+  box-shadow:
+    0 26px 60px rgba(0, 0, 0, 0.55),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(6px);
+}
+
+.main-menu-content::before {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  pointer-events: none;
+}
+
+.main-menu-title {
+  font-size: 3.4rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  color: #f6e9d7;
+  margin: 0 0 2.4rem 0;
+  text-transform: uppercase;
+  background: linear-gradient(125deg, #f9e4b2 0%, #f2c572 45%, #ffe7a4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.55),
+    0 0 30px rgba(249, 214, 127, 0.25);
+}
+
+.main-menu-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  align-items: stretch;
+  min-width: 260px;
+}
+
+.main-menu-option {
+  position: relative;
+  width: 100%;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: linear-gradient(180deg, #2c1d0f 0%, #1b120a 100%);
+  border: 1px solid rgba(255, 216, 127, 0.35);
+  border-radius: 14px;
+  color: #f6e6d2;
+  cursor: pointer;
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease, color 150ms ease;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.35),
+    0 12px 28px rgba(0, 0, 0, 0.4);
+}
+
+.main-menu-option::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 216, 127, 0.18);
+  opacity: 0;
+  transition: opacity 200ms ease, box-shadow 200ms ease;
+  pointer-events: none;
+}
+
+.main-menu-option:hover:not(.disabled),
+.main-menu-option.selected {
+  transform: translateY(-2px);
+  border-color: #f9d67f;
+  color: #ffe7b8;
+  background: linear-gradient(180deg, #372514 0%, #23160c 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.45),
+    0 16px 36px rgba(0, 0, 0, 0.55),
+    0 0 20px rgba(249, 214, 127, 0.35);
+}
+
+.main-menu-option:hover:not(.disabled)::after,
+.main-menu-option.selected::after {
+  opacity: 1;
+  box-shadow: 0 0 22px rgba(249, 214, 127, 0.35);
+}
+
+.main-menu-option:active:not(.disabled) {
+  transform: translateY(0);
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.5),
+    0 10px 20px rgba(0, 0, 0, 0.4);
+}
+
+.main-menu-option.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: saturate(0.6);
+}
+
+.main-menu-option:focus-visible {
+  outline: 2px solid #f9d67f;
+  outline-offset: 3px;
+}
+
+@keyframes menuAurora {
+  0% {
+    transform: translate3d(-12px, -8px, 0) scale(1);
+  }
+  100% {
+    transform: translate3d(14px, 10px, 0) scale(1.05);
+  }
+}
+
+@keyframes starField {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: -220px 220px;
+  }
+}
