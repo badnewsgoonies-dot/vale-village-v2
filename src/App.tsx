@@ -1,77 +1,168 @@
-import { useEffect, useState } from 'preact/hooks';
+import { FunctionComponent, JSX } from 'preact';
+import { useState, useEffect } from 'preact/hooks';
+import { shallow } from 'zustand/shallow';
+
+import { useGameStore, ScreenType, ModalType, GameStore } from './store/gameStore';
+
+import { TitleScreen } from './screens/TitleScreen';
+import { OverworldMap } from './screens/OverworldMap';
+import { QueueBattleView } from './screens/QueueBattleView';
+import { MainMenu } from './screens/MainMenu';
+
+import { PauseMenu } from './modals/PauseMenu';
+import { DialogueBox } from './modals/DialogueBox';
+import { InventoryModal } from './modals/InventoryModal';
+import { SettingsModal } from './modals/SettingsModal';
+
 import './index.css';
 
-// Game modes - will expand as we add components
-type GameMode = 'title' | 'overworld' | 'battle' | 'dialogue';
+type DevOverlayProps = {
+  screen: ScreenType;
+  modal: ModalType | null;
+};
 
-export function App() {
-  const [mode, setMode] = useState<GameMode>('title');
-  const [initialized, setInitialized] = useState(false);
+const DevOverlay: FunctionComponent<DevOverlayProps> = ({ screen, modal }) => (
+  <div className="dev-overlay">
+    <div className="dev-overlay__panel">
+      <div className="dev-overlay__header">Dev Mode</div>
+      <div className="dev-overlay__row">
+        <span>Screen: {screen}</span>
+        <span>Modal: {modal ?? 'none'}</span>
+      </div>
+      <div className="dev-overlay__row">
+        <span>F1</span>
+        <span>Toggle dev overlay</span>
+      </div>
+      <div className="dev-overlay__row">
+        <span>1 / 2 / 3 / 4</span>
+        <span>title / overworld / battle / menu</span>
+      </div>
+      <div className="dev-overlay__row">
+        <span>I / O / P / D</span>
+        <span>inventory / settings / pause / dialogue modal</span>
+      </div>
+      <div className="dev-overlay__row">
+        <span>Esc</span>
+        <span>Close active modal</span>
+      </div>
+    </div>
+  </div>
+);
 
-  // Initialize game on mount
-  useEffect(() => {
-    if (!initialized) {
-      setInitialized(true);
-      // TODO: Load save data, initialize state
+const App: FunctionComponent = () => {
+  const { screen, modal, isTransitioning, setScreen, openModal, closeModal } = useGameStore(
+    (state: GameStore) => ({
+      screen: state.flow.screen,
+      modal: state.flow.modal,
+      isTransitioning: state.flow.isTransitioning,
+      setScreen: state.setScreen,
+      openModal: state.openModal,
+      closeModal: state.closeModal,
+    }),
+    shallow
+  );
+
+  const setModal = (m: ModalType | null) => {
+    if (m === null) {
+      closeModal();
+    } else {
+      openModal(m);
     }
-  }, [initialized]);
+  };
 
-  // ESC key handler for pause menu
+  const [isDevMode, setIsDevMode] = useState<boolean>(false);
+
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && mode === 'overworld') {
-        e.preventDefault();
-        // TODO: Show pause menu
-        console.log('Pause menu triggered');
+    const handleKeyDown = (event: KeyboardEvent): void => {
+      if (event.key === 'F1') {
+        event.preventDefault();
+        setIsDevMode((value) => !value);
+        return;
+      }
+
+      if (!isDevMode) {
+        return;
+      }
+
+      switch (event.code) {
+        case 'Digit1':
+          setScreen('title');
+          break;
+        case 'Digit2':
+          setScreen('overworld');
+          break;
+        case 'Digit3':
+          setScreen('battle');
+          break;
+        case 'Digit4':
+          setScreen('menu');
+          break;
+        case 'KeyI':
+          setModal('inventory');
+          break;
+        case 'KeyO':
+          setModal('settings');
+          break;
+        case 'KeyP':
+          setModal('pause');
+          break;
+        case 'KeyD':
+          setModal('dialogue');
+          break;
+        case 'Escape':
+          setModal(null);
+          break;
+        default:
+          break;
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [mode]);
+  }, [isDevMode, setScreen, setModal]);
+
+  const renderScreen = (): JSX.Element => {
+    switch (screen) {
+      case 'title':
+        return <TitleScreen />;
+      case 'overworld':
+        return <OverworldMap />;
+      case 'battle':
+        return <QueueBattleView />;
+      case 'menu':
+        return <MainMenu />;
+      default:
+        return <TitleScreen />;
+    }
+  };
+
+  const renderModal = (): JSX.Element | null => {
+    if (!modal) {
+      return null;
+    }
+
+    switch (modal) {
+      case 'inventory':
+        return <InventoryModal />;
+      case 'settings':
+        return <SettingsModal />;
+      case 'dialogue':
+        return <DialogueBox />;
+      case 'pause':
+        return <PauseMenu />;
+      default:
+        return null;
+    }
+  };
 
   return (
-    <div class="game-container">
-      {/* Header HUD - hidden on title */}
-      {mode !== 'title' && (
-        <header class="game-hud">
-          <span class="game-hud__title">Vale Village v2</span>
-          <span class="game-hud__hint">Press ESC for menu</span>
-        </header>
-      )}
-
-      {/* Main content based on mode */}
-      <main class="game-main">
-        {mode === 'title' && (
-          <div class="title-screen">
-            <h1>Vale Village</h1>
-            <button onClick={() => setMode('overworld')}>Start Game</button>
-          </div>
-        )}
-
-        {mode === 'overworld' && (
-          <div class="overworld">
-            <p>Overworld placeholder</p>
-            <button onClick={() => setMode('battle')}>Test Battle</button>
-          </div>
-        )}
-
-        {mode === 'battle' && (
-          <div class="battle-screen">
-            <p>Battle placeholder</p>
-            <button onClick={() => setMode('overworld')}>End Battle</button>
-          </div>
-        )}
-
-        {mode === 'dialogue' && (
-          <div class="dialogue-screen">
-            <p>Dialogue placeholder</p>
-            <button onClick={() => setMode('overworld')}>Close</button>
-          </div>
-        )}
-      </main>
+    <div className={`app-root${isTransitioning ? ' app-root--transitioning' : ''}`}>
+      {renderScreen()}
+      {renderModal()}
+      {isDevMode && <DevOverlay screen={screen} modal={modal} />}
     </div>
   );
-}
+};
 
+export { App };
 export default App;
