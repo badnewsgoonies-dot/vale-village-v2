@@ -251,62 +251,19 @@ export function hasAbilityIcon(abilityId: string): boolean {
   return abilityId in ABILITY_ICON_MAP;
 }
 
-// List of specialized large FX GIFs available in /sprites/psynergy/
-const SPECIALIZED_FX = new Set([
-  'blue_bolt', 'deluge', 'destruct_ray', 'dragon_fire', 'fiery_blast',
-  'freeze_prism', 'froth_spiral', 'fume', 'glacier', 'grand_gaia',
-  'heat_wave', 'ice_missile', 'inferno', 'nettle', 'pyroclasm',
-  'sonic_slash', 'spark_plasma', 'supernova', 'tempest',
-  // lvl2 folder
-  'eruption', 'mother_gaia', 'shine_plasma', 'storm_ray',
-  // unleashes folder
-  'titan_blade', 'mortal_danger',
-  // lossless folder
-  'ragnarok', 'judgment', 'thor',
-]);
-
 /**
  * Convert an ability icon ID to a psynergy FX sprite path (GIF)
  * Returns null if no icon is mapped.
- *
- * Priority:
- * 1. Specialized large FX animations (/sprites/psynergy/) - 31 GIFs
- * 2. Icon GIFs (/sprites/icons/psynergy/) - 214 icons
  */
 export function getAbilityEffectSprite(abilityId: string): string | null {
   const iconId = ABILITY_ICON_MAP[abilityId];
   if (!iconId) return null;
 
-  // Convert kebab/slug to snake_case for lookup
+  // Convert kebab/slug to Title_Case used by GIF filenames
   const parts = iconId.split(/[^a-zA-Z0-9]+/).filter(Boolean);
   if (parts.length === 0) return null;
-  const snakeCase = parts.join('_').toLowerCase();
   const fileName = parts.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join('_');
-
-  // Check if a specialized large FX GIF exists (these are ANIMATED, 50-80 frames)
-  if (SPECIALIZED_FX.has(snakeCase)) {
-    // Handle subdirectory locations
-    if (['eruption', 'mother_gaia', 'shine_plasma', 'storm_ray'].includes(snakeCase)) {
-      return `/sprites/psynergy/lvl2/${fileName}.gif`;
-    }
-    if (['titan_blade', 'mortal_danger'].includes(snakeCase)) {
-      return `/sprites/psynergy/unleashes/${fileName}.gif`;
-    }
-    if (snakeCase === 'ragnarok') {
-      return `/sprites/psynergy/lossless/Ragnarok.gif`;
-    }
-    if (snakeCase === 'judgment') {
-      return `/sprites/psynergy/lossless/Summons/Judgment.gif`;
-    }
-    if (snakeCase === 'thor') {
-      return `/sprites/psynergy/lossless/Summons/Thor.gif`;
-    }
-    return `/sprites/psynergy/${fileName}.gif`;
-  }
-
-  // Don't fall back to static icons (they're 1-frame, no animation)
-  // Return null to let the caller use element-based animated fallbacks instead
-  return null;
+  return `/sprites/psynergy/${fileName}.gif`;
 }
 
 /**
