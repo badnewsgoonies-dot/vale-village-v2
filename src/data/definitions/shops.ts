@@ -17,11 +17,11 @@ export const SHOPS: Record<string, Shop> = {
     availableItems: [
       'wooden-sword',
       'iron-sword',
-      'leather-armor',
+      'leather-vest',
       'iron-armor',
       'cloth-cap',
       'iron-helm',
-      'cloth-boots',
+      'leather-boots',
       'iron-boots',
     ],
   },

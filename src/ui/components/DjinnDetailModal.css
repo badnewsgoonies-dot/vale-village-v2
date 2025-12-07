@@ -138,6 +138,25 @@
   margin: 0;
 }
 
+.djinn-summon-effect {
+  background: rgba(20, 30, 50, 0.9);
+  border: 2px solid rgba(255, 215, 127, 0.5);
+  padding: 16px;
+  border-radius: 4px;
+}
+
+.djinn-summon-effect h3 {
+  color: #FFD87F;
+  margin: 0 0 8px 0;
+  font-size: 18px;
+}
+
+.djinn-summon-effect p {
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.6;
+  margin: 0;
+}
+
 .djinn-assignment {
   background: rgba(20, 30, 50, 0.9);
   border: 2px solid rgba(255, 255, 255, 0.2);

@@ -437,6 +437,176 @@ export const HOUSE_20_OVERSEER: Encounter = {
 };
 
 // ============================================================================
+// CHAPTER 2: POST-VALE PROGRESSION (Houses 21-28)
+// ============================================================================
+
+/**
+ * HOUSE 21 - Undead Incursion
+ * - First Chapter 2 encounter
+ * - Introduces Undead enemy category
+ * - Moderate difficulty to ease into post-Vale content
+ */
+export const HOUSE_21: Encounter = {
+  id: 'house-21',
+  name: 'House 21: The Risen Dead',
+  enemies: ['skeleton-warrior', 'ghost-wisp', 'zombie-hound'],
+  difficulty: 'medium',
+  reward: {
+    xp: 650,
+    gold: 160,
+    equipment: {
+      type: 'choice',
+      options: ['silver-blade', 'steel-armor', 'crystal-rod'],
+    },
+  },
+};
+
+/**
+ * HOUSE 22 - Aerial Assault
+ * - Wind and Fire avian enemies
+ * - High speed, lower defense theme
+ */
+export const HOUSE_22: Encounter = {
+  id: 'house-22',
+  name: 'House 22: Wings of Fury',
+  enemies: ['wind-hawk', 'fire-eagle', 'storm-raven'],
+  difficulty: 'medium',
+  reward: {
+    xp: 700,
+    gold: 170,
+    equipment: {
+      type: 'fixed',
+      itemId: 'hyper-boots',
+    },
+  },
+};
+
+/**
+ * HOUSE 23 - Golem Fortress
+ * - Heavy defense and HP
+ * - Clay and Iron golems
+ * - First Djinn reward in Chapter 2
+ */
+export const HOUSE_23: Encounter = {
+  id: 'house-23',
+  name: 'House 23: The Earthen Guardians',
+  enemies: ['clay-golem', 'iron-golem'],
+  difficulty: 'hard',
+  reward: {
+    xp: 750,
+    gold: 185,
+    djinn: 'corona', // Mars T2 Djinn (reserved for future)
+    equipment: {
+      type: 'fixed',
+      itemId: 'dragon-scales',
+    },
+  },
+};
+
+/**
+ * HOUSE 24 - Frostbound Depths
+ * - Mercury beast specialization
+ * - Ice and water themed enemies
+ */
+export const HOUSE_24: Encounter = {
+  id: 'house-24',
+  name: 'House 24: Frozen Depths',
+  enemies: ['frost-serpent', 'aqua-drake', 'ice-owl'],
+  difficulty: 'hard',
+  reward: {
+    xp: 800,
+    gold: 195,
+    equipment: {
+      type: 'choice',
+      options: ['mythril-blade', 'zodiac-wand', 'valkyrie-mail'],
+    },
+  },
+};
+
+/**
+ * HOUSE 25 - Tempest Heights
+ * - Jupiter beast showcase
+ * - Lightning and wind enemies
+ */
+export const HOUSE_25: Encounter = {
+  id: 'house-25',
+  name: 'House 25: Storm\'s Wrath',
+  enemies: ['lightning-lynx', 'cyclone-djinni', 'thunderbird'],
+  difficulty: 'hard',
+  reward: {
+    xp: 850,
+    gold: 205,
+    djinn: 'tonic', // Mercury T2 Djinn (reserved for future)
+    equipment: {
+      type: 'fixed',
+      itemId: 'elemental-star',
+    },
+  },
+};
+
+/**
+ * HOUSE 26 - Undead Necromancer
+ * - Advanced undead encounter
+ * - Bone Mage as mini-boss
+ */
+export const HOUSE_26: Encounter = {
+  id: 'house-26',
+  name: 'House 26: Necromantic Rites',
+  enemies: ['bone-mage', 'skeleton-warrior', 'ghost-wisp', 'zombie-hound'],
+  difficulty: 'boss',
+  reward: {
+    xp: 900,
+    gold: 220,
+    equipment: {
+      type: 'choice',
+      options: ['oracles-crown', 'staff-of-ages', 'cosmos-shield'],
+    },
+  },
+};
+
+/**
+ * HOUSE 27 - Crystalline Menace
+ * - Mixed golem types
+ * - High-tier constructs
+ */
+export const HOUSE_27: Encounter = {
+  id: 'house-27',
+  name: 'House 27: Crystal Convergence',
+  enemies: ['crystal-golem', 'storm-golem', 'iron-golem'],
+  difficulty: 'boss',
+  reward: {
+    xp: 950,
+    gold: 235,
+    equipment: {
+      type: 'fixed',
+      itemId: 'gaia-blade',
+    },
+  },
+};
+
+/**
+ * HOUSE 28 - Elemental Dragons
+ * - Mythical beast showcase
+ * - Wyrm and Dragon enemies
+ * - Chapter 2 finale encounter
+ */
+export const HOUSE_28: Encounter = {
+  id: 'house-28',
+  name: 'House 28: Draconic Convergence',
+  enemies: ['glacier-wyrm', 'tempest-dragon', 'hydra'],
+  difficulty: 'boss',
+  reward: {
+    xp: 1000,
+    gold: 250,
+    djinn: 'fury', // Mars T3 Djinn (reserved for future)
+    equipment: {
+      type: 'choice',
+      options: ['sol-blade', 'titans-axe', 'staff-of-ages', 'cosmos-shield'],
+    },
+  },
+};
+
+// ============================================================================
 // BONUS ENCOUNTER - Training Mode
 // ============================================================================
 
@@ -483,6 +653,16 @@ export const ENCOUNTERS: Record<string, Encounter> = {
   'house-18': HOUSE_18,
   'house-19': HOUSE_19,
   'house-20': HOUSE_20_OVERSEER,
+
+  // Chapter 2: Post-Vale Progression (Houses 21-28)
+  'house-21': HOUSE_21,
+  'house-22': HOUSE_22,
+  'house-23': HOUSE_23,
+  'house-24': HOUSE_24,
+  'house-25': HOUSE_25,
+  'house-26': HOUSE_26,
+  'house-27': HOUSE_27,
+  'house-28': HOUSE_28,
 
   // Bonus
   'training-dummy': TRAINING_DUMMY,

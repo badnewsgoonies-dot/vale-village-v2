@@ -1,9 +1,9 @@
-import { create } from 'zustand';
+import { createWithEqualityFn } from 'zustand/traditional';
 import { immer } from 'zustand/middleware/immer';
 
-export type ScreenType = 'title' | 'overworld' | 'battle' | 'menu';
+export type ScreenType = 'title' | 'overworld' | 'battle' | 'menu' | 'team-select' | 'shop' | 'compendium' | 'rewards' | 'team-management' | 'djinn-collection' | 'tower';
 
-export type ModalType = 'inventory' | 'settings' | 'dialogue' | 'pause';
+export type ModalType = 'inventory' | 'settings' | 'dialogue' | 'pause' | 'team-management' | 'djinn-collection' | 'save' | 'help';
 
 export interface FlowState {
     screen: ScreenType;
@@ -283,7 +283,7 @@ const createInventorySlice = (set: GameStoreSetState, _get: GameStoreGetState): 
         }),
 });
 
-export const useGameStore = create<GameStore>()(
+export const useGameStore = createWithEqualityFn<GameStore>()(
     immer((set, get) => ({
         ...createGameSlice(set as GameStoreSetState, get as GameStoreGetState),
         ...createBattleSlice(set as GameStoreSetState, get as GameStoreGetState),

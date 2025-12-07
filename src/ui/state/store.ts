@@ -3,7 +3,7 @@
  * Provides unified state management for the UI
  */
 
-import { create } from 'zustand';
+import { createWithEqualityFn } from 'zustand/traditional';
 import type { GetState, SetState, StoreApi } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { createBattleSlice, type BattleSlice } from './battleSlice';
@@ -49,12 +49,12 @@ const storeFactory = (set: SetState<Store>, get: GetState<Store>, api: StoreApi<
 });
 
 export function createStore() {
-  return create<Store>()(storeFactory);
+  return createWithEqualityFn<Store>()(storeFactory);
 }
 
 // Only enable devtools in development to prevent state manipulation in production
 export const useStore = import.meta.env.DEV
-  ? create<Store>()(devtools(storeFactory, { name: 'vale-v2' }))
+  ? createWithEqualityFn<Store>()(devtools(storeFactory, { name: 'vale-v2' }))
   : createStore();
 
 // Export store instance for direct access (used in App.tsx for handleRewardsContinue)

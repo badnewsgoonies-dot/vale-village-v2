@@ -1,7 +1,2 @@
-import { FunctionComponent } from 'preact';
-
-export const QueueBattleView: FunctionComponent = () => (
-  <div className="screen screen--battle">
-    <h2>Battle</h2>
-  </div>
-);
+// Re-export from the actual implementation location
+export { QueueBattleView } from '../ui/components/QueueBattleView';

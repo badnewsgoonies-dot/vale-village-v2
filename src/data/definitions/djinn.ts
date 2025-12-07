@@ -812,6 +812,234 @@ export const STORM: Djinn = {
   },
 };
 
+// ============================================================================
+// NEW MERCURY DJINN (2 new to balance element coverage)
+// ============================================================================
+
+export const SURGE: Djinn = {
+  id: 'surge',
+  name: 'Surge',
+  element: 'Mercury',
+  tier: '2',
+  summonEffect: {
+    type: 'damage',
+    description: 'Tidal wave crashes through all enemies.',
+    damage: 180,
+  },
+  grantedAbilities: {
+    adept: {
+      same: [],
+      counter: [],
+      neutral: ['surge-aqua-pulse', 'surge-wave-guard'],
+    },
+    sentinel: {
+      same: [],
+      counter: [],
+      neutral: ['surge-aqua-pulse', 'surge-wave-guard'],
+    },
+    'war-mage': {
+      same: [],
+      counter: ['surge-steam-blast', 'surge-boiling-wave'],
+      neutral: ['surge-aqua-pulse'],
+    },
+    mystic: {
+      same: ['surge-healing-tide', 'surge-aqua-barrier', 'surge-tidal-heal', 'surge-ocean-blessing'],
+      counter: [],
+      neutral: ['surge-aqua-pulse', 'surge-wave-guard'],
+    },
+    ranger: {
+      same: [],
+      counter: [],
+      neutral: ['surge-aqua-pulse', 'surge-wave-guard'],
+    },
+    stormcaller: {
+      same: [],
+      counter: ['surge-storm-surge', 'surge-thunder-wave'],
+      neutral: ['surge-aqua-pulse'],
+    },
+  },
+};
+
+export const CHILL: Djinn = {
+  id: 'chill',
+  name: 'Chill',
+  element: 'Mercury',
+  tier: '3',
+  summonEffect: {
+    type: 'special',
+    description: 'Absolute zero freezes time itself, stunning all foes.',
+  },
+  grantedAbilities: {
+    adept: {
+      same: [],
+      counter: [],
+      neutral: ['chill-frost-pulse', 'chill-ice-wall'],
+    },
+    sentinel: {
+      same: [],
+      counter: [],
+      neutral: ['chill-frost-pulse', 'chill-ice-wall'],
+    },
+    'war-mage': {
+      same: [],
+      counter: ['chill-frozen-flame', 'chill-glacial-fire'],
+      neutral: ['chill-frost-pulse'],
+    },
+    mystic: {
+      same: ['chill-absolute-heal', 'chill-frost-revival', 'chill-glacial-blessing', 'chill-frozen-sanctuary'],
+      counter: [],
+      neutral: ['chill-frost-pulse', 'chill-ice-wall'],
+    },
+    ranger: {
+      same: [],
+      counter: [],
+      neutral: ['chill-frost-pulse', 'chill-ice-wall'],
+    },
+    stormcaller: {
+      same: [],
+      counter: ['chill-blizzard-bolt', 'chill-ice-storm'],
+      neutral: ['chill-frost-pulse'],
+    },
+  },
+};
+
+// ============================================================================
+// NEW JUPITER DJINN (3 new to balance element coverage)
+// ============================================================================
+
+export const GUST: Djinn = {
+  id: 'gust',
+  name: 'Gust',
+  element: 'Jupiter',
+  tier: '1',
+  summonEffect: {
+    type: 'buff',
+    description: 'Swift winds enhance party speed.',
+    statBonus: { spd: 8 },
+  },
+  grantedAbilities: {
+    adept: {
+      same: [],
+      counter: [],
+      neutral: ['gust-breeze-pulse', 'gust-wind-shield'],
+    },
+    sentinel: {
+      same: [],
+      counter: [],
+      neutral: ['gust-breeze-pulse', 'gust-wind-shield'],
+    },
+    'war-mage': {
+      same: [],
+      counter: ['gust-flame-wind', 'gust-ember-gale'],
+      neutral: ['gust-breeze-pulse'],
+    },
+    mystic: {
+      same: [],
+      counter: ['gust-mist-wind', 'gust-cool-breeze'],
+      neutral: ['gust-breeze-pulse'],
+    },
+    ranger: {
+      same: ['gust-swift-strike', 'gust-wind-slash', 'gust-tornado-blade'],
+      counter: [],
+      neutral: ['gust-breeze-pulse', 'gust-wind-shield'],
+    },
+    stormcaller: {
+      same: ['gust-swift-strike', 'gust-wind-slash', 'gust-tornado-blade'],
+      counter: [],
+      neutral: ['gust-breeze-pulse', 'gust-wind-shield'],
+    },
+  },
+};
+
+export const BOLT: Djinn = {
+  id: 'bolt',
+  name: 'Bolt',
+  element: 'Jupiter',
+  tier: '2',
+  summonEffect: {
+    type: 'damage',
+    description: 'Chain lightning arcs through all enemies.',
+    damage: 200,
+  },
+  grantedAbilities: {
+    adept: {
+      same: [],
+      counter: [],
+      neutral: ['bolt-spark-pulse', 'bolt-static-shield'],
+    },
+    sentinel: {
+      same: [],
+      counter: [],
+      neutral: ['bolt-spark-pulse', 'bolt-static-shield'],
+    },
+    'war-mage': {
+      same: [],
+      counter: ['bolt-plasma-strike', 'bolt-fire-lightning'],
+      neutral: ['bolt-spark-pulse'],
+    },
+    mystic: {
+      same: [],
+      counter: ['bolt-healing-spark', 'bolt-revive-shock'],
+      neutral: ['bolt-spark-pulse'],
+    },
+    ranger: {
+      same: ['bolt-thunder-slash', 'bolt-lightning-strike', 'bolt-storm-blade'],
+      counter: [],
+      neutral: ['bolt-spark-pulse', 'bolt-static-shield'],
+    },
+    stormcaller: {
+      same: ['bolt-chain-thunder', 'bolt-lightning-storm', 'bolt-thunderclap', 'bolt-arc-nova'],
+      counter: [],
+      neutral: ['bolt-spark-pulse', 'bolt-static-shield'],
+    },
+  },
+};
+
+export const TEMPEST: Djinn = {
+  id: 'tempest',
+  name: 'Tempest',
+  element: 'Jupiter',
+  tier: '3',
+  summonEffect: {
+    type: 'damage',
+    description: 'Ultimate storm devastates the battlefield with lightning and wind.',
+    damage: 350,
+  },
+  grantedAbilities: {
+    adept: {
+      same: [],
+      counter: [],
+      neutral: ['tempest-gale-pulse', 'tempest-wind-wall'],
+    },
+    sentinel: {
+      same: [],
+      counter: [],
+      neutral: ['tempest-gale-pulse', 'tempest-wind-wall'],
+    },
+    'war-mage': {
+      same: [],
+      counter: ['tempest-fire-tornado', 'tempest-inferno-cyclone'],
+      neutral: ['tempest-gale-pulse'],
+    },
+    mystic: {
+      same: [],
+      counter: ['tempest-healing-winds', 'tempest-mist-revival'],
+      neutral: ['tempest-gale-pulse'],
+    },
+    ranger: {
+      same: ['tempest-hurricane-blade', 'tempest-cyclone-slash', 'tempest-tornado-strike'],
+      counter: [],
+      neutral: ['tempest-gale-pulse', 'tempest-wind-wall'],
+    },
+    stormcaller: {
+      same: ['tempest-apocalypse', 'tempest-judgement-bolt', 'tempest-divine-storm', 'tempest-ultimate-thunder'],
+      counter: [],
+      neutral: ['tempest-gale-pulse', 'tempest-wind-wall'],
+    },
+  },
+  availableIn: ['tower'],
+};
+
 // VS1 Demo Djinn (simplified for demo)
 export const ROCKLING: Djinn = {
   id: 'rockling',
@@ -957,20 +1185,31 @@ export const NOVA: Djinn = {
 };
 
 export const DJINN: Record<string, Djinn> = {
+  // Venus (4)
   flint: FLINT,
   granite: GRANITE,
   bane: BANE,
+  rockling: ROCKLING, // VS1 Demo
+
+  // Mars (5)
   forge: FORGE,
   corona: CORONA,
   fury: FURY,
+  ember: EMBER, // VS1 Demo
+  nova: NOVA, // VS1 Demo
+
+  // Mercury (5 - balanced with Mars)
   fizz: FIZZ,
   tonic: TONIC,
   crystal: CRYSTAL,
+  surge: SURGE, // NEW
+  chill: CHILL, // NEW
+
+  // Jupiter (6 - balanced with Venus+Mars)
   breeze: BREEZE,
   squall: SQUALL,
   storm: STORM,
-  // VS1 Demo
-  rockling: ROCKLING,
-  ember: EMBER,
-  nova: NOVA,
+  gust: GUST, // NEW
+  bolt: BOLT, // NEW
+  tempest: TEMPEST, // NEW (tower-exclusive)
 };

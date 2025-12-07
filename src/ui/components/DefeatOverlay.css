@@ -1,0 +1,66 @@
+.defeat-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #0a0808;
+  z-index: 1000;
+  animation: defeatFadeIn 0.5s ease-out;
+}
+
+@keyframes defeatFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.defeat-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 30%, #000 100%);
+  pointer-events: none;
+}
+
+.defeat-text {
+  text-align: center;
+  z-index: 1;
+  animation: defeatTextFade 0.8s ease-out 0.3s both;
+}
+
+@keyframes defeatTextFade {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.defeat-title {
+  font-size: 3rem;
+  color: #8b0000;
+  text-shadow: 0 0 30px rgba(139, 0, 0, 0.5);
+  margin: 0;
+  letter-spacing: 0.3em;
+}
+
+.defeat-subtitle {
+  font-size: 1.2rem;
+  color: #666;
+  margin-top: 1rem;
+}
+
+.defeat-continue {
+  margin-top: 2rem;
+  padding: 0.75rem 2rem;
+  background: #333;
+  border: 2px solid #555;
+  border-radius: 8px;
+  color: #ccc;
+  font-size: 1rem;
+  cursor: pointer;
+  z-index: 1;
+  animation: defeatTextFade 0.8s ease-out 0.8s both;
+}
+
+.defeat-continue:hover {
+  background: #444;
+  border-color: #666;
+}

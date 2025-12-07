@@ -148,33 +148,62 @@ const createHouseInteriorTiles = (): GameMap['tiles'] => {
   return tiles;
 };
 
+// Map house numbers to character sprites (using protagonists as placeholders until enemy sprites are added)
+const HOUSE_ENEMY_SPRITES = [
+  '/sprites/overworld/protagonists/Garet.gif',      // House 1 - Garet recruit
+  '/sprites/overworld/protagonists/Ivan.gif',       // House 2 - Mystic
+  '/sprites/overworld/protagonists/Mia.gif',        // House 3 - Ranger
+  '/sprites/overworld/protagonists/Isaac.gif',      // House 4
+  '/sprites/overworld/protagonists/Felix.gif',      // House 5 - Blaze
+  '/sprites/overworld/protagonists/Jenna.gif',      // House 6
+  '/sprites/overworld/protagonists/Sheba.gif',      // House 7
+  '/sprites/overworld/protagonists/Piers.gif',      // House 8 - Sentinel
+  '/sprites/overworld/protagonists/Kraden.gif',     // House 9
+  '/sprites/overworld/protagonists/Garet.gif',      // House 10
+  '/sprites/overworld/protagonists/Ivan.gif',       // House 11 - Karis
+  '/sprites/overworld/protagonists/Mia.gif',        // House 12
+  '/sprites/overworld/protagonists/Isaac.gif',      // House 13
+  '/sprites/overworld/protagonists/Felix.gif',      // House 14 - Tyrell
+  '/sprites/overworld/protagonists/Jenna.gif',      // House 15 - Stormcaller
+  '/sprites/overworld/protagonists/Sheba.gif',      // House 16
+  '/sprites/overworld/protagonists/Piers.gif',      // House 17 - Felix recruit
+  '/sprites/overworld/protagonists/Kraden.gif',     // House 18
+  '/sprites/overworld/protagonists/Garet.gif',      // House 19
+  '/sprites/overworld/protagonists/Ivan.gif',       // House 20 - Overseer
+];
+
 const createHouseInterior = (
   houseId: string,
   houseNum: string,
   overworldEntranceX: number,
-): GameMap => ({
-  id: houseId,
-  name: `House ${parseInt(houseNum, 10)}`,
-  width: HOUSE_WIDTH,
-  height: HOUSE_HEIGHT,
-  tiles: createHouseInteriorTiles(),
-  npcs: [createNPC(`house-${houseNum}-enemy`, HOUSE_CENTER_X, HOUSE_ENEMY_Y)],
-  triggers: [
-    {
-      id: `house-${houseNum}-enemy`,
-      type: 'npc',
-      position: { x: HOUSE_CENTER_X, y: HOUSE_ENEMY_Y },
-      data: { npcId: `house-${houseNum}-enemy` },
-    },
-    {
-      id: `house-${houseNum}-exit`,
-      type: 'transition',
-      position: { x: HOUSE_CENTER_X, y: HOUSE_EXIT_Y },
-      data: { targetMap: 'vale-village', targetPos: { x: overworldEntranceX, y: ROAD_ROW } },
-    },
-  ],
-  spawnPoint: { x: HOUSE_CENTER_X, y: HOUSE_EXIT_Y },
-});
+): GameMap => {
+  const houseIndex = parseInt(houseNum, 10) - 1;
+  const enemySprite = HOUSE_ENEMY_SPRITES[houseIndex] || '/sprites/overworld/protagonists/Isaac.gif';
+
+  return {
+    id: houseId,
+    name: `House ${parseInt(houseNum, 10)}`,
+    width: HOUSE_WIDTH,
+    height: HOUSE_HEIGHT,
+    tiles: createHouseInteriorTiles(),
+    npcs: [createNPC(`house-${houseNum}-enemy`, HOUSE_CENTER_X, HOUSE_ENEMY_Y, enemySprite)],
+    triggers: [
+      {
+        id: `house-${houseNum}-enemy`,
+        type: 'battle',
+        position: { x: HOUSE_CENTER_X, y: HOUSE_ENEMY_Y },
+        data: { encounterId: `house-${houseNum.padStart(2, '0')}` },
+      },
+      {
+        id: `house-${houseNum}-exit`,
+        type: 'transition',
+        position: { x: HOUSE_CENTER_X, y: HOUSE_EXIT_Y },
+        data: { targetMap: 'vale-village', targetPos: { x: overworldEntranceX, y: ROAD_ROW } },
+      },
+    ],
+    spawnPoint: { x: HOUSE_CENTER_X, y: HOUSE_EXIT_Y },
+  };
+};
 
 const HOUSE_MAPS = HOUSE_POSITIONS.reduce<Record<string, GameMap>>((maps, { houseNum, overworldX }) => {
   const houseId = `house-${houseNum}-interior`;
