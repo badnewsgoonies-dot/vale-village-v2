@@ -26,6 +26,7 @@ import { getEnemyBattleSprite } from '../sprites/mappings/battleSprites';
 import { SimpleSprite } from '../sprites/SimpleSprite';
 import { BattleUnitSprite } from './BattleUnitSprite';
 import { ABILITIES } from '../../data/definitions/abilities';
+import { getAbilityEffectSprite } from '../sprites/mappings/abilityIcons';
 import { DIALOGUES } from '../../data/definitions/dialogues';
 import { VS1_ENCOUNTER_ID, VS1_SCENE_PRE } from '../../story/vs1Constants';
 
@@ -58,6 +59,12 @@ function elementFallbackFx(element: string | undefined): string {
 
 function resolveAbilityFx(abilityId: string | null | undefined): string {
   if (!abilityId) return FX_FALLBACK;
+
+  // Try dynamic sprite mapping first (from ability icon mappings)
+  const dynamicSprite = getAbilityEffectSprite(abilityId);
+  if (dynamicSprite) return dynamicSprite;
+
+  // Fall back to element-based FX if no mapping found
   const ability = ABILITIES[abilityId];
   return elementFallbackFx(ability?.element);
 }
@@ -78,6 +85,9 @@ function resolveFxForEvent(evt: AnyEvent): string {
   return FX_FALLBACK;
 }
 
+// Inter-event pause to prevent battle from feeling too rushed
+const INTER_EVENT_PAUSE = 350;
+
 function computeEventDelay(
   evt: BattleEvent | undefined,
   fx: string | null,
@@ -85,21 +95,21 @@ function computeEventDelay(
 ): number {
   if (!evt) return 0;
   const baseByType: Record<string, number> = {
-    ability: 1850,
-    hit: 1500,
-    heal: 1500,
-    'status-applied': 1250,
-    'status-expired': 1250,
-    ko: 1600,
-    'auto-heal': 1250,
+    ability: 1900,
+    hit: 1550,
+    heal: 1550,
+    'status-applied': 1300,
+    'status-expired': 1300,
+    ko: 1650,
+    'auto-heal': 1300,
   };
-  let delay = baseByType[evt.type] ?? 1150;
+  let delay = baseByType[evt.type] ?? 1200;
 
   if (evt.type === 'ability' && fx) {
-    delay = loadedFx.has(fx) ? Math.max(delay, 1900) : Math.max(delay, 2300);
+    delay = loadedFx.has(fx) ? Math.max(delay, 1950) : Math.max(delay, 2350);
   }
 
-  return delay;
+  return delay + INTER_EVENT_PAUSE;
 }
 
 const djinnSprites = [
@@ -334,6 +344,8 @@ export function QueueBattleView() {
   const processVictory = useStore((s) => s.processVictory);
   const lastError = useStore((s) => s.lastError);
   const clearError = useStore((s) => s.clearError);
+  const pendingResult = useStore((s) => s.pendingResult);
+  const resolvePendingResult = useStore((s) => s.resolvePendingResult);
 
   // Wrapper to sync both V1 and V2 store when returning to overworld
   const returnToOverworld = () => {
@@ -513,6 +525,13 @@ export function QueueBattleView() {
       }
     };
   }, [battle?.phase, events, dequeue, playbackLock, currentFx]);
+
+  // 5. Resolve pending result when all events are processed
+  useEffect(() => {
+    if (events.length === 0 && pendingResult) {
+      resolvePendingResult();
+    }
+  }, [events.length, pendingResult, resolvePendingResult]);
 
   // --- COMPUTED VALUES ---
 
