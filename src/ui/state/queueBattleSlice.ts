@@ -441,10 +441,10 @@ export const createQueueBattleSlice: StateCreator<
   },
 
   dequeueEvent: () => {
-    const { events } = get();
-    if (events.length === 0) return;
-
-    // Use snapshot-based processing to avoid race conditions
-    set({ events: events.slice(1) });
+    // Use functional update to avoid race conditions with concurrent dequeue calls
+    set((state) => {
+      if (state.events.length === 0) return state;
+      return { events: state.events.slice(1) };
+    });
   },
 });

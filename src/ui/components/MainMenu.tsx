@@ -4,18 +4,34 @@
  */
 
 import { useEffect, useState } from 'preact/hooks';
-import { useStore } from '../state/store';
+import { useGameStore } from '../../store/gameStore';
+import { useStore } from '../../ui/state/store';
+import { ADEPT } from '../../data/definitions/units';
+import { createUnit } from '../../core/models/Unit';
+import { createTeam } from '../../core/models/Team';
 import './MainMenu.css';
 
+// Character sprites flanking the menu
+const MENU_CHARACTERS = {
+  left: [
+    { name: 'Isaac', sprite: '/sprites/overworld/protagonists/Isaac.gif' },
+    { name: 'Garet', sprite: '/sprites/overworld/protagonists/Garet.gif' },
+  ],
+  right: [
+    { name: 'Ivan', sprite: '/sprites/overworld/protagonists/Ivan.gif' },
+    { name: 'Mia', sprite: '/sprites/overworld/protagonists/Mia.gif' },
+  ],
+};
+
 export function MainMenu() {
-  const setMode = useStore((s) => s.setMode);
-  const hasSave = useStore((s) => s.hasSave);
-  const loadGame = useStore((s) => s.loadGame);
-  const startTowerRun = useStore((s) => s.startTowerRun);
+  const setScreen = useGameStore((s) => s.setScreen);
+  const setTeam = useStore((s) => s.setTeam);
+  const addUnitToRoster = useStore((s) => s.addUnitToRoster);
   const openTowerFromMainMenu = useStore((s) => s.openTowerFromMainMenu);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  const hasSaveFile = hasSave();
+  // TODO: Wire up save system
+  const hasSaveFile = false;
 
   const menuOptions = [
     { id: 'new-game', label: 'New Game', enabled: true },
@@ -69,33 +85,59 @@ export function MainMenu() {
       if (event.key === 'Escape') {
         event.preventDefault();
         event.stopPropagation();
-        setMode('title-screen');
+        setScreen('title');
         return;
       }
     };
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [currentOption, enabledOptions.length, setMode]);
+  }, [currentOption, enabledOptions.length, setScreen]);
 
   const handleSelectOption = (optionId: string) => {
     if (optionId === 'new-game') {
-      setMode('intro');
+      // Initialize starting team with Isaac (the adept unit)
+      const isaac = createUnit(ADEPT, 1, 0);
+      addUnitToRoster(isaac);
+      const starterTeam = createTeam([isaac]);
+      setTeam(starterTeam);
+      setScreen('overworld'); // Start new game -> go to overworld
     } else if (optionId === 'continue') {
       if (hasSaveFile) {
-        loadGame();
-        setMode('overworld');
+        setScreen('overworld');
       }
     } else if (optionId === 'compendium') {
-      setMode('compendium');
+      setScreen('compendium');
     } else if (optionId === 'battle-tower') {
+      // Initialize team if none exists (for Battle Tower quick access)
+      const store = useStore.getState();
+      if (!store.team || store.team.units.length === 0) {
+        const isaac = createUnit(ADEPT, 1, 0);
+        addUnitToRoster(isaac);
+        const starterTeam = createTeam([isaac]);
+        setTeam(starterTeam);
+      }
+      // Enter the actual tower system with proper progression
       openTowerFromMainMenu();
-      startTowerRun({ difficulty: 'normal' });
+      setScreen('tower');
     }
   };
 
   return (
     <div class="main-menu">
+      {/* Left character sprites */}
+      <div class="main-menu-characters main-menu-characters--left">
+        {MENU_CHARACTERS.left.map((char, i) => (
+          <img
+            key={char.name}
+            src={char.sprite}
+            alt={char.name}
+            class="main-menu-sprite"
+            style={{ animationDelay: `${i * 0.3}s` }}
+          />
+        ))}
+      </div>
+
       <div class="main-menu-content">
         <h1 class="main-menu-title">Vale Chronicles</h1>
         <div class="main-menu-options">
@@ -116,6 +158,19 @@ export function MainMenu() {
             );
           })}
         </div>
+      </div>
+
+      {/* Right character sprites */}
+      <div class="main-menu-characters main-menu-characters--right">
+        {MENU_CHARACTERS.right.map((char, i) => (
+          <img
+            key={char.name}
+            src={char.sprite}
+            alt={char.name}
+            class="main-menu-sprite"
+            style={{ animationDelay: `${i * 0.3}s` }}
+          />
+        ))}
       </div>
     </div>
   );

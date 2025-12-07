@@ -1127,6 +1127,1067 @@ export const OVERSEER: Enemy = {
 };
 
 // ============================================================================
+// UNDEAD CATEGORY - Reanimated Creatures
+// ============================================================================
+
+export const SKELETON_WARRIOR: Enemy = {
+  id: 'skeleton-warrior',
+  name: 'Skeleton Warrior',
+  level: 5,
+  element: 'Venus',
+  stats: {
+    hp: 45,
+    pp: 10,
+    atk: 18,
+    def: 12,
+    mag: 5,
+    spd: 10,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...HEAVY_STRIKE, unlockLevel: 1 },
+  ],
+  baseXp: 42,
+  baseGold: 22,
+};
+
+export const GHOST_WISP: Enemy = {
+  id: 'ghost-wisp',
+  name: 'Ghost Wisp',
+  level: 5,
+  element: 'Jupiter',
+  stats: {
+    hp: 35,
+    pp: 18,
+    atk: 12,
+    def: 8,
+    mag: 16,
+    spd: 18,
+  },
+  abilities: [
+    { ...GUST, unlockLevel: 1 },
+    { ...PARALYZE_SHOCK, unlockLevel: 1 },
+  ],
+  baseXp: 40,
+  baseGold: 20,
+};
+
+export const ZOMBIE_HOUND: Enemy = {
+  id: 'zombie-hound',
+  name: 'Zombie Hound',
+  level: 6,
+  element: 'Mars',
+  stats: {
+    hp: 50,
+    pp: 12,
+    atk: 20,
+    def: 10,
+    mag: 6,
+    spd: 15,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...BURN_TOUCH, unlockLevel: 1 },
+  ],
+  baseXp: 48,
+  baseGold: 25,
+};
+
+export const BONE_MAGE: Enemy = {
+  id: 'bone-mage',
+  name: 'Bone Mage',
+  level: 7,
+  element: 'Mercury',
+  stats: {
+    hp: 40,
+    pp: 25,
+    atk: 15,
+    def: 10,
+    mag: 20,
+    spd: 11,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...ICE_SHARD, unlockLevel: 1 },
+    { ...FREEZE_BLAST, unlockLevel: 1 },
+  ],
+  baseXp: 60,
+  baseGold: 32,
+};
+
+// ============================================================================
+// GOLEM CATEGORY - Animated Constructs
+// ============================================================================
+
+export const CLAY_GOLEM: Enemy = {
+  id: 'clay-golem',
+  name: 'Clay Golem',
+  level: 8,
+  element: 'Venus',
+  stats: {
+    hp: 80,
+    pp: 15,
+    atk: 22,
+    def: 20,
+    mag: 8,
+    spd: 6,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...HEAVY_STRIKE, unlockLevel: 1 },
+    { ...QUAKE, unlockLevel: 1 },
+  ],
+  baseXp: 85,
+  baseGold: 45,
+};
+
+export const IRON_GOLEM: Enemy = {
+  id: 'iron-golem',
+  name: 'Iron Golem',
+  level: 9,
+  element: 'Mars',
+  stats: {
+    hp: 70,
+    pp: 18,
+    atk: 25,
+    def: 25,
+    mag: 10,
+    spd: 7,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...HEAVY_STRIKE, unlockLevel: 1 },
+    { ...FIREBALL, unlockLevel: 1 },
+  ],
+  baseXp: 105,
+  baseGold: 55,
+};
+
+export const CRYSTAL_GOLEM: Enemy = {
+  id: 'crystal-golem',
+  name: 'Crystal Golem',
+  level: 10,
+  element: 'Mercury',
+  stats: {
+    hp: 65,
+    pp: 22,
+    atk: 20,
+    def: 18,
+    mag: 24,
+    spd: 8,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...ICE_SHARD, unlockLevel: 1 },
+    { ...FREEZE_BLAST, unlockLevel: 1 },
+  ],
+  baseXp: 115,
+  baseGold: 58,
+};
+
+export const STORM_GOLEM: Enemy = {
+  id: 'storm-golem',
+  name: 'Storm Golem',
+  level: 10,
+  element: 'Jupiter',
+  stats: {
+    hp: 70,
+    pp: 24,
+    atk: 24,
+    def: 16,
+    mag: 22,
+    spd: 9,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...GUST, unlockLevel: 1 },
+    { ...CHAIN_LIGHTNING, unlockLevel: 1 },
+  ],
+  baseXp: 115,
+  baseGold: 58,
+};
+
+// ============================================================================
+// MERCURY BEASTS - Tier 3-4 (Mercury/Water themed)
+// ============================================================================
+
+export const FROST_SERPENT: Enemy = {
+  id: 'frost-serpent',
+  name: 'Frost Serpent',
+  level: 7,
+  element: 'Mercury',
+  stats: {
+    hp: 95,
+    pp: 22,
+    atk: 18,
+    def: 14,
+    mag: 20,
+    spd: 16,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...ICE_SHARD, unlockLevel: 1 },
+    { ...FREEZE_BLAST, unlockLevel: 1 },
+    { ...POISON_STRIKE, unlockLevel: 1 },
+  ],
+  baseXp: 70,
+  baseGold: 38,
+};
+
+export const AQUA_DRAKE: Enemy = {
+  id: 'aqua-drake',
+  name: 'Aqua Drake',
+  level: 8,
+  element: 'Mercury',
+  stats: {
+    hp: 135,
+    pp: 28,
+    atk: 22,
+    def: 18,
+    mag: 24,
+    spd: 14,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...HEAVY_STRIKE, unlockLevel: 1 },
+    { ...ICE_SHARD, unlockLevel: 1 },
+    { ...FREEZE_BLAST, unlockLevel: 1 },
+  ],
+  baseXp: 88,
+  baseGold: 46,
+};
+
+export const TIDAL_WRAITH: Enemy = {
+  id: 'tidal-wraith',
+  name: 'Tidal Wraith',
+  level: 9,
+  element: 'Mercury',
+  stats: {
+    hp: 120,
+    pp: 35,
+    atk: 18,
+    def: 16,
+    mag: 28,
+    spd: 18,
+  },
+  abilities: [
+    { ...ICE_SHARD, unlockLevel: 1 },
+    { ...FREEZE_BLAST, unlockLevel: 1 },
+    { ...HEAL, unlockLevel: 1 },
+    { ...WEAKEN_DEF, unlockLevel: 1 },
+  ],
+  baseXp: 95,
+  baseGold: 50,
+};
+
+export const GLACIER_WYRM: Enemy = {
+  id: 'glacier-wyrm',
+  name: 'Glacier Wyrm',
+  level: 10,
+  element: 'Mercury',
+  stats: {
+    hp: 180,
+    pp: 32,
+    atk: 26,
+    def: 22,
+    mag: 26,
+    spd: 13,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...HEAVY_STRIKE, unlockLevel: 1 },
+    { ...ICE_SHARD, unlockLevel: 1 },
+    { ...FREEZE_BLAST, unlockLevel: 1 },
+    { ...BOOST_DEF, unlockLevel: 1 },
+  ],
+  baseXp: 125,
+  baseGold: 65,
+};
+
+// ============================================================================
+// JUPITER BEASTS - Tier 3-4 (Wind/Lightning themed)
+// ============================================================================
+
+export const STORM_RAVEN: Enemy = {
+  id: 'storm-raven',
+  name: 'Storm Raven',
+  level: 7,
+  element: 'Jupiter',
+  stats: {
+    hp: 75,
+    pp: 25,
+    atk: 16,
+    def: 12,
+    mag: 22,
+    spd: 20,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...GUST, unlockLevel: 1 },
+    { ...CHAIN_LIGHTNING, unlockLevel: 1 },
+  ],
+  baseXp: 68,
+  baseGold: 36,
+};
+
+export const LIGHTNING_LYNX: Enemy = {
+  id: 'lightning-lynx',
+  name: 'Lightning Lynx',
+  level: 8,
+  element: 'Jupiter',
+  stats: {
+    hp: 90,
+    pp: 22,
+    atk: 24,
+    def: 14,
+    mag: 18,
+    spd: 24,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...PRECISE_JAB, unlockLevel: 1 },
+    { ...GUST, unlockLevel: 1 },
+    { ...PARALYZE_SHOCK, unlockLevel: 1 },
+  ],
+  baseXp: 85,
+  baseGold: 44,
+};
+
+export const CYCLONE_DJINNI: Enemy = {
+  id: 'cyclone-djinni',
+  name: 'Cyclone Djinni',
+  level: 9,
+  element: 'Jupiter',
+  stats: {
+    hp: 110,
+    pp: 40,
+    atk: 20,
+    def: 15,
+    mag: 30,
+    spd: 19,
+  },
+  abilities: [
+    { ...GUST, unlockLevel: 1 },
+    { ...CHAIN_LIGHTNING, unlockLevel: 1 },
+    { ...BLIND, unlockLevel: 1 },
+    { ...BOOST_ATK, unlockLevel: 1 },
+  ],
+  baseXp: 100,
+  baseGold: 52,
+};
+
+export const TEMPEST_DRAGON: Enemy = {
+  id: 'tempest-dragon',
+  name: 'Tempest Dragon',
+  level: 10,
+  element: 'Jupiter',
+  stats: {
+    hp: 165,
+    pp: 45,
+    atk: 28,
+    def: 20,
+    mag: 32,
+    spd: 17,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...HEAVY_STRIKE, unlockLevel: 1 },
+    { ...GUST, unlockLevel: 1 },
+    { ...CHAIN_LIGHTNING, unlockLevel: 1 },
+    { ...PARALYZE_SHOCK, unlockLevel: 1 },
+  ],
+  baseXp: 130,
+  baseGold: 68,
+};
+
+// ============================================================================
+// BOSS VARIANTS - Elite versions for tower floors 15-20
+// ============================================================================
+
+export const ALPHA_PHOENIX: Enemy = {
+  id: 'alpha-phoenix',
+  name: 'Alpha Phoenix',
+  level: 11,
+  element: 'Mars',
+  stats: {
+    hp: 280,
+    pp: 50,
+    atk: 32,
+    def: 24,
+    mag: 36,
+    spd: 20,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...FIREBALL, unlockLevel: 1 },
+    { ...BURN_TOUCH, unlockLevel: 1 },
+    { ...HEAL, unlockLevel: 1 },
+    { ...PARTY_HEAL, unlockLevel: 1 },
+    { ...BOOST_ATK, unlockLevel: 1 },
+  ],
+  baseXp: 180,
+  baseGold: 95,
+};
+
+export const ELDER_BASILISK: Enemy = {
+  id: 'elder-basilisk',
+  name: 'Elder Basilisk',
+  level: 11,
+  element: 'Venus',
+  stats: {
+    hp: 320,
+    pp: 35,
+    atk: 34,
+    def: 30,
+    mag: 22,
+    spd: 12,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...HEAVY_STRIKE, unlockLevel: 1 },
+    { ...QUAKE, unlockLevel: 1 },
+    { ...POISON_STRIKE, unlockLevel: 1 },
+    { ...GUARD_BREAK, unlockLevel: 1 },
+    { ...BOOST_DEF, unlockLevel: 1 },
+  ],
+  baseXp: 185,
+  baseGold: 98,
+};
+
+export const KRAKEN: Enemy = {
+  id: 'kraken',
+  name: 'Kraken',
+  level: 11,
+  element: 'Mercury',
+  stats: {
+    hp: 300,
+    pp: 42,
+    atk: 30,
+    def: 28,
+    mag: 28,
+    spd: 14,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...HEAVY_STRIKE, unlockLevel: 1 },
+    { ...ICE_SHARD, unlockLevel: 1 },
+    { ...FREEZE_BLAST, unlockLevel: 1 },
+    { ...WEAKEN_DEF, unlockLevel: 1 },
+    { ...HEAL, unlockLevel: 1 },
+  ],
+  baseXp: 175,
+  baseGold: 92,
+};
+
+export const STORM_TITAN: Enemy = {
+  id: 'storm-titan',
+  name: 'Storm Titan',
+  level: 12,
+  element: 'Jupiter',
+  stats: {
+    hp: 350,
+    pp: 55,
+    atk: 36,
+    def: 26,
+    mag: 38,
+    spd: 16,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...HEAVY_STRIKE, unlockLevel: 1 },
+    { ...GUST, unlockLevel: 1 },
+    { ...CHAIN_LIGHTNING, unlockLevel: 1 },
+    { ...PARALYZE_SHOCK, unlockLevel: 1 },
+    { ...BOOST_ATK, unlockLevel: 1 },
+  ],
+  baseXp: 200,
+  baseGold: 105,
+};
+
+// ============================================================================
+// TIER 5 ENEMIES - Tower Floor 15-20 Monsters
+// ============================================================================
+
+export const VOID_SPECTER: Enemy = {
+  id: 'void-specter',
+  name: 'Void Specter',
+  level: 11,
+  element: 'Jupiter',
+  stats: {
+    hp: 140,
+    pp: 48,
+    atk: 24,
+    def: 18,
+    mag: 34,
+    spd: 22,
+  },
+  abilities: [
+    { ...GUST, unlockLevel: 1 },
+    { ...CHAIN_LIGHTNING, unlockLevel: 1 },
+    { ...BLIND, unlockLevel: 1 },
+    { ...PARALYZE_SHOCK, unlockLevel: 1 },
+    { ...WEAKEN_DEF, unlockLevel: 1 },
+  ],
+  baseXp: 145,
+  baseGold: 76,
+};
+
+export const FROST_LICH: Enemy = {
+  id: 'frost-lich',
+  name: 'Frost Lich',
+  level: 11,
+  element: 'Mercury',
+  stats: {
+    hp: 155,
+    pp: 55,
+    atk: 22,
+    def: 20,
+    mag: 36,
+    spd: 15,
+  },
+  abilities: [
+    { ...ICE_SHARD, unlockLevel: 1 },
+    { ...FREEZE_BLAST, unlockLevel: 1 },
+    { ...HEAL, unlockLevel: 1 },
+    { ...PARTY_HEAL, unlockLevel: 1 },
+    { ...WEAKEN_DEF, unlockLevel: 1 },
+  ],
+  baseXp: 150,
+  baseGold: 78,
+};
+
+export const MAGMA_COLOSSUS: Enemy = {
+  id: 'magma-colossus',
+  name: 'Magma Colossus',
+  level: 12,
+  element: 'Mars',
+  stats: {
+    hp: 220,
+    pp: 30,
+    atk: 38,
+    def: 32,
+    mag: 20,
+    spd: 8,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...HEAVY_STRIKE, unlockLevel: 1 },
+    { ...FIREBALL, unlockLevel: 1 },
+    { ...BURN_TOUCH, unlockLevel: 1 },
+    { ...GUARD_BREAK, unlockLevel: 1 },
+  ],
+  baseXp: 160,
+  baseGold: 84,
+};
+
+export const TERRA_GUARDIAN: Enemy = {
+  id: 'terra-guardian',
+  name: 'Terra Guardian',
+  level: 12,
+  element: 'Venus',
+  stats: {
+    hp: 250,
+    pp: 28,
+    atk: 32,
+    def: 36,
+    mag: 18,
+    spd: 9,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...HEAVY_STRIKE, unlockLevel: 1 },
+    { ...QUAKE, unlockLevel: 1 },
+    { ...BOOST_DEF, unlockLevel: 1 },
+    { ...HEAL, unlockLevel: 1 },
+  ],
+  baseXp: 165,
+  baseGold: 86,
+};
+
+// ============================================================================
+// AVIAN CATEGORY - Flying Creatures
+// ============================================================================
+
+export const WIND_HAWK: Enemy = {
+  id: 'wind-hawk',
+  name: 'Wind Hawk',
+  level: 4,
+  element: 'Jupiter',
+  stats: {
+    hp: 30,
+    pp: 12,
+    atk: 16,
+    def: 6,
+    mag: 12,
+    spd: 20,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...GUST, unlockLevel: 1 },
+  ],
+  baseXp: 32,
+  baseGold: 18,
+};
+
+export const FIRE_EAGLE: Enemy = {
+  id: 'fire-eagle',
+  name: 'Fire Eagle',
+  level: 6,
+  element: 'Mars',
+  stats: {
+    hp: 45,
+    pp: 16,
+    atk: 22,
+    def: 10,
+    mag: 18,
+    spd: 17,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...FIREBALL, unlockLevel: 1 },
+  ],
+  baseXp: 50,
+  baseGold: 26,
+};
+
+export const ICE_OWL: Enemy = {
+  id: 'ice-owl',
+  name: 'Ice Owl',
+  level: 7,
+  element: 'Mercury',
+  stats: {
+    hp: 40,
+    pp: 20,
+    atk: 18,
+    def: 12,
+    mag: 20,
+    spd: 15,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...ICE_SHARD, unlockLevel: 1 },
+    { ...FREEZE_BLAST, unlockLevel: 1 },
+  ],
+  baseXp: 62,
+  baseGold: 34,
+};
+
+export const STONE_ROC: Enemy = {
+  id: 'stone-roc',
+  name: 'Stone Roc',
+  level: 9,
+  element: 'Venus',
+  stats: {
+    hp: 90,
+    pp: 22,
+    atk: 28,
+    def: 18,
+    mag: 14,
+    spd: 12,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...HEAVY_STRIKE, unlockLevel: 1 },
+    { ...QUAKE, unlockLevel: 1 },
+    { ...GUARD_BREAK, unlockLevel: 1 },
+  ],
+  baseXp: 110,
+  baseGold: 56,
+};
+
+// ============================================================================
+// MERCURY ELITE BOSSES - Tower Floor 15-20
+// ============================================================================
+
+export const ARCTIC_SOVEREIGN: Enemy = {
+  id: 'arctic-sovereign',
+  name: 'Arctic Sovereign',
+  level: 13,
+  element: 'Mercury',
+  stats: {
+    hp: 380,
+    pp: 60,
+    atk: 32,
+    def: 34,
+    mag: 40,
+    spd: 18,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...ICE_SHARD, unlockLevel: 1 },
+    { ...FREEZE_BLAST, unlockLevel: 1 },
+    { ...PARTY_HEAL, unlockLevel: 1 },
+    { ...BOOST_DEF, unlockLevel: 1 },
+    { ...WEAKEN_DEF, unlockLevel: 1 },
+  ],
+  baseXp: 220,
+  baseGold: 115,
+};
+
+export const NEPTUNE_WARDEN: Enemy = {
+  id: 'neptune-warden',
+  name: 'Neptune Warden',
+  level: 14,
+  element: 'Mercury',
+  stats: {
+    hp: 410,
+    pp: 65,
+    atk: 34,
+    def: 36,
+    mag: 42,
+    spd: 16,
+  },
+  abilities: [
+    { ...HEAVY_STRIKE, unlockLevel: 1 },
+    { ...ICE_SHARD, unlockLevel: 1 },
+    { ...FREEZE_BLAST, unlockLevel: 1 },
+    { ...HEAL, unlockLevel: 1 },
+    { ...PARTY_HEAL, unlockLevel: 1 },
+    { ...BOOST_DEF, unlockLevel: 1 },
+  ],
+  baseXp: 240,
+  baseGold: 125,
+};
+
+export const ABYSSAL_EMPEROR: Enemy = {
+  id: 'abyssal-emperor',
+  name: 'Abyssal Emperor',
+  level: 15,
+  element: 'Mercury',
+  stats: {
+    hp: 450,
+    pp: 70,
+    atk: 36,
+    def: 40,
+    mag: 44,
+    spd: 17,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...HEAVY_STRIKE, unlockLevel: 1 },
+    { ...ICE_SHARD, unlockLevel: 1 },
+    { ...FREEZE_BLAST, unlockLevel: 1 },
+    { ...HEAL, unlockLevel: 1 },
+    { ...PARTY_HEAL, unlockLevel: 1 },
+    { ...BOOST_DEF, unlockLevel: 1 },
+    { ...WEAKEN_DEF, unlockLevel: 1 },
+  ],
+  baseXp: 260,
+  baseGold: 135,
+};
+
+// ============================================================================
+// JUPITER ELITE BOSSES - Tower Floor 15-20
+// ============================================================================
+
+export const STRATOSPHERE_LORD: Enemy = {
+  id: 'stratosphere-lord',
+  name: 'Stratosphere Lord',
+  level: 13,
+  element: 'Jupiter',
+  stats: {
+    hp: 340,
+    pp: 65,
+    atk: 38,
+    def: 24,
+    mag: 42,
+    spd: 22,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...GUST, unlockLevel: 1 },
+    { ...CHAIN_LIGHTNING, unlockLevel: 1 },
+    { ...PARALYZE_SHOCK, unlockLevel: 1 },
+    { ...BLIND, unlockLevel: 1 },
+    { ...BOOST_ATK, unlockLevel: 1 },
+  ],
+  baseXp: 225,
+  baseGold: 118,
+};
+
+export const ZEUS_AVATAR: Enemy = {
+  id: 'zeus-avatar',
+  name: 'Zeus Avatar',
+  level: 14,
+  element: 'Jupiter',
+  stats: {
+    hp: 370,
+    pp: 70,
+    atk: 40,
+    def: 26,
+    mag: 46,
+    spd: 24,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...HEAVY_STRIKE, unlockLevel: 1 },
+    { ...GUST, unlockLevel: 1 },
+    { ...CHAIN_LIGHTNING, unlockLevel: 1 },
+    { ...PARALYZE_SHOCK, unlockLevel: 1 },
+    { ...BOOST_ATK, unlockLevel: 1 },
+  ],
+  baseXp: 245,
+  baseGold: 128,
+};
+
+export const CELESTIAL_FURY: Enemy = {
+  id: 'celestial-fury',
+  name: 'Celestial Fury',
+  level: 15,
+  element: 'Jupiter',
+  stats: {
+    hp: 400,
+    pp: 75,
+    atk: 42,
+    def: 28,
+    mag: 50,
+    spd: 26,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...HEAVY_STRIKE, unlockLevel: 1 },
+    { ...GUST, unlockLevel: 1 },
+    { ...CHAIN_LIGHTNING, unlockLevel: 1 },
+    { ...PARALYZE_SHOCK, unlockLevel: 1 },
+    { ...BLIND, unlockLevel: 1 },
+    { ...BOOST_ATK, unlockLevel: 1 },
+    { ...WEAKEN_DEF, unlockLevel: 1 },
+  ],
+  baseXp: 270,
+  baseGold: 140,
+};
+
+// ============================================================================
+// MERCURY TIER 5 VARIANTS - Advanced Water/Ice Enemies
+// ============================================================================
+
+export const PERMAFROST_GOLEM: Enemy = {
+  id: 'permafrost-golem',
+  name: 'Permafrost Golem',
+  level: 13,
+  element: 'Mercury',
+  stats: {
+    hp: 280,
+    pp: 35,
+    atk: 28,
+    def: 38,
+    mag: 26,
+    spd: 10,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...HEAVY_STRIKE, unlockLevel: 1 },
+    { ...ICE_SHARD, unlockLevel: 1 },
+    { ...FREEZE_BLAST, unlockLevel: 1 },
+    { ...BOOST_DEF, unlockLevel: 1 },
+  ],
+  baseXp: 170,
+  baseGold: 88,
+};
+
+export const TUNDRA_SERPENT: Enemy = {
+  id: 'tundra-serpent',
+  name: 'Tundra Serpent',
+  level: 12,
+  element: 'Mercury',
+  stats: {
+    hp: 185,
+    pp: 38,
+    atk: 26,
+    def: 22,
+    mag: 30,
+    spd: 17,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...ICE_SHARD, unlockLevel: 1 },
+    { ...FREEZE_BLAST, unlockLevel: 1 },
+    { ...POISON_STRIKE, unlockLevel: 1 },
+    { ...WEAKEN_DEF, unlockLevel: 1 },
+  ],
+  baseXp: 155,
+  baseGold: 82,
+};
+
+export const POLAR_GUARDIAN: Enemy = {
+  id: 'polar-guardian',
+  name: 'Polar Guardian',
+  level: 13,
+  element: 'Mercury',
+  stats: {
+    hp: 260,
+    pp: 40,
+    atk: 30,
+    def: 32,
+    mag: 28,
+    spd: 14,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...HEAVY_STRIKE, unlockLevel: 1 },
+    { ...ICE_SHARD, unlockLevel: 1 },
+    { ...HEAL, unlockLevel: 1 },
+    { ...BOOST_DEF, unlockLevel: 1 },
+  ],
+  baseXp: 165,
+  baseGold: 86,
+};
+
+// ============================================================================
+// JUPITER TIER 5 VARIANTS - Advanced Wind/Lightning Enemies
+// ============================================================================
+
+export const VOLTAGE_CHIMERA: Enemy = {
+  id: 'voltage-chimera',
+  name: 'Voltage Chimera',
+  level: 13,
+  element: 'Jupiter',
+  stats: {
+    hp: 200,
+    pp: 50,
+    atk: 32,
+    def: 20,
+    mag: 38,
+    spd: 25,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...GUST, unlockLevel: 1 },
+    { ...CHAIN_LIGHTNING, unlockLevel: 1 },
+    { ...PARALYZE_SHOCK, unlockLevel: 1 },
+    { ...BOOST_ATK, unlockLevel: 1 },
+  ],
+  baseXp: 175,
+  baseGold: 90,
+};
+
+export const MONSOON_DRAKE: Enemy = {
+  id: 'monsoon-drake',
+  name: 'Monsoon Drake',
+  level: 12,
+  element: 'Jupiter',
+  stats: {
+    hp: 190,
+    pp: 45,
+    atk: 30,
+    def: 18,
+    mag: 36,
+    spd: 23,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...HEAVY_STRIKE, unlockLevel: 1 },
+    { ...GUST, unlockLevel: 1 },
+    { ...CHAIN_LIGHTNING, unlockLevel: 1 },
+    { ...BLIND, unlockLevel: 1 },
+  ],
+  baseXp: 158,
+  baseGold: 83,
+};
+
+export const AURORA_ELEMENTAL: Enemy = {
+  id: 'aurora-elemental',
+  name: 'Aurora Elemental',
+  level: 14,
+  element: 'Jupiter',
+  stats: {
+    hp: 170,
+    pp: 55,
+    atk: 26,
+    def: 22,
+    mag: 44,
+    spd: 27,
+  },
+  abilities: [
+    { ...GUST, unlockLevel: 1 },
+    { ...CHAIN_LIGHTNING, unlockLevel: 1 },
+    { ...PARALYZE_SHOCK, unlockLevel: 1 },
+    { ...BLIND, unlockLevel: 1 },
+    { ...WEAKEN_DEF, unlockLevel: 1 },
+  ],
+  baseXp: 180,
+  baseGold: 94,
+};
+
+export const VORTEX_SENTINEL: Enemy = {
+  id: 'vortex-sentinel',
+  name: 'Vortex Sentinel',
+  level: 13,
+  element: 'Jupiter',
+  stats: {
+    hp: 210,
+    pp: 48,
+    atk: 34,
+    def: 24,
+    mag: 40,
+    spd: 21,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...GUST, unlockLevel: 1 },
+    { ...CHAIN_LIGHTNING, unlockLevel: 1 },
+    { ...PARALYZE_SHOCK, unlockLevel: 1 },
+    { ...BOOST_ATK, unlockLevel: 1 },
+  ],
+  baseXp: 168,
+  baseGold: 87,
+};
+
+// ============================================================================
+// HYBRID TIER 5 BOSSES - Multi-Element Threats
+// ============================================================================
+
+export const MAELSTROM_BEAST: Enemy = {
+  id: 'maelstrom-beast',
+  name: 'Maelstrom Beast',
+  level: 14,
+  element: 'Mercury',
+  stats: {
+    hp: 330,
+    pp: 52,
+    atk: 35,
+    def: 30,
+    mag: 38,
+    spd: 19,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...HEAVY_STRIKE, unlockLevel: 1 },
+    { ...ICE_SHARD, unlockLevel: 1 },
+    { ...FREEZE_BLAST, unlockLevel: 1 },
+    { ...GUST, unlockLevel: 1 },
+    { ...BOOST_DEF, unlockLevel: 1 },
+  ],
+  baseXp: 195,
+  baseGold: 102,
+};
+
+export const THUNDERSTORM_COLOSSUS: Enemy = {
+  id: 'thunderstorm-colossus',
+  name: 'Thunderstorm Colossus',
+  level: 15,
+  element: 'Jupiter',
+  stats: {
+    hp: 310,
+    pp: 60,
+    atk: 40,
+    def: 28,
+    mag: 46,
+    spd: 20,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...HEAVY_STRIKE, unlockLevel: 1 },
+    { ...GUST, unlockLevel: 1 },
+    { ...CHAIN_LIGHTNING, unlockLevel: 1 },
+    { ...PARALYZE_SHOCK, unlockLevel: 1 },
+    { ...GUARD_BREAK, unlockLevel: 1 },
+  ],
+  baseXp: 210,
+  baseGold: 110,
+};
+
+// ============================================================================
 // VS1 Demo Enemies
 // ============================================================================
 
@@ -1299,6 +2360,73 @@ export const ENEMIES: Record<string, Enemy> = {
   'venus-sprite': VENUS_SPRITE,
   chimera: CHIMERA,
   overseer: OVERSEER,
+
+  // Undead Category
+  'skeleton-warrior': SKELETON_WARRIOR,
+  'ghost-wisp': GHOST_WISP,
+  'zombie-hound': ZOMBIE_HOUND,
+  'bone-mage': BONE_MAGE,
+
+  // Golem Category
+  'clay-golem': CLAY_GOLEM,
+  'iron-golem': IRON_GOLEM,
+  'crystal-golem': CRYSTAL_GOLEM,
+  'storm-golem': STORM_GOLEM,
+
+  // Avian Category
+  'wind-hawk': WIND_HAWK,
+  'fire-eagle': FIRE_EAGLE,
+  'ice-owl': ICE_OWL,
+  'stone-roc': STONE_ROC,
+
+  // Mercury Beasts (Tier 3-4)
+  'frost-serpent': FROST_SERPENT,
+  'aqua-drake': AQUA_DRAKE,
+  'tidal-wraith': TIDAL_WRAITH,
+  'glacier-wyrm': GLACIER_WYRM,
+
+  // Jupiter Beasts (Tier 3-4)
+  'storm-raven': STORM_RAVEN,
+  'lightning-lynx': LIGHTNING_LYNX,
+  'cyclone-djinni': CYCLONE_DJINNI,
+  'tempest-dragon': TEMPEST_DRAGON,
+
+  // Boss Variants (Tier 5)
+  'alpha-phoenix': ALPHA_PHOENIX,
+  'elder-basilisk': ELDER_BASILISK,
+  'kraken': KRAKEN,
+  'storm-titan': STORM_TITAN,
+
+  // Tier 5 Enemies
+  'void-specter': VOID_SPECTER,
+  'frost-lich': FROST_LICH,
+  'magma-colossus': MAGMA_COLOSSUS,
+  'terra-guardian': TERRA_GUARDIAN,
+
+  // Mercury Elite Bosses (Tower Floor 15-20)
+  'arctic-sovereign': ARCTIC_SOVEREIGN,
+  'neptune-warden': NEPTUNE_WARDEN,
+  'abyssal-emperor': ABYSSAL_EMPEROR,
+
+  // Jupiter Elite Bosses (Tower Floor 15-20)
+  'stratosphere-lord': STRATOSPHERE_LORD,
+  'zeus-avatar': ZEUS_AVATAR,
+  'celestial-fury': CELESTIAL_FURY,
+
+  // Mercury Tier 5 Variants
+  'permafrost-golem': PERMAFROST_GOLEM,
+  'tundra-serpent': TUNDRA_SERPENT,
+  'polar-guardian': POLAR_GUARDIAN,
+
+  // Jupiter Tier 5 Variants
+  'voltage-chimera': VOLTAGE_CHIMERA,
+  'monsoon-drake': MONSOON_DRAKE,
+  'aurora-elemental': AURORA_ELEMENTAL,
+  'vortex-sentinel': VORTEX_SENTINEL,
+
+  // Hybrid Tier 5 Bosses
+  'maelstrom-beast': MAELSTROM_BEAST,
+  'thunderstorm-colossus': THUNDERSTORM_COLOSSUS,
 
   // VS1 Demo
   'bandit-minion': BANDIT_MINION,

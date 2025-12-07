@@ -4,6 +4,7 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 0.75rem 1.25rem;
+  background: #03080c;
 }
 
 .location-banner {
@@ -119,7 +120,7 @@
 }
 
 .tile-npc {
-  background-color: #9e6ac8;
+  background-color: transparent;
 }
 
 /* Trigger tiles no longer have visual indicators - discovery through exploration */

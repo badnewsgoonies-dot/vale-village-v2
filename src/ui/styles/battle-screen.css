@@ -397,9 +397,22 @@ body {
   border-top: 1px solid #444;
   padding-top: 4px;
   font-size: 11px;
-  overflow: hidden;
+  overflow-y: auto;
+  max-height: 150px;
   display: flex;
   flex-direction: column;
+}
+
+.ability-panel::-webkit-scrollbar {
+  width: 6px;
+}
+.ability-panel::-webkit-scrollbar-track {
+  background: #1c1c1c;
+  border-radius: 3px;
+}
+.ability-panel::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 3px;
 }
 
 .ability-section-title {

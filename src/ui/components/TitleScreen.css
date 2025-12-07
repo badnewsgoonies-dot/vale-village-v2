@@ -126,3 +126,46 @@
     transform: translateY(-2px);
   }
 }
+
+/* Character parade at bottom of title screen */
+.title-screen-parade {
+  position: absolute;
+  bottom: 60px;
+  left: 0;
+  right: 0;
+  height: 64px;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.title-screen-character {
+  position: absolute;
+  bottom: 0;
+  animation: characterWalk 12s linear infinite;
+  opacity: 0;
+}
+
+.title-screen-sprite {
+  width: 48px;
+  height: 48px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+}
+
+@keyframes characterWalk {
+  0% {
+    left: -60px;
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 1;
+  }
+  100% {
+    left: calc(100% + 60px);
+    opacity: 0;
+  }
+}

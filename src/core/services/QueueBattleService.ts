@@ -259,13 +259,8 @@ function executePlayerActionsPhase(
   for (const action of sortedPlayerActions) {
     const actor = currentState.playerTeam.units.find(u => u.id === action.unitId);
     if (!actor || isUnitKO(actor)) {
-      events.push({
-        type: 'ability',
-        casterId: action.unitId,
-        abilityId: action.abilityId || 'strike',
-        targets: action.targetIds,
-      });
-    continue;
+      // BUG FIX 2: Skip KO'd units silently - don't generate confusing events
+      continue;
     }
 
     const validTargets = resolveValidTargets(action, currentState);
@@ -781,28 +776,36 @@ function resolveValidTargets(
     targetType = 'single';
   }
 
-  // Retarget based on action side and target type
+  // BUG FIX 3: Retarget based on action side, preserving multi-target intent
   const isPlayerAction = state.playerTeam.units.some(u => u.id === action.unitId);
-  
+
   if (isPlayerAction) {
     // Player action: retarget to alive enemies
     const aliveEnemies = state.enemies.filter(e => !isUnitKO(e));
-    if (targetType === 'single' && aliveEnemies.length > 0) {
-      // Single-target: return first alive enemy
-      return [aliveEnemies[0]!.id];
-    } else {
+    if (aliveEnemies.length === 0) {
+      return [];
+    }
+
+    if (targetType === 'all') {
       // Multi-target: return all alive enemies
       return aliveEnemies.map(e => e.id);
+    } else {
+      // Single-target: return first alive enemy
+      return [aliveEnemies[0]!.id];
     }
   } else {
     // Enemy action: retarget to alive player units
     const alivePlayers = state.playerTeam.units.filter(u => !isUnitKO(u));
-    if (targetType === 'single' && alivePlayers.length > 0) {
-      // Single-target: return first alive player
-      return [alivePlayers[0]!.id];
-    } else {
+    if (alivePlayers.length === 0) {
+      return [];
+    }
+
+    if (targetType === 'all') {
       // Multi-target: return all alive players
       return alivePlayers.map(u => u.id);
+    } else {
+      // Single-target: return first alive player
+      return [alivePlayers[0]!.id];
     }
   }
 }

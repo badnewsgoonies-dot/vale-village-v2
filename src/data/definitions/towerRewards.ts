@@ -36,5 +36,40 @@ export const TOWER_REWARDS: readonly TowerReward[] = [
       },
     ],
   },
+  {
+    floorNumber: 25,
+    rewards: [
+      {
+        type: 'equipment',
+        ids: ['trident-neptune'],
+        notes: 'Tower-exclusive legendary weapon',
+      },
+      {
+        type: 'djinn',
+        ids: ['tsunami'],
+        notes: 'Tower-exclusive Mercury Djinn',
+      },
+    ],
+  },
+  {
+    floorNumber: 30,
+    rewards: [
+      {
+        type: 'equipment',
+        ids: ['zeus-thunderbolt'],
+        notes: 'Tower-exclusive ultimate artifact',
+      },
+      {
+        type: 'recruit',
+        ids: ['tower-legend'],
+        notes: 'Tower-exclusive legendary recruit',
+      },
+      {
+        type: 'djinn',
+        ids: ['celestial'],
+        notes: 'Tower-exclusive Jupiter Djinn',
+      },
+    ],
+  },
 ] as const;
 

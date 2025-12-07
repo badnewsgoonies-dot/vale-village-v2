@@ -650,6 +650,380 @@ export const ECLIPSE_BLADE: Equipment = {
 };
 
 // ========================================
+// TOWER-EXCLUSIVE EQUIPMENT (Floors 21-30)
+// ========================================
+
+// Tower Weapons - Mythril+ Tier
+export const STORM_CLEAVER: Equipment = {
+  id: 'storm-cleaver',
+  name: 'Storm Cleaver',
+  slot: 'weapon',
+  tier: 'legendary',
+  cost: 0, // Tower drop only
+  statBonus: { atk: 55, mag: 20, spd: 8 },
+  allowedElements: ['Jupiter'],
+  unlocksAbility: 'storm-slash',
+  availableIn: ['tower'],
+};
+
+export const FROST_REAVER: Equipment = {
+  id: 'frost-reaver',
+  name: 'Frost Reaver',
+  slot: 'weapon',
+  tier: 'legendary',
+  cost: 0,
+  statBonus: { atk: 52, mag: 25, def: 5 },
+  allowedElements: ['Mercury'],
+  unlocksAbility: 'frost-strike',
+  availableIn: ['tower'],
+};
+
+export const VOLCANIC_HAMMER: Equipment = {
+  id: 'volcanic-hammer',
+  name: 'Volcanic Hammer',
+  slot: 'weapon',
+  tier: 'legendary',
+  cost: 0,
+  statBonus: { atk: 68, def: 15, spd: -3 },
+  allowedElements: ['Mars'],
+  unlocksAbility: 'volcanic-smash',
+  availableIn: ['tower'],
+};
+
+export const GAIA_GREATSHIELD: Equipment = {
+  id: 'gaia-greatshield',
+  name: 'Gaia Greatshield',
+  slot: 'accessory',
+  tier: 'legendary',
+  cost: 0,
+  statBonus: { def: 45, hp: 80 },
+  allowedElements: ['Venus'],
+  elementalResist: 0.3,
+  availableIn: ['tower'],
+};
+
+// Tower Armor - Elemental Sets
+export const TEMPEST_ARMOR: Equipment = {
+  id: 'tempest-armor',
+  name: 'Tempest Armor',
+  slot: 'armor',
+  tier: 'legendary',
+  cost: 0,
+  statBonus: { def: 55, spd: 12, mag: 10 },
+  allowedElements: ['Jupiter'],
+  elementalResist: 0.2,
+  availableIn: ['tower'],
+};
+
+export const GLACIER_MAIL: Equipment = {
+  id: 'glacier-mail',
+  name: 'Glacier Mail',
+  slot: 'armor',
+  tier: 'legendary',
+  cost: 0,
+  statBonus: { def: 58, hp: 75, mag: 8 },
+  allowedElements: ['Mercury'],
+  elementalResist: 0.25,
+  availableIn: ['tower'],
+};
+
+export const INFERNO_PLATE: Equipment = {
+  id: 'inferno-plate',
+  name: 'Inferno Plate',
+  slot: 'armor',
+  tier: 'legendary',
+  cost: 0,
+  statBonus: { def: 52, atk: 15, hp: 50 },
+  allowedElements: ['Mars'],
+  elementalResist: 0.2,
+  availableIn: ['tower'],
+};
+
+// Tower Helms - Element Crowns
+export const STORMKING_CROWN: Equipment = {
+  id: 'stormking-crown',
+  name: 'Stormking Crown',
+  slot: 'helm',
+  tier: 'legendary',
+  cost: 0,
+  statBonus: { def: 42, mag: 20, pp: 25 },
+  allowedElements: ['Jupiter'],
+  unlocksAbility: 'storm-mastery',
+  availableIn: ['tower'],
+};
+
+export const FROSTQUEEN_TIARA: Equipment = {
+  id: 'frostqueen-tiara',
+  name: 'Frostqueen Tiara',
+  slot: 'helm',
+  tier: 'legendary',
+  cost: 0,
+  statBonus: { def: 38, mag: 22, pp: 30 },
+  allowedElements: ['Mercury'],
+  unlocksAbility: 'frost-mastery',
+  availableIn: ['tower'],
+};
+
+export const VOLCANIC_VISOR: Equipment = {
+  id: 'volcanic-visor',
+  name: 'Volcanic Visor',
+  slot: 'helm',
+  tier: 'legendary',
+  cost: 0,
+  statBonus: { def: 45, atk: 12, hp: 30 },
+  allowedElements: ['Mars'],
+  availableIn: ['tower'],
+};
+
+// Tower Boots - Speed Set
+export const WINDSTRIDER_BOOTS: Equipment = {
+  id: 'windstrider-boots',
+  name: 'Windstrider Boots',
+  slot: 'boots',
+  tier: 'legendary',
+  cost: 0,
+  statBonus: { spd: 18, def: 15 },
+  allowedElements: ['Jupiter'],
+  alwaysFirstTurn: true,
+  availableIn: ['tower'],
+};
+
+export const TIDAL_TREADS: Equipment = {
+  id: 'tidal-treads',
+  name: 'Tidal Treads',
+  slot: 'boots',
+  tier: 'legendary',
+  cost: 0,
+  statBonus: { spd: 12, def: 18, mag: 8 },
+  allowedElements: ['Mercury'],
+  availableIn: ['tower'],
+};
+
+// Tower Accessories - Milestone Rewards (Floor 25, 30)
+export const TOWER_CHAMPIONS_RING: Equipment = {
+  id: 'tower-champions-ring',
+  name: "Tower Champion's Ring",
+  slot: 'accessory',
+  tier: 'artifact',
+  cost: 0,
+  statBonus: { atk: 20, def: 20, mag: 20, spd: 10 },
+  allowedElements: ['Venus', 'Mars', 'Mercury', 'Jupiter'],
+  elementalResist: 0.15,
+  availableIn: ['tower'],
+};
+
+export const TOWER_MASTERS_MEDALLION: Equipment = {
+  id: 'tower-masters-medallion',
+  name: "Tower Master's Medallion",
+  slot: 'accessory',
+  tier: 'artifact',
+  cost: 0,
+  statBonus: { atk: 25, def: 25, mag: 25, spd: 15, hp: 100, pp: 50 },
+  allowedElements: ['Venus', 'Mars', 'Mercury', 'Jupiter'],
+  elementalResist: 0.25,
+  availableIn: ['tower'],
+};
+
+// ========================================
+// MYTHRIL TIER ITEMS (Late-game shop items)
+// ========================================
+
+// Mythril Weapons
+export const MYTHRIL_AXE: Equipment = {
+  id: 'mythril-axe',
+  name: 'Mythril Axe',
+  slot: 'weapon',
+  tier: 'mythril',
+  cost: 3200,
+  statBonus: { atk: 46, spd: -2 },
+  allowedElements: ['Mars'],
+  unlocksAbility: 'mythril-cleave',
+};
+
+export const MYTHRIL_STAFF: Equipment = {
+  id: 'mythril-staff',
+  name: 'Mythril Staff',
+  slot: 'weapon',
+  tier: 'mythril',
+  cost: 3800,
+  statBonus: { atk: 26, mag: 36 },
+  allowedElements: ['Mercury'],
+  unlocksAbility: 'mythril-surge',
+};
+
+export const MYTHRIL_LANCE: Equipment = {
+  id: 'mythril-lance',
+  name: 'Mythril Lance',
+  slot: 'weapon',
+  tier: 'mythril',
+  cost: 3100,
+  statBonus: { atk: 42, spd: 3 },
+  allowedElements: ['Jupiter'],
+  unlocksAbility: 'mythril-pierce',
+};
+
+// Mythril Armor Pieces
+export const MYTHRIL_GREAVES: Equipment = {
+  id: 'mythril-greaves',
+  name: 'Mythril Greaves',
+  slot: 'boots',
+  tier: 'mythril',
+  cost: 2600,
+  statBonus: { spd: 9, def: 10 },
+  allowedElements: ['Venus', 'Mars'],
+};
+
+export const MYTHRIL_GAUNTLETS: Equipment = {
+  id: 'mythril-gauntlets',
+  name: 'Mythril Gauntlets',
+  slot: 'accessory',
+  tier: 'mythril',
+  cost: 4200,
+  statBonus: { atk: 16, def: 12 },
+  allowedElements: ['Venus', 'Mars'],
+  unlocksAbility: 'mythril-strike',
+};
+
+// ========================================
+// ELEMENT-SPECIFIC GEAR (All 4 elements)
+// ========================================
+
+// Venus Element Gear
+export const EARTH_WARDEN_SHIELD: Equipment = {
+  id: 'earth-warden-shield',
+  name: 'Earth Warden Shield',
+  slot: 'accessory',
+  tier: 'silver',
+  cost: 1900,
+  statBonus: { def: 18, hp: 40 },
+  allowedElements: ['Venus'],
+  elementalResist: 0.2,
+  unlocksAbility: 'earth-wall',
+};
+
+export const GAIA_HELM: Equipment = {
+  id: 'gaia-helm',
+  name: 'Gaia Helm',
+  slot: 'helm',
+  tier: 'mythril',
+  cost: 3400,
+  statBonus: { def: 30, hp: 25 },
+  allowedElements: ['Venus'],
+  unlocksAbility: 'gaia-fortitude',
+};
+
+// Mars Element Gear
+export const FLAME_BRANDED_AXE: Equipment = {
+  id: 'flame-branded-axe',
+  name: 'Flame Branded Axe',
+  slot: 'weapon',
+  tier: 'silver',
+  cost: 2200,
+  statBonus: { atk: 38, mag: 8, spd: -1 },
+  allowedElements: ['Mars'],
+  unlocksAbility: 'flame-burst',
+};
+
+export const INFERNO_GAUNTLETS: Equipment = {
+  id: 'inferno-gauntlets',
+  name: 'Inferno Gauntlets',
+  slot: 'accessory',
+  tier: 'mythril',
+  cost: 4000,
+  statBonus: { atk: 18, mag: 10, def: 6 },
+  allowedElements: ['Mars'],
+  elementalResist: 0.15,
+  unlocksAbility: 'inferno-fist',
+};
+
+// Mercury Element Gear
+export const FROST_SCEPTER: Equipment = {
+  id: 'frost-scepter',
+  name: 'Frost Scepter',
+  slot: 'weapon',
+  tier: 'silver',
+  cost: 2100,
+  statBonus: { atk: 20, mag: 28, pp: 10 },
+  allowedElements: ['Mercury'],
+  unlocksAbility: 'frost-nova',
+};
+
+export const GLACIAL_ROBES: Equipment = {
+  id: 'glacial-robes',
+  name: 'Glacial Robes',
+  slot: 'armor',
+  tier: 'mythril',
+  cost: 4800,
+  statBonus: { def: 40, mag: 15, hp: 60 },
+  allowedElements: ['Mercury'],
+  elementalResist: 0.2,
+};
+
+// Jupiter Element Gear
+export const THUNDERBOLT_BOW: Equipment = {
+  id: 'thunderbolt-bow',
+  name: 'Thunderbolt Bow',
+  slot: 'weapon',
+  tier: 'silver',
+  cost: 2400,
+  statBonus: { atk: 35, spd: 6, mag: 5 },
+  allowedElements: ['Jupiter'],
+  unlocksAbility: 'lightning-shot',
+};
+
+export const STORM_CIRCLET: Equipment = {
+  id: 'storm-circlet',
+  name: 'Storm Circlet',
+  slot: 'helm',
+  tier: 'mythril',
+  cost: 3600,
+  statBonus: { def: 26, mag: 12, spd: 4, pp: 15 },
+  allowedElements: ['Jupiter'],
+  unlocksAbility: 'storm-focus',
+};
+
+// ========================================
+// ADDITIONAL TOWER-EXCLUSIVE ITEMS
+// ========================================
+
+export const ASTRAL_BLADE: Equipment = {
+  id: 'astral-blade',
+  name: 'Astral Blade',
+  slot: 'weapon',
+  tier: 'artifact',
+  cost: 0,
+  statBonus: { atk: 70, mag: 20, spd: 8, pp: 20 },
+  allowedElements: ['Venus', 'Jupiter'],
+  unlocksAbility: 'astral-strike',
+  availableIn: ['tower'],
+};
+
+export const SHADOWFLAME_STAFF: Equipment = {
+  id: 'shadowflame-staff',
+  name: 'Shadowflame Staff',
+  slot: 'weapon',
+  tier: 'artifact',
+  cost: 0,
+  statBonus: { atk: 35, mag: 55, pp: 30 },
+  allowedElements: ['Mars', 'Mercury'],
+  elementalResist: 0.2,
+  unlocksAbility: 'shadowflame',
+  availableIn: ['tower'],
+};
+
+export const AETHERIC_MANTLE: Equipment = {
+  id: 'aetheric-mantle',
+  name: 'Aetheric Mantle',
+  slot: 'armor',
+  tier: 'artifact',
+  cost: 0,
+  statBonus: { def: 70, mag: 25, hp: 120, pp: 40 },
+  allowedElements: ['Mercury', 'Jupiter'],
+  elementalResist: 0.3,
+  availableIn: ['tower'],
+};
+
+// ========================================
 // EQUIPMENT REGISTRY
 // ========================================
 export const EQUIPMENT: Record<string, Equipment> = {
@@ -674,6 +1048,7 @@ export const EQUIPMENT: Record<string, Equipment> = {
   'mace': MACE,
   'heavy-mace': HEAVY_MACE,
   'demon-mace': DEMON_MACE,
+  'mythril-axe': MYTHRIL_AXE,
 
   // Staves
   'wooden-staff': WOODEN_STAFF,
@@ -682,6 +1057,8 @@ export const EQUIPMENT: Record<string, Equipment> = {
   'crystal-rod': CRYSTAL_ROD,
   'zodiac-wand': ZODIAC_WAND,
   'staff-of-ages': STAFF_OF_AGES,
+  'mythril-staff': MYTHRIL_STAFF,
+  'mythril-lance': MYTHRIL_LANCE,
 
   // Armor
   'cotton-shirt': COTTON_SHIRT,
@@ -693,6 +1070,7 @@ export const EQUIPMENT: Record<string, Equipment> = {
   'mythril-armor': MYTHRIL_ARMOR,
   'dragon-scales': DRAGON_SCALES,
   'valkyrie-mail': VALKYRIE_MAIL,
+  'glacial-robes': GLACIAL_ROBES,
 
   // Helms
   'leather-cap': LEATHER_CAP,
@@ -704,6 +1082,8 @@ export const EQUIPMENT: Record<string, Equipment> = {
   'mythril-crown': MYTHRIL_CROWN,
   'oracles-crown': ORACLES_CROWN,
   'glory-helm': GLORY_HELM,
+  'gaia-helm': GAIA_HELM,
+  'storm-circlet': STORM_CIRCLET,
 
   // Boots
   'leather-boots': LEATHER_BOOTS,
@@ -713,6 +1093,7 @@ export const EQUIPMENT: Record<string, Equipment> = {
   'hyper-boots': HYPER_BOOTS,
   'quick-boots': QUICK_BOOTS,
   'hermes-sandals': HERMES_SANDALS,
+  'mythril-greaves': MYTHRIL_GREAVES,
 
   // Accessories
   'power-ring': POWER_RING,
@@ -726,4 +1107,31 @@ export const EQUIPMENT: Record<string, Equipment> = {
   'cleric-ring': CLERIC_RING,
   'iris-robe': IRIS_ROBE,
   'cosmos-shield': COSMOS_SHIELD,
+  'mythril-gauntlets': MYTHRIL_GAUNTLETS,
+  'earth-warden-shield': EARTH_WARDEN_SHIELD,
+  'inferno-gauntlets': INFERNO_GAUNTLETS,
+
+  // Element-specific weapons
+  'flame-branded-axe': FLAME_BRANDED_AXE,
+  'frost-scepter': FROST_SCEPTER,
+  'thunderbolt-bow': THUNDERBOLT_BOW,
+
+  // Tower-exclusive items
+  'storm-cleaver': STORM_CLEAVER,
+  'frost-reaver': FROST_REAVER,
+  'volcanic-hammer': VOLCANIC_HAMMER,
+  'gaia-greatshield': GAIA_GREATSHIELD,
+  'tempest-armor': TEMPEST_ARMOR,
+  'glacier-mail': GLACIER_MAIL,
+  'inferno-plate': INFERNO_PLATE,
+  'stormking-crown': STORMKING_CROWN,
+  'frostqueen-tiara': FROSTQUEEN_TIARA,
+  'volcanic-visor': VOLCANIC_VISOR,
+  'windstrider-boots': WINDSTRIDER_BOOTS,
+  'tidal-treads': TIDAL_TREADS,
+  'tower-champions-ring': TOWER_CHAMPIONS_RING,
+  'tower-masters-medallion': TOWER_MASTERS_MEDALLION,
+  'astral-blade': ASTRAL_BLADE,
+  'shadowflame-staff': SHADOWFLAME_STAFF,
+  'aetheric-mantle': AETHERIC_MANTLE,
 };
