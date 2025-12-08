@@ -374,6 +374,7 @@ export function QueueBattleView() {
   const events = useStore((s) => s.events);
   const dequeue = useStore((s) => s.dequeueEvent);
   const queueUnitAction = useStore((s) => s.queueUnitAction);
+  const clearUnitAction = useStore((s) => s.clearUnitAction);
   const executeQueuedRound = useStore((s) => s.executeQueuedRound);
   const setMode = useStore((s) => s.setMode);
   const mode = useStore((s) => s.mode);
@@ -1345,8 +1346,16 @@ export function QueueBattleView() {
               return;
             }
             if (uiPhase === 'planning') {
-              setActivePortrait(idx);
-              setSelectedAbilityId(undefined);
+              // If clicking on a unit with a queued action, cancel it
+              const hasQueuedAction = battle.queuedActions[idx] !== null;
+              if (hasQueuedAction) {
+                clearUnitAction(idx);
+                setActivePortrait(idx); // Select the unit so they can queue a new action
+                setSelectedAbilityId(undefined);
+              } else {
+                setActivePortrait(idx);
+                setSelectedAbilityId(undefined);
+              }
             }
           }}
         />

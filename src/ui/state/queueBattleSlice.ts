@@ -444,7 +444,15 @@ export const createQueueBattleSlice: StateCreator<
     // Use functional update to avoid race conditions with concurrent dequeue calls
     set((state) => {
       if (state.events.length === 0) return state;
-      return { events: state.events.slice(1) };
+
+      // MANA FIX: Sync currentMana with battle.remainingMana after dequeuing event
+      // This ensures UI shows accurate mana during event processing (e.g., mana-generated events)
+      const updates: Partial<QueueBattleSlice> = { events: state.events.slice(1) };
+      if (state.battle) {
+        updates.currentMana = state.battle.remainingMana;
+      }
+
+      return updates;
     });
   },
 });
