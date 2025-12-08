@@ -164,7 +164,7 @@ export function BattlePortraitRow({
 
             {queued && (
               <div
-                title="Queued"
+                title="Queued (click to cancel)"
                 style={{
                   position: 'absolute',
                   bottom: 4,
@@ -178,6 +178,8 @@ export function BattlePortraitRow({
                   justifyContent: 'center',
                   fontSize: '0.75rem',
                   borderRadius: 4,
+                  cursor: 'pointer',
+                  boxShadow: '0 0 4px rgba(76, 175, 80, 0.8)',
                 }}
               >
                 OK
