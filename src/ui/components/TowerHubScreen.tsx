@@ -19,7 +19,7 @@ type ConfirmAction = 'quit' | 'restart' | null;
 type LoadoutPanel = 'party' | 'equipment' | 'djinn' | null;
 
 export function TowerHubScreen(): JSX.Element {
-  const setScreen = useGameStore((s) => s.setScreen);
+  const startTransition = useGameStore((s) => s.startTransition);
 
   const {
     towerRun,
@@ -52,13 +52,13 @@ export function TowerHubScreen(): JSX.Element {
   // Sync V1 store mode to V2 gameStore screen (for battle transitions from tower)
   useEffect(() => {
     if (mode === 'team-select') {
-      setScreen('team-select');
+      startTransition('team-select');
     } else if (mode === 'battle') {
-      setScreen('battle');
+      startTransition('battle');
     } else if (mode === 'rewards') {
-      setScreen('rewards');
+      startTransition('rewards');
     }
-  }, [mode, setScreen]);
+  }, [mode, startTransition]);
 
   const currentFloor = getCurrentTowerFloor();
   const isRestFloor = currentFloor?.type === 'rest';

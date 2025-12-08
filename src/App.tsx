@@ -22,16 +22,16 @@ const TeamSelectWrapper: FunctionComponent = () => {
     confirmBattleTeam: s.confirmBattleTeam,
     returnToOverworld: s.returnToOverworld,
   }));
-  const setScreen = useGameStore((s) => s.setScreen);
+  const startTransition = useGameStore((s) => s.startTransition);
 
   const handleConfirm = () => {
     confirmBattleTeam();
-    setScreen('battle');
+    startTransition('battle');
   };
 
   const handleCancel = () => {
     returnToOverworld();
-    setScreen('menu');
+    startTransition('menu');
   };
 
   if (!pendingBattleEncounterId) {
@@ -60,7 +60,7 @@ const RewardsWrapper: FunctionComponent = () => {
     towerStatus: s.towerStatus,
     setMode: s.setMode,
   }));
-  const setScreen = useGameStore((s) => s.setScreen);
+  const startTransition = useGameStore((s) => s.startTransition);
 
   const handleRewardsContinue = () => {
     claimRewards();
@@ -72,11 +72,11 @@ const RewardsWrapper: FunctionComponent = () => {
     // Check if we're in tower mode - if so, return to tower hub instead of overworld
     if (towerStatus === 'in-run' || towerStatus === 'completed') {
       setMode('tower');
-      setScreen('tower');
+      startTransition('tower');
     } else {
       // Return to overworld for normal battles
       returnToOverworld();
-      setScreen('overworld');
+      startTransition('overworld');
     }
   };
 
@@ -100,11 +100,11 @@ const ShopWrapper: FunctionComponent = () => {
     currentShopId: s.currentShopId,
     returnToOverworld: s.returnToOverworld,
   }));
-  const setScreen = useGameStore((s) => s.setScreen);
+  const startTransition = useGameStore((s) => s.startTransition);
 
   const handleClose = () => {
     returnToOverworld();
-    setScreen('overworld');
+    startTransition('overworld');
   };
 
   if (!currentShopId) {
@@ -119,7 +119,7 @@ import { PauseMenu } from './modals/PauseMenu';
 import { DialogueBox } from './modals/DialogueBox';
 import { InventoryModal } from './modals/InventoryModal';
 import { SettingsModal } from './modals/SettingsModal';
-import { SaveMenu } from './modals/SaveMenu';
+import { SaveMenu } from './ui/components/SaveMenu';
 import { HowToPlay } from './modals/HowToPlay';
 import { PartyManagementScreen } from './ui/components/PartyManagementScreen';
 import { DjinnCollectionScreen } from './ui/components/DjinnCollectionScreen';
@@ -178,12 +178,13 @@ const App: FunctionComponent = () => {
   // Sync V1 store mode to V2 gameStore screen
   useStoreSync();
 
-  const { screen, modal, isTransitioning, setScreen, openModal, closeModal } = useGameStore(
+  const { screen, modal, isTransitioning, setScreen, startTransition, openModal, closeModal } = useGameStore(
     (state: GameStore) => ({
       screen: state.flow.screen,
       modal: state.flow.modal,
       isTransitioning: state.flow.isTransitioning,
       setScreen: state.setScreen,
+      startTransition: state.startTransition,
       openModal: state.openModal,
       closeModal: state.closeModal,
     }),
@@ -214,16 +215,16 @@ const App: FunctionComponent = () => {
 
       switch (event.code) {
         case 'Digit1':
-          setScreen('title');
+          startTransition('title');
           break;
         case 'Digit2':
-          setScreen('overworld');
+          startTransition('overworld');
           break;
         case 'Digit3':
-          setScreen('battle');
+          startTransition('battle');
           break;
         case 'Digit4':
-          setScreen('menu');
+          startTransition('menu');
           break;
         case 'KeyI':
           setModal('inventory');
@@ -268,9 +269,9 @@ const App: FunctionComponent = () => {
       case 'shop':
         return <ShopWrapper />;
       case 'team-management':
-        return <PartyManagementScreen onClose={() => setScreen('overworld')} />;
+        return <PartyManagementScreen onClose={() => startTransition('overworld')} />;
       case 'djinn-collection':
-        return <DjinnCollectionScreen onClose={() => setScreen('overworld')} />;
+        return <DjinnCollectionScreen onClose={() => startTransition('overworld')} />;
       case 'tower':
         return <TowerHubScreen />;
       default:
@@ -299,7 +300,7 @@ const App: FunctionComponent = () => {
           onClose={closeModal}
           onTeamManagement={() => {
             closeModal();
-            setScreen('team-management');
+            startTransition('team-management');
           }}
           onInventory={() => {
             closeModal();
@@ -307,7 +308,7 @@ const App: FunctionComponent = () => {
           }}
           onDjinnCollection={() => {
             closeModal();
-            setScreen('djinn-collection');
+            startTransition('djinn-collection');
           }}
           onSaveGame={() => {
             closeModal();
@@ -323,7 +324,7 @@ const App: FunctionComponent = () => {
           }}
           onReturnToTitle={() => {
             closeModal();
-            setScreen('title');
+            startTransition('title');
           }}
         />;
       default:

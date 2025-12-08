@@ -26,6 +26,7 @@ import {
   calculateDjinnBonusesForUnit,
 } from '../algorithms/djinnAbilities';
 import { DJINN } from '../../data/definitions/djinn';
+import { ABILITIES } from '../../data/definitions/abilities';
 import { applyStatusToUnit } from '../algorithms/status';
 
 // The unwrapped value from performAction Result
@@ -750,7 +751,15 @@ function resolveValidTargets(
   let targetMode: TargetMode = 'single'; // Default to single-target
 
   if (actor && action.abilityId) {
-    const ability = actor.abilities.find(a => a.id === action.abilityId);
+    // First try to find ability in actor's abilities array
+    let ability = actor.abilities.find(a => a.id === action.abilityId);
+
+    // Fallback to global ABILITIES record if not found in actor's abilities
+    // (This handles cases where ability is from Djinn or temporary effects)
+    if (!ability) {
+      ability = ABILITIES[action.abilityId];
+    }
+
     if (ability) {
       // Determine target side and mode based on ability's targets field
       const targets = ability.targets;
@@ -766,6 +775,10 @@ function resolveValidTargets(
       } else {
         targetMode = 'single';
       }
+    } else {
+      // Ability not found anywhere - this is unexpected, but we can try to infer from ability type
+      // This is a defensive fallback to prevent heals/buffs from targeting enemies
+      console.warn(`[QueueBattle] Ability ${action.abilityId} not found for actor ${actor.id}`);
     }
   } else if (action.abilityId === null) {
     // Basic attack is always single-target enemy

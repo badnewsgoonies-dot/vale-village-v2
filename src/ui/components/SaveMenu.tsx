@@ -5,6 +5,7 @@
 
 import { useState, useEffect } from 'preact/hooks';
 import { useStore } from '../state/store';
+import { useGameStore } from '../../store/gameStore';
 import type { SaveSlotMetadata } from '../../core/services/SaveService';
 import { SimpleSprite } from '../sprites/SimpleSprite';
 import { BackgroundSprite } from '../sprites/BackgroundSprite';
@@ -44,6 +45,7 @@ function formatPlaytime(seconds?: number): string {
 
 export function SaveMenu({ onClose }: SaveMenuProps) {
   const { saveGameSlot, loadGameSlot, deleteSaveSlot, getSaveSlotMetadata: getMetadata } = useStore();
+  const startTransition = useGameStore((s) => s.startTransition);
   const [slots, setSlots] = useState<SaveSlotMetadata[]>([
     { exists: false },
     { exists: false },
@@ -101,6 +103,8 @@ export function SaveMenu({ onClose }: SaveMenuProps) {
     setError(null);
     try {
       loadGameSlot(slotIndex);
+      // Navigate to overworld after successful load
+      startTransition('overworld');
       onClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load game');
