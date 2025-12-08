@@ -227,6 +227,12 @@ export function performAction(
           amount: result.damage || 0,
           element: ability.element,
         });
+
+        // Check if target was KO'd and emit KO event
+        const updatedTarget = result.updatedUnits.find(u => u.id === targetId);
+        if (updatedTarget && updatedTarget.currentHp <= 0) {
+          events.push({ type: 'ko', unitId: targetId });
+        }
       }
     });
   }

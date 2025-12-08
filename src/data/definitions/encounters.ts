@@ -90,11 +90,12 @@ export const HOUSE_03: Encounter = {
 /**
  * HOUSE 4
  * - Equipment: magic-rod (Mercury/Jupiter shared)
+ * - First Healer: Frost Mystic (Mercury healer)
  */
 export const HOUSE_04: Encounter = {
   id: 'house-04',
   name: 'House 4: Arcane Power',
-  enemies: ['frost-scout', 'mercury-wolf'],
+  enemies: ['frost-scout', 'frost-mystic'],
   difficulty: 'easy',
   reward: {
     xp: 90,
@@ -111,11 +112,12 @@ export const HOUSE_04: Encounter = {
  * - Recruit: Blaze (Mars, Balanced Warrior)
  * - First recruitable Mars unit (shares equipment with Garet)
  * - Reward: Blaze is the upgrade – no equipment drop per blueprint
+ * - Second Healer: Gale Priest (Jupiter healer + debuff)
  */
 export const HOUSE_05: Encounter = {
   id: 'house-05',
   name: 'House 5: The Blazing Warrior',
-  enemies: ['gale-scout', 'jupiter-wolf'],
+  enemies: ['gale-scout', 'gale-priest'],
   difficulty: 'easy',
   reward: {
     xp: 100,
@@ -128,11 +130,12 @@ export const HOUSE_05: Encounter = {
 /**
  * HOUSE 6
  * - Equipment: steel-helm (Venus)
+ * - Tank + Healer Duo: Stone Guardian (Venus tank) + Ember Cleric (Mars healer)
  */
 export const HOUSE_06: Encounter = {
   id: 'house-06',
   name: 'House 6: The Steel Guardian',
-  enemies: ['earth-scout', 'flame-scout', 'venus-wolf'],
+  enemies: ['stone-guardian', 'ember-cleric', 'flame-scout'],
   difficulty: 'medium',
   reward: {
     xp: 120,
@@ -149,11 +152,12 @@ export const HOUSE_06: Encounter = {
  * - Reward: Breeze Djinn (Jupiter T1)
  * - Equipment Choice (steel-sword vs battle-axe per locked blueprint)
  * - MILESTONE: 3rd Djinn = SUMMONS UNLOCKED! (Flint + Forge + Breeze)
+ * - Earth Shaman (Venus buffer + healer) forces summons usage
  */
 export const HOUSE_07: Encounter = {
   id: 'house-07',
   name: 'House 7: Winds of Liberation',
-  enemies: ['terra-soldier', 'venus-bear'],
+  enemies: ['terra-soldier', 'venus-bear', 'earth-shaman'],
   difficulty: 'medium',
   reward: {
     xp: 150,
@@ -174,11 +178,12 @@ export const HOUSE_07: Encounter = {
  * HOUSE 8
  * - Reward: Fizz Djinn (Mercury T1) + Sentinel recruit (Venus Support Buffer)
  * - Milestone: Complete T1 Djinn set (4 elements) with no equipment drop
+ * - Tide Enchanter (Mercury buffer + healer) creates counter-element test
  */
 export const HOUSE_08: Encounter = {
   id: 'house-08',
   name: 'House 8: The Frozen Sentinel',
-  enemies: ['wind-soldier', 'jupiter-bear'],
+  enemies: ['jupiter-bear', 'wind-soldier', 'tide-enchanter'],
   difficulty: 'medium',
   reward: {
     xp: 200,
@@ -192,11 +197,12 @@ export const HOUSE_08: Encounter = {
 /**
  * HOUSE 9
  * - Equipment: battle-axe (Mars)
+ * - Double Healer Hell: Frost Oracle (party healer) + Ice Elemental (self heal)
  */
 export const HOUSE_09: Encounter = {
   id: 'house-09',
   name: 'House 9: Inferno\'s Rage',
-  enemies: ['tide-soldier', 'mercury-bear', 'ice-elemental'],
+  enemies: ['mercury-bear', 'frost-oracle', 'ice-elemental'],
   difficulty: 'medium',
   reward: {
     xp: 215,
@@ -211,6 +217,7 @@ export const HOUSE_09: Encounter = {
 /**
  * HOUSE 10
  * - No equipment/djinn rewards (progression house)
+ * - Phase-change Flame Elemental (buffs then debuffs)
  */
 export const HOUSE_10: Encounter = {
   id: 'house-10',
@@ -228,11 +235,12 @@ export const HOUSE_10: Encounter = {
  * HOUSE 11
  * - Equipment: silver-armor (Venus)
  * - Recruit: Karis (Mercury, Versatile Scholar)
+ * - Trinity Wall: Terra Warden (triple buffer + tank + healer)
  */
 export const HOUSE_11: Encounter = {
   id: 'house-11',
   name: 'House 11: The Scholar\'s Trial',
-  enemies: ['stone-captain', 'rock-elemental'],
+  enemies: ['stone-captain', 'rock-elemental', 'terra-warden'],
   difficulty: 'hard',
   reward: {
     xp: 255,
@@ -249,11 +257,12 @@ export const HOUSE_11: Encounter = {
  * HOUSE 12
  * - Reward: Granite Djinn (Venus T2) only - no equipment drop per locked table
  * - MILESTONE: First T2 Djinn! (Djinn swapping strategy unlocked)
+ * - Boss Gauntlet: Flame Herald (buffer + debuffer) + Phoenix (3-phase boss)
  */
 export const HOUSE_12: Encounter = {
   id: 'house-12',
   name: 'House 12: The Granite Fortress',
-  enemies: ['inferno-captain', 'phoenix'],
+  enemies: ['inferno-captain', 'phoenix', 'flame-herald'],
   difficulty: 'hard',
   reward: {
     xp: 275,
