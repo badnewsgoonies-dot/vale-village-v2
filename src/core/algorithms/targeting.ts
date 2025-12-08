@@ -33,8 +33,8 @@ export function resolveTargets(
 
     case 'single-ally':
       return isPlayerUnit
-        ? playerUnits.filter(u => !isUnitKO(u) && u.id !== caster.id)
-        : enemyUnits.filter(u => !isUnitKO(u) && u.id !== caster.id);
+        ? playerUnits.filter(u => !isUnitKO(u))
+        : enemyUnits.filter(u => !isUnitKO(u));
 
     case 'all-allies':
       return isPlayerUnit
@@ -91,7 +91,7 @@ export function getValidTargets(
       return enemies.filter(e => !isUnitKO(e));
     case 'single-ally':
     case 'all-allies':
-      return playerTeam.units.filter(u => !isUnitKO(u) && u.id !== caster.id);
+      return playerTeam.units.filter(u => !isUnitKO(u));
     case 'self':
       return [caster];
     default:
