@@ -15,7 +15,7 @@ export function OverworldMap() {
   const screen = useGameStore((s) => s.flow.screen);
   const modal = useGameStore((s) => s.flow.modal);
 
-  const setScreen = useGameStore((s) => s.setScreen);
+  const startTransition = useGameStore((s) => s.startTransition);
   const openModal = useGameStore((s) => s.openModal);
   const closeModal = useGameStore((s) => s.closeModal);
 
@@ -38,20 +38,20 @@ export function OverworldMap() {
   // Sync V1 store's mode to V2 gameStore screen/modal when mode changes
   useEffect(() => {
     if (mode === 'team-select') {
-      setScreen('team-select');
+      startTransition('team-select');
     } else if (mode === 'battle') {
-      setScreen('battle');
+      startTransition('battle');
     } else if (mode === 'shop') {
-      setScreen('shop');
+      startTransition('shop');
     } else if (mode === 'rewards') {
-      setScreen('rewards');
+      startTransition('rewards');
     } else if (mode === 'dialogue') {
       openModal('dialogue');
     } else if (mode === 'overworld') {
       // Close any open modal when returning to overworld (e.g., after dialogue ends)
       closeModal();
     }
-  }, [mode, setScreen, openModal, closeModal]);
+  }, [mode, startTransition, openModal, closeModal]);
 
   const map = MAPS[currentMapId];
 

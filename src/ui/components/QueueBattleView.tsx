@@ -986,12 +986,19 @@ export function QueueBattleView() {
               const isTargetCandidate = validTargetIds.has(enemy.id);
               const isResolvingTarget = highlightedTargets.has(enemy.id);
               const isActor = currentActorId === enemy.id;
-              // Don't filter out KO'd units if they have pending KO/hit events in the queue
-              const hasPendingKOEvent = events.some(evt =>
-                (evt.type === 'ko' && evt.unitId === enemy.id) ||
-                (evt.type === 'hit' && evt.targetId === enemy.id)
-              );
-              if (isUnitKO(enemy) && !hasPendingKOEvent) return null;
+              // Don't filter out KO'd units if they have ANY pending events related to them
+              // This includes ability casts, hits, heals, status changes, and KO animations
+              const hasPendingEvent = events.some(evt => {
+                if (evt.type === 'ability' && evt.casterId === enemy.id) return true;
+                if (evt.type === 'ability' && evt.targets.includes(enemy.id)) return true;
+                if (evt.type === 'hit' && evt.targetId === enemy.id) return true;
+                if (evt.type === 'heal' && evt.targetId === enemy.id) return true;
+                if (evt.type === 'ko' && evt.unitId === enemy.id) return true;
+                if (evt.type === 'status-applied' && evt.targetId === enemy.id) return true;
+                if (evt.type === 'status-expired' && evt.targetId === enemy.id) return true;
+                return false;
+              });
+              if (isUnitKO(enemy) && !hasPendingEvent) return null;
               const mappedSprite = getEnemyBattleSprite(enemy.id, 'idle');
               const nameBasedFallback = `/sprites/battle/enemies/${enemy.name.replace(/\s+/g, '')}.gif`;
               const spriteId = mappedSprite ?? nameBasedFallback;
@@ -1116,12 +1123,19 @@ export function QueueBattleView() {
             }}
           >
             {battle.playerTeam.units.map((unit, index) => {
-              // Don't filter out KO'd units if they have pending KO/hit events in the queue
-              const hasPendingKOEvent = events.some(evt =>
-                (evt.type === 'ko' && evt.unitId === unit.id) ||
-                (evt.type === 'hit' && evt.targetId === unit.id)
-              );
-              if (isUnitKO(unit) && !hasPendingKOEvent) return null;
+              // Don't filter out KO'd units if they have ANY pending events related to them
+              // This includes ability casts, hits, heals, status changes, and KO animations
+              const hasPendingEvent = events.some(evt => {
+                if (evt.type === 'ability' && evt.casterId === unit.id) return true;
+                if (evt.type === 'ability' && evt.targets.includes(unit.id)) return true;
+                if (evt.type === 'hit' && evt.targetId === unit.id) return true;
+                if (evt.type === 'heal' && evt.targetId === unit.id) return true;
+                if (evt.type === 'ko' && evt.unitId === unit.id) return true;
+                if (evt.type === 'status-applied' && evt.targetId === unit.id) return true;
+                if (evt.type === 'status-expired' && evt.targetId === unit.id) return true;
+                return false;
+              });
+              if (isUnitKO(unit) && !hasPendingEvent) return null;
               const isActor = currentActorId === unit.id;
               const isTarget = highlightedTargets.has(unit.id);
               return (

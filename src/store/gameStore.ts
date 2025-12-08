@@ -83,6 +83,7 @@ export interface PlayerData {
 export interface GameSlice {
     flow: FlowState;
     setScreen: (screen: ScreenType) => void;
+    startTransition: (screen: ScreenType) => void;
     openModal: (modal: ModalType) => void;
     closeModal: () => void;
     setTransitioning: (isTransitioning: boolean) => void;
@@ -150,6 +151,26 @@ const createGameSlice = (set: GameStoreSetState, _get: GameStoreGetState): GameS
         set((state) => {
             state.flow.screen = screen;
         }),
+    startTransition: (screen) => {
+        // Start fade to black
+        set((state) => {
+            state.flow.isTransitioning = true;
+        });
+
+        // Wait 150ms, change screen at peak darkness
+        setTimeout(() => {
+            set((state) => {
+                state.flow.screen = screen;
+            });
+
+            // Wait another 150ms, then fade back in
+            setTimeout(() => {
+                set((state) => {
+                    state.flow.isTransitioning = false;
+                });
+            }, 150);
+        }, 150);
+    },
     openModal: (modal) =>
         set((state) => {
             state.flow.modal = modal;

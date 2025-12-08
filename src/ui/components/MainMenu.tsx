@@ -24,14 +24,23 @@ const MENU_CHARACTERS = {
 };
 
 export function MainMenu() {
+  const startTransition = useGameStore((s) => s.startTransition);
   const setScreen = useGameStore((s) => s.setScreen);
+  const openModal = useGameStore((s) => s.openModal);
   const setTeam = useStore((s) => s.setTeam);
   const addUnitToRoster = useStore((s) => s.addUnitToRoster);
   const openTowerFromMainMenu = useStore((s) => s.openTowerFromMainMenu);
+  const loadGameSlot = useStore((s) => s.loadGameSlot);
+  const hasSaveSlot = useStore((s) => s.hasSaveSlot);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [hasSaveFile, setHasSaveFile] = useState(false);
 
-  // TODO: Wire up save system
-  const hasSaveFile = false;
+  // Check for existing save files on mount
+  useEffect(() => {
+    // Check if any of the 3 save slots have data
+    const hasAnySave = hasSaveSlot(0) || hasSaveSlot(1) || hasSaveSlot(2);
+    setHasSaveFile(hasAnySave);
+  }, [hasSaveSlot]);
 
   const menuOptions = [
     { id: 'new-game', label: 'New Game', enabled: true },
@@ -85,14 +94,14 @@ export function MainMenu() {
       if (event.key === 'Escape') {
         event.preventDefault();
         event.stopPropagation();
-        setScreen('title');
+        startTransition('title');
         return;
       }
     };
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [currentOption, enabledOptions.length, setScreen]);
+  }, [currentOption, enabledOptions.length, startTransition]);
 
   const handleSelectOption = (optionId: string) => {
     if (optionId === 'new-game') {
@@ -101,13 +110,14 @@ export function MainMenu() {
       addUnitToRoster(isaac);
       const starterTeam = createTeam([isaac]);
       setTeam(starterTeam);
-      setScreen('overworld'); // Start new game -> go to overworld
+      startTransition('overworld'); // Start new game -> go to overworld
     } else if (optionId === 'continue') {
       if (hasSaveFile) {
-        setScreen('overworld');
+        // Open save menu modal to let user choose which slot to load
+        openModal('save');
       }
     } else if (optionId === 'compendium') {
-      setScreen('compendium');
+      startTransition('compendium');
     } else if (optionId === 'battle-tower') {
       // Initialize team if none exists (for Battle Tower quick access)
       const store = useStore.getState();
@@ -119,7 +129,7 @@ export function MainMenu() {
       }
       // Enter the actual tower system with proper progression
       openTowerFromMainMenu();
-      setScreen('tower');
+      startTransition('tower');
     }
   };
 

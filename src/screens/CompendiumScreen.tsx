@@ -178,7 +178,7 @@ function EquipmentCard({ equipment }: { equipment: Equipment }) {
 }
 
 export function CompendiumScreen() {
-  const setScreen = useGameStore((s) => s.setScreen);
+  const startTransition = useGameStore((s) => s.startTransition);
   const [activeTab, setActiveTab] = useState<TabType>('djinn');
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -214,7 +214,7 @@ export function CompendiumScreen() {
       // ESC to return to menu
       if (event.key === 'Escape') {
         event.preventDefault();
-        setScreen('menu');
+        startTransition('menu');
         return;
       }
 
@@ -253,7 +253,7 @@ export function CompendiumScreen() {
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [activeTab, currentList.length, setScreen]);
+  }, [activeTab, currentList.length, startTransition]);
 
   // Render cards based on active tab
   const renderContent = () => {

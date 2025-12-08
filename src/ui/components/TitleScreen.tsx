@@ -16,19 +16,19 @@ const TITLE_CHARACTERS = [
 ];
 
 export function TitleScreen() {
-  const setScreen = useGameStore((s) => s.setScreen);
+  const startTransition = useGameStore((s) => s.startTransition);
 
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
       // Any key press advances to main menu
       event.preventDefault();
       event.stopPropagation();
-      setScreen('menu');
+      startTransition('menu');
     };
 
     const handleClick = () => {
       // Click anywhere also advances
-      setScreen('menu');
+      startTransition('menu');
     };
 
     window.addEventListener('keydown', handleKeyPress);
@@ -38,10 +38,10 @@ export function TitleScreen() {
       window.removeEventListener('keydown', handleKeyPress);
       window.removeEventListener('click', handleClick);
     };
-  }, [setScreen]);
+  }, [startTransition]);
 
   return (
-    <div class="title-screen" onClick={() => setScreen('menu')}>
+    <div class="title-screen" onClick={() => startTransition('menu')}>
       <div class="title-screen-content">
         <h1 class="title-screen-logo">Vale Chronicles</h1>
         <p class="title-screen-subtitle">Press any key to continue</p>
