@@ -243,23 +243,32 @@ function transitionToExecutingPhase(state: BattleState): BattleState {
 }
 
 /**
- * Execute player actions phase
- * Processes all queued player actions in SPD order
+ * Execute all actions (player and enemy) in SPD order
+ * FIX: Interleaves player and enemy actions by speed instead of running all player actions first
  */
-function executePlayerActionsPhase(
+function executeAllActionsPhase(
   state: BattleState,
   rng: PRNG
 ): { state: BattleState; events: readonly BattleEvent[] } {
+  // Gather player actions
   const playerActions = state.queuedActions.filter((a): a is QueuedAction => a !== null);
-  const sortedPlayerActions = sortActionsBySPD(playerActions, state.playerTeam, state.enemies);
+
+  // Generate enemy actions
+  const enemyActions = generateEnemyActions(state, rng);
+
+  // Combine and sort all actions by SPD
+  const allActions = [...playerActions, ...enemyActions];
+  const sortedActions = sortActionsBySPD(allActions, state.playerTeam, state.enemies);
 
   let currentState = state;
   const events: BattleEvent[] = [];
 
-  for (const action of sortedPlayerActions) {
-    const actor = currentState.playerTeam.units.find(u => u.id === action.unitId);
+  for (const action of sortedActions) {
+    // Find actor in either team
+    const allUnits = [...currentState.playerTeam.units, ...currentState.enemies];
+    const actor = allUnits.find(u => u.id === action.unitId);
+
     if (!actor || isUnitKO(actor)) {
-      // BUG FIX 2: Skip KO'd units silently - don't generate confusing events
       continue;
     }
 
@@ -284,7 +293,9 @@ function executePlayerActionsPhase(
     currentState = actionResult.value.state;
     events.push(...actionResult.value.events);
 
-    if (shouldGenerateMana(action, actionResult.value)) {
+    // Only generate mana for player basic attacks
+    const isPlayerAction = currentState.playerTeam.units.some(u => u.id === action.unitId);
+    if (isPlayerAction && shouldGenerateMana(action, actionResult.value)) {
       const manaGained = 1;
       const newMana = Math.min(currentState.remainingMana + manaGained, currentState.maxMana);
       currentState = updateBattleState(currentState, {
@@ -298,51 +309,6 @@ function executePlayerActionsPhase(
         newTotal: newMana,
       });
     }
-  }
-
-  return { state: currentState, events };
-}
-
-/**
- * Execute enemy actions phase
- * Generates and processes all enemy actions in SPD order
- */
-function executeEnemyActionsPhase(
-  state: BattleState,
-  rng: PRNG
-): { state: BattleState; events: readonly BattleEvent[] } {
-  const enemyActions = generateEnemyActions(state, rng);
-  const sortedEnemyActions = sortActionsBySPD(enemyActions, state.playerTeam, state.enemies);
-
-  let currentState = state;
-  const events: BattleEvent[] = [];
-
-  for (const action of sortedEnemyActions) {
-    const actor = currentState.enemies.find(u => u.id === action.unitId);
-    if (!actor || isUnitKO(actor)) {
-      continue;
-    }
-
-    const validTargets = resolveValidTargets(action, currentState);
-    if (validTargets.length === 0) {
-      continue;
-    }
-
-    const actionResult = performAction(
-      currentState,
-      action.unitId,
-      action.abilityId || 'strike',
-      validTargets,
-      rng
-    );
-
-    if (!actionResult.ok) {
-      // Action failed, skip to next
-      continue;
-    }
-
-    currentState = actionResult.value.state;
-    events.push(...actionResult.value.events);
   }
 
   return { state: currentState, events };
@@ -433,7 +399,8 @@ function transitionToPlanningPhase(state: BattleState): BattleState {
 
 /**
  * Execute a complete round
- * PR-QUEUE-BATTLE: Executes Djinn → player actions (SPD order) → enemy actions
+ * PR-QUEUE-BATTLE: Executes Djinn → all actions interleaved by SPD
+ * FIX: Player and enemy actions now execute in SPD order, not in separate phases
  *
  * @param state - Current battle state
  * @param rng - PRNG instance
@@ -462,13 +429,10 @@ export function executeRound(
     allEvents.push(...djinnResult.events);
   }
 
-  const playerResult = executePlayerActionsPhase(currentState, rng);
-  currentState = playerResult.state;
-  allEvents.push(...playerResult.events);
-
-  const enemyResult = executeEnemyActionsPhase(currentState, rng);
-  currentState = enemyResult.state;
-  allEvents.push(...enemyResult.events);
+  // Execute all actions (player and enemy) interleaved by SPD
+  const actionsResult = executeAllActionsPhase(currentState, rng);
+  currentState = actionsResult.state;
+  allEvents.push(...actionsResult.events);
 
   const battleEnd = checkBattleEndPhase(currentState);
   if (battleEnd) {
@@ -702,6 +666,7 @@ function executeDjinnSummons(
 /**
  * Sort actions by SPD (fastest first)
  * PR-QUEUE-BATTLE: Orders actions by effective SPD
+ * BUG FIX: Correctly calculate SPD for enemy units without applying player team Djinn bonuses
  */
 function sortActionsBySPD(
   actions: readonly QueuedAction[],
@@ -709,28 +674,47 @@ function sortActionsBySPD(
   enemies: readonly Unit[]
 ): QueuedAction[] {
   const allUnits = [...playerTeam.units, ...enemies];
-  
+
+  // Create an empty team for enemy stat calculations (no Djinn bonuses)
+  const emptyTeam: Team = {
+    equippedDjinn: [],
+    djinnTrackers: {},
+    units: [],
+    collectedDjinn: [],
+    currentTurn: 0,
+    activationsThisTurn: {},
+    djinnStates: {},
+  };
+
   return [...actions].sort((a, b) => {
     const unitA = allUnits.find(u => u.id === a.unitId);
     const unitB = allUnits.find(u => u.id === b.unitId);
-    
+
     if (!unitA || !unitB) return 0;
-    
-    const spdA = getEffectiveSPD(unitA, playerTeam);
-    const spdB = getEffectiveSPD(unitB, playerTeam);
-    
+
+    // Determine if each unit is a player unit or enemy
+    const isPlayerA = playerTeam.units.some(u => u.id === a.unitId);
+    const isPlayerB = playerTeam.units.some(u => u.id === b.unitId);
+
+    // Calculate SPD with correct team context
+    // Player units: use playerTeam for Djinn bonuses
+    // Enemy units: use emptyTeam (no Djinn bonuses)
+    const spdA = isPlayerA
+      ? getEffectiveSPD(unitA, playerTeam)
+      : getEffectiveSPD(unitA, emptyTeam);
+    const spdB = isPlayerB
+      ? getEffectiveSPD(unitB, playerTeam)
+      : getEffectiveSPD(unitB, emptyTeam);
+
     if (spdB !== spdA) {
       return spdB - spdA; // Descending (fastest first)
     }
-    
+
     // Tie-breaker: player units before enemies, then by ID
-    const isPlayerA = playerTeam.units.some(u => u.id === a.unitId);
-    const isPlayerB = playerTeam.units.some(u => u.id === b.unitId);
-    
     if (isPlayerA !== isPlayerB) {
       return isPlayerA ? -1 : 1;
     }
-    
+
     return a.unitId.localeCompare(b.unitId);
   });
 }
@@ -758,54 +742,73 @@ function resolveValidTargets(
   }
 
   // No valid targets - need to retarget
-  // First, determine the ability's target type to preserve it
-  let targetType: 'single' | 'all' = 'single'; // Default to single-target
-  
+  // Determine the ability's target side (allies vs enemies) and targeting mode (single vs all)
+  type TargetSide = 'ally' | 'enemy';
+  type TargetMode = 'single' | 'all';
+
+  let targetSide: TargetSide = 'enemy'; // Default to enemy targeting
+  let targetMode: TargetMode = 'single'; // Default to single-target
+
   if (actor && action.abilityId) {
     const ability = actor.abilities.find(a => a.id === action.abilityId);
     if (ability) {
-      // Determine if ability is single-target or multi-target
-      if (ability.targets === 'all-enemies' || ability.targets === 'all-allies') {
-        targetType = 'all';
+      // Determine target side and mode based on ability's targets field
+      const targets = ability.targets;
+
+      if (targets === 'single-ally' || targets === 'all-allies' || targets === 'self') {
+        targetSide = 'ally';
       } else {
-        targetType = 'single';
+        targetSide = 'enemy';
+      }
+
+      if (targets === 'all-enemies' || targets === 'all-allies') {
+        targetMode = 'all';
+      } else {
+        targetMode = 'single';
       }
     }
   } else if (action.abilityId === null) {
-    // Basic attack is always single-target
-    targetType = 'single';
+    // Basic attack is always single-target enemy
+    targetSide = 'enemy';
+    targetMode = 'single';
   }
 
-  // BUG FIX 3: Retarget based on action side, preserving multi-target intent
+  // Retarget based on ability's intended target side, NOT action side
   const isPlayerAction = state.playerTeam.units.some(u => u.id === action.unitId);
 
-  if (isPlayerAction) {
-    // Player action: retarget to alive enemies
-    const aliveEnemies = state.enemies.filter(e => !isUnitKO(e));
-    if (aliveEnemies.length === 0) {
+  if (targetSide === 'ally') {
+    // Ability targets allies - retarget to actor's allies
+    const allies = isPlayerAction
+      ? state.playerTeam.units.filter(u => !isUnitKO(u))
+      : state.enemies.filter(e => !isUnitKO(e));
+
+    if (allies.length === 0) {
       return [];
     }
 
-    if (targetType === 'all') {
-      // Multi-target: return all alive enemies
-      return aliveEnemies.map(e => e.id);
+    if (targetMode === 'all') {
+      // Multi-target: return all alive allies
+      return allies.map(u => u.id);
     } else {
-      // Single-target: return first alive enemy
-      return [aliveEnemies[0]!.id];
+      // Single-target: return first alive ally
+      return [allies[0]!.id];
     }
   } else {
-    // Enemy action: retarget to alive player units
-    const alivePlayers = state.playerTeam.units.filter(u => !isUnitKO(u));
-    if (alivePlayers.length === 0) {
+    // Ability targets enemies - retarget to actor's enemies
+    const enemies = isPlayerAction
+      ? state.enemies.filter(e => !isUnitKO(e))
+      : state.playerTeam.units.filter(u => !isUnitKO(u));
+
+    if (enemies.length === 0) {
       return [];
     }
 
-    if (targetType === 'all') {
-      // Multi-target: return all alive players
-      return alivePlayers.map(u => u.id);
+    if (targetMode === 'all') {
+      // Multi-target: return all alive enemies
+      return enemies.map(u => u.id);
     } else {
-      // Single-target: return first alive player
-      return [alivePlayers[0]!.id];
+      // Single-target: return first alive enemy
+      return [enemies[0]!.id];
     }
   }
 }
@@ -971,8 +974,7 @@ export function getPlanningTurnOrder(state: BattleState): number[] {
 export const queueBattleServiceInternals = {
   validateQueueForExecution,
   transitionToExecutingPhase,
-  executePlayerActionsPhase,
-  executeEnemyActionsPhase,
+  executeAllActionsPhase,
   checkBattleEndPhase,
   transitionToVictoryOrDefeat,
   transitionToPlanningPhase,

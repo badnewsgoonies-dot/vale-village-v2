@@ -142,7 +142,7 @@ export const createTowerSlice: StateCreator<
       .map((item) => ({ ...item }));
     get().setEquipment(campaignEquipment);
 
-    const run = createTowerRun(seed, difficulty, TOWER_FLOORS, DEFAULT_TOWER_CONFIG);
+    const run = createTowerRun(seed, difficulty, TOWER_FLOORS, { config: DEFAULT_TOWER_CONFIG });
 
     if (!get().towerEntryContext) {
       set({ towerEntryContext: { type: 'main-menu' } });

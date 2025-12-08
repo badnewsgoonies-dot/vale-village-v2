@@ -79,7 +79,6 @@ export interface QueueBattleSlice {
   critThresholds: Record<string, number>;
   critFlash: Record<string, boolean>;
   lastError: string | null;
-  pendingResult: 'victory' | 'defeat' | null;
 
   setBattle: (battle: BattleState | null, seed: number) => void;
   setActivePortrait: (index: number | null) => void;
@@ -102,7 +101,6 @@ export interface QueueBattleSlice {
   unqueueDjinnActivation: (djinnId: string) => void;
   executeQueuedRound: () => void;
   dequeueEvent: () => void;
-  resolvePendingResult: () => void;
 }
 
 export const createQueueBattleSlice: StateCreator<
@@ -126,7 +124,6 @@ export const createQueueBattleSlice: StateCreator<
   critThresholds: {},
   critFlash: {},
   lastError: null,
-  pendingResult: null,
 
   setBattle: (battle, seed) => {
     const critThresholds: Record<string, number> = {};
@@ -362,8 +359,7 @@ export const createQueueBattleSlice: StateCreator<
 
       const healedUnits = autoHealUnits(result.state.playerTeam.units);
       const healedTeam = updateTeam(result.state.playerTeam, { units: healedUnits });
-      // Keep phase as 'executing' instead of 'victory'
-      const healedState = updateBattleState(result.state, { playerTeam: healedTeam, phase: 'executing' });
+      const healedState = updateBattleState(result.state, { playerTeam: healedTeam });
 
       const healEvent: BattleEvent = {
         type: 'auto-heal',
@@ -373,7 +369,6 @@ export const createQueueBattleSlice: StateCreator<
       set({
         battle: healedState,
         events: [...battleEvents, healEvent],
-        pendingResult: 'victory',
       });
 
       updateTeamUnits(healedUnits);
@@ -412,8 +407,7 @@ export const createQueueBattleSlice: StateCreator<
 
       const healedUnits = autoHealUnits(result.state.playerTeam.units);
       const healedTeam = updateTeam(result.state.playerTeam, { units: healedUnits });
-      // Keep phase as 'executing' instead of 'defeat'
-      const healedState = updateBattleState(result.state, { playerTeam: healedTeam, phase: 'executing' });
+      const healedState = updateBattleState(result.state, { playerTeam: healedTeam });
 
       const healEvent: BattleEvent = {
         type: 'auto-heal',
@@ -423,7 +417,6 @@ export const createQueueBattleSlice: StateCreator<
       set({
         battle: healedState,
         events: [...battleEvents, healEvent],
-        pendingResult: 'defeat',
       });
 
       updateTeamUnits(healedUnits);
@@ -452,18 +445,6 @@ export const createQueueBattleSlice: StateCreator<
     set((state) => {
       if (state.events.length === 0) return state;
       return { events: state.events.slice(1) };
-    });
-  },
-
-  resolvePendingResult: () => {
-    const { battle, events, pendingResult } = get();
-    if (!battle || !pendingResult || events.length > 0) return;
-
-    // All events have been processed, now transition to the final phase
-    const finalState = updateBattleState(battle, { phase: pendingResult });
-    set({
-      battle: finalState,
-      pendingResult: null,
     });
   },
 });

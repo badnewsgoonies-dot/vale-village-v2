@@ -126,6 +126,21 @@ import { DjinnCollectionScreen } from './ui/components/DjinnCollectionScreen';
 
 import './index.css';
 
+// Global sync: V1 store mode → V2 gameStore screen
+// This ensures tower battles return to tower hub correctly
+function useStoreSync() {
+  const mode = useStore((s) => s.mode);
+  const towerStatus = useStore((s) => s.towerStatus);
+  const setScreen = useGameStore((s) => s.setScreen);
+
+  useEffect(() => {
+    // Only sync tower mode - other modes are handled by their respective components
+    if (mode === 'tower' && (towerStatus === 'in-run' || towerStatus === 'completed' || towerStatus === 'idle')) {
+      setScreen('tower');
+    }
+  }, [mode, towerStatus, setScreen]);
+}
+
 type DevOverlayProps = {
   screen: ScreenType;
   modal: ModalType | null;
@@ -160,6 +175,9 @@ const DevOverlay: FunctionComponent<DevOverlayProps> = ({ screen, modal }) => (
 );
 
 const App: FunctionComponent = () => {
+  // Sync V1 store mode to V2 gameStore screen
+  useStoreSync();
+
   const { screen, modal, isTransitioning, setScreen, openModal, closeModal } = useGameStore(
     (state: GameStore) => ({
       screen: state.flow.screen,

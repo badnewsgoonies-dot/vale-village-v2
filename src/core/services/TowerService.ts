@@ -2,12 +2,18 @@
 
 import type { TowerFloor } from '../../data/schemas/TowerFloorSchema';
 import type { TowerRewardEntry } from '../../data/schemas/TowerRewardSchema';
+import type { Unit } from '../../data/schemas/UnitSchema';
 import {
   DEFAULT_TOWER_CONFIG,
   type TowerConfig,
   type TowerDifficulty,
   TOWER_ENEMY_SCALING_PER_FLOOR,
 } from '../config/towerConfig';
+import {
+  normalizePartyForFloor,
+  type NormalizedUnit,
+  type NormalizationCurve,
+} from './LevelNormalizationService';
 
 export type TowerBattleOutcome = 'victory' | 'defeat' | 'retreat';
 
@@ -54,6 +60,7 @@ export interface TowerRunState {
   history: readonly TowerFloorHistoryEntry[];
   pendingRewards: readonly TowerRewardEntry[];
   config: TowerConfig;
+  rentalTeamId?: string; // Optional rental team ID
 }
 
 export interface ScalingParams {
@@ -61,11 +68,16 @@ export interface ScalingParams {
   levelDelta: number;
 }
 
+export interface CreateTowerRunOptions {
+  config?: TowerConfig;
+  rentalTeamId?: string;
+}
+
 export function createTowerRun(
   seed: number,
   difficulty: TowerDifficulty,
   floors: readonly TowerFloor[],
-  config: TowerConfig = DEFAULT_TOWER_CONFIG
+  options: CreateTowerRunOptions = {}
 ): TowerRunState {
   if (!floors.length) {
     throw new Error('TOWER_FLOORS must contain at least one entry');
@@ -99,7 +111,8 @@ export function createTowerRun(
       rewardsGranted: [],
     })),
     pendingRewards: [],
-    config,
+    config: options.config ?? DEFAULT_TOWER_CONFIG,
+    rentalTeamId: options.rentalTeamId,
   };
 }
 
@@ -270,5 +283,44 @@ function updateStatsForBattle(
     totalDamageDealt: stats.totalDamageDealt + summary.damageDealt,
     totalDamageTaken: stats.totalDamageTaken + summary.damageTaken,
   };
+}
+
+/**
+ * Prepare a floor battle by normalizing the party to the floor's level
+ *
+ * @param run - Current tower run state
+ * @param floors - All tower floors
+ * @param playerParty - Player's party units
+ * @param curve - Normalization curve to use (default: 'stepped')
+ * @returns Normalized party and current floor
+ *
+ * @throws Error if current floor is not found or is a rest floor
+ *
+ * @example
+ * const { normalizedParty, floor } = prepareFloorBattle(
+ *   run,
+ *   TOWER_FLOORS,
+ *   playerParty,
+ *   'stepped'
+ * );
+ * // Use normalizedParty for battle
+ */
+export function prepareFloorBattle(
+  run: TowerRunState,
+  floors: readonly TowerFloor[],
+  playerParty: readonly Unit[],
+  curve: NormalizationCurve = 'stepped'
+): { normalizedParty: NormalizedUnit[]; floor: TowerFloor } {
+  const floor = getCurrentFloor(run, floors);
+  if (!floor) {
+    throw new Error('No current floor found');
+  }
+  if (floor.type === 'rest') {
+    throw new Error('Cannot prepare battle for rest floor');
+  }
+
+  const normalizedParty = normalizePartyForFloor(playerParty, floor, curve);
+
+  return { normalizedParty, floor };
 }
 

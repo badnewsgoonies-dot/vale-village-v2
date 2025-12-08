@@ -195,6 +195,243 @@ export const MERCURY_WOLF: Enemy = {
   baseGold: 9,
 };
 
+// ============================================================================
+// COUNTER-STRATEGY ENEMIES - Support Roles (NEW from enemies_v2.ts)
+// ============================================================================
+
+/**
+ * FROST MYSTIC - First Healer (House 4)
+ * Role: Low-HP healer that forces focus-fire priority
+ */
+export const FROST_MYSTIC: Enemy = {
+  id: 'frost-mystic',
+  name: 'Frost Mystic',
+  level: 2,
+  element: 'Mercury',
+  stats: {
+    hp: 200,
+    pp: 20,
+    atk: 10,
+    def: 8,
+    mag: 12,
+    spd: 11,
+  },
+  abilities: [
+    { ...ICE_SHARD, unlockLevel: 1 },
+    { ...HEAL, unlockLevel: 1 },
+  ],
+  baseXp: 22,
+  baseGold: 12,
+};
+
+/**
+ * GALE PRIEST - Second Healer (House 5)
+ * Role: Healer with debuff (BLIND)
+ */
+export const GALE_PRIEST: Enemy = {
+  id: 'gale-priest',
+  name: 'Gale Priest',
+  level: 2,
+  element: 'Jupiter',
+  stats: {
+    hp: 180,
+    pp: 22,
+    atk: 8,
+    def: 7,
+    mag: 14,
+    spd: 13,
+  },
+  abilities: [
+    { ...GUST, unlockLevel: 1 },
+    { ...HEAL, unlockLevel: 1 },
+    { ...BLIND, unlockLevel: 1 },
+  ],
+  baseXp: 24,
+  baseGold: 14,
+};
+
+/**
+ * STONE GUARDIAN - Tank (House 6)
+ * Role: High DEF tank that buffs itself
+ */
+export const STONE_GUARDIAN: Enemy = {
+  id: 'stone-guardian',
+  name: 'Stone Guardian',
+  level: 3,
+  element: 'Venus',
+  stats: {
+    hp: 350,
+    pp: 10,
+    atk: 12,
+    def: 20,
+    mag: 5,
+    spd: 6,
+  },
+  abilities: [
+    { ...STRIKE, unlockLevel: 1 },
+    { ...GUARD_BREAK, unlockLevel: 1 },
+    { ...BOOST_DEF, unlockLevel: 1 },
+  ],
+  baseXp: 30,
+  baseGold: 16,
+};
+
+/**
+ * EMBER CLERIC - Healer for Tank (House 6)
+ * Role: Heals Stone Guardian, creating tank+healer duo
+ */
+export const EMBER_CLERIC: Enemy = {
+  id: 'ember-cleric',
+  name: 'Ember Cleric',
+  level: 3,
+  element: 'Mars',
+  stats: {
+    hp: 190,
+    pp: 18,
+    atk: 9,
+    def: 8,
+    mag: 11,
+    spd: 10,
+  },
+  abilities: [
+    { ...FIREBALL, unlockLevel: 1 },
+    { ...HEAL, unlockLevel: 1 },
+  ],
+  baseXp: 26,
+  baseGold: 14,
+};
+
+/**
+ * EARTH SHAMAN - Buffer + Healer (House 7)
+ * Role: Buffs + heals allies, AoE damage
+ */
+export const EARTH_SHAMAN: Enemy = {
+  id: 'earth-shaman',
+  name: 'Earth Shaman',
+  level: 4,
+  element: 'Venus',
+  stats: {
+    hp: 220,
+    pp: 25,
+    atk: 10,
+    def: 14,
+    mag: 16,
+    spd: 9,
+  },
+  abilities: [
+    { ...QUAKE, unlockLevel: 1 },
+    { ...BOOST_DEF, unlockLevel: 1 },
+    { ...HEAL, unlockLevel: 1 },
+  ],
+  baseXp: 45,
+  baseGold: 22,
+};
+
+/**
+ * TIDE ENCHANTER - Buffer + Healer (House 8)
+ * Role: Buffs + heals Jupiter Bear
+ */
+export const TIDE_ENCHANTER: Enemy = {
+  id: 'tide-enchanter',
+  name: 'Tide Enchanter',
+  level: 4,
+  element: 'Mercury',
+  stats: {
+    hp: 240,
+    pp: 30,
+    atk: 11,
+    def: 13,
+    mag: 18,
+    spd: 10,
+  },
+  abilities: [
+    { ...ICE_SHARD, unlockLevel: 1 },
+    { ...BOOST_DEF, unlockLevel: 1 },
+    { ...HEAL, unlockLevel: 1 },
+  ],
+  baseXp: 50,
+  baseGold: 24,
+};
+
+/**
+ * FROST ORACLE - Party Healer (House 9)
+ * Role: Party-wide healing creates endurance battle
+ */
+export const FROST_ORACLE: Enemy = {
+  id: 'frost-oracle',
+  name: 'Frost Oracle',
+  level: 5,
+  element: 'Mercury',
+  stats: {
+    hp: 200,
+    pp: 35,
+    atk: 10,
+    def: 12,
+    mag: 20,
+    spd: 11,
+  },
+  abilities: [
+    { ...FREEZE_BLAST, unlockLevel: 1 },
+    { ...HEAL, unlockLevel: 1 },
+    { ...PARTY_HEAL, unlockLevel: 1 },
+  ],
+  baseXp: 55,
+  baseGold: 26,
+};
+
+/**
+ * TERRA WARDEN - Buffer + Tank + Healer (House 11)
+ * Role: Buffs both allies' ATK/DEF + heals
+ */
+export const TERRA_WARDEN: Enemy = {
+  id: 'terra-warden',
+  name: 'Terra Warden',
+  level: 6,
+  element: 'Venus',
+  stats: {
+    hp: 260,
+    pp: 28,
+    atk: 16,
+    def: 16,
+    mag: 14,
+    spd: 9,
+  },
+  abilities: [
+    { ...QUAKE, unlockLevel: 1 },
+    { ...BOOST_ATK, unlockLevel: 1 },
+    { ...BOOST_DEF, unlockLevel: 1 },
+    { ...HEAL, unlockLevel: 1 },
+  ],
+  baseXp: 58,
+  baseGold: 28,
+};
+
+/**
+ * FLAME HERALD - Buffer + Debuffer (House 12)
+ * Role: Buffs Phoenix ATK, debuffs player DEF
+ */
+export const FLAME_HERALD: Enemy = {
+  id: 'flame-herald',
+  name: 'Flame Herald',
+  level: 7,
+  element: 'Mars',
+  stats: {
+    hp: 220,
+    pp: 32,
+    atk: 18,
+    def: 14,
+    mag: 20,
+    spd: 13,
+  },
+  abilities: [
+    { ...FIREBALL, unlockLevel: 1 },
+    { ...BOOST_ATK, unlockLevel: 1 },
+    { ...WEAKEN_DEF, unlockLevel: 1 },
+  ],
+  baseXp: 70,
+  baseGold: 35,
+};
+
 export const JUPITER_WOLF: Enemy = {
   id: 'jupiter-wolf',
   name: 'Storm Wolf',
@@ -821,20 +1058,22 @@ export const FLAME_ELEMENTAL: Enemy = {
   level: 6,
   element: 'Mars',
   stats: {
-    hp: 120,
-    pp: 28,
+    hp: 180,   // CHANGED from 120 - first phase-change boss
+    pp: 35,    // CHANGED from 28
     atk: 14,
     def: 14,
-    mag: 20,
+    mag: 24,   // CHANGED from 20
     spd: 14,
   },
   abilities: [
     { ...STRIKE, unlockLevel: 1 },
     { ...FIREBALL, unlockLevel: 1 },
     { ...BURN_TOUCH, unlockLevel: 1 },
+    { ...BOOST_ATK, unlockLevel: 1 },    // ADDED - Phase 1: buffs self
+    { ...WEAKEN_DEF, unlockLevel: 1 },   // ADDED - Phase 2: debuffs player
   ],
-  baseXp: 45,
-  baseGold: 24,
+  baseXp: 60,   // CHANGED from 45
+  baseGold: 30, // CHANGED from 24
 };
 
 export const ICE_ELEMENTAL: Enemy = {
@@ -854,6 +1093,7 @@ export const ICE_ELEMENTAL: Enemy = {
     { ...STRIKE, unlockLevel: 1 },
     { ...ICE_SHARD, unlockLevel: 1 },
     { ...FREEZE_BLAST, unlockLevel: 1 },
+    { ...HEAL, unlockLevel: 1 }, // ADDED - creates double-healer synergy with Frost Oracle
   ],
   baseXp: 45,
   baseGold: 24,
@@ -914,11 +1154,11 @@ export const PHOENIX: Enemy = {
   level: 8,
   element: 'Mars',
   stats: {
-    hp: 180,
-    pp: 35,
+    hp: 240,   // CHANGED from 180 - phase-change boss with rebirth mechanic
+    pp: 40,    // CHANGED from 35
     atk: 22,
     def: 18,
-    mag: 26,
+    mag: 28,   // CHANGED from 26
     spd: 18,
   },
   abilities: [
@@ -926,9 +1166,11 @@ export const PHOENIX: Enemy = {
     { ...FIREBALL, unlockLevel: 1 },
     { ...BURN_TOUCH, unlockLevel: 1 },
     { ...HEAL, unlockLevel: 1 },
+    { ...PARTY_HEAL, unlockLevel: 1 },   // ADDED - Phase 2: rebirth mode
+    { ...BOOST_ATK, unlockLevel: 1 },    // ADDED - Phase 2: buffs self
   ],
-  baseXp: 90,
-  baseGold: 50,
+  baseXp: 110,  // CHANGED from 90
+  baseGold: 60, // CHANGED from 50
 };
 
 export const LEVIATHAN: Enemy = {
@@ -2304,6 +2546,17 @@ export const ENEMIES: Record<string, Enemy> = {
   'mars-wolf': MARS_WOLF,
   'mercury-wolf': MERCURY_WOLF,
   'jupiter-wolf': JUPITER_WOLF,
+
+  // Counter-Strategy Enemies - Support Roles (NEW from enemies_v2.ts)
+  'frost-mystic': FROST_MYSTIC,
+  'gale-priest': GALE_PRIEST,
+  'stone-guardian': STONE_GUARDIAN,
+  'ember-cleric': EMBER_CLERIC,
+  'earth-shaman': EARTH_SHAMAN,
+  'tide-enchanter': TIDE_ENCHANTER,
+  'frost-oracle': FROST_ORACLE,
+  'terra-warden': TERRA_WARDEN,
+  'flame-herald': FLAME_HERALD,
 
   // Enslaved Beasts - Bear Variants
   'venus-bear': VENUS_BEAR,

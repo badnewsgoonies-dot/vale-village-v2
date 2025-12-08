@@ -14,10 +14,6 @@ export function ModeLabel({ battleType, locationName, floorNumber }: ModeLabelPr
   return (
     <div
       style={{
-        position: 'absolute',
-        top: 8,
-        left: '50%',
-        transform: 'translateX(-50%)',
         background: 'rgba(0,0,0,0.75)',
         border: '2px solid rgba(255,215,0,0.65)',
         borderRadius: 8,
@@ -26,7 +22,6 @@ export function ModeLabel({ battleType, locationName, floorNumber }: ModeLabelPr
         fontWeight: 700,
         letterSpacing: 0.5,
         textShadow: '1px 1px 2px #000',
-        zIndex: 60,
         boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
         display: 'flex',
         alignItems: 'center',

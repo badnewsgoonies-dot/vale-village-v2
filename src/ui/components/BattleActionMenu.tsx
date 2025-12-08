@@ -191,14 +191,23 @@ function AbilityGrid({
   selectedAbilityId,
   battle,
   lockedAbilityIds,
+  currentUnit,
   onSelect,
 }: {
   abilities: readonly Ability[];
   selectedAbilityId: string | null;
   battle: BattleState;
   lockedAbilityIds: readonly string[];
+  currentUnit: Unit;
   onSelect: (id: string, ability: Ability) => void;
 }) {
+  // Find current unit's queued action to account for refund when swapping
+  const currentQueuedAction = battle.queuedActions[battle.currentQueueIndex];
+  const refundAmount = currentQueuedAction?.unitId === currentUnit.id
+    ? currentQueuedAction.manaCost
+    : 0;
+  const effectiveRemainingMana = battle.remainingMana + refundAmount;
+
   return (
     <div
       style={{
@@ -212,7 +221,7 @@ function AbilityGrid({
     >
       {abilities.map((ability) => {
         const manaCost = getAbilityManaCost(ability.id, ability);
-        const canAfford = canAffordAction(battle.remainingMana, manaCost);
+        const canAfford = canAffordAction(effectiveRemainingMana, manaCost);
         const isDjinnAbility = Boolean(DJINN_ABILITIES[ability.id]);
         const isLocked = lockedAbilityIds.includes(ability.id);
         const isSelected = selectedAbilityId === ability.id;
@@ -464,6 +473,7 @@ export function BattleActionMenu({
               selectedAbilityId={selectedAbilityId}
               battle={battle}
               lockedAbilityIds={lockedAbilityIds}
+              currentUnit={currentUnit}
               onSelect={onSelectAbility}
             />
           </>
@@ -508,6 +518,7 @@ export function BattleActionMenu({
               selectedAbilityId={selectedAbilityId}
               battle={battle}
               lockedAbilityIds={lockedAbilityIds}
+              currentUnit={currentUnit}
               onSelect={onSelectAbility}
             />
           </div>
