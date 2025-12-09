@@ -37,6 +37,27 @@ const EQUIPMENT_SLOTS: EquipmentSlot[] = ['weapon', 'armor', 'helm', 'boots', 'a
 
 type StatKey = keyof Stats;
 const COMPARISON_STATS: StatKey[] = ['hp', 'pp', 'atk', 'def', 'mag', 'spd'];
+type TierFilter = 'all' | 'basic' | 'bronze' | 'iron' | 'steel' | 'mythril-plus';
+
+const TIER_FILTERS: Array<{ id: TierFilter; label: string }> = [
+  { id: 'all', label: 'All' },
+  { id: 'basic', label: 'Basic' },
+  { id: 'bronze', label: 'Bronze' },
+  { id: 'iron', label: 'Iron' },
+  { id: 'steel', label: 'Steel' },
+  { id: 'mythril-plus', label: 'Mythril+' },
+];
+
+function matchesTier(tier: Equipment['tier'] | undefined, filter: TierFilter) {
+  if (filter === 'all' || !tier) return true;
+  if (filter === 'mythril-plus') {
+    return tier === 'mythril' || tier === 'legendary' || tier === 'artifact';
+  }
+  if (filter === 'steel') {
+    return tier === 'steel' || tier === 'silver';
+  }
+  return tier === filter;
+}
 
 function buildStatDeltas(candidate: Equipment, current: Equipment | null | undefined) {
   return COMPARISON_STATS
@@ -84,6 +105,7 @@ export function ShopEquipScreen({ shopId, onClose }: ShopEquipScreenProps): JSX.
   );
   const [selectedSlot, setSelectedSlot] = useState<EquipmentSlot | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [tierFilter, setTierFilter] = useState<TierFilter>('all');
 
   const selectedUnit = team?.units.find((u) => u.id === selectedUnitId) ?? null;
 
@@ -96,6 +118,7 @@ export function ShopEquipScreen({ shopId, onClose }: ShopEquipScreenProps): JSX.
         .filter((item): item is Equipment => Boolean(item))
         .filter(isAvailableInCampaign))
     : [];
+  const filteredAvailableItems = availableItems.filter((item) => matchesTier(item.tier, tierFilter));
 
   const starterKitEntries = team
     ? team.units
@@ -262,6 +285,21 @@ export function ShopEquipScreen({ shopId, onClose }: ShopEquipScreenProps): JSX.
                 <div class="shop-locked">This shop is not yet available.</div>
               ) : (
                 <>
+                  <div class="tier-filter-bar">
+                    <span class="tier-filter-label">Tier:</span>
+                    <div class="tier-filter-buttons">
+                      {TIER_FILTERS.map((filter) => (
+                        <button
+                          key={filter.id}
+                          class={`tier-filter-btn ${tierFilter === filter.id ? 'active' : ''}`}
+                          onClick={() => setTierFilter(filter.id)}
+                        >
+                          {filter.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
                   {starterKitEntries.length > 0 && (
                     <section class="starter-kits-section">
                       <h2>Starter Kits</h2>
@@ -296,9 +334,12 @@ export function ShopEquipScreen({ shopId, onClose }: ShopEquipScreenProps): JSX.
 
                   {unlockedUnits.map((unit) => {
                     // Filter equipment by element type (not unit-specific)
-            const availableEquipment = Object.values(EQUIPMENT).filter(
-              (item) => isAvailableInCampaign(item) && item.allowedElements.includes(unit.element)
-            );
+                    const availableEquipment = Object.values(EQUIPMENT).filter(
+                      (item) =>
+                        isAvailableInCampaign(item) &&
+                        item.allowedElements.includes(unit.element) &&
+                        matchesTier(item.tier, tierFilter)
+                    );
                     return (
                       <section key={unit.id} class="unit-store-section">
                         <h2>{unit.name}&apos;s Equipment ({unit.element})</h2>
@@ -348,11 +389,11 @@ export function ShopEquipScreen({ shopId, onClose }: ShopEquipScreenProps): JSX.
                     );
                   })}
 
-                  {availableItems.length > 0 && (
+                  {filteredAvailableItems.length > 0 && (
                     <section class="shop-general-section">
                       <h2>General Equipment</h2>
                       <div class="shop-items-grid">
-                        {availableItems.map((item) => {
+                        {filteredAvailableItems.map((item) => {
                           const affordable = canAffordItem(gold, item.id);
                           return (
                             <div
@@ -394,6 +435,9 @@ export function ShopEquipScreen({ shopId, onClose }: ShopEquipScreenProps): JSX.
 
                   {starterKitEntries.length === 0 && unlockedUnits.length === 0 && availableItems.length === 0 && (
                     <div class="shop-empty">No items available.</div>
+                  )}
+                  {starterKitEntries.length === 0 && unlockedUnits.length === 0 && availableItems.length > 0 && filteredAvailableItems.length === 0 && (
+                    <div class="shop-empty">No items match this tier filter.</div>
                   )}
                 </>
               )}
