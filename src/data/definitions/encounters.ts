@@ -311,6 +311,7 @@ export const HOUSE_14: Encounter = {
   reward: {
     xp: 320,
     gold: 82,
+    djinn: 'bolt',
     equipment: {
       type: 'choice',
       options: ['hyper-boots', 'guardian-ring', 'lucky-medal'],
@@ -535,6 +536,7 @@ export const HOUSE_24: Encounter = {
   reward: {
     xp: 800,
     gold: 195,
+    djinn: 'chill',
     equipment: {
       type: 'choice',
       options: ['mythril-blade', 'zodiac-wand', 'glacial-robes'],
