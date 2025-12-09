@@ -61,10 +61,9 @@ export function BattleUnitSprite({
   const sizeStyles = SIZE_MAP[size];
 
   const mappedState = STATE_PROP_TO_BATTLE_STATE[state] ?? 'idle';
-  const spriteId =
-    getPlayerBattleSprite(unitId, mappedState) ??
-    getEnemyBattleSprite(unitId, mappedState) ??
-    null;
+  const spriteId = isPlayer
+    ? getPlayerBattleSprite(unitId, mappedState) ?? getEnemyBattleSprite(unitId, mappedState) ?? null
+    : getEnemyBattleSprite(unitId, mappedState) ?? getPlayerBattleSprite(unitId, mappedState) ?? null;
   const resolvedSpriteId = spriteId ?? `missing-battle-sprite-${unitId}-${mappedState}`;
   warnIfPlaceholderSprite('BattleUnitSprite', resolvedSpriteId);
 

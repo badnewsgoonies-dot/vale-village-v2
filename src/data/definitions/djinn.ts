@@ -343,6 +343,7 @@ export const CORONA: Djinn = {
   name: 'Corona',
   element: 'Mars',
   tier: '2',
+  description: 'A radiant fire spirit born from the heart of a dying star. Corona channels solar energy to both burn enemies and revitalize allies.',
   summonEffect: {
     type: 'buff',
     description: 'Flame field heals the party.',
@@ -578,6 +579,7 @@ export const TONIC: Djinn = {
   name: 'Tonic',
   element: 'Mercury',
   tier: '2',
+  description: 'A gentle water spirit dwelling in ancient healing springs. Tonic carries restorative essence that can mend wounds and cure ailments.',
   summonEffect: {
     type: 'heal',
     description: 'Healing mist restores allies.',

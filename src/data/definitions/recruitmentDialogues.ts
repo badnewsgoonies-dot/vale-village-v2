@@ -250,7 +250,7 @@ export const HOUSE_08_RECRUIT: DialogueTree = {
       text: "I found this Fizz Djinn while guarding the waters. It's yours now.",
       portrait: 'sentinel',
       effects: {
-        recruitUnit: "war-mage",
+        recruitUnit: "sentinel",
         grantDjinn: "fizz",
       },
     },
@@ -415,7 +415,7 @@ export const HOUSE_15_RECRUIT: DialogueTree = {
       text: "I bring both myself and Squall Djinn. Together, we'll unleash the tempest!",
       portrait: 'stormcaller',
       effects: {
-        recruitUnit: "war-mage",
+        recruitUnit: "stormcaller",
         grantDjinn: "squall",
       },
     },
@@ -505,6 +505,181 @@ export const HOUSE_20_DJINN: DialogueTree = {
   ],
 };
 
+// HOUSE 06: Victory + Gust Djinn
+export const HOUSE_06_VICTORY: DialogueTree = {
+  id: 'house-06-victory',
+  name: 'House 06: Steel Guardian Falls',
+  startNodeId: 'guardian-falls',
+  nodes: [
+    {
+      id: 'guardian-falls',
+      speaker: 'Isaac',
+      text: '*wipes sweat from brow* The Steel Guardian was tougher than I expected. But we prevailed!',
+      portrait: 'isaac',
+      nextNodeId: 'gust-appears',
+    },
+    {
+      id: 'gust-appears',
+      speaker: 'Gust',
+      text: '*swirls into existence* You have freed me from the Guardian\'s chains! I am Gust, Jupiter Djinn!',
+      portrait: 'djinn',
+      nextNodeId: 'isaac-accepts',
+    },
+    {
+      id: 'isaac-accepts',
+      speaker: 'Isaac',
+      text: 'A wind spirit! With Jupiter Psynergy on our side, our options expand greatly.',
+      portrait: 'isaac',
+      effects: { grantDjinn: "gust" },
+    },
+  ],
+};
+
+// HOUSE 09: Victory (equipment reward only)
+export const HOUSE_09_VICTORY: DialogueTree = {
+  id: 'house-09-victory',
+  name: 'House 09: Inferno Conquered',
+  startNodeId: 'inferno-falls',
+  nodes: [
+    {
+      id: 'inferno-falls',
+      speaker: 'Isaac',
+      text: '*catches breath* The flames are quelled. Nine houses liberated - we are gaining momentum!',
+      portrait: 'isaac',
+      nextNodeId: 'team-reaction',
+    },
+    {
+      id: 'team-reaction',
+      speaker: 'War Mage',
+      text: 'Ha! Those fire elementals were nothing compared to TRUE Mars Psynergy! Great work, everyone!',
+      portrait: 'garet',
+    },
+  ],
+};
+
+// HOUSE 10: Victory - Act 1 Climax
+export const HOUSE_10_VICTORY: DialogueTree = {
+  id: 'house-10-victory',
+  name: 'House 10: The Burning Gauntlet Cleared',
+  startNodeId: 'milestone',
+  nodes: [
+    {
+      id: 'milestone',
+      speaker: 'Isaac',
+      text: '*looks at the freed villagers* Ten houses. Half the village is free. We are truly making a difference.',
+      portrait: 'isaac',
+      nextNodeId: 'mystic-insight',
+    },
+    {
+      id: 'mystic-insight',
+      speaker: 'Mystic',
+      text: '*sensing the flow of Psynergy* The Overseer\'s grip weakens with each victory. But the remaining houses will be harder.',
+      portrait: 'mystic',
+      nextNodeId: 'isaac-resolve',
+    },
+    {
+      id: 'isaac-resolve',
+      speaker: 'Isaac',
+      text: 'Then we get stronger too. Forward - there is no turning back now!',
+      portrait: 'isaac',
+    },
+  ],
+};
+
+// HOUSE 13: Victory - Act 2 Major Battle
+export const HOUSE_13_VICTORY: DialogueTree = {
+  id: 'house-13-victory',
+  name: 'House 13: The Silver Strike',
+  startNodeId: 'leviathan-freed',
+  nodes: [
+    {
+      id: 'leviathan-freed',
+      speaker: 'Isaac',
+      text: '*watches the Leviathan dive into the depths* Another legendary creature freed. Thirteen down!',
+      portrait: 'isaac',
+      nextNodeId: 'ranger-intel',
+    },
+    {
+      id: 'ranger-intel',
+      speaker: 'Ranger',
+      text: '*scans the horizon* My scouts report the remaining houses are heavily fortified. Elite guards await us.',
+      portrait: 'ranger',
+      nextNodeId: 'blaze-eager',
+    },
+    {
+      id: 'blaze-eager',
+      speaker: 'Blaze',
+      text: '*flames flicker eagerly* Good! I was getting bored with these weaklings. Bring on the real challenge!',
+      portrait: 'blaze',
+    },
+  ],
+};
+
+// HOUSE 16: Victory - Act 3 Opening
+export const HOUSE_16_VICTORY: DialogueTree = {
+  id: 'house-16-victory',
+  name: 'House 16: The Mythril Edge',
+  startNodeId: 'commander-falls',
+  nodes: [
+    {
+      id: 'commander-falls',
+      speaker: 'Isaac',
+      text: '*sheathes weapon* The Lightning Commander was a worthy foe. Only four houses remain.',
+      portrait: 'isaac',
+      nextNodeId: 'karis-observation',
+    },
+    {
+      id: 'karis-observation',
+      speaker: 'Karis',
+      text: '*the wind whispers around her* I sense immense power ahead. The Overseer is gathering his strongest forces.',
+      portrait: 'karis',
+      nextNodeId: 'tyrell-confident',
+    },
+    {
+      id: 'tyrell-confident',
+      speaker: 'Tyrell',
+      text: '*cracks knuckles* Four houses? We have taken sixteen! Nothing can stop us now!',
+      portrait: 'tyrell',
+    },
+  ],
+};
+
+// HOUSE 19: Victory - Final Armament
+export const HOUSE_19_VICTORY: DialogueTree = {
+  id: 'house-19-victory',
+  name: 'House 19: The Final Armament',
+  startNodeId: 'hydra-freed',
+  nodes: [
+    {
+      id: 'hydra-freed',
+      speaker: 'Isaac',
+      text: '*breathing heavily* The Hydra and Warlords fall! Only the Overseer remains!',
+      portrait: 'isaac',
+      nextNodeId: 'felix-wisdom',
+    },
+    {
+      id: 'felix-wisdom',
+      speaker: 'Felix',
+      text: '*grips his blade* We have come so far, Isaac. Whatever happens in the final house... it has been an honor.',
+      portrait: 'felix',
+      nextNodeId: 'isaac-rallies',
+    },
+    {
+      id: 'isaac-rallies',
+      speaker: 'Isaac',
+      text: '*places hand on Felix\'s shoulder* Save the sentimentality for AFTER we win. Everyone - prepare for the final battle!',
+      portrait: 'isaac',
+      nextNodeId: 'team-ready',
+    },
+    {
+      id: 'team-ready',
+      speaker: 'War Mage',
+      text: 'For Vale! For the villagers! FOR VICTORY!',
+      portrait: 'garet',
+    },
+  ],
+};
+
 // Export all recruitment dialogues
 export const RECRUITMENT_DIALOGUES: Record<string, DialogueTree> = {
   'house-01-recruit': HOUSE_01_RECRUIT,
@@ -512,13 +687,19 @@ export const RECRUITMENT_DIALOGUES: Record<string, DialogueTree> = {
   'house-03-recruit': HOUSE_03_RECRUIT,
   'house-04-post': HOUSE_04_POST_BATTLE,
   'house-05-recruit': HOUSE_05_RECRUIT,
+  'house-06-victory': HOUSE_06_VICTORY,
   'house-07-djinn': HOUSE_07_DJINN,
   'house-08-recruit': HOUSE_08_RECRUIT,
+  'house-09-victory': HOUSE_09_VICTORY,
+  'house-10-victory': HOUSE_10_VICTORY,
   'house-11-recruit': HOUSE_11_RECRUIT,
   'house-12-djinn': HOUSE_12_DJINN,
+  'house-13-victory': HOUSE_13_VICTORY,
   'house-14-recruit': HOUSE_14_RECRUIT,
   'house-15-recruit': HOUSE_15_RECRUIT,
+  'house-16-victory': HOUSE_16_VICTORY,
   'house-17-recruit': HOUSE_17_RECRUIT,
   'house-18-djinn': HOUSE_18_DJINN,
+  'house-19-victory': HOUSE_19_VICTORY,
   'house-20-djinn': HOUSE_20_DJINN,
 };
