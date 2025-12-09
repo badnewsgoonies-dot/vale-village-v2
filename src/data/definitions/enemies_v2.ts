@@ -21,7 +21,6 @@
 import type { Enemy } from '../schemas/EnemySchema';
 import {
   STRIKE,
-  HEAVY_STRIKE,
   GUARD_BREAK,
   GUST,
   BLIND,

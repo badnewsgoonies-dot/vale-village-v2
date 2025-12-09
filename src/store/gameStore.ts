@@ -1,7 +1,7 @@
 import { createWithEqualityFn } from 'zustand/traditional';
 import { immer } from 'zustand/middleware/immer';
 
-export type ScreenType = 'title' | 'overworld' | 'battle' | 'menu' | 'team-select' | 'shop' | 'compendium' | 'rewards' | 'team-management' | 'djinn-collection' | 'tower';
+export type ScreenType = 'title' | 'overworld' | 'battle' | 'menu' | 'team-select' | 'shop' | 'compendium' | 'rewards' | 'team-management' | 'djinn-collection' | 'tower' | 'credits' | 'epilogue';
 
 export type ModalType = 'inventory' | 'settings' | 'dialogue' | 'pause' | 'team-management' | 'djinn-collection' | 'save' | 'help';
 

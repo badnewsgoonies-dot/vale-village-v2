@@ -11,6 +11,7 @@
  * - Auto-save functionality
  */
 
+import type { ZodSchema } from 'zod';
 import type { Result } from '../utils/result';
 import { Ok, Err } from '../utils/result';
 import { SaveV1Schema, type SaveV1 } from '../../data/schemas/SaveV1Schema';
@@ -19,7 +20,7 @@ import { buildUnitIndex } from '../models/BattleState';
 import { migrateSaveData } from '../migrations';
 import {
   calculateChecksum,
-  verifyChecksum,
+  validateSaveFile,
   type SaveFileValidationError,
 } from '../validation/saveFileValidation';
 
@@ -94,103 +95,15 @@ function wrapWithChecksum(data: SaveV1 | BattleStateSerializable, version: strin
 }
 
 /**
- * Check if migration is supported between versions
- *
- * @param from - Source version
- * @param to - Target version
- * @returns True if migration path exists
- */
-function isMigrationSupported(from: string, to: string): boolean {
-  // Currently only support forward migration within v1.x.x
-  const fromParts = from.split('.');
-  const toParts = to.split('.');
-
-  // Only support v1.x.x migrations for now
-  if (fromParts[0] !== '1' || toParts[0] !== '1') {
-    return false;
-  }
-
-  // Can migrate from older to newer within same major version
-  return true;
-}
-
-/**
  * Validate and unwrap save file
  */
 function unwrapAndValidate<T>(
   wrapper: unknown,
-  expectedVersion: string
+  expectedVersion: string,
+  schema: ZodSchema<unknown>,
+  migrate?: (data: unknown) => Result<unknown, string>
 ): Result<T, SaveFileValidationError> {
-  // Basic structure validation
-  if (!wrapper || typeof wrapper !== 'object') {
-    return Err({
-      type: 'INVALID_FORMAT',
-      message: 'Save file is not a valid object',
-    });
-  }
-
-  let file = wrapper as Partial<SaveFileWrapper>;
-
-  // Check required fields
-  if (!file.version || !file.timestamp || !file.checksum || !file.data) {
-    return Err({
-      type: 'MISSING_DATA',
-      missingFields: [
-        !file.version ? 'version' : null,
-        !file.timestamp ? 'timestamp' : null,
-        !file.checksum ? 'checksum' : null,
-        !file.data ? 'data' : null,
-      ].filter((f): f is string => f !== null),
-    });
-  }
-
-  // Version check with migration support
-  if (file.version !== expectedVersion) {
-    // Check if migration is possible
-    const canMigrate = isMigrationSupported(file.version, expectedVersion);
-
-    if (!canMigrate) {
-      return Err({
-        type: 'VERSION_MISMATCH',
-        saveVersion: file.version,
-        currentVersion: expectedVersion,
-        canMigrate: false,
-      });
-    }
-
-    // Attempt migration
-    const migrateResult = migrateSaveData(file.data);
-    if (!migrateResult.ok) {
-      return Err({
-        type: 'VERSION_MISMATCH',
-        saveVersion: file.version,
-        currentVersion: expectedVersion,
-        canMigrate: true,
-      });
-    }
-
-    // Create new file object with migrated data
-    const migratedFile = {
-      ...file,
-      version: expectedVersion,
-      data: migrateResult.value,
-      checksum: calculateChecksum(migrateResult.value), // Recalculate checksum after migration
-    };
-
-    // Continue with migrated file
-    file = migratedFile as Partial<SaveFileWrapper>;
-  }
-
-  // Checksum verification
-  if (!verifyChecksum(file.data, file.checksum!)) {
-    return Err({
-      type: 'CHECKSUM_FAILED',
-      expected: file.checksum!,
-      actual: calculateChecksum(file.data),
-    });
-  }
-
-  return Ok(file.data as T);
+  return validateSaveFile<T>(wrapper, schema, expectedVersion, migrate);
 }
 
 // ============================================================================
@@ -260,7 +173,7 @@ export function loadProgress(slot: number): Result<SaveV1, string> {
     }
 
     // Validate and unwrap
-    const unwrapResult = unwrapAndValidate<SaveV1>(wrapper, '1.0.0');
+    const unwrapResult = unwrapAndValidate<SaveV1>(wrapper, '1.0.0', SaveV1Schema, migrateSaveData);
     if (!unwrapResult.ok) {
       // Try backup with error context
       const errorMsg = unwrapResult.error.type;
@@ -297,7 +210,7 @@ function loadProgressFromBackup(slot: number, mainError?: string): Result<SaveV1
     }
 
     const wrapper = JSON.parse(serialized);
-    const unwrapResult = unwrapAndValidate<SaveV1>(wrapper, '1.0.0');
+    const unwrapResult = unwrapAndValidate<SaveV1>(wrapper, '1.0.0', SaveV1Schema, migrateSaveData);
 
     if (!unwrapResult.ok) {
       const context = mainError ? ` Main save error: ${mainError}` : '';
@@ -373,7 +286,7 @@ export function loadBattle(): Result<BattleState, string> {
     }
 
     // Validate and unwrap (loads BattleStateSerializable without unitById)
-    const unwrapResult = unwrapAndValidate<BattleStateSerializable>(wrapper, '1.0.0');
+    const unwrapResult = unwrapAndValidate<BattleStateSerializable>(wrapper, '1.0.0', BattleStateSchema);
     if (!unwrapResult.ok) {
       return Err('Battle save validation failed');
     }

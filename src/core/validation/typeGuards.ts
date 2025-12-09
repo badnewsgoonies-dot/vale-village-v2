@@ -35,10 +35,10 @@ export function validateBattleStateData(data: unknown): Result<BattleState, Vali
 
   if (result.success) {
     // Zod schema doesn't include unitById index, so we need to reconstruct it
-    const validatedData = result.data as unknown as BattleState;
+    const validatedData = result.data;
 
     // Build unitById index
-    const unitById = new Map();
+    const unitById = new Map<string, { unit: Unit; isPlayer: boolean }>();
     for (const unit of validatedData.playerTeam.units) {
       unitById.set(unit.id, { unit, isPlayer: true });
     }
@@ -46,10 +46,12 @@ export function validateBattleStateData(data: unknown): Result<BattleState, Vali
       unitById.set(unit.id, { unit, isPlayer: false });
     }
 
-    return Ok({
+    const fullState: BattleState = {
       ...validatedData,
       unitById,
-    });
+    };
+
+    return Ok(fullState);
   }
 
   const errors: ValidationError[] = result.error.errors.map(err => ({
@@ -67,7 +69,7 @@ export function validateTeam(data: unknown): Result<Team, ValidationError[]> {
   const result = TeamSchema.safeParse(data);
 
   if (result.success) {
-    return Ok(result.data as Team);
+    return Ok(result.data);
   }
 
   const errors: ValidationError[] = result.error.errors.map(err => ({
@@ -85,7 +87,7 @@ export function validateUnit(data: unknown): Result<Unit, ValidationError[]> {
   const result = UnitSchema.safeParse(data);
 
   if (result.success) {
-    return Ok(result.data as Unit);
+    return Ok(result.data);
   }
 
   const errors: ValidationError[] = result.error.errors.map(err => ({
