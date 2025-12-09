@@ -18,7 +18,6 @@ export const FLINT: Djinn = {
         'flint-granite-guard',
         'flint-stone-spike',
         'flint-terra-armor',
-        'flint-earthquake-punch',
       ],
       counter: [],
       neutral: [
@@ -33,7 +32,6 @@ export const FLINT: Djinn = {
         'flint-granite-guard',
         'flint-stone-spike',
         'flint-terra-armor',
-        'flint-earthquake-punch',
       ],
       counter: [],
       neutral: [
@@ -60,7 +58,6 @@ export const FLINT: Djinn = {
         'flint-ground-shield',
         'flint-rock-barrage',
         'flint-soothing-earth',
-        'flint-terra-heal',
       ],
     },
     ranger: {
@@ -71,7 +68,6 @@ export const FLINT: Djinn = {
         'flint-ground-shield',
         'flint-rock-barrage',
         'flint-soothing-earth',
-        'flint-terra-heal',
       ],
     },
     stormcaller: {
@@ -82,7 +78,6 @@ export const FLINT: Djinn = {
         'flint-ground-shield',
         'flint-rock-barrage',
         'flint-soothing-earth',
-        'flint-terra-heal',
       ],
     },
   },
@@ -106,7 +101,6 @@ export const GRANITE: Djinn = {
         'granite-terra-break',
         'granite-stone-spike',
         'granite-earthquake',
-        'granite-stone-fortress',
       ],
       counter: [],
       neutral: [
@@ -121,7 +115,6 @@ export const GRANITE: Djinn = {
         'granite-terra-break',
         'granite-stone-spike',
         'granite-earthquake',
-        'granite-stone-fortress',
       ],
       counter: [],
       neutral: [
@@ -148,7 +141,6 @@ export const GRANITE: Djinn = {
         'granite-ground-wave',
         'granite-rock-shield',
         'granite-terra-heal',
-        'granite-earth-revival',
       ],
     },
     ranger: {
@@ -159,7 +151,6 @@ export const GRANITE: Djinn = {
         'granite-ground-wave',
         'granite-rock-shield',
         'granite-terra-heal',
-        'granite-earth-revival',
       ],
     },
     stormcaller: {
@@ -170,7 +161,6 @@ export const GRANITE: Djinn = {
         'granite-ground-wave',
         'granite-rock-shield',
         'granite-terra-heal',
-        'granite-earth-revival',
       ],
     },
   },
@@ -193,7 +183,6 @@ export const BANE: Djinn = {
         'bane-terra-guard',
         'bane-terra-breaker',
         'bane-earthquake-rage',
-        'bane-stone-titan',
       ],
       counter: [],
       neutral: [
@@ -208,7 +197,6 @@ export const BANE: Djinn = {
         'bane-terra-guard',
         'bane-terra-breaker',
         'bane-earthquake-rage',
-        'bane-stone-titan',
       ],
       counter: [],
       neutral: [
@@ -235,7 +223,6 @@ export const BANE: Djinn = {
         'bane-rock-storm',
         'bane-terra-pulse',
         'bane-earth-revival',
-        'bane-terra-blessing',
       ],
     },
     ranger: {
@@ -246,7 +233,6 @@ export const BANE: Djinn = {
         'bane-rock-storm',
         'bane-terra-pulse',
         'bane-earth-revival',
-        'bane-terra-blessing',
       ],
     },
     stormcaller: {
@@ -257,7 +243,6 @@ export const BANE: Djinn = {
         'bane-rock-storm',
         'bane-terra-pulse',
         'bane-earth-revival',
-        'bane-terra-blessing',
       ],
     },
   },
@@ -311,7 +296,6 @@ export const FORGE: Djinn = {
         'forge-inferno-blaze',
         'forge-flame-burst',
         'forge-inferno-shield',
-        'forge-fire-storm',
       ],
       counter: [],
       neutral: [
@@ -329,7 +313,6 @@ export const FORGE: Djinn = {
         'forge-ember-shield',
         'forge-heat-wave',
         'forge-warmth',
-        'forge-flame-heal',
       ],
     },
     ranger: {
@@ -340,7 +323,6 @@ export const FORGE: Djinn = {
         'forge-ember-shield',
         'forge-heat-wave',
         'forge-warmth',
-        'forge-flame-heal',
       ],
     },
     stormcaller: {
@@ -351,7 +333,6 @@ export const FORGE: Djinn = {
         'forge-ember-shield',
         'forge-heat-wave',
         'forge-warmth',
-        'forge-flame-heal',
       ],
     },
   },
@@ -404,7 +385,6 @@ export const CORONA: Djinn = {
         'corona-ember-veil',
         'corona-solar-blast',
         'corona-flame-barrier',
-        'corona-fire-nova',
       ],
       counter: [],
       neutral: [
@@ -422,7 +402,6 @@ export const CORONA: Djinn = {
         'corona-solar-guard',
         'corona-heat-pulse',
         'corona-solar-heal',
-        'corona-flare-revival',
       ],
     },
     ranger: {
@@ -433,7 +412,6 @@ export const CORONA: Djinn = {
         'corona-solar-guard',
         'corona-heat-pulse',
         'corona-solar-heal',
-        'corona-flare-revival',
       ],
     },
     stormcaller: {
@@ -444,7 +422,6 @@ export const CORONA: Djinn = {
         'corona-solar-guard',
         'corona-heat-pulse',
         'corona-solar-heal',
-        'corona-flare-revival',
       ],
     },
   },
@@ -497,7 +474,6 @@ export const FURY: Djinn = {
         'fury-flare-guard',
         'fury-inferno-rage',
         'fury-flame-titan',
-        'fury-fire-apocalypse',
       ],
       counter: [],
       neutral: [
