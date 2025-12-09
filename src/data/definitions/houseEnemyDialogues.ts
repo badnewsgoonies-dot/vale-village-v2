@@ -75,6 +75,49 @@ const ENEMY_PHASES: EnemyPhase[] = [
   },
 ];
 
+const ENEMY_OVERRIDES: Record<number, Partial<EnemyPhase>> = {
+  21: {
+    intro: () => 'The Risen Dead shall claim your souls! House 21 is their doorway.',
+    threat: () => 'Your breaths are numbered. The grave is patient.',
+  },
+  22: {
+    intro: () => 'Wings of fury circle above House 22. Can you even reach us?',
+    threat: () => 'We strike from the sky; you fall from the earth.',
+  },
+  23: {
+    intro: () => 'Clay and iron bar your path at House 23. We do not bend.',
+    threat: () => 'Stone breaks bone. Yours will be next.',
+  },
+  24: {
+    intro: () => 'House 24 is frozen shut. Only the worthy break the ice.',
+    threat: () => 'Winter never tires. You will.',
+  },
+  25: {
+    intro: () => 'Tempest Heights roar at House 25. The gale tests all challengers.',
+    threat: () => 'The storm shows no mercy—and neither do I.',
+  },
+  26: {
+    intro: () => 'Necromantic rites already began at House 26. You are late.',
+    threat: () => 'Join the ceremony as guests… or as fuel.',
+  },
+  27: {
+    intro: () => 'Crystal convergence peaks at House 27. Shatter or be shattered.',
+    threat: () => 'Try to crack us; you will only cut yourselves.',
+  },
+  28: {
+    intro: () => 'Dragons converge at House 28. Few live to tell of it.',
+    threat: () => 'You face the apex. Pray your defenses hold.',
+  },
+  29: {
+    intro: () => 'The Void Armada anchors at House 29. Seas and storms obey me.',
+    threat: () => 'Drown, be torn by lightning, or flee. Those are your choices.',
+  },
+  30: {
+    intro: () => 'House 30 is the nexus. Every element bends here—except your will.',
+    threat: () => 'Your journey ends at the threshold. Lay down your weapons.',
+  },
+};
+
 const padHouseNum = (houseNum: number): string => String(houseNum).padStart(2, '0');
 
 const getPhaseConfig = (houseNum: number): EnemyPhase => {
@@ -89,6 +132,9 @@ const createEnemyDialogue = (houseNum: number): DialogueTree => {
   const padded = padHouseNum(houseNum);
   const encounterId = `house-${padded}`;
   const config = getPhaseConfig(houseNum);
+  const override = ENEMY_OVERRIDES[houseNum];
+  const introText = override?.intro ? override.intro(houseNum) : config.intro(houseNum);
+  const threatText = override?.threat ? override.threat(houseNum) : config.threat(houseNum);
 
   return {
     id: `${encounterId}-enemy`,
@@ -98,14 +144,14 @@ const createEnemyDialogue = (houseNum: number): DialogueTree => {
       {
         id: 'intro',
         speaker: config.speaker,
-        text: config.intro(houseNum),
+        text: introText,
         portrait: config.portrait,
         nextNodeId: 'threat',
       },
       {
         id: 'threat',
         speaker: config.speaker,
-        text: config.threat(houseNum),
+        text: threatText,
         portrait: config.portrait,
         effects: { startBattle: encounterId } as const,
       },
