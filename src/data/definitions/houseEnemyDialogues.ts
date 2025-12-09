@@ -44,6 +44,35 @@ const ENEMY_PHASES: EnemyPhase[] = [
     intro: () => 'The final house is my throne, and you are wildly outmatched.',
     threat: () => 'Topple me if you dare. Freedom for Vale lies beyond my defeat.',
   },
+  // CHAPTER 2: Post-Vale Progression (Houses 21-30)
+  {
+    range: [21, 23],
+    speaker: 'Undead Warlord',
+    portrait: 'enemy-undead',
+    intro: (houseNum) => `You thought Vale was the end? House ${houseNum} marks the beginning of true darkness.`,
+    threat: () => 'The dead do not rest. Neither shall you.',
+  },
+  {
+    range: [24, 26],
+    speaker: 'Frost Titan',
+    portrait: 'enemy-titan',
+    intro: (houseNum) => `House ${houseNum} lies in eternal winter. Your flames mean nothing here.`,
+    threat: () => 'Ice cares not for hope. It only consumes.',
+  },
+  {
+    range: [27, 29],
+    speaker: 'Storm Archon',
+    portrait: 'enemy-archon',
+    intro: (houseNum) => `House ${houseNum} crackles with raw elemental fury. You dare challenge the storm?`,
+    threat: () => 'Lightning strikes without warning. So shall my wrath.',
+  },
+  {
+    range: [30, 30],
+    speaker: 'The Nexus Guardian',
+    portrait: 'enemy-nexus',
+    intro: () => 'You stand at the threshold of ultimate power. House 30 is the nexus of all Psynergy.',
+    threat: () => 'Every Adept before you has fallen here. You will join them in oblivion.',
+  },
 ];
 
 const padHouseNum = (houseNum: number): string => String(houseNum).padStart(2, '0');
@@ -84,7 +113,7 @@ const createEnemyDialogue = (houseNum: number): DialogueTree => {
   };
 };
 
-export const HOUSE_ENEMY_DIALOGUES: Record<string, DialogueTree> = Array.from({ length: 20 }, (_, index) => index + 1)
+export const HOUSE_ENEMY_DIALOGUES: Record<string, DialogueTree> = Array.from({ length: 30 }, (_, index) => index + 1)
   .map(createEnemyDialogue)
   .reduce<Record<string, DialogueTree>>((map, dialogue) => {
     map[dialogue.id] = dialogue;
