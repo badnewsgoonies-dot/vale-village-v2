@@ -286,6 +286,150 @@ export const HOUSE_20_POST_BATTLE_DIALOGUE: DialogueTree = {
   ],
 };
 
+// ============================================================================
+// CHAPTER 2: Post-Vale Progression (Houses 21-30)
+// ============================================================================
+
+export const HOUSE_21_POST_BATTLE_DIALOGUE: DialogueTree = {
+  id: 'house-21-post-battle',
+  name: 'House 21 Liberation Complete',
+  startNodeId: 'undead-vanquished',
+  nodes: [
+    {
+      id: 'undead-vanquished',
+      speaker: 'Isaac',
+      text: '*watches the undead crumble to dust* The graveyard falls silent. House 21 is freed from necromantic chains.',
+      portrait: 'isaac',
+    },
+  ],
+};
+
+export const HOUSE_22_POST_BATTLE_DIALOGUE: DialogueTree = {
+  id: 'house-22-post-battle',
+  name: 'House 22 Liberation Complete',
+  startNodeId: 'skies-cleared',
+  nodes: [
+    {
+      id: 'skies-cleared',
+      speaker: 'Isaac',
+      text: 'The aerial forces scatter! House 22 is ours. Even the skies cannot hold us back.',
+      portrait: 'isaac',
+    },
+  ],
+};
+
+export const HOUSE_23_POST_BATTLE_DIALOGUE: DialogueTree = {
+  id: 'house-23-post-battle',
+  name: 'House 23 Liberation Complete',
+  startNodeId: 'golems-shattered',
+  nodes: [
+    {
+      id: 'golems-shattered',
+      speaker: 'Isaac',
+      text: '*the last golem crumbles* Clay and iron bow to our resolve. House 23 is liberated!',
+      portrait: 'isaac',
+    },
+  ],
+};
+
+export const HOUSE_24_POST_BATTLE_DIALOGUE: DialogueTree = {
+  id: 'house-24-post-battle',
+  name: 'House 24 Liberation Complete',
+  startNodeId: 'ice-thawed',
+  nodes: [
+    {
+      id: 'ice-thawed',
+      speaker: 'Isaac',
+      text: '*warmth returns to the air* The eternal winter ends. House 24 thaws at last!',
+      portrait: 'isaac',
+    },
+  ],
+};
+
+export const HOUSE_25_POST_BATTLE_DIALOGUE: DialogueTree = {
+  id: 'house-25-post-battle',
+  name: 'House 25 Liberation Complete',
+  startNodeId: 'storm-calmed',
+  nodes: [
+    {
+      id: 'storm-calmed',
+      speaker: 'Isaac',
+      text: '*the winds settle* Tempest Heights grow quiet. House 25 stands free beneath clear skies!',
+      portrait: 'isaac',
+    },
+  ],
+};
+
+export const HOUSE_26_POST_BATTLE_DIALOGUE: DialogueTree = {
+  id: 'house-26-post-battle',
+  name: 'House 26 Liberation Complete',
+  startNodeId: 'ritual-broken',
+  nodes: [
+    {
+      id: 'ritual-broken',
+      speaker: 'Isaac',
+      text: '*the dark altar shatters* The necromantic rites are ended. House 26 will know no more death magic!',
+      portrait: 'isaac',
+    },
+  ],
+};
+
+export const HOUSE_27_POST_BATTLE_DIALOGUE: DialogueTree = {
+  id: 'house-27-post-battle',
+  name: 'House 27 Liberation Complete',
+  startNodeId: 'crystals-harmonized',
+  nodes: [
+    {
+      id: 'crystals-harmonized',
+      speaker: 'Isaac',
+      text: '*the crystals hum peacefully* The convergence is complete. House 27 shines with pure light!',
+      portrait: 'isaac',
+    },
+  ],
+};
+
+export const HOUSE_28_POST_BATTLE_DIALOGUE: DialogueTree = {
+  id: 'house-28-post-battle',
+  name: 'House 28 Liberation Complete',
+  startNodeId: 'dragons-freed',
+  nodes: [
+    {
+      id: 'dragons-freed',
+      speaker: 'Isaac',
+      text: '*the dragons roar in triumph* The apex predators are allies now. House 28 belongs to legend!',
+      portrait: 'isaac',
+    },
+  ],
+};
+
+export const HOUSE_29_POST_BATTLE_DIALOGUE: DialogueTree = {
+  id: 'house-29-post-battle',
+  name: 'House 29 Liberation Complete',
+  startNodeId: 'armada-sunk',
+  nodes: [
+    {
+      id: 'armada-sunk',
+      speaker: 'Isaac',
+      text: '*waves crash peacefully* The Void Armada is no more. House 29 returns to the people!',
+      portrait: 'isaac',
+    },
+  ],
+};
+
+export const HOUSE_30_POST_BATTLE_DIALOGUE: DialogueTree = {
+  id: 'house-30-post-battle',
+  name: 'House 30 Liberation Complete',
+  startNodeId: 'nexus-claimed',
+  nodes: [
+    {
+      id: 'nexus-claimed',
+      speaker: 'Isaac',
+      text: '*all four elements swirl in harmony* The Nexus Guardian falls! Chapter 2 complete - we have mastered all elements!',
+      portrait: 'isaac',
+    },
+  ],
+};
+
 export const POST_BATTLE_DIALOGUES: Record<string, DialogueTree> = {
   'house-01-post-battle': HOUSE_01_POST_BATTLE_DIALOGUE,
   'house-02-post-battle': HOUSE_02_POST_BATTLE_DIALOGUE,
@@ -307,6 +451,17 @@ export const POST_BATTLE_DIALOGUES: Record<string, DialogueTree> = {
   'house-18-post-battle': HOUSE_18_POST_BATTLE_DIALOGUE,
   'house-19-post-battle': HOUSE_19_POST_BATTLE_DIALOGUE,
   'house-20-post-battle': HOUSE_20_POST_BATTLE_DIALOGUE,
+  // Chapter 2: Post-Vale Progression
+  'house-21-post-battle': HOUSE_21_POST_BATTLE_DIALOGUE,
+  'house-22-post-battle': HOUSE_22_POST_BATTLE_DIALOGUE,
+  'house-23-post-battle': HOUSE_23_POST_BATTLE_DIALOGUE,
+  'house-24-post-battle': HOUSE_24_POST_BATTLE_DIALOGUE,
+  'house-25-post-battle': HOUSE_25_POST_BATTLE_DIALOGUE,
+  'house-26-post-battle': HOUSE_26_POST_BATTLE_DIALOGUE,
+  'house-27-post-battle': HOUSE_27_POST_BATTLE_DIALOGUE,
+  'house-28-post-battle': HOUSE_28_POST_BATTLE_DIALOGUE,
+  'house-29-post-battle': HOUSE_29_POST_BATTLE_DIALOGUE,
+  'house-30-post-battle': HOUSE_30_POST_BATTLE_DIALOGUE,
 };
 
 /**
@@ -334,4 +489,15 @@ export const ENCOUNTER_TO_POST_BATTLE_DIALOGUE: Record<string, string> = {
   'house-18': 'house-18-post-battle',
   'house-19': 'house-19-post-battle',
   'house-20': 'house-20-post-battle',
+  // Chapter 2: Post-Vale Progression
+  'house-21': 'house-21-post-battle',
+  'house-22': 'house-22-post-battle',
+  'house-23': 'house-23-post-battle',
+  'house-24': 'house-24-post-battle',
+  'house-25': 'house-25-post-battle',
+  'house-26': 'house-26-post-battle',
+  'house-27': 'house-27-post-battle',
+  'house-28': 'house-28-post-battle',
+  'house-29': 'house-29-post-battle',
+  'house-30': 'house-30-post-battle',
 };

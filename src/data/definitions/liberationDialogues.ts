@@ -623,6 +623,328 @@ export const HOUSE_20_DIALOGUE: DialogueTree = {
 };
 
 // ============================================================================
+// ACT 4: BEYOND VALE (Houses 21-30) - Chapter 2 Content
+// ============================================================================
+
+export const HOUSE_21_DIALOGUE: DialogueTree = {
+  id: 'house-21-graveyard',
+  name: 'House 21: The Dead Rise',
+  startNodeId: 'pre-battle',
+  nodes: [
+    {
+      id: 'pre-battle',
+      speaker: 'Undead Warlord',
+      text: '*emerges from shadows* You thought Vale was the end? Foolish child. The darkness merely retreated... to marshal its true forces.',
+      portrait: 'enemy-undead',
+      nextNodeId: 'isaac-surprise',
+    },
+    {
+      id: 'isaac-surprise',
+      speaker: 'Isaac',
+      text: 'The dead... they\'re walking! How is this possible?',
+      portrait: 'isaac',
+      nextNodeId: 'warlord-explains',
+    },
+    {
+      id: 'warlord-explains',
+      speaker: 'Undead Warlord',
+      text: 'The Overseer was a pawn. His masters command powers beyond your comprehension. House 21 is your grave, Adept!',
+      portrait: 'enemy-undead',
+      effects: { startBattle: 'house-21' },
+    },
+  ],
+};
+
+export const HOUSE_22_DIALOGUE: DialogueTree = {
+  id: 'house-22-aerial',
+  name: 'House 22: Wings of Terror',
+  startNodeId: 'pre-battle',
+  nodes: [
+    {
+      id: 'pre-battle',
+      speaker: 'Undead Warlord',
+      text: '*hovers above* You survived the graveyard. But can you fight what you cannot reach? My aerial forces darken the sky!',
+      portrait: 'enemy-undead',
+      nextNodeId: 'stormcaller-counters',
+    },
+    {
+      id: 'stormcaller-counters',
+      speaker: 'Stormcaller',
+      text: 'Isaac, leave the flying ones to me. My lightning will ground them!',
+      portrait: 'stormcaller',
+      nextNodeId: 'isaac-coordinates',
+    },
+    {
+      id: 'isaac-coordinates',
+      speaker: 'Isaac',
+      text: 'Good! Sentinel, protect Stormcaller while they cast. I\'ll handle the ground forces!',
+      portrait: 'isaac',
+      effects: { startBattle: 'house-22' },
+    },
+  ],
+};
+
+export const HOUSE_23_DIALOGUE: DialogueTree = {
+  id: 'house-23-golem',
+  name: 'House 23: Iron and Clay',
+  startNodeId: 'pre-battle',
+  nodes: [
+    {
+      id: 'pre-battle',
+      speaker: 'Undead Warlord',
+      text: '*raises arms, golems rise* You\'ve broken my scouts. My flyers. But you cannot break STONE! Rise, my constructs!',
+      portrait: 'enemy-undead',
+      nextNodeId: 'sentinel-recognizes',
+    },
+    {
+      id: 'sentinel-recognizes',
+      speaker: 'Sentinel',
+      text: 'Those golems... they\'re made from the ruins of Vale! Our homes... turned into weapons against us!',
+      portrait: 'sentinel',
+      nextNodeId: 'isaac-determined',
+    },
+    {
+      id: 'isaac-determined',
+      speaker: 'Isaac',
+      text: '*grips sword tighter* Then we\'ll return them to rest. For Vale!',
+      portrait: 'isaac',
+      effects: { startBattle: 'house-23' },
+    },
+  ],
+};
+
+export const HOUSE_24_DIALOGUE: DialogueTree = {
+  id: 'house-24-frost',
+  name: 'House 24: Eternal Winter',
+  startNodeId: 'pre-battle',
+  nodes: [
+    {
+      id: 'pre-battle',
+      speaker: 'Frost Titan',
+      text: '*ice crackles with each step* The Undead Warlord was merely the cold breath before the storm. I am WINTER INCARNATE.',
+      portrait: 'enemy-titan',
+      nextNodeId: 'team-shivers',
+    },
+    {
+      id: 'team-shivers',
+      speaker: 'Stormcaller',
+      text: '*shivers* The temperature... it dropped twenty degrees just from their presence!',
+      portrait: 'stormcaller',
+      nextNodeId: 'isaac-strategizes',
+    },
+    {
+      id: 'isaac-strategizes',
+      speaker: 'Isaac',
+      text: 'Fire counters ice. Focus your Mars psynergy! We melt our way through!',
+      portrait: 'isaac',
+      effects: { startBattle: 'house-24' },
+    },
+  ],
+};
+
+export const HOUSE_25_DIALOGUE: DialogueTree = {
+  id: 'house-25-tempest',
+  name: 'House 25: Tempest Heights',
+  startNodeId: 'pre-battle',
+  nodes: [
+    {
+      id: 'pre-battle',
+      speaker: 'Frost Titan',
+      text: '*wind howls* You melted my ice soldiers. But can you stand against the BLIZZARD? The mountain gale bows to my will!',
+      portrait: 'enemy-titan',
+      nextNodeId: 'sentinel-shields',
+    },
+    {
+      id: 'sentinel-shields',
+      speaker: 'Sentinel',
+      text: 'I\'ll anchor us! My earth psynergy can create windbreaks! Everyone stay close!',
+      portrait: 'sentinel',
+      nextNodeId: 'isaac-charges',
+    },
+    {
+      id: 'isaac-charges',
+      speaker: 'Isaac',
+      text: 'Good plan! We push forward together! No storm stops us now!',
+      portrait: 'isaac',
+      effects: { startBattle: 'house-25' },
+    },
+  ],
+};
+
+export const HOUSE_26_DIALOGUE: DialogueTree = {
+  id: 'house-26-ritual',
+  name: 'House 26: Dark Ceremony',
+  startNodeId: 'pre-battle',
+  nodes: [
+    {
+      id: 'pre-battle',
+      speaker: 'Frost Titan',
+      text: '*dark altar glows behind* You come too late. The necromantic rites have begun. Soon, an army of eternal cold shall rise!',
+      portrait: 'enemy-titan',
+      nextNodeId: 'stormcaller-senses',
+    },
+    {
+      id: 'stormcaller-senses',
+      speaker: 'Stormcaller',
+      text: 'That altar... it\'s drawing power from somewhere deep. We have to destroy it before the ritual completes!',
+      portrait: 'stormcaller',
+      nextNodeId: 'isaac-rallies',
+    },
+    {
+      id: 'isaac-rallies',
+      speaker: 'Isaac',
+      text: 'Titan first, then the altar! Break through!',
+      portrait: 'isaac',
+      effects: { startBattle: 'house-26' },
+    },
+  ],
+};
+
+export const HOUSE_27_DIALOGUE: DialogueTree = {
+  id: 'house-27-crystal',
+  name: 'House 27: Crystal Convergence',
+  startNodeId: 'pre-battle',
+  nodes: [
+    {
+      id: 'pre-battle',
+      speaker: 'Storm Archon',
+      text: '*lightning crackles around crystalline form* The Titan was ice. I am LIGHTNING. All four elements converge here at House 27!',
+      portrait: 'enemy-archon',
+      nextNodeId: 'sentinel-observes',
+    },
+    {
+      id: 'sentinel-observes',
+      speaker: 'Sentinel',
+      text: 'Isaac, look at the crystals! They\'re resonating with psynergy! This place is some kind of nexus!',
+      portrait: 'sentinel',
+      nextNodeId: 'isaac-realizes',
+    },
+    {
+      id: 'isaac-realizes',
+      speaker: 'Isaac',
+      text: 'A psynergy nexus... that\'s why they\'re so powerful here. We need to break their connection to the crystals!',
+      portrait: 'isaac',
+      effects: { startBattle: 'house-27' },
+    },
+  ],
+};
+
+export const HOUSE_28_DIALOGUE: DialogueTree = {
+  id: 'house-28-dragons',
+  name: 'House 28: Dragon\'s Peak',
+  startNodeId: 'pre-battle',
+  nodes: [
+    {
+      id: 'pre-battle',
+      speaker: 'Storm Archon',
+      text: '*gestures to the sky* Behold! The dragons have gathered! The apex predators of Weyard, all under my dominion!',
+      portrait: 'enemy-archon',
+      nextNodeId: 'stormcaller-awed',
+    },
+    {
+      id: 'stormcaller-awed',
+      speaker: 'Stormcaller',
+      text: 'Three dragons?! Isaac, this is unlike anything we\'ve faced! Even the Chimera wasn\'t this powerful!',
+      portrait: 'stormcaller',
+      nextNodeId: 'isaac-undaunted',
+    },
+    {
+      id: 'isaac-undaunted',
+      speaker: 'Isaac',
+      text: 'Dragons deserve freedom too. We\'ve freed phoenixes and leviathans. These are no different!',
+      portrait: 'isaac',
+      effects: { startBattle: 'house-28' },
+    },
+  ],
+};
+
+export const HOUSE_29_DIALOGUE: DialogueTree = {
+  id: 'house-29-armada',
+  name: 'House 29: Void Armada',
+  startNodeId: 'pre-battle',
+  nodes: [
+    {
+      id: 'pre-battle',
+      speaker: 'Storm Archon',
+      text: '*stands on ghostly ship* The Void Armada answers to me! Seas and storms combined! You face the wrath of the deep!',
+      portrait: 'enemy-archon',
+      nextNodeId: 'sentinel-counts',
+    },
+    {
+      id: 'sentinel-counts',
+      speaker: 'Sentinel',
+      text: 'An entire fleet of spectral ships! And each one carries soldiers! This is an army, not a guard!',
+      portrait: 'sentinel',
+      nextNodeId: 'team-rallies',
+    },
+    {
+      id: 'team-rallies',
+      speaker: 'Stormcaller',
+      text: 'We\'ve faced armies before. We\'ve won before. House 30 is next - let\'s make this count!',
+      portrait: 'stormcaller',
+      nextNodeId: 'isaac-leads',
+    },
+    {
+      id: 'isaac-leads',
+      speaker: 'Isaac',
+      text: 'One more house after this. The Nexus Guardian awaits. Everyone - give it everything!',
+      portrait: 'isaac',
+      effects: { startBattle: 'house-29' },
+    },
+  ],
+};
+
+export const HOUSE_30_DIALOGUE: DialogueTree = {
+  id: 'house-30-nexus',
+  name: 'House 30: The Nexus Guardian',
+  startNodeId: 'pre-battle',
+  nodes: [
+    {
+      id: 'pre-battle',
+      speaker: 'The Nexus Guardian',
+      text: '*all four elements swirl around massive form* At last. The Adepts who toppled the Overseer. Who defeated my lieutenants. Who dared challenge the elements themselves.',
+      portrait: 'enemy-nexus',
+      nextNodeId: 'guardian-reveals',
+    },
+    {
+      id: 'guardian-reveals',
+      speaker: 'The Nexus Guardian',
+      text: 'I am the Nexus Guardian. Earth, Fire, Water, Wind - all psynergy flows through me. The Overseer was a puppet. The Titans, my servants. THIS is ultimate power.',
+      portrait: 'enemy-nexus',
+      nextNodeId: 'isaac-stands-firm',
+    },
+    {
+      id: 'isaac-stands-firm',
+      speaker: 'Isaac',
+      text: 'You control all elements? Then you\'ll understand what happens when they turn against you.',
+      portrait: 'isaac',
+      nextNodeId: 'sentinel-ready',
+    },
+    {
+      id: 'sentinel-ready',
+      speaker: 'Sentinel',
+      text: 'Twenty-nine houses. Every element. Every challenge. We\'ve mastered them all. Your nexus is nothing we haven\'t faced!',
+      portrait: 'sentinel',
+      nextNodeId: 'stormcaller-charges',
+    },
+    {
+      id: 'stormcaller-charges',
+      speaker: 'Stormcaller',
+      text: '*lightning crackling* For everyone who believed in us! For the world that needs to be FREE!',
+      portrait: 'stormcaller',
+      nextNodeId: 'isaac-final',
+    },
+    {
+      id: 'isaac-final',
+      speaker: 'Isaac',
+      text: '*raises sword, all djinn glow* This is it, team. The final house. THE FINAL BATTLE! FOR WEYARD!',
+      portrait: 'isaac',
+      effects: { startBattle: 'house-30' },
+    },
+  ],
+};
+
+// ============================================================================
 // Export all dialogues
 // ============================================================================
 
@@ -647,4 +969,15 @@ export const LIBERATION_DIALOGUES: Record<string, DialogueTree> = {
   'house-18': HOUSE_18_DIALOGUE,
   'house-19': HOUSE_19_DIALOGUE,
   'house-20': HOUSE_20_DIALOGUE,
+  // Chapter 2: Beyond Vale
+  'house-21': HOUSE_21_DIALOGUE,
+  'house-22': HOUSE_22_DIALOGUE,
+  'house-23': HOUSE_23_DIALOGUE,
+  'house-24': HOUSE_24_DIALOGUE,
+  'house-25': HOUSE_25_DIALOGUE,
+  'house-26': HOUSE_26_DIALOGUE,
+  'house-27': HOUSE_27_DIALOGUE,
+  'house-28': HOUSE_28_DIALOGUE,
+  'house-29': HOUSE_29_DIALOGUE,
+  'house-30': HOUSE_30_DIALOGUE,
 };
