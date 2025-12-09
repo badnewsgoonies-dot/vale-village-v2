@@ -20,6 +20,7 @@ import { updateUnit } from '../../core/models/Unit';
 import { calculateEquipmentBonuses } from '../../core/models/Equipment';
 import { calculateLevelBonuses } from '../../core/algorithms/stats';
 import './ShopEquipScreen.css';
+import type { Stats } from '../../core/models/types';
 import type { Equipment } from '../../data/schemas/EquipmentSchema';
 import type { Unit } from '../../core/models/Unit';
 import type { EquipmentSlot } from '../../core/models/Equipment';
@@ -33,6 +34,37 @@ interface ShopEquipScreenProps {
 }
 
 const EQUIPMENT_SLOTS: EquipmentSlot[] = ['weapon', 'armor', 'helm', 'boots', 'accessory'];
+
+type StatKey = keyof Stats;
+const COMPARISON_STATS: StatKey[] = ['hp', 'pp', 'atk', 'def', 'mag', 'spd'];
+
+function buildStatDeltas(candidate: Equipment, current: Equipment | null | undefined) {
+  return COMPARISON_STATS
+    .map((stat) => {
+      const candidateVal = candidate.statBonus[stat] ?? 0;
+      const currentVal = current?.statBonus[stat] ?? 0;
+      const delta = candidateVal - currentVal;
+      return { stat, delta };
+    })
+    .filter(({ delta }) => delta !== 0);
+}
+
+function DeltaBadges({ deltas }: { deltas: ReturnType<typeof buildStatDeltas> }) {
+  if (deltas.length === 0) return null;
+  return (
+    <div class="item-deltas">
+      {deltas.map(({ stat, delta }) => (
+        <span
+          key={stat}
+          class={`delta-badge ${delta > 0 ? 'delta-up' : 'delta-down'}`}
+        >
+          {delta > 0 ? '+' : ''}
+          {delta} {stat.toUpperCase()}
+        </span>
+      ))}
+    </div>
+  );
+}
 
 export function ShopEquipScreen({ shopId, onClose }: ShopEquipScreenProps): JSX.Element {
   const { gold, addGold, addEquipment, removeEquipment, team, updateTeamUnits, equipment: inventory } = useStore((s) => ({
@@ -293,6 +325,11 @@ export function ShopEquipScreen({ shopId, onClose }: ShopEquipScreenProps): JSX.
                                         </span>
                                       ))}
                                     </div>
+                                    {selectedUnit && (
+                                      <DeltaBadges
+                                        deltas={buildStatDeltas(item, selectedUnit.equipment[item.slot])}
+                                      />
+                                    )}
                                     <div class="item-price">{item.cost}g</div>
                                   </div>
                                   <button
@@ -325,20 +362,25 @@ export function ShopEquipScreen({ shopId, onClose }: ShopEquipScreenProps): JSX.
                               <div class="item-icon">
                                 <EquipmentIcon equipment={item} />
                               </div>
-                              <div class="item-details">
-                                <div class="item-name">{item.name}</div>
-                                <div class="item-stats">
-                                  {Object.entries(item.statBonus).map(([stat, value]) => (
-                                    <span key={stat} class="stat-badge">
-                                      +{value} {stat.toUpperCase()}
-                                    </span>
-                                  ))}
+                                <div class="item-details">
+                                  <div class="item-name">{item.name}</div>
+                                  <div class="item-stats">
+                                    {Object.entries(item.statBonus).map(([stat, value]) => (
+                                      <span key={stat} class="stat-badge">
+                                        +{value} {stat.toUpperCase()}
+                                      </span>
+                                    ))}
+                                  </div>
+                                  {selectedUnit && (
+                                    <DeltaBadges
+                                      deltas={buildStatDeltas(item, selectedUnit.equipment[item.slot])}
+                                    />
+                                  )}
+                                  <div class="item-price">{item.cost}g</div>
                                 </div>
-                                <div class="item-price">{item.cost}g</div>
-                              </div>
-                              <button
-                                class="buy-btn"
-                                onClick={() => handleUnlock(item.id)}
+                                <button
+                                  class="buy-btn"
+                                  onClick={() => handleUnlock(item.id)}
                                 disabled={!affordable}
                               >
                                 Unlock Equipment
@@ -494,6 +536,9 @@ export function ShopEquipScreen({ shopId, onClose }: ShopEquipScreenProps): JSX.
                                       {item.statBonus.mag && `+${item.statBonus.mag} MAG `}
                                       {item.statBonus.spd && `+${item.statBonus.spd} SPD `}
                                     </div>
+                                    <DeltaBadges
+                                      deltas={buildStatDeltas(item, selectedUnit.equipment[item.slot])}
+                                    />
                                   </div>
                                 ))}
                               </div>

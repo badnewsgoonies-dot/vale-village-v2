@@ -5,6 +5,7 @@ export const FLINT: Djinn = {
   name: 'Flint',
   element: 'Venus',
   tier: '1',
+  description: 'A steadfast earth spirit that has watched over mountain villages for centuries.',
   summonEffect: {
     type: 'damage',
     description: 'Stone Barrage scatters earth shards at all foes.',
@@ -92,6 +93,7 @@ export const GRANITE: Djinn = {
   name: 'Granite',
   element: 'Venus',
   tier: '2',
+  description: 'An ancient spirit of bedrock, unyielding as the mountains themselves.',
   summonEffect: {
     type: 'buff',
     description: 'Terra Wall raises nearby allies’ defenses.',
@@ -266,6 +268,7 @@ export const FORGE: Djinn = {
   name: 'Forge',
   element: 'Mars',
   tier: '1',
+  description: 'A blazing spirit born from volcanic fires, fierce and passionate.',
   summonEffect: {
     type: 'damage',
     description: 'Firebolt barrage burns every foe.',
@@ -554,6 +557,7 @@ export const FIZZ: Djinn = {
   name: 'Fizz',
   element: 'Mercury',
   tier: '1',
+  description: 'A playful water spirit that dances through streams and rain.',
   summonEffect: {
     type: 'damage',
     description: 'Shards of ice sweep across enemies.',
@@ -686,6 +690,7 @@ export const BREEZE: Djinn = {
   name: 'Breeze',
   element: 'Jupiter',
   tier: '1',
+  description: 'A swift wind spirit that carries whispers across the skies.',
   summonEffect: {
     type: 'damage',
     description: 'Gale shards sweep every enemy.',

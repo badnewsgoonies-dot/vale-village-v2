@@ -25,12 +25,10 @@ const MENU_CHARACTERS = {
 
 export function MainMenu() {
   const startTransition = useGameStore((s) => s.startTransition);
-  const setScreen = useGameStore((s) => s.setScreen);
   const openModal = useGameStore((s) => s.openModal);
   const setTeam = useStore((s) => s.setTeam);
   const addUnitToRoster = useStore((s) => s.addUnitToRoster);
   const openTowerFromMainMenu = useStore((s) => s.openTowerFromMainMenu);
-  const loadGameSlot = useStore((s) => s.loadGameSlot);
   const hasSaveSlot = useStore((s) => s.hasSaveSlot);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [hasSaveFile, setHasSaveFile] = useState(false);

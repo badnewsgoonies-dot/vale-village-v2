@@ -39,6 +39,7 @@ export const DjinnSchema = z.object({
   name: z.string().min(1),
   element: ElementSchema,
   tier: z.enum(['1', '2', '3']),
+  description: z.string().optional(), // Lore/flavor text about the Djinn
   summonEffect: DjinnSummonEffectSchema,
   grantedAbilities: z.record(z.string().min(1), DjinnGrantedAbilitiesSchema),
   availableIn: ContentAvailabilitySchema.optional().readonly(),

@@ -19,6 +19,7 @@ interface PauseMenuProps {
   onTeamManagement?: () => void;
   onInventory?: () => void;
   onDjinnCollection?: () => void;
+  onCompendium?: () => void;
   onSaveGame?: () => void;
   onSettings?: () => void;
   onHowToPlay?: () => void;
@@ -39,6 +40,7 @@ export function PauseMenu({
   onTeamManagement,
   onInventory,
   onDjinnCollection,
+  onCompendium,
   onSaveGame,
   onSettings,
   onHowToPlay,
@@ -58,7 +60,8 @@ export function PauseMenu({
     { id: 'resume', icon: '▶️', label: 'Resume Game', shortcut: 'ESC', action: onClose },
     { id: 'team', icon: '👥', label: 'Team Management', shortcut: 'T', action: onTeamManagement },
     { id: 'inventory', icon: '🎒', label: 'Inventory', shortcut: 'I', action: onInventory },
-    { id: 'djinn', icon: '✨', label: 'Djinn Collection', shortcut: 'D', action: onDjinnCollection, dividerAfter: true },
+    { id: 'djinn', icon: '✨', label: 'Djinn Collection', shortcut: 'D', action: onDjinnCollection },
+    { id: 'compendium', icon: '📚', label: 'Compendium', shortcut: 'C', action: onCompendium, dividerAfter: true },
     { id: 'save', icon: '💾', label: 'Save Game', shortcut: 'S', action: onSaveGame },
     { id: 'settings', icon: '⚙️', label: 'Settings', shortcut: 'O', action: onSettings },
     { id: 'help', icon: '❓', label: 'How to Play', shortcut: 'H', action: onHowToPlay, dividerAfter: true },
@@ -119,6 +122,13 @@ export function PauseMenu({
         case 'D':
           if (onDjinnCollection) {
             const idx = menuItems.findIndex((m) => m.id === 'djinn');
+            executeAction(idx);
+          }
+          break;
+        case 'c':
+        case 'C':
+          if (onCompendium) {
+            const idx = menuItems.findIndex((m) => m.id === 'compendium');
             executeAction(idx);
           }
           break;

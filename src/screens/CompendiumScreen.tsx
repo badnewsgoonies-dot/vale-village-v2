@@ -5,6 +5,7 @@
 
 import { useState, useEffect } from 'preact/hooks';
 import { useGameStore } from '../store/gameStore';
+import { useStore } from '../ui/state/store';
 import { DJINN } from '../data/definitions/djinn';
 import { UNIT_DEFINITIONS } from '../data/definitions/units';
 import { EQUIPMENT } from '../data/definitions/equipment';
@@ -59,11 +60,21 @@ const EQUIPMENT_TIER_LABELS: Record<string, string> = {
   artifact: 'Artifact',
 };
 
+// Ownership Badge Component
+function OwnershipBadge({ isOwned }: { isOwned: boolean }) {
+  return (
+    <div class={`ownership-badge ${isOwned ? 'owned' : 'not-owned'}`}>
+      {isOwned ? '✓' : '?'}
+    </div>
+  );
+}
+
 // Djinn Card Component
-function DjinnCard({ djinn }: { djinn: Djinn }) {
+function DjinnCard({ djinn, isOwned }: { djinn: Djinn; isOwned: boolean }) {
   const elementLower = djinn.element.toLowerCase();
   return (
-    <div class="compendium-card" style={{ borderColor: getElementColor(djinn.element) }}>
+    <div class={`compendium-card ${!isOwned ? 'not-owned' : ''}`} style={{ borderColor: getElementColor(djinn.element) }}>
+      <OwnershipBadge isOwned={isOwned} />
       <div class="compendium-card-header">
         <h3 class="compendium-card-title">{djinn.name}</h3>
         <span class="compendium-card-element" style={{ backgroundColor: getElementColor(djinn.element) }}>
@@ -79,6 +90,9 @@ function DjinnCard({ djinn }: { djinn: Djinn }) {
       </div>
       <div class="compendium-card-body">
         <div class="compendium-card-tier">{TIER_LABELS[djinn.tier] || djinn.tier}</div>
+        {djinn.description && (
+          <p class="compendium-card-description">{djinn.description}</p>
+        )}
         <div class="compendium-card-section">
           <h4>Summon Effect</h4>
           <p class="compendium-card-description">{djinn.summonEffect.description}</p>
@@ -100,10 +114,11 @@ function DjinnCard({ djinn }: { djinn: Djinn }) {
 }
 
 // Unit Card Component
-function UnitCard({ unit }: { unit: UnitDefinition }) {
+function UnitCard({ unit, isRecruited }: { unit: UnitDefinition; isRecruited: boolean }) {
   const portraitId = getPortraitSprite(unit.id);
   return (
-    <div class="compendium-card" style={{ borderColor: getElementColor(unit.element) }}>
+    <div class={`compendium-card ${!isRecruited ? 'not-owned' : ''}`} style={{ borderColor: getElementColor(unit.element) }}>
+      <OwnershipBadge isOwned={isRecruited} />
       <div class="compendium-card-header">
         <h3 class="compendium-card-title">{unit.name}</h3>
         <span class="compendium-card-element" style={{ backgroundColor: getElementColor(unit.element) }}>
@@ -141,9 +156,10 @@ function UnitCard({ unit }: { unit: UnitDefinition }) {
 }
 
 // Equipment Card Component
-function EquipmentCard({ equipment }: { equipment: Equipment }) {
+function EquipmentCard({ equipment, isOwned }: { equipment: Equipment; isOwned: boolean }) {
   return (
-    <div class="compendium-card" style={{ borderColor: '#888' }}>
+    <div class={`compendium-card ${!isOwned ? 'not-owned' : ''}`} style={{ borderColor: '#888' }}>
+      <OwnershipBadge isOwned={isOwned} />
       <div class="compendium-card-header">
         <h3 class="compendium-card-title">{equipment.name}</h3>
         <span class="compendium-card-tier-badge">
@@ -251,6 +267,18 @@ export function CompendiumScreen() {
   const [activeTab, setActiveTab] = useState<TabType>('djinn');
   const [selectedIndex, setSelectedIndex] = useState(0);
 
+  // Get player ownership data from store
+  const { team, roster, equipment: ownedEquipment } = useStore((s) => ({
+    team: s.team,
+    roster: s.roster,
+    equipment: s.equipment,
+  }));
+
+  // Build lookup sets for efficient ownership checks
+  const collectedDjinnIds = new Set(team?.collectedDjinn || []);
+  const recruitedUnitIds = new Set(roster.map((u) => u.id));
+  const ownedEquipmentIds = new Set(ownedEquipment.map((e) => e.id));
+
   // Get data for current tab - filter out tower-exclusive content
   const djinnList = Object.values(DJINN).filter(d => !d.availableIn || d.availableIn.length === 0);
   const unitsList = Object.values(UNIT_DEFINITIONS).filter(u => !u.availableIn || u.availableIn.length === 0);
@@ -335,7 +363,7 @@ export function CompendiumScreen() {
           <div class="compendium-grid">
             {djinnList.map((djinn, index) => (
               <div key={djinn.id} class={selectedIndex === index ? 'selected' : ''}>
-                <DjinnCard djinn={djinn} />
+                <DjinnCard djinn={djinn} isOwned={collectedDjinnIds.has(djinn.id)} />
               </div>
             ))}
           </div>
@@ -345,7 +373,7 @@ export function CompendiumScreen() {
           <div class="compendium-grid">
             {unitsList.map((unit, index) => (
               <div key={unit.id} class={selectedIndex === index ? 'selected' : ''}>
-                <UnitCard unit={unit} />
+                <UnitCard unit={unit} isRecruited={recruitedUnitIds.has(unit.id)} />
               </div>
             ))}
           </div>
@@ -365,7 +393,7 @@ export function CompendiumScreen() {
           <div class="compendium-grid">
             {equipmentList.map((equipment, index) => (
               <div key={equipment.id} class={selectedIndex === index ? 'selected' : ''}>
-                <EquipmentCard equipment={equipment} />
+                <EquipmentCard equipment={equipment} isOwned={ownedEquipmentIds.has(equipment.id)} />
               </div>
             ))}
           </div>

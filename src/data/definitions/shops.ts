@@ -23,6 +23,9 @@ export const SHOPS: Record<string, Shop> = {
       'iron-helm',
       'leather-boots',
       'iron-boots',
+      'mythril-blade',
+      'mythril-armor',
+      'mythril-staff',
     ],
   },
   'kolima-shop': {
@@ -41,5 +44,4 @@ export const SHOPS: Record<string, Shop> = {
     unlockCondition: (flags) => flags['kolimaUnlocked'] === true,
   },
 };
-
 

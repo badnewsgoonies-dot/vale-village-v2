@@ -37,6 +37,10 @@ export const STORY_FLAG_TO_DJINN: Record<string, string> = {
   // Chapter 3 Djinn
   'boss:ch2': 'bane',                 // Chapter 2 boss grants Bane (Venus T3)
   'house:liberated:06': 'fury',       // Third liberated house grants Fury (Mars T3)
+  'house:liberated:21': 'tonic',      // House 21 grants Tonic (Mercury T2)
+  'house:liberated:22': 'corona',     // House 22 grants Corona (Mars T2)
+  'house:liberated:24': 'chill',      // House 24 grants Chill (Mercury T3)
+  'house:liberated:26': 'fury',       // House 26 grants Fury (Mars T3)
   
   // Mercury Djinn (water/ice)
   'encounter:ch1:special': 'fizz',   // Special encounter grants Fizz (Mercury T1)
@@ -44,6 +48,7 @@ export const STORY_FLAG_TO_DJINN: Record<string, string> = {
   'encounter:ch2:special': 'crystal', // Special encounter grants Crystal (Mercury T3)
   
   // Jupiter Djinn (wind/storm)
+  'house:liberated:07': 'gust',       // House 7 unlocks Gust (Jupiter T1)
   'encounter:ch1:wind': 'breeze',     // Wind encounter grants Breeze (Jupiter T1)
   'miniboss:ch3': 'squall',           // Chapter 3 miniboss grants Squall (Jupiter T2)
   'boss:ch3': 'storm',                // Chapter 3 boss grants Storm (Jupiter T3)
@@ -69,6 +74,12 @@ export const DJINN_ACQUISITION_TIMELINE: Array<{
     flagId: 'encounter:ch1:wind',
     djinnId: 'breeze',
     description: 'Wind encounter - grants Breeze (Jupiter T1)',
+    chapter: 1,
+  },
+  {
+    flagId: 'house:liberated:07',
+    djinnId: 'gust',
+    description: 'House 7 - grants Gust (Jupiter T1)',
     chapter: 1,
   },
   {
@@ -120,6 +131,30 @@ export const DJINN_ACQUISITION_TIMELINE: Array<{
     chapter: 3,
   },
   {
+    flagId: 'house:liberated:21',
+    djinnId: 'tonic',
+    description: 'House 21 - grants Tonic (Mercury T2)',
+    chapter: 3,
+  },
+  {
+    flagId: 'house:liberated:22',
+    djinnId: 'corona',
+    description: 'House 22 - grants Corona (Mars T2)',
+    chapter: 3,
+  },
+  {
+    flagId: 'house:liberated:24',
+    djinnId: 'chill',
+    description: 'House 24 - grants Chill (Mercury T3)',
+    chapter: 3,
+  },
+  {
+    flagId: 'house:liberated:26',
+    djinnId: 'fury',
+    description: 'House 26 - grants Fury (Mars T3)',
+    chapter: 3,
+  },
+  {
     flagId: 'miniboss:ch3',
     djinnId: 'squall',
     description: 'Chapter 3 miniboss - grants Squall (Jupiter T2)',
@@ -132,4 +167,3 @@ export const DJINN_ACQUISITION_TIMELINE: Array<{
     chapter: 3,
   },
 ];
-

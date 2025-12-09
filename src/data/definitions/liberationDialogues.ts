@@ -239,12 +239,19 @@ export const HOUSE_10_DIALOGUE: DialogueTree = {
       speaker: 'Stone Captain',
       text: 'A captain at last. You\'ve fought soldiers and scouts. But captains... we\'re ELITE. This is where your liberation ends.',
       portrait: 'enemy-captain',
+      nextNodeId: 'sentinel-tactical',
+    },
+    {
+      id: 'sentinel-tactical',
+      speaker: 'Sentinel',
+      text: 'Isaac, notice the pattern? Scouts, soldiers, now captains. Each house escalates their best fighters. They\'re testing us, learning our tactics.',
+      portrait: 'sentinel',
       nextNodeId: 'isaac-ready',
     },
     {
       id: 'isaac-ready',
       speaker: 'Isaac',
-      text: '*grips sword* Elite or not, you\'re standing between me and freedom. Let\'s go!',
+      text: '*grips sword* Then let\'s give them something NEW to learn. Elite or not, you\'re going down!',
       portrait: 'isaac',
       effects: { startBattle: 'house-10' }, // Dialogue ends here - battle starts
     },
@@ -268,12 +275,19 @@ export const HOUSE_11_DIALOGUE: DialogueTree = {
       speaker: 'Isaac',
       text: 'A Phoenix?! Those are supposed to be extinct! How did you...?',
       portrait: 'isaac',
+      nextNodeId: 'sentinel-tactical',
+    },
+    {
+      id: 'sentinel-tactical',
+      speaker: 'Sentinel',
+      text: 'Focus on the captain first, Isaac. The Phoenix draws power from its master. Break their connection and it won\'t regenerate as fast.',
+      portrait: 'sentinel',
       nextNodeId: 'captain-laughs',
     },
     {
       id: 'captain-laughs',
       speaker: 'Inferno Captain',
-      text: '*laughs* Extinct? Not if you know where to look! Now, face the flames of rebirth!',
+      text: '*laughs* Extinct? Not if you know where to look! Your strategy won\'t save you - face the flames of rebirth!',
       portrait: 'enemy-captain',
       effects: { startBattle: 'house-11' }, // Dialogue ends here - battle starts
     },
@@ -290,12 +304,19 @@ export const HOUSE_12_DIALOGUE: DialogueTree = {
       speaker: 'Glacier Captain',
       text: 'Phoenix, you say? Try fighting a LEVIATHAN. The sea serpent of legend. This will be your coldest battle yet.',
       portrait: 'enemy-captain',
+      nextNodeId: 'sentinel-tactical',
+    },
+    {
+      id: 'sentinel-tactical',
+      speaker: 'Sentinel',
+      text: 'Water-types are weak to my earth psynergy, but this one\'s part ice. Watch for frost breath attacks - they slow movement. I\'ll try to draw its attention.',
+      portrait: 'sentinel',
       nextNodeId: 'isaac-undeterred',
     },
     {
       id: 'isaac-undeterred',
       speaker: 'Isaac',
-      text: 'Legend or not, it deserves freedom. Let\'s break those chains!',
+      text: 'Good eye. Legend or not, it deserves freedom. Let\'s break those chains!',
       portrait: 'isaac',
       effects: { startBattle: 'house-12' }, // Dialogue ends here - battle starts
     },

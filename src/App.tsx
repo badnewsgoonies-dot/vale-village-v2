@@ -13,6 +13,8 @@ import { PreBattleTeamSelectScreenV2 } from './ui/components/PreBattleTeamSelect
 import { RewardsScreen } from './ui/components/RewardsScreen';
 import { ShopScreen } from './ui/components/ShopScreen';
 import { TowerHubScreen } from './ui/components/TowerHubScreen';
+import { CreditsScreen } from './ui/components/CreditsScreen';
+import { EpilogueScreen } from './ui/components/EpilogueScreen';
 import { useStore, store } from './ui/state/store';
 
 // Wrapper that reads team-select props from V1 store
@@ -131,7 +133,10 @@ import './index.css';
 function useStoreSync() {
   const mode = useStore((s) => s.mode);
   const towerStatus = useStore((s) => s.towerStatus);
+  const showCredits = useStore((s) => s.showCredits);
+  const setShowCredits = useStore((s) => s.setShowCredits);
   const setScreen = useGameStore((s) => s.setScreen);
+  const startTransition = useGameStore((s) => s.startTransition);
 
   useEffect(() => {
     // Only sync tower mode - other modes are handled by their respective components
@@ -139,6 +144,15 @@ function useStoreSync() {
       setScreen('tower');
     }
   }, [mode, towerStatus, setScreen]);
+
+  // Sync showCredits flag to credits screen
+  useEffect(() => {
+    if (showCredits) {
+      startTransition('credits');
+      // Reset the flag so it doesn't re-trigger
+      setShowCredits(false);
+    }
+  }, [showCredits, startTransition, setShowCredits]);
 }
 
 type DevOverlayProps = {
@@ -209,6 +223,16 @@ const App: FunctionComponent = () => {
         return;
       }
 
+      // Inventory shortcut 'I' - works on overworld/menu screens regardless of dev mode
+      if (event.code === 'KeyI' && !isDevMode) {
+        const allowedScreens: ScreenType[] = ['overworld', 'menu', 'team-management', 'djinn-collection'];
+        if (allowedScreens.includes(screen)) {
+          event.preventDefault();
+          setModal('inventory');
+        }
+        return;
+      }
+
       if (!isDevMode) {
         return;
       }
@@ -248,7 +272,7 @@ const App: FunctionComponent = () => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isDevMode, setScreen, setModal]);
+  }, [isDevMode, screen, setScreen, setModal]);
 
   const renderScreen = (): JSX.Element => {
     switch (screen) {
@@ -274,6 +298,10 @@ const App: FunctionComponent = () => {
         return <DjinnCollectionScreen onClose={() => startTransition('overworld')} />;
       case 'tower':
         return <TowerHubScreen />;
+      case 'credits':
+        return <CreditsScreen onExit={() => startTransition('epilogue')} />;
+      case 'epilogue':
+        return <EpilogueScreen onComplete={() => startTransition('title')} />;
       default:
         return <TitleScreen />;
     }

@@ -74,9 +74,8 @@ export function DjinnCollectionScreen({ onClose }: DjinnCollectionScreenProps): 
   };
 
   const getDjinnSprite = (element: string): string => {
-    // Map element to Djinn sprite (using Front variant)
-    const elementLower = element.toLowerCase();
-    return `${elementLower}-djinn-front`;
+    // Semantic ID for catalog lookup (e.g., "venus-djinn-front")
+    return `${element.toLowerCase()}-djinn-front`;
   };
 
   return (

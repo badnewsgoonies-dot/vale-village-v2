@@ -22,8 +22,6 @@ import { ModeLabel } from './ModeLabel';
 import type { Ability } from '../../data/schemas/AbilitySchema';
 import type { Unit } from '../../core/models/Unit';
 import type { BattleEvent } from '../../core/services/types';
-import { getEnemyBattleSprite } from '../sprites/mappings/battleSprites';
-import { SimpleSprite } from '../sprites/SimpleSprite';
 import { BattleUnitSprite } from './BattleUnitSprite';
 import { ABILITIES } from '../../data/definitions/abilities';
 // Direct ability→GIF mapping in ABILITY_FX_MAP below (only for existing GIFs)
@@ -1000,9 +998,8 @@ export function QueueBattleView() {
                 return false;
               });
               if (isUnitKO(enemy) && !hasPendingEvent) return null;
-              const mappedSprite = getEnemyBattleSprite(enemy.id, 'idle');
-              const nameBasedFallback = `/sprites/battle/enemies/${enemy.name.replace(/\s+/g, '')}.gif`;
-              const spriteId = mappedSprite ?? nameBasedFallback;
+              const animationState: 'idle' | 'attack' | 'hit' =
+                isActor ? 'attack' : isResolvingTarget ? 'hit' : 'idle';
               return (
                 <div
                   key={enemy.id}
@@ -1040,19 +1037,11 @@ export function QueueBattleView() {
                         : 'none',
                     }}
                   >
-                    <SimpleSprite
-                      id={spriteId}
-                      width={64}
-                      height={64}
-                      fallback={
-                        <SimpleSprite
-                          id="/sprites/battle/enemies/Goblin.gif"
-                          width={64}
-                          height={64}
-                          imageRendering="pixelated"
-                        />
-                      }
-                      imageRendering="pixelated"
+                    <BattleUnitSprite
+                      unitId={enemy.id}
+                      state={animationState}
+                      size="large"
+                      isPlayer={false}
                     />
                   </div>
                   {floatingNumbers
@@ -1139,6 +1128,8 @@ export function QueueBattleView() {
               if (isUnitKO(unit) && !hasPendingEvent) return null;
               const isActor = currentActorId === unit.id;
               const isTarget = highlightedTargets.has(unit.id);
+              const animationState: 'idle' | 'attack' | 'hit' =
+                isActor ? 'attack' : isTarget ? 'hit' : 'idle';
               return (
                 <div
                   key={unit.id}
@@ -1172,7 +1163,7 @@ export function QueueBattleView() {
                       filter: isTarget ? 'drop-shadow(0 0 12px rgba(255,216,127,0.8))' : 'none',
                     }}
                   >
-                    <BattleUnitSprite unitId={unit.id} state="idle" size="large" />
+                    <BattleUnitSprite unitId={unit.id} state={animationState} size="large" />
                   </div>
                   {isTarget && (
                     <div
