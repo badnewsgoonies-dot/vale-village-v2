@@ -1,0 +1,163 @@
+{
+  "$schema": "./balance-scenarios.schema.json",
+  "version": "1.0",
+  "description": "Battle scenarios for deterministic balance simulation",
+  "scenarios": [
+    {
+      "id": "tutorial-1v1",
+      "name": "Tutorial: Isaac vs Garet",
+      "category": "early-game",
+      "playerUnits": ["adept"],
+      "playerLevel": 1,
+      "enemyIds": ["garet-enemy"],
+      "strategy": "basic-attack",
+      "expectedWinRate": [85, 95],
+      "expectedTurns": [2, 4],
+      "notes": "First battle, should be easy win"
+    },
+    {
+      "id": "house-02-easy",
+      "name": "House 2: Bronze Trial",
+      "category": "early-game",
+      "playerUnits": ["adept", "war-mage"],
+      "playerLevel": 1,
+      "enemyIds": ["earth-scout", "venus-wolf"],
+      "strategy": "basic-attack",
+      "expectedWinRate": [80, 90],
+      "expectedTurns": [3, 5],
+      "notes": "2v2 early game"
+    },
+    {
+      "id": "house-05-recruit",
+      "name": "House 5: Blaze Recruit",
+      "category": "early-game",
+      "playerUnits": ["adept", "war-mage", "mystic"],
+      "playerLevel": 2,
+      "enemyIds": ["gale-scout", "gale-priest"],
+      "strategy": "optimal-ability",
+      "expectedWinRate": [75, 85],
+      "expectedTurns": [4, 6],
+      "notes": "First healer enemy (Gale Priest)"
+    },
+    {
+      "id": "house-07-summons",
+      "name": "House 7: Summons Unlock",
+      "category": "early-game",
+      "playerUnits": ["adept", "war-mage", "mystic", "ranger"],
+      "playerLevel": 3,
+      "enemyIds": ["terra-soldier", "venus-bear", "earth-shaman"],
+      "strategy": "optimal-ability",
+      "expectedWinRate": [70, 85],
+      "expectedTurns": [5, 8],
+      "notes": "3 Djinn milestone, Earth Shaman buffs"
+    },
+    {
+      "id": "house-10-mid",
+      "name": "House 10: Burning Gauntlet",
+      "category": "mid-game",
+      "playerUnits": ["adept", "war-mage", "mystic", "ranger"],
+      "playerLevel": 4,
+      "enemyIds": ["blaze-soldier", "mars-bear", "flame-elemental"],
+      "strategy": "optimal-ability",
+      "expectedWinRate": [65, 80],
+      "expectedTurns": [5, 8],
+      "notes": "Flame Elemental phase-change"
+    },
+    {
+      "id": "house-12-t2djinn",
+      "name": "House 12: Granite Fortress",
+      "category": "mid-game",
+      "playerUnits": ["adept", "war-mage", "mystic", "ranger"],
+      "playerLevel": 5,
+      "enemyIds": ["inferno-captain", "phoenix", "flame-herald"],
+      "strategy": "optimal-ability",
+      "expectedWinRate": [60, 75],
+      "expectedTurns": [6, 10],
+      "notes": "Phoenix 3-phase boss, T2 Djinn reward"
+    },
+    {
+      "id": "house-15-stormcaller",
+      "name": "House 15: Storm Unleashed",
+      "category": "late-game",
+      "playerUnits": ["adept", "war-mage", "mystic", "ranger"],
+      "playerLevel": 6,
+      "enemyIds": ["terra-soldier", "blaze-soldier", "wind-soldier"],
+      "strategy": "optimal-ability",
+      "expectedWinRate": [70, 85],
+      "expectedTurns": [5, 8],
+      "notes": "Stormcaller recruit, 8 mana/round"
+    },
+    {
+      "id": "house-20-overseer",
+      "name": "House 20: Overseer Boss",
+      "category": "boss",
+      "playerUnits": ["adept", "war-mage", "mystic", "ranger"],
+      "playerLevel": 8,
+      "enemyIds": ["overseer", "chimera", "tempest-warlord"],
+      "strategy": "optimal-ability",
+      "expectedWinRate": [50, 70],
+      "expectedTurns": [10, 15],
+      "notes": "Chapter 1 finale, phase-change at 50% HP"
+    },
+    {
+      "id": "tower-f5",
+      "name": "Tower Floor 5",
+      "category": "tower",
+      "playerUnits": ["adept", "war-mage"],
+      "playerLevel": 2,
+      "enemyIds": ["frost-scout", "frost-mystic"],
+      "strategy": "basic-attack",
+      "expectedWinRate": [75, 90],
+      "expectedTurns": [3, 5],
+      "notes": "Early tower, rental gear"
+    },
+    {
+      "id": "tower-f10-boss",
+      "name": "Tower Floor 10: Sentinel Boss",
+      "category": "tower",
+      "playerUnits": ["adept", "war-mage", "mystic"],
+      "playerLevel": 4,
+      "enemyIds": ["jupiter-bear", "wind-soldier", "tide-enchanter"],
+      "strategy": "optimal-ability",
+      "expectedWinRate": [60, 80],
+      "expectedTurns": [6, 10],
+      "notes": "First tower boss, Fizz Djinn"
+    },
+    {
+      "id": "tower-f20-finale",
+      "name": "Tower Floor 20: Overseer",
+      "category": "tower",
+      "playerUnits": ["adept", "war-mage", "mystic", "ranger"],
+      "playerLevel": 7,
+      "enemyIds": ["overseer", "chimera", "tempest-warlord"],
+      "strategy": "optimal-ability",
+      "expectedWinRate": [45, 65],
+      "expectedTurns": [10, 15],
+      "notes": "Tower chapter finale"
+    },
+    {
+      "id": "stress-underleveled",
+      "name": "Stress: Underleveled Party",
+      "category": "stress-test",
+      "playerUnits": ["adept"],
+      "playerLevel": 1,
+      "enemyIds": ["stone-guardian", "ember-cleric", "flame-scout"],
+      "strategy": "basic-attack",
+      "expectedWinRate": [10, 30],
+      "expectedTurns": [3, 6],
+      "notes": "Should lose most of the time"
+    },
+    {
+      "id": "stress-overleveled",
+      "name": "Stress: Overleveled Party",
+      "category": "stress-test",
+      "playerUnits": ["adept", "war-mage", "mystic", "ranger"],
+      "playerLevel": 10,
+      "enemyIds": ["earth-scout", "venus-wolf"],
+      "strategy": "basic-attack",
+      "expectedWinRate": [98, 100],
+      "expectedTurns": [1, 2],
+      "notes": "Should trivially win"
+    }
+  ]
+}

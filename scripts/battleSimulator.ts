@@ -1,9 +1,5 @@
-/**
- * Headless Battle Simulator
- *
- * Runs battles without UI for balance testing and analysis.
- * Uses QueueBattleService for pure, deterministic battle simulation.
- */
+import fs from 'node:fs';
+import path from 'node:path';
 
 import type { Unit, UnitDefinition } from '../src/core/models/Unit';
 import type { Team } from '../src/core/models/Team';
@@ -19,14 +15,8 @@ import { UNIT_DEFINITIONS } from '../src/data/definitions/units';
 import { ENEMIES } from '../src/data/definitions/enemies';
 import type { Enemy } from '../src/data/schemas/EnemySchema';
 
-/**
- * Strategy types for AI decision-making
- */
 export type Strategy = 'basic-attack' | 'optimal-ability' | 'random';
 
-/**
- * Simulation metrics tracked per battle
- */
 export interface BattleMetrics {
   turns: number;
   damageDealt: number;
@@ -38,9 +28,6 @@ export interface BattleMetrics {
   enemiesKO: number;
 }
 
-/**
- * Result of a single simulation run
- */
 export interface SimulationResult {
   winner: 'player' | 'enemy' | 'draw';
   metrics: BattleMetrics;
@@ -49,9 +36,6 @@ export interface SimulationResult {
   finalState: BattleState;
 }
 
-/**
- * Aggregated results from multiple simulation runs
- */
 export interface AggregatedResults {
   totalRuns: number;
   playerWins: number;
@@ -271,10 +255,11 @@ export function runSimulation(
   enemyIds: string[],
   strategy: Strategy,
   seed: number,
-  maxRounds: number = 100
+  maxRounds: number = 100,
+  playerLevel: number = 1
 ): SimulationResult {
   // Create units and enemies
-  const playerUnits = createUnitsFromIds(playerUnitIds, 1);
+  const playerUnits = createUnitsFromIds(playerUnitIds, playerLevel);
   const enemies = createEnemiesFromIds(enemyIds);
 
   // Create team
@@ -339,13 +324,14 @@ export function runMultipleSimulations(
   enemyIds: string[],
   strategy: Strategy,
   runs: number,
-  baseSeed: number = Date.now()
+  baseSeed: number = Date.now(),
+  playerLevel: number = 1
 ): AggregatedResults {
   const results: SimulationResult[] = [];
 
   for (let i = 0; i < runs; i++) {
     const seed = baseSeed + i;
-    const result = runSimulation(playerUnitIds, enemyIds, strategy, seed);
+    const result = runSimulation(playerUnitIds, enemyIds, strategy, seed, 100, playerLevel);
     results.push(result);
   }
 
@@ -377,13 +363,130 @@ export function runMultipleSimulations(
 /**
  * CLI entry point
  */
+type ScenarioConfig = {
+  id: string;
+  name?: string;
+  category?: string;
+  playerUnits: string[];
+  playerLevel?: number;
+  enemyIds: string[];
+  strategy?: Strategy;
+  expectedWinRate?: [number, number];
+  expectedTurns?: [number, number];
+  notes?: string;
+};
+
+function writeOutputs(
+  scenario: string,
+  strategy: Strategy,
+  runs: number,
+  results: AggregatedResults,
+  outJsonPath?: string,
+  outMarkdownPath?: string
+): void {
+  const baseDir = path.resolve(__dirname, '..', 'docs', 'sims');
+  const safeScenario = scenario.replace(/[^a-zA-Z0-9_-]/g, '');
+  const safeStrategy = strategy.replace(/[^a-zA-Z0-9_-]/g, '');
+
+  const jsonPath = outJsonPath
+    ? path.resolve(outJsonPath)
+    : path.join(baseDir, `${safeScenario}-${safeStrategy}-${runs}.json`);
+  const mdPath = outMarkdownPath
+    ? path.resolve(outMarkdownPath)
+    : path.join(baseDir, `${safeScenario}-${safeStrategy}-${runs}.md`);
+
+  fs.mkdirSync(path.dirname(jsonPath), { recursive: true });
+
+  const summary = {
+    scenario,
+    strategy,
+    runs: results.totalRuns,
+    playerWins: results.playerWins,
+    enemyWins: results.enemyWins,
+    draws: results.draws,
+    winRate: results.winRate,
+    avgTurns: results.avgTurns,
+    avgDamageDealt: results.avgDamageDealt,
+    avgDamageTaken: results.avgDamageTaken,
+    avgManaUsed: results.avgManaUsed,
+  };
+
+  fs.writeFileSync(
+    jsonPath,
+    JSON.stringify({ summary, results }, null, 2),
+    'utf-8'
+  );
+
+  const mdLines = [
+    `# Battle Simulation Results`,
+    ``,
+    `- Scenario: \`${scenario}\``,
+    `- Strategy: \`${strategy}\``,
+    `- Runs: ${results.totalRuns}`,
+    ``,
+    `## Win Rates`,
+    `- Player Wins: ${results.playerWins} (${results.winRate.toFixed(1)}%)`,
+    `- Enemy Wins: ${results.enemyWins}`,
+    `- Draws: ${results.draws}`,
+    ``,
+    `## Averages`,
+    `- Turns: ${results.avgTurns.toFixed(1)}`,
+    `- Damage Dealt: ${results.avgDamageDealt.toFixed(1)}`,
+    `- Damage Taken: ${results.avgDamageTaken.toFixed(1)}`,
+    `- Mana Used: ${results.avgManaUsed.toFixed(1)}`,
+    ``,
+  ];
+
+  fs.mkdirSync(path.dirname(mdPath), { recursive: true });
+  fs.writeFileSync(mdPath, mdLines.join('\n'), 'utf-8');
+}
+
+function loadScenarioFile(filePath: string): Record<string, ScenarioConfig> | null {
+  try {
+    const resolved = path.resolve(process.cwd(), filePath);
+    const raw = fs.readFileSync(resolved, 'utf-8');
+    const parsed = JSON.parse(raw);
+    if (!parsed || !Array.isArray(parsed.scenarios)) {
+      throw new Error('Invalid scenario file: missing scenarios array');
+    }
+
+    const map: Record<string, ScenarioConfig> = {};
+    for (const scenario of parsed.scenarios) {
+      if (!scenario?.id || !Array.isArray(scenario.playerUnits) || !Array.isArray(scenario.enemyIds)) {
+        // Skip invalid entries quietly
+        continue;
+      }
+      map[scenario.id] = {
+        id: scenario.id,
+        name: scenario.name,
+        category: scenario.category,
+        playerUnits: scenario.playerUnits,
+        playerLevel: scenario.playerLevel,
+        enemyIds: scenario.enemyIds,
+        strategy: scenario.strategy as Strategy | undefined,
+        expectedWinRate: scenario.expectedWinRate,
+        expectedTurns: scenario.expectedTurns,
+        notes: scenario.notes,
+      };
+    }
+
+    return map;
+  } catch (error) {
+    console.warn(`Failed to load scenarios from ${filePath}:`, error);
+    return null;
+  }
+}
+
 function main() {
   const args = process.argv.slice(2);
 
-  // Parse CLI arguments
   let scenario = '4v4';
   let strategy: Strategy = 'basic-attack';
   let runs = 100;
+  let outJsonPath: string | undefined;
+  let outMarkdownPath: string | undefined;
+  let scenariosPath = 'docs/balance-scenarios.json';
+  let strategyFromArg = false;
 
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--scenario' && args[i + 1]) {
@@ -391,32 +494,50 @@ function main() {
       i++;
     } else if (args[i] === '--strategy' && args[i + 1]) {
       strategy = args[i + 1] as Strategy;
+      strategyFromArg = true;
       i++;
     } else if (args[i] === '--runs' && args[i + 1]) {
       runs = parseInt(args[i + 1]!, 10);
       i++;
+    } else if (args[i] === '--out-json' && args[i + 1]) {
+      outJsonPath = args[i + 1]!;
+      i++;
+    } else if (args[i] === '--out-md' && args[i + 1]) {
+      outMarkdownPath = args[i + 1]!;
+      i++;
+    } else if (args[i] === '--scenarios' && args[i + 1]) {
+      scenariosPath = args[i + 1]!;
+      i++;
     }
   }
 
-  // Define scenarios
-  const scenarios: Record<string, { player: string[]; enemies: string[] }> = {
+  // Define built-in fallback scenarios
+  const fallbackScenarios: Record<string, ScenarioConfig> = {
     '1v1': {
-      player: ['adept'],
-      enemies: ['venus-wolf'],
+      id: '1v1',
+      playerUnits: ['adept'],
+      enemyIds: ['venus-wolf'],
     },
     '2v2': {
-      player: ['adept', 'war-mage'],
-      enemies: ['venus-wolf', 'mars-wolf'],
+      id: '2v2',
+      playerUnits: ['adept', 'war-mage'],
+      enemyIds: ['venus-wolf', 'mars-wolf'],
     },
     '4v4': {
-      player: ['adept', 'war-mage', 'mystic', 'ranger'],
-      enemies: ['venus-wolf', 'mars-wolf', 'mercury-wolf', 'jupiter-wolf'],
+      id: '4v4',
+      playerUnits: ['adept', 'war-mage', 'mystic', 'ranger'],
+      enemyIds: ['venus-wolf', 'mars-wolf', 'mercury-wolf', 'jupiter-wolf'],
     },
     'boss': {
-      player: ['adept', 'war-mage', 'mystic', 'ranger'],
-      enemies: ['overseer'],
+      id: 'boss',
+      playerUnits: ['adept', 'war-mage', 'mystic', 'ranger'],
+      enemyIds: ['overseer'],
+      strategy: 'optimal-ability',
     },
   };
+
+  const loadedScenarios = loadScenarioFile(scenariosPath);
+  const scenarios = loadedScenarios ?? fallbackScenarios;
 
   const selectedScenario = scenarios[scenario];
   if (!selectedScenario) {
@@ -425,18 +546,32 @@ function main() {
     process.exit(1);
   }
 
+  const chosenStrategy = strategyFromArg
+    ? strategy
+    : (selectedScenario.strategy ?? strategy);
+  const playerLevel = selectedScenario.playerLevel ?? 1;
+
   console.log(`Running ${runs} simulations...`);
   console.log(`Scenario: ${scenario}`);
-  console.log(`Strategy: ${strategy}`);
-  console.log(`Player: ${selectedScenario.player.join(', ')}`);
-  console.log(`Enemies: ${selectedScenario.enemies.join(', ')}`);
+  if (selectedScenario.name) {
+    console.log(`Name: ${selectedScenario.name}`);
+  }
+  if (selectedScenario.category) {
+    console.log(`Category: ${selectedScenario.category}`);
+  }
+  console.log(`Strategy: ${chosenStrategy}`);
+  console.log(`Player Level: ${playerLevel}`);
+  console.log(`Player: ${selectedScenario.playerUnits.join(', ')}`);
+  console.log(`Enemies: ${selectedScenario.enemyIds.join(', ')}`);
   console.log('');
 
   const results = runMultipleSimulations(
-    selectedScenario.player,
-    selectedScenario.enemies,
-    strategy,
-    runs
+    selectedScenario.playerUnits,
+    selectedScenario.enemyIds,
+    chosenStrategy,
+    runs,
+    Date.now(),
+    playerLevel
   );
 
   console.log('=== RESULTS ===');
@@ -450,6 +585,14 @@ function main() {
   console.log(`Damage Dealt: ${results.avgDamageDealt.toFixed(1)}`);
   console.log(`Damage Taken: ${results.avgDamageTaken.toFixed(1)}`);
   console.log(`Mana Used: ${results.avgManaUsed.toFixed(1)}`);
+
+  try {
+    writeOutputs(scenario, chosenStrategy, runs, results, outJsonPath, outMarkdownPath);
+    console.log('');
+    console.log(`Results written to docs/sims (or custom paths if provided).`);
+  } catch (error) {
+    console.warn('Failed to write simulation outputs:', error);
+  }
 }
 
 // Export main for CLI usage

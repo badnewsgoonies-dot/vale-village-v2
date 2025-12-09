@@ -346,6 +346,25 @@ body {
   animation: unit-damage-shake 240ms ease-in-out;
 }
 
+/* Enemy-specific animations */
+@keyframes enemy-lunge {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(-20px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes enemy-shake {
+  0% { transform: translateX(0) translateY(0); }
+  20% { transform: translateX(-3px) translateY(-2px); }
+  40% { transform: translateX(3px) translateY(2px); }
+  60% { transform: translateX(-2px) translateY(-1px); }
+  80% { transform: translateX(2px) translateY(1px); }
+  100% { transform: translateX(0) translateY(0); }
+}
+
+.enemy-lunge { animation: enemy-lunge 400ms ease-in-out; }
+.enemy-shake { animation: enemy-shake 300ms ease-in-out; }
+
 /* Bottom: command, abilities, queue, mana, log */
 .bottom-row {
   grid-row: 4 / 5;
