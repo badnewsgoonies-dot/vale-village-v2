@@ -119,6 +119,49 @@
   border-bottom: 2px solid rgba(255, 255, 255, 0.3);
 }
 
+.tier-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  color: #dbe7ff;
+}
+
+.tier-filter-label {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.tier-filter-buttons {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.tier-filter-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #eaf2ff;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.tier-filter-btn:hover {
+  border-color: #ffd87f;
+  color: #ffd87f;
+}
+
+.tier-filter-btn.active {
+  background: rgba(255, 216, 127, 0.12);
+  border-color: #ffd87f;
+  color: #ffd87f;
+  box-shadow: 0 0 10px rgba(255, 216, 127, 0.35);
+}
+
 .tab-btn {
   background: transparent;
   border: none;

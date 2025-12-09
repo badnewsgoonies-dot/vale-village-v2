@@ -71,8 +71,8 @@ export const TOWER_REWARDS: readonly TowerReward[] = [
     rewards: [
       {
         type: 'equipment',
-        ids: ['trident-neptune'],
-        notes: 'Tower-exclusive legendary weapon',
+        ids: ['trident-neptune', 'sol-blade'],
+        notes: 'Tower-exclusive legendary weapon cache',
       },
       {
         type: 'djinn',
@@ -86,8 +86,8 @@ export const TOWER_REWARDS: readonly TowerReward[] = [
     rewards: [
       {
         type: 'equipment',
-        ids: ['zeus-thunderbolt'],
-        notes: 'Tower-exclusive ultimate artifact',
+        ids: ['zeus-thunderbolt', 'astral-blade', 'shadowflame-staff', 'aetheric-mantle'],
+        notes: 'Tower-exclusive ultimate artifact set',
       },
       {
         type: 'recruit',

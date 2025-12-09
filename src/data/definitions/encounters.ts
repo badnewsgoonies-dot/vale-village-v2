@@ -95,7 +95,7 @@ export const HOUSE_03: Encounter = {
 export const HOUSE_04: Encounter = {
   id: 'house-04',
   name: 'House 4: Arcane Power',
-  enemies: ['frost-scout', 'frost-mystic', 'mercury-sprite'],
+  enemies: ['frost-scout', 'frost-mystic', 'mercury-sprite', 'aqua-drake'],
   difficulty: 'easy',
   reward: {
     xp: 90,
@@ -158,7 +158,7 @@ export const HOUSE_06: Encounter = {
 export const HOUSE_07: Encounter = {
   id: 'house-07',
   name: 'House 7: Winds of Liberation',
-  enemies: ['terra-soldier', 'venus-bear', 'earth-shaman', 'jupiter-sprite', 'wind-hawk'],
+  enemies: ['terra-soldier', 'venus-bear', 'earth-shaman', 'jupiter-sprite', 'wind-hawk', 'glacier-wyrm'],
   difficulty: 'medium',
   reward: {
     xp: 150,
@@ -166,7 +166,7 @@ export const HOUSE_07: Encounter = {
     djinn: 'breeze', // Jupiter T1 Djinn - SUMMONS UNLOCK!
     equipment: {
       type: 'choice',
-      options: ['steel-sword', 'battle-axe', 'crystal-rod'],
+      options: ['steel-sword', 'battle-axe', 'adepts-ring'],
     },
   },
 };
@@ -203,14 +203,14 @@ export const HOUSE_08: Encounter = {
 export const HOUSE_09: Encounter = {
   id: 'house-09',
   name: 'House 9: Inferno\'s Rage',
-  enemies: ['mercury-bear', 'frost-oracle', 'ice-elemental', 'fire-eagle'],
+  enemies: ['mercury-bear', 'frost-oracle', 'ice-elemental', 'fire-eagle', 'permafrost-golem'],
   difficulty: 'medium',
   reward: {
     xp: 215,
     gold: 58,
     equipment: {
       type: 'fixed',
-      itemId: 'battle-axe',
+      itemId: 'spirit-gloves',
     },
   },
 };
@@ -293,7 +293,7 @@ export const HOUSE_13: Encounter = {
     gold: 76,
     equipment: {
       type: 'choice',
-      options: ['silver-blade', 'great-axe', 'valkyrie-mail'],
+      options: ['silver-blade', 'great-axe', 'lucky-medal'],
     },
   },
 };
@@ -341,7 +341,7 @@ export const HOUSE_15: Encounter = {
     unlockUnit: 'stormcaller', // Recruit Stormcaller (Jupiter AoE Mage)
     equipment: {
       type: 'choice',
-      options: ['mythril-armor', 'zodiac-wand', 'elemental-star'],
+      options: ['mythril-armor', 'war-gloves', 'elemental-star'],
     },
   },
 };
