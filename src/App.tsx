@@ -14,6 +14,7 @@ import { RewardsScreen } from './ui/components/RewardsScreen';
 import { ShopScreen } from './ui/components/ShopScreen';
 import { TowerHubScreen } from './ui/components/TowerHubScreen';
 import { useStore, store } from './ui/state/store';
+import { ToolboxHelpers } from './ui/components/debug/ToolboxHelpers';
 
 // Wrapper that reads team-select props from V1 store
 const TeamSelectWrapper: FunctionComponent = () => {
@@ -331,12 +332,45 @@ const App: FunctionComponent = () => {
     }
   };
 
+  const toolboxActions = [
+    {
+      id: 'toggle-dev',
+      label: isDevMode ? 'Hide Dev Overlay' : 'Show Dev Overlay',
+      tooltip: 'Alt+T also toggles the toolbox; Ctrl+D still toggles dev overlay',
+      onClick: () => setIsDevMode((prev) => !prev),
+    },
+    {
+      id: 'open-settings',
+      label: 'Settings',
+      tooltip: 'Open settings modal',
+      onClick: () => openModal('settings'),
+    },
+    {
+      id: 'open-help',
+      label: 'How to Play',
+      tooltip: 'Open how-to-play modal',
+      onClick: () => openModal('help'),
+    },
+    {
+      id: 'return-title',
+      label: 'Return to Title',
+      tooltip: 'Jump back to title screen',
+      onClick: () => startTransition('title'),
+    },
+  ];
+
   return (
     <div className={`app-root${isTransitioning ? ' app-root--transitioning' : ''}`}>
       {renderScreen()}
       {renderModal()}
       {/* DialogueBoxV2 always rendered - uses portal and self-manages visibility */}
       <DialogueBoxV2 />
+      <ToolboxHelpers
+        title="Toolbox"
+        actions={toolboxActions}
+        position="top-right"
+        initiallyOpen={false}
+      />
       {isDevMode && <DevOverlay screen={screen} modal={modal} />}
     </div>
   );
