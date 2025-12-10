@@ -59,6 +59,21 @@ function matchesTier(tier: Equipment['tier'] | undefined, filter: TierFilter) {
   return tier === filter;
 }
 
+function getProgressionAllowedTiers(flags: Record<string, boolean>): Set<Equipment['tier']> {
+  const liberatedHouses = Object.keys(flags)
+    .filter((key) => key.startsWith('house:liberated:'))
+    .map((key) => Number(key.split(':').pop() || '0'))
+    .filter((n) => !Number.isNaN(n));
+  const maxHouse = liberatedHouses.length > 0 ? Math.max(...liberatedHouses) : 1;
+  if (maxHouse <= 10) {
+    return new Set<Equipment['tier']>(['basic', 'bronze']);
+  }
+  if (maxHouse <= 20) {
+    return new Set<Equipment['tier']>(['basic', 'bronze', 'iron', 'steel', 'silver']);
+  }
+  return new Set<Equipment['tier']>(['basic', 'bronze', 'iron', 'steel', 'silver', 'mythril', 'legendary', 'artifact']);
+}
+
 function buildStatDeltas(candidate: Equipment, current: Equipment | null | undefined) {
   return COMPARISON_STATS
     .map((stat) => {
@@ -108,6 +123,7 @@ export function ShopEquipScreen({ shopId, onClose }: ShopEquipScreenProps): JSX.
   const [tierFilter, setTierFilter] = useState<TierFilter>('all');
 
   const selectedUnit = team?.units.find((u) => u.id === selectedUnitId) ?? null;
+  const progressionAllowedTiers = getProgressionAllowedTiers(storyFlags as Record<string, boolean>);
 
   // Shop tab logic
   const shop = shopId ? SHOPS[shopId] : null;
@@ -118,7 +134,10 @@ export function ShopEquipScreen({ shopId, onClose }: ShopEquipScreenProps): JSX.
         .filter((item): item is Equipment => Boolean(item))
         .filter(isAvailableInCampaign))
     : [];
-  const filteredAvailableItems = availableItems.filter((item) => matchesTier(item.tier, tierFilter));
+  const progressionFilteredItems = availableItems.filter(
+    (item) => !item.tier || progressionAllowedTiers.has(item.tier)
+  );
+  const filteredAvailableItems = progressionFilteredItems.filter((item) => matchesTier(item.tier, tierFilter));
 
   const starterKitEntries = team
     ? team.units
@@ -338,6 +357,7 @@ export function ShopEquipScreen({ shopId, onClose }: ShopEquipScreenProps): JSX.
                       (item) =>
                         isAvailableInCampaign(item) &&
                         item.allowedElements.includes(unit.element) &&
+                        progressionAllowedTiers.has(item.tier as Equipment['tier']) &&
                         matchesTier(item.tier, tierFilter)
                     );
                     return (

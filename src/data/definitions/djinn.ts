@@ -6,6 +6,10 @@ export const FLINT: Djinn = {
   element: 'Venus',
   tier: '1',
   description: 'A steadfast earth spirit that has watched over mountain villages for centuries.',
+  voiceLines: [
+    'The earth welcomes a new ally! I am Flint—steady as stone, loyal to the end.',
+    'Feel the strength of the mountains flow through you. Together, we are unbreakable!',
+  ],
   summonEffect: {
     type: 'damage',
     description: 'Stone Barrage scatters earth shards at all foes.',
@@ -89,6 +93,10 @@ export const GRANITE: Djinn = {
   element: 'Venus',
   tier: '2',
   description: 'An ancient spirit of bedrock, unyielding as the mountains themselves.',
+  voiceLines: [
+    'I have stood since the world was young. Now I stand with you, Adept.',
+    'Like bedrock beneath your feet—I shall never falter, never yield.',
+  ],
   summonEffect: {
     type: 'buff',
     description: 'Terra Wall raises nearby allies’ defenses.',
@@ -171,6 +179,10 @@ export const BANE: Djinn = {
   name: 'Bane',
   element: 'Venus',
   tier: '3',
+  voiceLines: [
+    'The earth TREMBLES at my awakening! I am Bane—the quake that shatters kingdoms!',
+    'You have freed a force of nature itself. Use my power wisely... or not. Destruction is beautiful either way.',
+  ],
   summonEffect: {
     type: 'damage',
     description: 'Earthquake shakes the whole battlefield.',
@@ -254,6 +266,10 @@ export const FORGE: Djinn = {
   element: 'Mars',
   tier: '1',
   description: 'A blazing spirit born from volcanic fires, fierce and passionate.',
+  voiceLines: [
+    'Ha! Finally, someone with fire in their heart! I like you already, Adept!',
+    'Forge is my name—and together we shall FORGE a path through any who oppose us!',
+  ],
   summonEffect: {
     type: 'damage',
     description: 'Firebolt barrage burns every foe.',
@@ -344,6 +360,10 @@ export const CORONA: Djinn = {
   element: 'Mars',
   tier: '2',
   description: 'A radiant fire spirit born from the heart of a dying star. Corona channels solar energy to both burn enemies and revitalize allies.',
+  voiceLines: [
+    'I am Corona—born of starlight, wielder of solar flame. Your heart burns bright, Adept!',
+    'The sun itself lent me its power. Now that power is yours to command!',
+  ],
   summonEffect: {
     type: 'buff',
     description: 'Flame field heals the party.',
@@ -433,6 +453,10 @@ export const FURY: Djinn = {
   name: 'Fury',
   element: 'Mars',
   tier: '3',
+  voiceLines: [
+    'FURY AWAKENS! *flames roar* Finally, an Adept worthy of my WRATH!',
+    'I am the inferno that consumes all! Point me at your enemies and WATCH THEM BURN!',
+  ],
   summonEffect: {
     type: 'damage',
     description: 'Blazing torrent devastates enemies.',
@@ -535,6 +559,10 @@ export const FIZZ: Djinn = {
   element: 'Mercury',
   tier: '1',
   description: 'A playful water spirit that dances through streams and rain.',
+  voiceLines: [
+    '*giggles* Fizz is free! Fizz will help you! Fizz likes making splashy-splash!',
+    'Ooh, you have kind eyes! Fizz knows good people. Let\'s go on adventures together!',
+  ],
   summonEffect: {
     type: 'damage',
     description: 'Shards of ice sweep across enemies.',
@@ -580,6 +608,10 @@ export const TONIC: Djinn = {
   element: 'Mercury',
   tier: '2',
   description: 'A gentle water spirit dwelling in ancient healing springs. Tonic carries restorative essence that can mend wounds and cure ailments.',
+  voiceLines: [
+    'Be at peace, weary traveler. I am Tonic—let my waters soothe your wounds.',
+    'The healing springs have blessed me. That blessing now extends to you and yours.',
+  ],
   summonEffect: {
     type: 'heal',
     description: 'Healing mist restores allies.',
@@ -624,6 +656,10 @@ export const CRYSTAL: Djinn = {
   name: 'Crystal',
   element: 'Mercury',
   tier: '3',
+  voiceLines: [
+    'I am Crystal—pure as glacial ice, sharp as frozen starlight. Your enemies shall know true cold.',
+    'My prisms refract the magic of the cosmos. Together, we shall illuminate the path to victory!',
+  ],
   summonEffect: {
     type: 'buff',
     description: 'Crystal prism boosts allies’ magical power.',
@@ -669,6 +705,10 @@ export const BREEZE: Djinn = {
   element: 'Jupiter',
   tier: '1',
   description: 'A swift wind spirit that carries whispers across the skies.',
+  voiceLines: [
+    '*whoosh* Breeze reporting for duty! I carry secrets on the wind—now I carry YOUR victories!',
+    'Swift as thought, free as the sky! With me, you\'ll dance circles around your foes!',
+  ],
   summonEffect: {
     type: 'damage',
     description: 'Gale shards sweep every enemy.',
@@ -713,6 +753,10 @@ export const SQUALL: Djinn = {
   name: 'Squall',
   element: 'Jupiter',
   tier: '2',
+  voiceLines: [
+    'The storm answers your call! I am Squall—rider of thunderclouds, herald of tempests!',
+    'When skies darken and winds howl, that is my song. Now I sing for YOU!',
+  ],
   summonEffect: {
     type: 'damage',
     description: 'Storm burst rains down on foes.',
@@ -757,6 +801,10 @@ export const STORM: Djinn = {
   name: 'Storm',
   element: 'Jupiter',
   tier: '3',
+  voiceLines: [
+    'I AM THE STORM! *lightning crackles* Chaos itself bows to my will—and now, to YOURS!',
+    'Hurricanes. Typhoons. Tornadoes. These are but whispers of my true power. Are you ready?',
+  ],
   summonEffect: {
     type: 'special',
     description: 'Tempest swirl inflicts chaos and lightning.',
@@ -804,6 +852,10 @@ export const SURGE: Djinn = {
   name: 'Surge',
   element: 'Mercury',
   tier: '2',
+  voiceLines: [
+    'The tides rise at my command! I am Surge—and our enemies shall be swept away!',
+    'Like the ocean, I am patient... but also RELENTLESS. Let us crash upon our foes!',
+  ],
   summonEffect: {
     type: 'damage',
     description: 'Tidal wave crashes through all enemies.',
@@ -848,6 +900,10 @@ export const CHILL: Djinn = {
   name: 'Chill',
   element: 'Mercury',
   tier: '3',
+  voiceLines: [
+    'Absolute zero... the stillness before creation. I am Chill—time itself freezes at my touch.',
+    'In the deepest cold, even fire dies. Your enemies will know the embrace of eternal winter.',
+  ],
   summonEffect: {
     type: 'special',
     description: 'Absolute zero freezes time itself, stunning all foes.',
@@ -895,6 +951,10 @@ export const GUST: Djinn = {
   name: 'Gust',
   element: 'Jupiter',
   tier: '1',
+  voiceLines: [
+    'Fleet of foot and light as air—I am Gust! None shall catch us, friend!',
+    'The wind at your back, the breeze in your blade! Speed is our greatest weapon!',
+  ],
   summonEffect: {
     type: 'buff',
     description: 'Swift winds enhance party speed.',
@@ -939,6 +999,10 @@ export const BOLT: Djinn = {
   name: 'Bolt',
   element: 'Jupiter',
   tier: '2',
+  voiceLines: [
+    '*CRACK* I am Bolt! The lightning answers to you now—strike swift, strike TRUE!',
+    'Thunder heralds my arrival, lightning marks my path. Our enemies won\'t see us coming!',
+  ],
   summonEffect: {
     type: 'damage',
     description: 'Chain lightning arcs through all enemies.',
@@ -983,6 +1047,10 @@ export const TEMPEST: Djinn = {
   name: 'Tempest',
   element: 'Jupiter',
   tier: '3',
+  voiceLines: [
+    'THE ULTIMATE STORM HAS AWAKENED! I am Tempest—wind and lightning incarnate!',
+    'Kingdoms have fallen before my fury! *thunder roars* And you... YOU have TAMED me. Impressive, Adept.',
+  ],
   summonEffect: {
     type: 'damage',
     description: 'Ultimate storm devastates the battlefield with lightning and wind.',
@@ -1029,6 +1097,9 @@ export const ROCKLING: Djinn = {
   name: 'Rockling',
   element: 'Venus',
   tier: '1',
+  voiceLines: [
+    '*rumble* Rockling here! Small but mighty! Let\'s smash some baddies together!',
+  ],
   summonEffect: {
     type: 'damage',
     description: 'Earth spike pierces a single foe.',
@@ -1073,6 +1144,9 @@ export const EMBER: Djinn = {
   name: 'Ember',
   element: 'Mars',
   tier: '1',
+  voiceLines: [
+    '*crackle* Ember at your service! My flames may be small, but they burn HOT!',
+  ],
   summonEffect: {
     type: 'damage',
     description: 'Fire burst engulfs a single foe.',
@@ -1117,6 +1191,10 @@ export const NOVA: Djinn = {
   name: 'Nova',
   element: 'Mars',
   tier: '3',
+  voiceLines: [
+    'A STAR IS BORN! I am Nova—the brilliance of a thousand suns compressed into pure destruction!',
+    'Witness my radiance! *blinding light* When I explode, even darkness fears the light!',
+  ],
   summonEffect: {
     type: 'damage',
     description: 'Nova erupts with starfire, scorching every foe.',
