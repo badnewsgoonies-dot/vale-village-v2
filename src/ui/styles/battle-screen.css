@@ -346,24 +346,78 @@ body {
   animation: unit-damage-shake 240ms ease-in-out;
 }
 
-/* Enemy-specific animations */
-@keyframes enemy-lunge {
-  0% { transform: translateX(0); }
-  50% { transform: translateX(-20px); }
-  100% { transform: translateX(0); }
+/* Floating Damage Numbers */
+@keyframes damage-float {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
 }
 
-@keyframes enemy-shake {
-  0% { transform: translateX(0) translateY(0); }
-  20% { transform: translateX(-3px) translateY(-2px); }
-  40% { transform: translateX(3px) translateY(2px); }
-  60% { transform: translateX(-2px) translateY(-1px); }
-  80% { transform: translateX(2px) translateY(1px); }
-  100% { transform: translateX(0) translateY(0); }
+.damage-number {
+  position: absolute;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ffff00;
+  text-shadow: 2px 2px 4px #000;
+  pointer-events: none;
+  z-index: 150;
+  animation: damage-float 1s ease-out forwards;
 }
 
-.enemy-lunge { animation: enemy-lunge 400ms ease-in-out; }
-.enemy-shake { animation: enemy-shake 300ms ease-in-out; }
+.damage-number.critical {
+  color: #ff6600;
+  font-size: 2rem;
+}
+
+.damage-number.heal {
+  color: #00ff00;
+}
+
+/* Psynergy Effect Animations */
+@keyframes psynergy-burst {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  35% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+.psynergy-effect {
+  position: absolute;
+  pointer-events: none;
+  z-index: 100;
+  animation: psynergy-burst 0.9s ease-out forwards;
+  mix-blend-mode: screen;
+}
+
+/* Element-specific glow effects */
+.psynergy-effect.venus {
+  filter: drop-shadow(0 0 10px #8B4513);
+}
+
+.psynergy-effect.mars {
+  filter: drop-shadow(0 0 10px #ff6600);
+}
+
+.psynergy-effect.mercury {
+  filter: drop-shadow(0 0 10px #00ccff);
+}
+
+.psynergy-effect.jupiter {
+  filter: drop-shadow(0 0 10px #9932CC);
+}
 
 /* Bottom: command, abilities, queue, mana, log */
 .bottom-row {

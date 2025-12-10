@@ -19,9 +19,6 @@ interface BattleUnitSpriteProps {
   /** Animation state */
   state?: 'idle' | 'attack' | 'hit' | 'damage';
 
-  /** Whether this unit is on the player team (defaults to true) */
-  isPlayer?: boolean;
-
   /** Size variant */
   size?: 'small' | 'medium' | 'large';
 
@@ -53,7 +50,6 @@ const STATE_PROP_TO_BATTLE_STATE: Record<NonNullable<BattleUnitSpriteProps['stat
 export function BattleUnitSprite({
   unitId,
   state = 'idle',
-  isPlayer = true,
   size = 'medium',
   className,
   style,
@@ -61,22 +57,12 @@ export function BattleUnitSprite({
   const sizeStyles = SIZE_MAP[size];
 
   const mappedState = STATE_PROP_TO_BATTLE_STATE[state] ?? 'idle';
-  const spriteId = isPlayer
-    ? getPlayerBattleSprite(unitId, mappedState) ?? getEnemyBattleSprite(unitId, mappedState) ?? null
-    : getEnemyBattleSprite(unitId, mappedState) ?? getPlayerBattleSprite(unitId, mappedState) ?? null;
+  const spriteId =
+    getPlayerBattleSprite(unitId, mappedState) ??
+    getEnemyBattleSprite(unitId, mappedState) ??
+    null;
   const resolvedSpriteId = spriteId ?? `missing-battle-sprite-${unitId}-${mappedState}`;
   warnIfPlaceholderSprite('BattleUnitSprite', resolvedSpriteId);
-
-  const animationClasses: string[] = [];
-  if (!isPlayer) {
-    if (state === 'attack') {
-      animationClasses.push('enemy-lunge');
-    } else if (state === 'hit') {
-      animationClasses.push('enemy-shake');
-    }
-  }
-
-  const finalClassName = [className, ...animationClasses].filter(Boolean).join(' ') || undefined;
 
   // Render sprite using SimpleSprite with catalog lookup
   return (
@@ -84,7 +70,7 @@ export function BattleUnitSprite({
       id={resolvedSpriteId}
       width={sizeStyles.width}
       height={sizeStyles.height}
-      className={finalClassName}
+      className={className}
       style={style}
       alt={spriteId ? `${unitId} sprite` : `Missing battle sprite for ${unitId}`}
     />

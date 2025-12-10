@@ -7,6 +7,79 @@
 import type { SpriteDef } from './types';
 
 /**
+ * Helper: generate a simple sprite def from a direct asset path.
+ * Useful for GIFs living in /public/sprites without explicit registry entries.
+ */
+const makeDirectSprite = (src: string): SpriteDef => ({
+  src,
+  frames: 1,
+});
+
+/**
+ * Overworld player directional sprites mapped by unit id.
+ * Falls back to "down" if a specific facing is missing.
+ */
+const PLAYER_OVERWORLD_SPRITES: Record<
+  string,
+  { down: string; up?: string; left?: string; right?: string }
+> = {
+  adept: {
+    down: '/sprites/overworld/Isaac_Walk.gif',
+    up: '/sprites/overworld/Isaac_Back.gif',
+    left: '/sprites/overworld/Isaac_Walk_Left.gif',
+    right: '/sprites/overworld/Isaac_Walk_Right.gif',
+  },
+  'war-mage': {
+    down: '/sprites/overworld/Garet.gif',
+    up: '/sprites/overworld/Garet_Back.gif',
+    left: '/sprites/overworld/Garet_Left.gif',
+    right: '/sprites/overworld/Garet_Right.gif',
+  },
+  mystic: {
+    down: '/sprites/overworld/Mia.gif',
+    up: '/sprites/overworld/Mia_Back.gif',
+    left: '/sprites/overworld/Mia_Left.gif',
+    right: '/sprites/overworld/Mia_Right.gif',
+  },
+  ranger: {
+    down: '/sprites/overworld/Ivan.gif',
+    up: '/sprites/overworld/Ivan_Back.gif',
+    left: '/sprites/overworld/Ivan_Left.gif',
+    right: '/sprites/overworld/Ivan_Right.gif',
+  },
+  sentinel: {
+    down: '/sprites/overworld/Piers.gif',
+  },
+  stormcaller: {
+    down: '/sprites/overworld/Sheba.gif',
+  },
+  blaze: {
+    down: '/sprites/overworld/Jenna_Walk.gif',
+    up: '/sprites/overworld/Jenna_Back.gif',
+    left: '/sprites/overworld/Jenna_Left.gif',
+    right: '/sprites/overworld/Jenna_Right.gif',
+  },
+  karis: {
+    down: '/sprites/overworld/Ivan.gif',
+    up: '/sprites/overworld/Ivan_Back.gif',
+    left: '/sprites/overworld/Ivan_Left.gif',
+    right: '/sprites/overworld/Ivan_Right.gif',
+  },
+  tyrell: {
+    down: '/sprites/overworld/Young_Garet_Walk_Down.gif',
+    up: '/sprites/overworld/Young_Garet_Up.gif',
+    left: '/sprites/overworld/Young_Garet_Walk_Right.gif',
+    right: '/sprites/overworld/Young_Garet_Walk_Right.gif',
+  },
+  felix: {
+    down: '/sprites/overworld/Felix_Walk.gif',
+    up: '/sprites/overworld/Felix_Back.gif',
+    left: '/sprites/overworld/Felix_W.gif',
+    right: '/sprites/overworld/Felix_E.gif',
+  },
+};
+
+/**
  * Sprite manifest
  * Maps sprite IDs to definitions
  */
@@ -122,16 +195,48 @@ export const SPRITES: Record<string, SpriteDef> = {
 };
 
 /**
+ * Resolve a player overworld sprite id of form `player-{unitId}-{facing}`
+ */
+function resolvePlayerSprite(id: string): SpriteDef | null {
+  const match = id.match(/^player-(.+)-(up|down|left|right)$/);
+  if (!match) return null;
+
+  const unitId = match[1] ?? 'adept';
+  const facing = (match[2] as 'up' | 'down' | 'left' | 'right') ?? 'down';
+  const mapping = PLAYER_OVERWORLD_SPRITES[unitId] ?? PLAYER_OVERWORLD_SPRITES['adept'];
+  if (!mapping) return null;
+
+  const src =
+    (facing === 'up' && mapping.up) ||
+    (facing === 'left' && mapping.left) ||
+    (facing === 'right' && mapping.right) ||
+    mapping.down;
+
+  if (!src) return null;
+
+  return makeDirectSprite(src);
+}
+
+/**
  * Get sprite definition by ID
  */
 export function getSpriteDef(id: string): SpriteDef | null {
+  // 1) Player overworld sprites
+  const player = resolvePlayerSprite(id);
+  if (player) return player;
+
+  // 2) Direct asset paths (e.g., /sprites/overworld/Felix.gif)
+  if (id.startsWith('/sprites/')) {
+    return makeDirectSprite(id);
+  }
+
+  // 3) Manifest entries
   return SPRITES[id] ?? null;
 }
 
 /**
- * Check if sprite exists in manifest
+ * Check if sprite exists in manifest or can be resolved dynamically
  */
 export function hasSprite(id: string): boolean {
-  return id in SPRITES;
+  return Boolean(resolvePlayerSprite(id) || id.startsWith('/sprites/') || SPRITES[id]);
 }
-

@@ -40,8 +40,6 @@ function useStore<T>(selector: (state: { battle: BattleState | null }) => T): T 
   return selector(mockState);
 }
 
-const isDev = import.meta.env?.DEV ?? false;
-
 export function ActionBar({ disabled = false }: ActionBarProps) {
   const battle = useStore((s) => s.battle);
 
@@ -102,17 +100,13 @@ export function ActionBar({ disabled = false }: ActionBarProps) {
 
   const handleExecute = () => {
     if (!selectedAbility || selectedTargets.length === 0 || !currentActorId) return;
-    if (isDev) {
-      console.log('Execute:', { actor: currentActorId, ability: selectedAbility, targets: selectedTargets });
-    }
+    console.log('Execute:', { actor: currentActorId, ability: selectedAbility, targets: selectedTargets });
     setSelectedAbility(null);
     setSelectedTargets([]);
   };
 
   const handleEndTurn = () => {
-    if (isDev) {
-      console.log('End turn');
-    }
+    console.log('End turn');
   };
 
   return (

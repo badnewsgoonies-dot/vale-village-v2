@@ -54,11 +54,6 @@ export const BattleStateSchema = z.object({
   maxMana: z.number().int().min(0),
   executionIndex: z.number().int().min(0),
   djinnRecoveryTimers: z.record(z.string(), z.number().int().min(0)),
-  rngSnapshot: z.object({
-    state: z.number().int(),
-    initialSeed: z.number().int(),
-    draws: z.number().int(),
-  }).optional(),
   
   // Legacy fields
   isBossBattle: z.boolean().optional(),
@@ -140,3 +135,4 @@ export const BattleStateSchema = z.object({
 export type BattleState = z.infer<typeof BattleStateSchema>;
 export type BattleResult = z.infer<typeof BattleResultSchema>;
 export type BattleStatus = z.infer<typeof BattleStatusSchema>;
+

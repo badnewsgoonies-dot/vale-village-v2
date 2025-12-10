@@ -70,7 +70,8 @@ export function validateAllGameData(): void {
   // Validate shops
   Object.entries(SHOPS).forEach(([id, shop]) => {
     // Note: ShopSchema doesn't validate unlockCondition functions
-    const { unlockCondition: _unlockCondition, ...shopData } = shop;
+    const shopData = { ...shop };
+    delete (shopData as any).unlockCondition; // Remove function for validation
     const result = ShopSchema.safeParse(shopData);
     if (!result.success) {
       const errorMessages = result.error.errors.map(e =>
@@ -185,3 +186,4 @@ export function validateAllGameData(): void {
     console.warn('✅ No balance issues detected');
   }
 }
+

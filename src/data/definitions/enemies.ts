@@ -2489,10 +2489,10 @@ export const GARET_ENEMY = unitDefinitionToEnemy(
   { 
     id: 'garet-enemy',
     stats: {
-      // Increase HP significantly for longer battles (target: 10-20 turns)
-      hp: (warMageDef.baseStats.hp + (1 * warMageDef.growthRates.hp)) * 3, // 3x HP (still tanky but within VS1 expectation)
-      // Increase attack to encourage defensive play
-      atk: warMageDef.baseStats.atk + (1 * warMageDef.growthRates.atk) + 4, // +4 ATK
+      // HP reduced from 3x to 1.5x for winnable House 1 (~6 hits instead of 13)
+      hp: (warMageDef.baseStats.hp + (1 * warMageDef.growthRates.hp)) * 1.5, // 1.5x HP (balanced for VS1)
+      // ATK reduced from +4 to +2 for fairer damage output
+      atk: warMageDef.baseStats.atk + (1 * warMageDef.growthRates.atk) + 2, // +2 ATK
     }
   }
 );

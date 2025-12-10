@@ -5,26 +5,19 @@
 
 import { useState, useEffect } from 'preact/hooks';
 import { useGameStore } from '../store/gameStore';
-import { useStore } from '../ui/state/store';
 import { DJINN } from '../data/definitions/djinn';
 import { UNIT_DEFINITIONS } from '../data/definitions/units';
 import { EQUIPMENT } from '../data/definitions/equipment';
-import { ENEMIES } from '../data/definitions/enemies';
 import type { Djinn } from '../data/schemas/DjinnSchema';
 import type { UnitDefinition } from '../data/schemas/UnitSchema';
 import type { Equipment } from '../data/schemas/EquipmentSchema';
-import type { Enemy } from '../data/schemas/EnemySchema';
-import { SimpleSprite } from '../ui/sprites/SimpleSprite';
-import { EquipmentIcon } from '../ui/components/EquipmentIcon';
-import { getPortraitSprite, getEnemyBattleSprite } from '../ui/sprites/mappings';
 import './CompendiumScreen.css';
 
-type TabType = 'djinn' | 'units' | 'enemies' | 'equipment';
+type TabType = 'djinn' | 'units' | 'equipment';
 
 const TABS = [
   { id: 'djinn' as TabType, label: 'Djinn Collection', icon: '✨' },
   { id: 'units' as TabType, label: 'Unit Roster', icon: '⚔️' },
-  { id: 'enemies' as TabType, label: 'Enemies', icon: '👾' },
   { id: 'equipment' as TabType, label: 'Equipment Catalog', icon: '🛡️' },
 ];
 
@@ -60,39 +53,18 @@ const EQUIPMENT_TIER_LABELS: Record<string, string> = {
   artifact: 'Artifact',
 };
 
-// Ownership Badge Component
-function OwnershipBadge({ isOwned }: { isOwned: boolean }) {
-  return (
-    <div class={`ownership-badge ${isOwned ? 'owned' : 'not-owned'}`}>
-      {isOwned ? '✓' : '?'}
-    </div>
-  );
-}
-
 // Djinn Card Component
-function DjinnCard({ djinn, isOwned }: { djinn: Djinn; isOwned: boolean }) {
-  const elementLower = djinn.element.toLowerCase();
+function DjinnCard({ djinn }: { djinn: Djinn }) {
   return (
-    <div class={`compendium-card ${!isOwned ? 'not-owned' : ''}`} style={{ borderColor: getElementColor(djinn.element) }}>
-      <OwnershipBadge isOwned={isOwned} />
+    <div class="compendium-card" style={{ borderColor: getElementColor(djinn.element) }}>
       <div class="compendium-card-header">
         <h3 class="compendium-card-title">{djinn.name}</h3>
         <span class="compendium-card-element" style={{ backgroundColor: getElementColor(djinn.element) }}>
           {djinn.element}
         </span>
       </div>
-      <div class="compendium-card-sprite">
-        <SimpleSprite
-          id={`${elementLower}-djinn-front`}
-          width={64}
-          height={64}
-        />
-      </div>
       <div class="compendium-card-body">
         <div class="compendium-card-tier">{TIER_LABELS[djinn.tier] || djinn.tier}</div>
-        {djinn.description && (
-          <p class="compendium-card-description">{djinn.description}</p>
-        )}
         <div class="compendium-card-section">
           <h4>Summon Effect</h4>
           <p class="compendium-card-description">{djinn.summonEffect.description}</p>
@@ -114,23 +86,14 @@ function DjinnCard({ djinn, isOwned }: { djinn: Djinn; isOwned: boolean }) {
 }
 
 // Unit Card Component
-function UnitCard({ unit, isRecruited }: { unit: UnitDefinition; isRecruited: boolean }) {
-  const portraitId = getPortraitSprite(unit.id);
+function UnitCard({ unit }: { unit: UnitDefinition }) {
   return (
-    <div class={`compendium-card ${!isRecruited ? 'not-owned' : ''}`} style={{ borderColor: getElementColor(unit.element) }}>
-      <OwnershipBadge isOwned={isRecruited} />
+    <div class="compendium-card" style={{ borderColor: getElementColor(unit.element) }}>
       <div class="compendium-card-header">
         <h3 class="compendium-card-title">{unit.name}</h3>
         <span class="compendium-card-element" style={{ backgroundColor: getElementColor(unit.element) }}>
           {unit.element}
         </span>
-      </div>
-      <div class="compendium-card-sprite">
-        <SimpleSprite
-          id={portraitId}
-          width={64}
-          height={64}
-        />
       </div>
       <div class="compendium-card-body">
         <div class="compendium-card-role">{unit.role}</div>
@@ -156,18 +119,14 @@ function UnitCard({ unit, isRecruited }: { unit: UnitDefinition; isRecruited: bo
 }
 
 // Equipment Card Component
-function EquipmentCard({ equipment, isOwned }: { equipment: Equipment; isOwned: boolean }) {
+function EquipmentCard({ equipment }: { equipment: Equipment }) {
   return (
-    <div class={`compendium-card ${!isOwned ? 'not-owned' : ''}`} style={{ borderColor: '#888' }}>
-      <OwnershipBadge isOwned={isOwned} />
+    <div class="compendium-card" style={{ borderColor: '#888' }}>
       <div class="compendium-card-header">
         <h3 class="compendium-card-title">{equipment.name}</h3>
         <span class="compendium-card-tier-badge">
           {EQUIPMENT_TIER_LABELS[equipment.tier] || equipment.tier}
         </span>
-      </div>
-      <div class="compendium-card-sprite">
-        <EquipmentIcon equipment={equipment} size="large" />
       </div>
       <div class="compendium-card-body">
         <div class="compendium-card-slot">{equipment.slot.toUpperCase()}</div>
@@ -218,71 +177,14 @@ function EquipmentCard({ equipment, isOwned }: { equipment: Equipment; isOwned: 
   );
 }
 
-// Enemy Card Component
-function EnemyCard({ enemy }: { enemy: Enemy }) {
-  const spriteId = getEnemyBattleSprite(enemy.id, 'idle');
-  return (
-    <div class="compendium-card" style={{ borderColor: getElementColor(enemy.element) }}>
-      <div class="compendium-card-header">
-        <h3 class="compendium-card-title">{enemy.name}</h3>
-        <span class="compendium-card-element" style={{ backgroundColor: getElementColor(enemy.element) }}>
-          {enemy.element}
-        </span>
-      </div>
-      <div class="compendium-card-sprite">
-        {spriteId ? (
-          <SimpleSprite
-            id={spriteId}
-            width={64}
-            height={64}
-          />
-        ) : (
-          <div class="compendium-card-stat">Sprite missing</div>
-        )}
-      </div>
-      <div class="compendium-card-body">
-        <div class="compendium-card-role">Level {enemy.level}</div>
-        <div class="compendium-card-section">
-          <h4>Base Stats</h4>
-          <div class="compendium-card-stats">
-            <div class="compendium-stat">HP: {enemy.stats.hp}</div>
-            <div class="compendium-stat">PP: {enemy.stats.pp}</div>
-            <div class="compendium-stat">ATK: {enemy.stats.atk}</div>
-            <div class="compendium-stat">DEF: {enemy.stats.def}</div>
-            <div class="compendium-stat">MAG: {enemy.stats.mag}</div>
-            <div class="compendium-stat">SPD: {enemy.stats.spd}</div>
-          </div>
-        </div>
-        <div class="compendium-card-section">
-          <h4>Abilities</h4>
-          <p class="compendium-card-stat">{enemy.abilities.length} abilities available</p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export function CompendiumScreen() {
   const startTransition = useGameStore((s) => s.startTransition);
   const [activeTab, setActiveTab] = useState<TabType>('djinn');
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  // Get player ownership data from store
-  const { team, roster, equipment: ownedEquipment } = useStore((s) => ({
-    team: s.team,
-    roster: s.roster,
-    equipment: s.equipment,
-  }));
-
-  // Build lookup sets for efficient ownership checks
-  const collectedDjinnIds = new Set(team?.collectedDjinn || []);
-  const recruitedUnitIds = new Set(roster.map((u) => u.id));
-  const ownedEquipmentIds = new Set(ownedEquipment.map((e) => e.id));
-
   // Get data for current tab - filter out tower-exclusive content
   const djinnList = Object.values(DJINN).filter(d => !d.availableIn || d.availableIn.length === 0);
   const unitsList = Object.values(UNIT_DEFINITIONS).filter(u => !u.availableIn || u.availableIn.length === 0);
-  const enemiesList = Object.values(ENEMIES);
   const equipmentList = Object.values(EQUIPMENT).filter(e => !e.availableIn || e.availableIn.length === 0);
 
   // Get current list based on active tab
@@ -292,8 +194,6 @@ export function CompendiumScreen() {
         return djinnList;
       case 'units':
         return unitsList;
-      case 'enemies':
-        return enemiesList;
       case 'equipment':
         return equipmentList;
       default:
@@ -363,7 +263,7 @@ export function CompendiumScreen() {
           <div class="compendium-grid">
             {djinnList.map((djinn, index) => (
               <div key={djinn.id} class={selectedIndex === index ? 'selected' : ''}>
-                <DjinnCard djinn={djinn} isOwned={collectedDjinnIds.has(djinn.id)} />
+                <DjinnCard djinn={djinn} />
               </div>
             ))}
           </div>
@@ -373,17 +273,7 @@ export function CompendiumScreen() {
           <div class="compendium-grid">
             {unitsList.map((unit, index) => (
               <div key={unit.id} class={selectedIndex === index ? 'selected' : ''}>
-                <UnitCard unit={unit} isRecruited={recruitedUnitIds.has(unit.id)} />
-              </div>
-            ))}
-          </div>
-        );
-      case 'enemies':
-        return (
-          <div class="compendium-grid">
-            {enemiesList.map((enemy, index) => (
-              <div key={enemy.id} class={selectedIndex === index ? 'selected' : ''}>
-                <EnemyCard enemy={enemy} />
+                <UnitCard unit={unit} />
               </div>
             ))}
           </div>
@@ -393,7 +283,7 @@ export function CompendiumScreen() {
           <div class="compendium-grid">
             {equipmentList.map((equipment, index) => (
               <div key={equipment.id} class={selectedIndex === index ? 'selected' : ''}>
-                <EquipmentCard equipment={equipment} isOwned={ownedEquipmentIds.has(equipment.id)} />
+                <EquipmentCard equipment={equipment} />
               </div>
             ))}
           </div>
@@ -432,7 +322,7 @@ export function CompendiumScreen() {
           <span>ESC: Return to Menu</span>
         </div>
         <div class="compendium-count">
-          {currentList.length} {activeTab === 'djinn' ? 'Djinn' : activeTab === 'units' ? 'Units' : activeTab === 'enemies' ? 'Enemies' : 'Items'}
+          {currentList.length} {activeTab === 'djinn' ? 'Djinn' : activeTab === 'units' ? 'Units' : 'Items'}
         </div>
       </div>
     </div>

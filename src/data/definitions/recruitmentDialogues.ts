@@ -86,42 +86,21 @@ export const HOUSE_03_RECRUIT: DialogueTree = {
     {
       id: 'scouting',
       speaker: 'Ranger',
-      text: '*drops from a tree branch* Hold. I have been tracking your progress through the houses.',
-      portrait: 'ranger',
-      nextNodeId: 'ranger-intel',
-    },
-    {
-      id: 'ranger-intel',
-      speaker: 'Ranger',
-      text: "The corruption runs deep. House 4 holds a Frost Mystic - dangerous healer. House 5 guards a powerful fire wielder. You will need more than strength to succeed.",
-      portrait: 'ranger',
-      nextNodeId: 'isaac-impressed',
-    },
-    {
-      id: 'isaac-impressed',
-      speaker: 'Isaac',
-      text: "You know the layout of the houses? That intelligence is invaluable!",
-      portrait: 'isaac',
-      nextNodeId: 'ranger-offer',
-    },
-    {
-      id: 'ranger-offer',
-      speaker: 'Ranger',
-      text: '*nocks an arrow and aims at a distant target* My Jupiter Psynergy grants me keen sight. I can hit a shadow-touched creature from three hundred paces.',
+      text: "I've been scouting the area. The corruption runs deep, but you're making progress.",
       portrait: 'ranger',
       nextNodeId: 'isaac-question',
     },
     {
       id: 'isaac-question',
       speaker: 'Isaac',
-      text: "Will you help us push forward? We could use your eyes and your bow.",
+      text: "Will you help us push forward?",
       portrait: 'isaac',
       nextNodeId: 'ranger-joins',
     },
     {
       id: 'ranger-joins',
       speaker: 'Ranger',
-      text: "*releases the arrow, striking true* My arrows are yours. I will scout ahead and ensure no ambush catches us unaware.",
+      text: "My arrows are yours. Let's clear the path ahead.",
       portrait: 'ranger',
       effects: { recruitUnit: "ranger" },
     },
@@ -152,42 +131,21 @@ export const HOUSE_05_RECRUIT: DialogueTree = {
     {
       id: 'flames',
       speaker: 'Blaze',
-      text: '*emerges from a pillar of flame* So, you are the ones making waves across Vale. I have been watching.',
+      text: "Fire answers to those with conviction. You've proven yours!",
       portrait: 'blaze',
-      nextNodeId: 'blaze-demonstrate',
+      nextNodeId: 'isaac-response',
     },
     {
-      id: 'blaze-demonstrate',
-      speaker: 'Blaze',
-      text: '*conjures a ring of fire that spirals around the party* Fire answers to those with conviction. But do you have what it takes to wield true Mars Psynergy?',
-      portrait: 'blaze',
-      nextNodeId: 'isaac-unflinching',
-    },
-    {
-      id: 'isaac-unflinching',
+      id: 'isaac-response',
       speaker: 'Isaac',
-      text: "*stands firm as flames lick the air around him* We've faced worse. The Overseer's shadow won't stop us - and neither will your test.",
-      portrait: 'isaac',
-      nextNodeId: 'blaze-impressed',
-    },
-    {
-      id: 'blaze-impressed',
-      speaker: 'Blaze',
-      text: '*the flames recede* Ha! Most would have flinched. You have the spirit of a true warrior.',
-      portrait: 'blaze',
-      nextNodeId: 'isaac-request',
-    },
-    {
-      id: 'isaac-request',
-      speaker: 'Isaac',
-      text: "We need your flames to burn through the resistance ahead. Will you join us?",
+      text: "We need your flames to burn through the resistance ahead.",
       portrait: 'isaac',
       nextNodeId: 'blaze-joins',
     },
     {
       id: 'blaze-joins',
       speaker: 'Blaze',
-      text: "*ignites both fists* You've earned my fire. Let's reduce the Overseer's forces to ashes!",
+      text: "Then let my fire light the way! I'm with you.",
       portrait: 'blaze',
       effects: { recruitUnit: "blaze" },
     },
@@ -250,7 +208,7 @@ export const HOUSE_08_RECRUIT: DialogueTree = {
       text: "I found this Fizz Djinn while guarding the waters. It's yours now.",
       portrait: 'sentinel',
       effects: {
-        recruitUnit: "sentinel",
+        recruitUnit: "war-mage",
         grantDjinn: "fizz",
       },
     },
@@ -268,40 +226,19 @@ export const HOUSE_11_RECRUIT: DialogueTree = {
       speaker: 'Karis',
       text: "The winds speak of your deeds. You're bringing hope back to these lands.",
       portrait: 'karis',
-      nextNodeId: 'karis-demonstrate',
+      nextNodeId: 'isaac-response',
     },
     {
-      id: 'karis-demonstrate',
-      speaker: 'Karis',
-      text: '*summons a whirlwind that lifts debris into the air* Watch closely - THIS is Jupiter Psynergy.',
-      portrait: 'karis',
-      nextNodeId: 'isaac-impressed',
-    },
-    {
-      id: 'isaac-impressed',
+      id: 'isaac-response',
       speaker: 'Isaac',
-      text: '*shielding eyes from the wind* Incredible control! You could turn the tide of any battle.',
-      portrait: 'isaac',
-      nextNodeId: 'karis-explain',
-    },
-    {
-      id: 'karis-explain',
-      speaker: 'Karis',
-      text: 'Wind is versatile. I can boost our speed, slice through armor, or create barriers of air. The sky is my domain.',
-      portrait: 'karis',
-      nextNodeId: 'isaac-request',
-    },
-    {
-      id: 'isaac-request',
-      speaker: 'Isaac',
-      text: "We need that power. Will you join our fight against the Overseer?",
+      text: "Hope alone won't be enough. We need warriors like you.",
       portrait: 'isaac',
       nextNodeId: 'karis-joins',
     },
     {
       id: 'karis-joins',
       speaker: 'Karis',
-      text: '*wind calms to a gentle breeze* I thought you would never ask. Let the storm begin!',
+      text: "Then I'll fight alongside you. My wind magic is yours!",
       portrait: 'karis',
       effects: { recruitUnit: "karis" },
     },
@@ -340,49 +277,21 @@ export const HOUSE_14_RECRUIT: DialogueTree = {
     {
       id: 'earthshaker',
       speaker: 'Tyrell',
-      text: "You've got guts taking on these houses! I like that. But guts alone won't cut it.",
-      portrait: 'tyrell',
-      nextNodeId: 'tyrell-challenge',
-    },
-    {
-      id: 'tyrell-challenge',
-      speaker: 'Tyrell',
-      text: '*cracks knuckles* Tell you what - show me your best attack. If you can push me back even one step, I join.',
-      portrait: 'tyrell',
-      nextNodeId: 'isaac-accepts',
-    },
-    {
-      id: 'isaac-accepts',
-      speaker: 'Isaac',
-      text: '*readies weapon* You asked for it!',
-      portrait: 'isaac',
-      nextNodeId: 'tyrell-impressed',
-    },
-    {
-      id: 'tyrell-impressed',
-      speaker: 'Tyrell',
-      text: '*staggers back two steps* Whoa! Not bad at all! Most people can\'t even make me flinch!',
-      portrait: 'tyrell',
-      nextNodeId: 'tyrell-respect',
-    },
-    {
-      id: 'tyrell-respect',
-      speaker: 'Tyrell',
-      text: "You've got strength AND technique. The Overseer won't know what hit him!",
+      text: "You've got guts taking on these houses! I like that.",
       portrait: 'tyrell',
       nextNodeId: 'isaac-response',
     },
     {
       id: 'isaac-response',
       speaker: 'Isaac',
-      text: "So you're in?",
+      text: "We could use someone who isn't afraid to shake things up.",
       portrait: 'isaac',
       nextNodeId: 'tyrell-joins',
     },
     {
       id: 'tyrell-joins',
       speaker: 'Tyrell',
-      text: "*pounds fist into palm* Ha! You bet I'm in! Let's make some noise together!",
+      text: "Ha! Then let's make some noise together!",
       portrait: 'tyrell',
       effects: { recruitUnit: "tyrell" },
     },
@@ -415,7 +324,7 @@ export const HOUSE_15_RECRUIT: DialogueTree = {
       text: "I bring both myself and Squall Djinn. Together, we'll unleash the tempest!",
       portrait: 'stormcaller',
       effects: {
-        recruitUnit: "stormcaller",
+        recruitUnit: "war-mage",
         grantDjinn: "squall",
       },
     },
@@ -505,181 +414,6 @@ export const HOUSE_20_DJINN: DialogueTree = {
   ],
 };
 
-// HOUSE 06: Victory + Gust Djinn
-export const HOUSE_06_VICTORY: DialogueTree = {
-  id: 'house-06-victory',
-  name: 'House 06: Steel Guardian Falls',
-  startNodeId: 'guardian-falls',
-  nodes: [
-    {
-      id: 'guardian-falls',
-      speaker: 'Isaac',
-      text: '*wipes sweat from brow* The Steel Guardian was tougher than I expected. But we prevailed!',
-      portrait: 'isaac',
-      nextNodeId: 'gust-appears',
-    },
-    {
-      id: 'gust-appears',
-      speaker: 'Gust',
-      text: '*swirls into existence* You have freed me from the Guardian\'s chains! I am Gust, Jupiter Djinn!',
-      portrait: 'djinn',
-      nextNodeId: 'isaac-accepts',
-    },
-    {
-      id: 'isaac-accepts',
-      speaker: 'Isaac',
-      text: 'A wind spirit! With Jupiter Psynergy on our side, our options expand greatly.',
-      portrait: 'isaac',
-      effects: { grantDjinn: "gust" },
-    },
-  ],
-};
-
-// HOUSE 09: Victory (equipment reward only)
-export const HOUSE_09_VICTORY: DialogueTree = {
-  id: 'house-09-victory',
-  name: 'House 09: Inferno Conquered',
-  startNodeId: 'inferno-falls',
-  nodes: [
-    {
-      id: 'inferno-falls',
-      speaker: 'Isaac',
-      text: '*catches breath* The flames are quelled. Nine houses liberated - we are gaining momentum!',
-      portrait: 'isaac',
-      nextNodeId: 'team-reaction',
-    },
-    {
-      id: 'team-reaction',
-      speaker: 'War Mage',
-      text: 'Ha! Those fire elementals were nothing compared to TRUE Mars Psynergy! Great work, everyone!',
-      portrait: 'garet',
-    },
-  ],
-};
-
-// HOUSE 10: Victory - Act 1 Climax
-export const HOUSE_10_VICTORY: DialogueTree = {
-  id: 'house-10-victory',
-  name: 'House 10: The Burning Gauntlet Cleared',
-  startNodeId: 'milestone',
-  nodes: [
-    {
-      id: 'milestone',
-      speaker: 'Isaac',
-      text: '*looks at the freed villagers* Ten houses. Half the village is free. We are truly making a difference.',
-      portrait: 'isaac',
-      nextNodeId: 'mystic-insight',
-    },
-    {
-      id: 'mystic-insight',
-      speaker: 'Mystic',
-      text: '*sensing the flow of Psynergy* The Overseer\'s grip weakens with each victory. But the remaining houses will be harder.',
-      portrait: 'mystic',
-      nextNodeId: 'isaac-resolve',
-    },
-    {
-      id: 'isaac-resolve',
-      speaker: 'Isaac',
-      text: 'Then we get stronger too. Forward - there is no turning back now!',
-      portrait: 'isaac',
-    },
-  ],
-};
-
-// HOUSE 13: Victory - Act 2 Major Battle
-export const HOUSE_13_VICTORY: DialogueTree = {
-  id: 'house-13-victory',
-  name: 'House 13: The Silver Strike',
-  startNodeId: 'leviathan-freed',
-  nodes: [
-    {
-      id: 'leviathan-freed',
-      speaker: 'Isaac',
-      text: '*watches the Leviathan dive into the depths* Another legendary creature freed. Thirteen down!',
-      portrait: 'isaac',
-      nextNodeId: 'ranger-intel',
-    },
-    {
-      id: 'ranger-intel',
-      speaker: 'Ranger',
-      text: '*scans the horizon* My scouts report the remaining houses are heavily fortified. Elite guards await us.',
-      portrait: 'ranger',
-      nextNodeId: 'blaze-eager',
-    },
-    {
-      id: 'blaze-eager',
-      speaker: 'Blaze',
-      text: '*flames flicker eagerly* Good! I was getting bored with these weaklings. Bring on the real challenge!',
-      portrait: 'blaze',
-    },
-  ],
-};
-
-// HOUSE 16: Victory - Act 3 Opening
-export const HOUSE_16_VICTORY: DialogueTree = {
-  id: 'house-16-victory',
-  name: 'House 16: The Mythril Edge',
-  startNodeId: 'commander-falls',
-  nodes: [
-    {
-      id: 'commander-falls',
-      speaker: 'Isaac',
-      text: '*sheathes weapon* The Lightning Commander was a worthy foe. Only four houses remain.',
-      portrait: 'isaac',
-      nextNodeId: 'karis-observation',
-    },
-    {
-      id: 'karis-observation',
-      speaker: 'Karis',
-      text: '*the wind whispers around her* I sense immense power ahead. The Overseer is gathering his strongest forces.',
-      portrait: 'karis',
-      nextNodeId: 'tyrell-confident',
-    },
-    {
-      id: 'tyrell-confident',
-      speaker: 'Tyrell',
-      text: '*cracks knuckles* Four houses? We have taken sixteen! Nothing can stop us now!',
-      portrait: 'tyrell',
-    },
-  ],
-};
-
-// HOUSE 19: Victory - Final Armament
-export const HOUSE_19_VICTORY: DialogueTree = {
-  id: 'house-19-victory',
-  name: 'House 19: The Final Armament',
-  startNodeId: 'hydra-freed',
-  nodes: [
-    {
-      id: 'hydra-freed',
-      speaker: 'Isaac',
-      text: '*breathing heavily* The Hydra and Warlords fall! Only the Overseer remains!',
-      portrait: 'isaac',
-      nextNodeId: 'felix-wisdom',
-    },
-    {
-      id: 'felix-wisdom',
-      speaker: 'Felix',
-      text: '*grips his blade* We have come so far, Isaac. Whatever happens in the final house... it has been an honor.',
-      portrait: 'felix',
-      nextNodeId: 'isaac-rallies',
-    },
-    {
-      id: 'isaac-rallies',
-      speaker: 'Isaac',
-      text: '*places hand on Felix\'s shoulder* Save the sentimentality for AFTER we win. Everyone - prepare for the final battle!',
-      portrait: 'isaac',
-      nextNodeId: 'team-ready',
-    },
-    {
-      id: 'team-ready',
-      speaker: 'War Mage',
-      text: 'For Vale! For the villagers! FOR VICTORY!',
-      portrait: 'garet',
-    },
-  ],
-};
-
 // Export all recruitment dialogues
 export const RECRUITMENT_DIALOGUES: Record<string, DialogueTree> = {
   'house-01-recruit': HOUSE_01_RECRUIT,
@@ -687,19 +421,13 @@ export const RECRUITMENT_DIALOGUES: Record<string, DialogueTree> = {
   'house-03-recruit': HOUSE_03_RECRUIT,
   'house-04-post': HOUSE_04_POST_BATTLE,
   'house-05-recruit': HOUSE_05_RECRUIT,
-  'house-06-victory': HOUSE_06_VICTORY,
   'house-07-djinn': HOUSE_07_DJINN,
   'house-08-recruit': HOUSE_08_RECRUIT,
-  'house-09-victory': HOUSE_09_VICTORY,
-  'house-10-victory': HOUSE_10_VICTORY,
   'house-11-recruit': HOUSE_11_RECRUIT,
   'house-12-djinn': HOUSE_12_DJINN,
-  'house-13-victory': HOUSE_13_VICTORY,
   'house-14-recruit': HOUSE_14_RECRUIT,
   'house-15-recruit': HOUSE_15_RECRUIT,
-  'house-16-victory': HOUSE_16_VICTORY,
   'house-17-recruit': HOUSE_17_RECRUIT,
   'house-18-djinn': HOUSE_18_DJINN,
-  'house-19-victory': HOUSE_19_VICTORY,
   'house-20-djinn': HOUSE_20_DJINN,
 };

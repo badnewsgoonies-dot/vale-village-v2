@@ -36,7 +36,7 @@ export class InteriorFloorLayer implements Layer {
     this.roomOffsetY = (640 - height) / 2 + 50; // Slightly lower for ceiling space
   }
 
-  render(ctx: CanvasRenderingContext2D, camera: Camera): void {
+  render(ctx: CanvasRenderingContext2D, _camera: Camera): void {
     // Dark background (walls)
     ctx.fillStyle = '#2a2a2a';
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);

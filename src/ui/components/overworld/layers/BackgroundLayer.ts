@@ -45,7 +45,7 @@ export class BackgroundLayer implements Layer {
     });
   }
 
-  private generateMountainPoints(variance: number, minHeight: number, maxHeight: number): Array<{ x: number; y: number }> {
+  private generateMountainPoints(_variance: number, minHeight: number, maxHeight: number): Array<{ x: number; y: number }> {
     const points: Array<{ x: number; y: number }> = [];
     const worldWidth = 2000; // Extended width for scrolling
     let x = -200;
@@ -88,24 +88,26 @@ export class BackgroundLayer implements Layer {
     const isNight = this.timeOfDay < 0.25 || this.timeOfDay > 0.80;
     const isDusk = this.timeOfDay > 0.70 && this.timeOfDay <= 0.80;
     const isDawn = this.timeOfDay > 0.25 && this.timeOfDay <= 0.35;
+    const [back, mid, front] = this.mountainRanges;
+    if (!back || !mid || !front) return;
 
     if (isNight) {
-      this.mountainRanges[0].color = '#1a2030';
-      this.mountainRanges[1].color = '#252a3a';
-      this.mountainRanges[2].color = '#303545';
+      back.color = '#1a2030';
+      mid.color = '#252a3a';
+      front.color = '#303545';
     } else if (isDusk) {
-      this.mountainRanges[0].color = '#4a3a4a';
-      this.mountainRanges[1].color = '#5a4a5a';
-      this.mountainRanges[2].color = '#6a5a6a';
+      back.color = '#4a3a4a';
+      mid.color = '#5a4a5a';
+      front.color = '#6a5a6a';
     } else if (isDawn) {
-      this.mountainRanges[0].color = '#4a4a5a';
-      this.mountainRanges[1].color = '#5a5a6a';
-      this.mountainRanges[2].color = '#6a6a7a';
+      back.color = '#4a4a5a';
+      mid.color = '#5a5a6a';
+      front.color = '#6a6a7a';
     } else {
       // Day colors
-      this.mountainRanges[0].color = '#3a4a5a';
-      this.mountainRanges[1].color = '#4a5a6a';
-      this.mountainRanges[2].color = '#5a6a7a';
+      back.color = '#3a4a5a';
+      mid.color = '#4a5a6a';
+      front.color = '#5a6a7a';
     }
   }
 

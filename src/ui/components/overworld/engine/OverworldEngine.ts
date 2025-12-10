@@ -65,7 +65,6 @@ export class OverworldEngine {
   private playerPos: WorldPosition = { x: 0, y: 0 };
   private playerFacing: Direction = 'down';
   private savedOverworldPos: WorldPosition | null = null; // Saved when entering interior
-  // @ts-expect-error Used in Phase 3 for sprite selection
   private _playerUnitId: string = 'adept';
   private playerSpeed: number;
 

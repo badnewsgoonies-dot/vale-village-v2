@@ -74,8 +74,9 @@ export function DjinnCollectionScreen({ onClose }: DjinnCollectionScreenProps): 
   };
 
   const getDjinnSprite = (element: string): string => {
-    // Semantic ID for catalog lookup (e.g., "venus-djinn-front")
-    return `${element.toLowerCase()}-djinn-front`;
+    // Map element to Djinn sprite (using Front variant)
+    const elementLower = element.toLowerCase();
+    return `${elementLower}-djinn-front`;
   };
 
   return (
@@ -146,8 +147,22 @@ export function DjinnCollectionScreen({ onClose }: DjinnCollectionScreenProps): 
                         <div class="djinn-info">
                           <div class="djinn-name">{djinn.name}</div>
                           <div class="djinn-tier">Tier {djinn.tier}</div>
+                          {djinn.summonEffect && (
+                            <div class="djinn-effect">
+                              {djinn.summonEffect.type === 'damage' && djinn.summonEffect.damage && (
+                                <span class="effect-damage">⚔️ {djinn.summonEffect.damage} DMG</span>
+                              )}
+                              {djinn.summonEffect.type === 'buff' && djinn.summonEffect.statBonus && (
+                                <span class="effect-bonus">
+                                  {Object.entries(djinn.summonEffect.statBonus).map(([stat, val]) => (
+                                    <span key={stat} class="bonus-stat">+{val} {stat.toUpperCase()}</span>
+                                  ))}
+                                </span>
+                              )}
+                            </div>
+                          )}
                           {isEquipped && (
-                            <div class="djinn-status">Equipped · Team Slot ({state})</div>
+                            <div class="djinn-equipped-status">{state.toUpperCase()}</div>
                           )}
                         </div>
                       </div>

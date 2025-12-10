@@ -11,6 +11,7 @@ import { UnitDefinitionSchema } from './schemas/UnitSchema';
 import { EquipmentSchema } from './schemas/EquipmentSchema';
 import { EnemySchema } from './schemas/EnemySchema';
 import { EncounterSchema } from './schemas/EncounterSchema';
+import { ShopSchema } from './schemas/ShopSchema';
 
 // Import data
 import { DJINN } from './definitions/djinn';
@@ -18,6 +19,7 @@ import { UNIT_DEFINITIONS } from './definitions/units';
 import { EQUIPMENT } from './definitions/equipment';
 import { ENEMIES } from './definitions/enemies';
 import { ENCOUNTERS } from './definitions/encounters';
+import { SHOPS } from './definitions/shops';
 
 export interface ValidationError {
   category: string;
@@ -76,6 +78,8 @@ export function validateGameData(): ValidationResult {
 
   // Validate Encounters
   errors.push(...validateRecord(ENCOUNTERS, EncounterSchema, 'Encounters'));
+  // Validate Shops
+  errors.push(...validateRecord(SHOPS, ShopSchema, 'Shops'));
 
   // Add warnings for empty collections
   if (Object.keys(DJINN).length === 0) {
@@ -89,6 +93,9 @@ export function validateGameData(): ValidationResult {
   }
   if (Object.keys(ENCOUNTERS).length === 0) {
     warnings.push('No Encounters defined');
+  }
+  if (Object.keys(SHOPS).length === 0) {
+    warnings.push('No Shops defined');
   }
 
   return {

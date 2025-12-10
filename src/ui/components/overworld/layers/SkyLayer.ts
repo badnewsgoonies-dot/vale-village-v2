@@ -79,7 +79,7 @@ export class SkyLayer implements Layer {
     }
   }
 
-  render(ctx: CanvasRenderingContext2D, camera: Camera): void {
+  render(ctx: CanvasRenderingContext2D, _camera: Camera): void {
     const width = ctx.canvas.width;
 
     // Get interpolated sky colors
@@ -107,14 +107,22 @@ export class SkyLayer implements Layer {
   private getSkyColors(): SkyColors {
     const t = this.timeOfDay;
 
+    // Require at least two entries
+    if (SKY_COLORS.length < 2) {
+      return { top: '#0a0a1a', bottom: '#1a1a2a' };
+    }
+
     // Find bracketing colors
-    let lower = SKY_COLORS[0];
-    let upper = SKY_COLORS[1];
+    let lower = SKY_COLORS[0]!;
+    let upper = SKY_COLORS[1]!;
 
     for (let i = 0; i < SKY_COLORS.length - 1; i++) {
-      if (t >= SKY_COLORS[i].t && t <= SKY_COLORS[i + 1].t) {
-        lower = SKY_COLORS[i];
-        upper = SKY_COLORS[i + 1];
+      const current = SKY_COLORS[i]!;
+      const next = SKY_COLORS[i + 1]!;
+
+      if (t >= current.t && t <= next.t) {
+        lower = current;
+        upper = next;
         break;
       }
     }
@@ -244,6 +252,7 @@ export class SkyLayer implements Layer {
 
       for (let i = 0; i < starPositions.length; i++) {
         const star = starPositions[i];
+        if (!star) continue;
         // Twinkle effect
         const twinkle = 0.5 + Math.sin(Date.now() * 0.003 + i * 1.7) * 0.5;
         ctx.fillStyle = `rgba(255, 255, 255, ${twinkle})`;

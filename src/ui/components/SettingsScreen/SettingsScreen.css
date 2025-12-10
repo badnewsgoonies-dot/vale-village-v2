@@ -1,0 +1,458 @@
+/* SettingsScreen - Golden Sun-inspired Settings */
+
+/* Overlay */
+.settings-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: settingsFadeIn 0.2s ease-out;
+}
+
+@keyframes settingsFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Container */
+.settings-container {
+  width: 90%;
+  max-width: 900px;
+  max-height: 90vh;
+  background: linear-gradient(135deg, #3a2a1a, #2a1a0a);
+  border: 3px solid #8b6a4a;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+  animation: settingsSlideUp 0.3s ease-out;
+}
+
+@keyframes settingsSlideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Header */
+.settings-header {
+  background: linear-gradient(180deg, #4a3a2a, #3a2a1a);
+  border-bottom: 2px solid #6a5a4a;
+  padding: 1.5rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.settings-title {
+  font-size: 1.8rem;
+  color: #FFD87F;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0;
+}
+
+.settings-close-btn {
+  background: transparent;
+  border: 2px solid #6a5a4a;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  color: #e8d8c8;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+.settings-close-btn:hover {
+  border-color: #FFD87F;
+  color: #FFD87F;
+}
+
+/* Tab Navigation */
+.settings-tab-nav {
+  background: #2a1a0a;
+  border-bottom: 2px solid #4a3a2a;
+  padding: 0 2rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.settings-tab-btn {
+  background: transparent;
+  border: none;
+  padding: 1rem 1.5rem;
+  color: #a8a8a0;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-bottom: 3px solid transparent;
+  font-size: 1rem;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.settings-tab-btn:hover {
+  color: #e8d8c8;
+}
+
+.settings-tab-btn.active {
+  color: #FFD87F;
+  border-bottom-color: #FFD87F;
+}
+
+/* Content Area */
+.settings-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 2rem;
+}
+
+.settings-panel {
+  animation: panelFadeIn 0.2s ease-out;
+}
+
+@keyframes panelFadeIn {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Settings Groups */
+.settings-group {
+  margin-bottom: 2rem;
+}
+
+.settings-group-title {
+  color: #FFD87F;
+  font-size: 1.2rem;
+  margin: 0 0 1rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #4a3a2a;
+}
+
+/* Setting Item */
+.setting-item {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.setting-info {
+  flex: 1;
+}
+
+.setting-label {
+  font-size: 1.1rem;
+  color: #e8d8c8;
+  margin-bottom: 0.3rem;
+}
+
+.setting-description {
+  font-size: 0.85rem;
+  color: #8a7a6a;
+}
+
+.setting-value {
+  color: #FFD87F;
+  font-weight: bold;
+}
+
+/* Slider Control */
+.slider-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-width: 200px;
+}
+
+.settings-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 150px;
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(to right, #6a5a4a 0%, #6a5a4a var(--value, 50%), #3a2a1a var(--value, 50%), #3a2a1a 100%);
+  outline: none;
+  cursor: pointer;
+}
+
+.settings-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #FFD87F;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.settings-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 50%;
+  background: #FFD87F;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.slider-value {
+  min-width: 45px;
+  text-align: center;
+  color: #FFD87F;
+  font-weight: bold;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 30px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #3a2a1a;
+  transition: 0.4s;
+  border-radius: 30px;
+  border: 2px solid #6a5a4a;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 22px;
+  left: 2px;
+  bottom: 2px;
+  background-color: #e8d8c8;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+  background-color: #4a7a2a;
+  border-color: #FFD87F;
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+  transform: translateX(30px);
+  background-color: #FFD87F;
+}
+
+/* Button Group */
+.button-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.button-option {
+  background: #3a2a1a;
+  border: 2px solid #6a5a4a;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  color: #a8a8a0;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  font-size: 0.95rem;
+}
+
+.button-option:hover {
+  border-color: #8b7a6a;
+  color: #e8d8c8;
+}
+
+.button-option.selected {
+  background: linear-gradient(180deg, #FFD87F, #f3c866);
+  border-color: #FFD87F;
+  color: #1a0a00;
+}
+
+/* Keybind Grid */
+.keybind-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.keybind-item {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.keybind-action {
+  color: #e8d8c8;
+}
+
+.keybind-key {
+  background: #2a1a0a;
+  border: 2px solid #6a5a4a;
+  border-radius: 4px;
+  padding: 0.3rem 0.8rem;
+  color: #FFD87F;
+  font-family: monospace;
+  font-weight: bold;
+  min-width: 60px;
+  text-align: center;
+}
+
+/* Footer */
+.settings-footer {
+  background: #2a1a0a;
+  border-top: 2px solid #4a3a2a;
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-info {
+  color: #8a7a6a;
+  font-size: 0.9rem;
+}
+
+.footer-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.footer-btn {
+  background: linear-gradient(180deg, #4a3a2a, #3a2a1a);
+  border: 2px solid #6a5a4a;
+  border-radius: 6px;
+  padding: 0.75rem 1.5rem;
+  color: #e8d8c8;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.footer-btn:hover {
+  border-color: #8b7a6a;
+  color: #FFD87F;
+}
+
+.footer-btn.primary {
+  background: linear-gradient(180deg, #4a7a2a, #3a6a1a);
+  border-color: #5a8a3a;
+}
+
+.footer-btn.primary:hover {
+  border-color: #FFD87F;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .settings-container {
+    width: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 0;
+  }
+
+  .settings-header {
+    padding: 1rem;
+  }
+
+  .settings-title {
+    font-size: 1.4rem;
+  }
+
+  .settings-tab-nav {
+    padding: 0 0.5rem;
+    overflow-x: auto;
+    gap: 0.5rem;
+  }
+
+  .settings-tab-btn {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
+
+  .settings-content {
+    padding: 1rem;
+  }
+
+  .setting-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .slider-container {
+    width: 100%;
+  }
+
+  .settings-slider {
+    flex: 1;
+    width: auto;
+  }
+
+  .keybind-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .settings-footer {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .footer-buttons {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .footer-btn {
+    width: 100%;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .settings-overlay,
+  .settings-container,
+  .settings-panel,
+  .toggle-slider,
+  .toggle-slider:before {
+    animation: none;
+    transition: none;
+  }
+}
