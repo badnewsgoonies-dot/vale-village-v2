@@ -83,7 +83,6 @@ const TOWER_ENTRANCE_COLUMN = 76;
 
 const buildValeVillageNPCs = (): GameMap['npcs'] => [
   createNPC('tower-attendant', TOWER_ENTRANCE_COLUMN, ROAD_ROW),
-  createNPC('elder-vale', 5, ROAD_ROW, '/sprites/overworld/majornpcs/Elder.gif'),
 ];
 
 const buildValeVillageTriggers = (): GameMap['triggers'] => {
@@ -120,12 +119,6 @@ const buildValeVillageTriggers = (): GameMap['triggers'] => {
         sourceMapId: 'vale-village',
         returnPos: { x: TOWER_ENTRANCE_COLUMN, y: ROAD_ROW },
       },
-    },
-    {
-      id: 'elder-vale',
-      type: 'npc' as const,
-      position: { x: 5, y: ROAD_ROW },
-      data: { npcId: 'elder-vale' },
     },
   ];
 };
