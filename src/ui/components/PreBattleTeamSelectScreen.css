@@ -353,6 +353,32 @@
   transform: translateY(-1px);
 }
 
+/* Drag and Drop States */
+.equipment-slot.can-drop {
+  border: 2px dashed rgba(100, 200, 255, 0.4);
+  background: linear-gradient(150deg, #152535, #0e1a28);
+}
+
+.equipment-slot.drag-over {
+  border: 2px solid #64c8ff;
+  background: linear-gradient(150deg, #1a3045, #122538);
+  box-shadow: 0 0 20px rgba(100, 200, 255, 0.4), inset 0 0 15px rgba(100, 200, 255, 0.1);
+  transform: scale(1.02);
+}
+
+.compendium-item.dragging {
+  opacity: 0.5;
+  transform: scale(0.95);
+}
+
+.compendium-item[draggable="true"] {
+  cursor: grab;
+}
+
+.compendium-item[draggable="true"]:active {
+  cursor: grabbing;
+}
+
 .equipment-slot.helm {
   grid-column: 1 / -1;
 }
