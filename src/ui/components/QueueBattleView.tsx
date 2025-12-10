@@ -419,6 +419,7 @@ export function QueueBattleView() {
   const [showVictoryOverlay, setShowVictoryOverlay] = useState(false);
   const [showDefeatOverlay, setShowDefeatOverlay] = useState(false);
   const [battleOutcome, setBattleOutcome] = useState<'victory' | 'defeat' | null>(null);
+  const [victoryVariant, setVictoryVariant] = useState<'normal' | 'flawless' | 'boss'>('normal');
   const loadedFxRef = useRef<Set<string>>(new Set());
   const [floatingNumbers, setFloatingNumbers] = useState<
     { id: number; unitId: string; amount: number; kind: 'damage' | 'heal' }[]
@@ -468,6 +469,18 @@ export function QueueBattleView() {
     if (uiPhase === 'victory') {
       setBattleOutcome('victory');
       setShowCutscene(true);
+      // Derive victory variant: prioritize flawless, otherwise boss difficulty
+      if (battle) {
+        const totalDamageTaken = battle.playerTeam.units.reduce(
+          (sum, unit) => sum + (unit.battleStats?.damageTaken ?? 0),
+          0
+        );
+        const isFlawless = totalDamageTaken === 0;
+        const isBoss = battle.encounterId?.includes('house-10') || battle.encounterId?.includes('house-20') || battle.encounterId?.includes('house-30');
+        setVictoryVariant(isFlawless ? 'flawless' : isBoss ? 'boss' : 'normal');
+      } else {
+        setVictoryVariant('normal');
+      }
       return;
     }
 
@@ -835,7 +848,7 @@ export function QueueBattleView() {
   }
 
   if (battleOutcome === 'victory' && showVictoryOverlay) {
-    return <VictoryOverlay onComplete={handleVictoryOverlayComplete} />;
+    return <VictoryOverlay onComplete={handleVictoryOverlayComplete} variant={victoryVariant} />;
   }
 
   if (battleOutcome === 'defeat' && showDefeatOverlay) {

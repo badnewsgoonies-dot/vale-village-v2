@@ -1,0 +1,47 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Dev Server",
+            "type": "shell",
+            "command": "pnpm dev",
+            "isBackground": true,
+            "problemMatcher": {
+                "pattern": { "regexp": "." },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": ".",
+                    "endsPattern": "Local:.*http"
+                }
+            },
+            "presentation": {
+                "group": "dev",
+                "panel": "dedicated",
+                "reveal": "always"
+            }
+        },
+        {
+            "label": "Multi-Agent 4-Panel",
+            "type": "shell",
+            "command": "./agents.sh gui",
+            "options": { "cwd": "${workspaceFolder}" },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "silent"
+            }
+        },
+        {
+            "label": "Launch Multi-Agent Workstation",
+            "dependsOn": [
+                "Dev Server",
+                "Multi-Agent 4-Panel"
+            ],
+            "dependsOrder": "parallel",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}

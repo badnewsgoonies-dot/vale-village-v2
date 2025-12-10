@@ -15,6 +15,25 @@ export default defineConfig({
   },
   build: {
     target: 'ES2022',
-    sourcemap: true
+    sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            return 'vendor';
+          }
+          if (id.includes('/src/ui/')) {
+            return 'ui-components';
+          }
+          if (id.includes('/src/core/')) {
+            return 'core-services';
+          }
+          if (id.includes('/src/data/definitions/')) {
+            return 'data-definitions';
+          }
+          return undefined;
+        }
+      }
+    }
   }
 });

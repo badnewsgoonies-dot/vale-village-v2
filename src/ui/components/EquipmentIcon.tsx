@@ -6,6 +6,7 @@
 import { JSX } from 'preact';
 import { SimpleSprite } from '../sprites/SimpleSprite';
 import type { Equipment } from '../../core/models/Equipment';
+import { getEquipmentSpriteId } from '../sprites/mappings/equipmentSprites';
 
 interface EquipmentIconProps {
   /** Equipment item */
@@ -86,12 +87,13 @@ export function EquipmentIcon({
   const sizeStyles = SIZE_MAP[size];
   const icon = getSlotIcon(equipment.slot);
   const tierColor = getTierColor(equipment.tier);
+  const spriteId = getEquipmentSpriteId(equipment);
 
   // SimpleSprite will automatically show fallback if sprite not found
-  // Try flexible lookup: equipment ID might match item icon sprites
+  // Try mapping to item icon sprites; fallback renders tier-colored emoji
   return (
     <SimpleSprite
-      id={equipment.id.toLowerCase()}
+      id={spriteId ?? equipment.id.toLowerCase()}
       width={sizeStyles.width}
       height={sizeStyles.height}
       className={className}

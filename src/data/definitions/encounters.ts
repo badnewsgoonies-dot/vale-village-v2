@@ -634,7 +634,7 @@ export const HOUSE_28: Encounter = {
 export const HOUSE_29: Encounter = {
   id: 'house-29',
   name: 'House 29: Void Armada',
-  enemies: ['kraken', 'storm-titan', 'void-specter'],
+  enemies: ['kraken', 'storm-titan', 'void-specter', 'storm-golem', 'tidal-wraith'],
   difficulty: 'boss',
   reward: {
     xp: 1100,

@@ -76,6 +76,20 @@ const ENEMY_PHASES: EnemyPhase[] = [
 ];
 
 const ENEMY_OVERRIDES: Record<number, Partial<EnemyPhase>> = {
+  // BOSS FLOOR: House 10 - Stone Captain (first major boss)
+  10: {
+    speaker: 'Stone Captain',
+    portrait: 'enemy-boss',
+    intro: () => '*steps forward, armor gleaming* So... you\'ve cleared nine houses. The scouts whispered of an Adept with fire in their heart.',
+    threat: () => 'I am the Stone Captain—the first TRUE test of your resolve. Many have reached me. NONE have passed. Prepare yourself!',
+  },
+  // BOSS FLOOR: House 20 - Vale Overseer (Chapter 1 final boss)
+  20: {
+    speaker: 'The Vale Overseer',
+    portrait: 'enemy-overseer',
+    intro: () => '*rises from dark throne* At last... the one who shattered my army stands before me. I have watched your every battle, studied your every weakness.',
+    threat: () => 'I am the Overseer—master of Vale, commander of shadows! You think nineteen victories make you strong? I will show you the TRUE meaning of power!',
+  },
   21: {
     intro: () => 'The Risen Dead shall claim your souls! House 21 is their doorway.',
     threat: () => 'Your breaths are numbered. The grave is patient.',
@@ -112,9 +126,12 @@ const ENEMY_OVERRIDES: Record<number, Partial<EnemyPhase>> = {
     intro: () => 'The Void Armada anchors at House 29. Seas and storms obey me.',
     threat: () => 'Drown, be torn by lightning, or flee. Those are your choices.',
   },
+  // BOSS FLOOR: House 30 - The Nexus Guardian (Chapter 2 final boss)
   30: {
-    intro: () => 'House 30 is the nexus. Every element bends here—except your will.',
-    threat: () => 'Your journey ends at the threshold. Lay down your weapons.',
+    speaker: 'The Nexus Guardian',
+    portrait: 'enemy-nexus-boss',
+    intro: () => '*all four elements swirl violently* You... you actually made it. The Overseer. The Titans. The Archons. All fallen before you.',
+    threat: () => 'I am the Nexus Guardian—the convergence of ALL Psynergy! Earth, fire, water, wind—they are ONE within me! This is where your legend ENDS!',
   },
 };
 
