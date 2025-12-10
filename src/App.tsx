@@ -6,7 +6,16 @@ import { useGameStore, ScreenType, ModalType, GameStore } from './store/gameStor
 
 import { TitleScreen } from './screens/TitleScreen';
 import { OverworldMap } from './screens/OverworldMap';
+import { OverworldCanvas } from './ui/components/overworld';
 import { QueueBattleView } from './screens/QueueBattleView';
+
+// Feature flag for new canvas renderer (set via URL param or localStorage)
+const USE_CANVAS_OVERWORLD = (() => {
+  if (typeof window === 'undefined') return false;
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.has('canvas')) return urlParams.get('canvas') !== 'false';
+  return localStorage.getItem('useCanvasOverworld') === 'true';
+})();
 import { MainMenu } from './screens/MainMenu';
 import { CompendiumScreen } from './screens/CompendiumScreen';
 import { PreBattleTeamSelectScreenV2 } from './ui/components/PreBattleTeamSelectScreenV2';
@@ -125,6 +134,7 @@ import { SaveMenu } from './ui/components/SaveMenu';
 import { HowToPlay } from './modals/HowToPlay';
 import { PartyManagementScreen } from './ui/components/PartyManagementScreen';
 import { DjinnCollectionScreen } from './ui/components/DjinnCollectionScreen';
+import { DebugRouter, isDebugRouting } from './debug';
 
 import './index.css';
 
@@ -279,7 +289,7 @@ const App: FunctionComponent = () => {
       case 'title':
         return <TitleScreen />;
       case 'overworld':
-        return <OverworldMap />;
+        return USE_CANVAS_OVERWORLD ? <OverworldCanvas /> : <OverworldMap />;
       case 'battle':
         return <QueueBattleView />;
       case 'menu':
@@ -360,8 +370,13 @@ const App: FunctionComponent = () => {
     }
   };
 
+  // Check if we're in debug routing mode
+  const debugRouting = isDebugRouting();
+
   return (
     <div className={`app-root${isTransitioning ? ' app-root--transitioning' : ''}`}>
+      {/* Debug router handles URL-based navigation for screenshots */}
+      {debugRouting && <DebugRouter />}
       {renderScreen()}
       {renderModal()}
       {isDevMode && <DevOverlay screen={screen} modal={modal} />}
