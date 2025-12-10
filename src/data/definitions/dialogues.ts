@@ -107,43 +107,6 @@ export const DJINN_INTRO_DIALOGUE: DialogueTree = {
   ],
 };
 
-export const ELDER_DIALOGUE: DialogueTree = {
-  id: 'elder-vale',
-  name: 'Elder of Vale',
-  startNodeId: 'greeting',
-  nodes: [
-    {
-      id: 'greeting',
-      speaker: 'Elder Vale',
-      text: 'Welcome, young warrior. I sense great power within you.',
-      portrait: 'elder',
-      nextNodeId: 'ask-quest',
-    },
-    {
-      id: 'ask-quest',
-      speaker: 'Elder Vale',
-      text: 'The forest to the east has been plagued by bandits. Can you help us?',
-      portrait: 'elder',
-      choices: [
-        { id: 'accept', text: 'I will help the village.', nextNodeId: 'quest-accepted', effects: { questAccepted: true } },
-        { id: 'decline', text: 'I am not ready yet.', nextNodeId: 'quest-declined' },
-      ],
-    },
-    {
-      id: 'quest-accepted',
-      speaker: 'Elder Vale',
-      text: 'Thank you! May the stars guide you.',
-      portrait: 'elder',
-    },
-    {
-      id: 'quest-declined',
-      speaker: 'Elder Vale',
-      text: 'I understand. Come back when you are ready.',
-      portrait: 'elder',
-    },
-  ],
-};
-
 export const SHOPKEEPER_DIALOGUE: DialogueTree = {
   id: 'shopkeeper-weapons',
   name: 'Weapon Shop Owner',
@@ -184,7 +147,6 @@ export const DIALOGUES: Record<string, DialogueTree> = {
   // Post-battle celebrations
   ...POST_BATTLE_DIALOGUES,
   // Existing dialogues
-  'elder-vale': ELDER_DIALOGUE,
   'shopkeeper-weapons': SHOPKEEPER_DIALOGUE,
   // Recruitment dialogues (Houses 1-20)
   ...RECRUITMENT_DIALOGUES,

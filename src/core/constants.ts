@@ -14,18 +14,6 @@ export const MIN_PARTY_SIZE = 1;
 export const MAX_PARTY_SIZE = 4;
 
 /**
- * Party size - maximum number of units in player team
- * @deprecated Use MAX_PARTY_SIZE instead. Kept for backward compatibility.
- */
-export const PARTY_SIZE = MAX_PARTY_SIZE;
-
-/**
- * Maximum queue size (matches party size)
- * @deprecated Use MAX_PARTY_SIZE instead. Kept for backward compatibility.
- */
-export const MAX_QUEUE_SIZE = MAX_PARTY_SIZE;
-
-/**
  * RNG stream offsets for deterministic battle RNG
  * Each stream is separated by a large offset to prevent collisions
  */
