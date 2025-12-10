@@ -82,6 +82,8 @@ export interface Camera {
   worldToScreen(worldX: number, worldY: number): { x: number; y: number };
   screenToWorld(screenX: number, screenY: number): { x: number; y: number };
   getParallaxOffset(factor: number): { x: number; y: number };
+  isVisible(worldX: number, worldY: number, width?: number, height?: number, padding?: number): boolean;
+  getVisibleBounds(): { left: number; top: number; right: number; bottom: number };
   setTarget(x: number, y: number): void;
   update(dt: number): void;
 }

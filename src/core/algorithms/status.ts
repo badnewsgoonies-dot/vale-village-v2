@@ -142,7 +142,8 @@ export function isImmuneToStatus(unit: Unit, statusType: string): boolean {
   }
 
   // Check if any immunity specifically lists this status type
-  return immunities.some(s => s.types?.some(t => t === statusType));
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return immunities.some(s => s.types?.includes(statusType as any));
 }
 
 /**
@@ -191,3 +192,4 @@ export function applyStatusToUnit(
     statusEffects: [...updatedStatusEffects, newStatus],
   };
 }
+

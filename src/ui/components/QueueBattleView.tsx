@@ -22,6 +22,8 @@ import { ModeLabel } from './ModeLabel';
 import type { Ability } from '../../data/schemas/AbilitySchema';
 import type { Unit } from '../../core/models/Unit';
 import type { BattleEvent } from '../../core/services/types';
+import { getEnemyBattleSprite } from '../sprites/mappings/battleSprites';
+import { SimpleSprite } from '../sprites/SimpleSprite';
 import { BattleUnitSprite } from './BattleUnitSprite';
 import { ABILITIES } from '../../data/definitions/abilities';
 // Direct ability→GIF mapping in ABILITY_FX_MAP below (only for existing GIFs)
@@ -419,12 +421,14 @@ export function QueueBattleView() {
   const [showVictoryOverlay, setShowVictoryOverlay] = useState(false);
   const [showDefeatOverlay, setShowDefeatOverlay] = useState(false);
   const [battleOutcome, setBattleOutcome] = useState<'victory' | 'defeat' | null>(null);
-  const [victoryVariant, setVictoryVariant] = useState<'normal' | 'flawless' | 'boss'>('normal');
   const loadedFxRef = useRef<Set<string>>(new Set());
   const [floatingNumbers, setFloatingNumbers] = useState<
-    { id: number; unitId: string; amount: number; kind: 'damage' | 'heal' }[]
+    { id: number; unitId: string; amount: number; kind: 'damage' | 'heal'; isCrit?: boolean }[]
   >([]);
   const floatingIdRef = useRef(0);
+  const [shakingUnits, setShakingUnits] = useState<Set<string>>(new Set());
+  const shakeTimeoutsRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
+  const currentAttackerRef = useRef<string | null>(null);
   const floatingTimeoutsRef = useRef<Map<number, ReturnType<typeof setTimeout>>>(new Map());
   const lastProcessedEventRef = useRef<BattleEvent | undefined>(undefined);
   const lastCritProcessedEventRef = useRef<BattleEvent | undefined>(undefined);
@@ -469,18 +473,6 @@ export function QueueBattleView() {
     if (uiPhase === 'victory') {
       setBattleOutcome('victory');
       setShowCutscene(true);
-      // Derive victory variant: prioritize flawless, otherwise boss difficulty
-      if (battle) {
-        const totalDamageTaken = battle.playerTeam.units.reduce(
-          (sum, unit) => sum + (unit.battleStats?.damageTaken ?? 0),
-          0
-        );
-        const isFlawless = totalDamageTaken === 0;
-        const isBoss = battle.encounterId?.includes('house-10') || battle.encounterId?.includes('house-20') || battle.encounterId?.includes('house-30');
-        setVictoryVariant(isFlawless ? 'flawless' : isBoss ? 'boss' : 'normal');
-      } else {
-        setVictoryVariant('normal');
-      }
       return;
     }
 
@@ -518,17 +510,22 @@ export function QueueBattleView() {
 
   const currentFx = useMemo(() => getEventGif(events[0]), [events]);
 
-  // Reset floating numbers when battle changes and clear timers on unmount
+  // Reset floating numbers and shake states when battle changes and clear timers on unmount
   useEffect(() => {
     floatingTimeoutsRef.current.forEach((timeout) => clearTimeout(timeout));
     floatingTimeoutsRef.current.clear();
+    shakeTimeoutsRef.current.forEach((timeout) => clearTimeout(timeout));
+    shakeTimeoutsRef.current.clear();
     setFloatingNumbers([]);
+    setShakingUnits(new Set());
     lastProcessedEventRef.current = undefined;
     lastCritProcessedEventRef.current = undefined;
 
     return () => {
       floatingTimeoutsRef.current.forEach((timeout) => clearTimeout(timeout));
       floatingTimeoutsRef.current.clear();
+      shakeTimeoutsRef.current.forEach((timeout) => clearTimeout(timeout));
+      shakeTimeoutsRef.current.clear();
     };
   }, [battle]);
 
@@ -540,7 +537,7 @@ export function QueueBattleView() {
     };
   }, []);
 
-  // Spawn floating damage/heal numbers when events resolve
+  // Spawn floating damage/heal numbers and trigger shake when events resolve
   useEffect(() => {
     if (!battle || uiPhase !== 'executing') return;
     const evt = events[0];
@@ -548,18 +545,49 @@ export function QueueBattleView() {
     if (evt === lastProcessedEventRef.current) return;
     lastProcessedEventRef.current = evt;
 
+    // Track current attacker from ability events
+    if (evt.type === 'ability') {
+      currentAttackerRef.current = evt.casterId;
+    }
+
     if (evt.type === 'hit' || evt.type === 'heal') {
       const id = floatingIdRef.current + 1;
       floatingIdRef.current = id;
       const kind = evt.type === 'heal' ? 'heal' : 'damage';
-      setFloatingNumbers((prev) => [...prev, { id, unitId: evt.targetId, amount: evt.amount, kind }]);
+
+      // Check if this is a critical hit (attacker has critFlash active)
+      const isCrit = !!(evt.type === 'hit' && currentAttackerRef.current && critFlash[currentAttackerRef.current]);
+
+      setFloatingNumbers((prev) => [...prev, { id, unitId: evt.targetId, amount: evt.amount, kind, isCrit }]);
       const timeoutId = setTimeout(() => {
         setFloatingNumbers((prev) => prev.filter((n) => n.id !== id));
         floatingTimeoutsRef.current.delete(id);
-      }, 1150);
+      }, isCrit ? 1400 : 1150); // Crits stay longer
       floatingTimeoutsRef.current.set(id, timeoutId);
+
+      // Trigger shake animation for damage hits
+      if (evt.type === 'hit') {
+        const targetId = evt.targetId;
+        // Clear any existing shake timeout for this unit
+        const existingTimeout = shakeTimeoutsRef.current.get(targetId);
+        if (existingTimeout) {
+          clearTimeout(existingTimeout);
+        }
+        // Add unit to shaking set
+        setShakingUnits((prev) => new Set([...prev, targetId]));
+        // Remove after animation duration (crits shake longer)
+        const shakeTimeout = setTimeout(() => {
+          setShakingUnits((prev) => {
+            const next = new Set(prev);
+            next.delete(targetId);
+            return next;
+          });
+          shakeTimeoutsRef.current.delete(targetId);
+        }, isCrit ? 350 : 240);
+        shakeTimeoutsRef.current.set(targetId, shakeTimeout);
+      }
     }
-  }, [uiPhase, events, battle]);
+  }, [uiPhase, events, battle, critFlash]);
 
   // Crit counter progression for basic attacks (during execution phase)
   // This ensures the counter only increments when the attack actually happens,
@@ -848,7 +876,7 @@ export function QueueBattleView() {
   }
 
   if (battleOutcome === 'victory' && showVictoryOverlay) {
-    return <VictoryOverlay onComplete={handleVictoryOverlayComplete} variant={victoryVariant} />;
+    return <VictoryOverlay onComplete={handleVictoryOverlayComplete} />;
   }
 
   if (battleOutcome === 'defeat' && showDefeatOverlay) {
@@ -914,6 +942,30 @@ export function QueueBattleView() {
               0% { opacity: 1; transform: translate(-50%, 0) scale(1); }
               60% { opacity: 1; transform: translate(-50%, -6px) scale(1.02); }
               100% { opacity: 0; transform: translate(-50%, -24px) scale(1.05); }
+            }
+            @keyframes unitDamageShake {
+              0% { transform: translateX(0); }
+              20% { transform: translateX(-4px); }
+              40% { transform: translateX(4px); }
+              60% { transform: translateX(-2px); }
+              80% { transform: translateX(2px); }
+              100% { transform: translateX(0); }
+            }
+            @keyframes psynergyBurst {
+              0% { transform: scale(0.8); opacity: 0; box-shadow: 0 0 20px currentColor; }
+              30% { transform: scale(1.05); opacity: 1; box-shadow: 0 0 40px currentColor; }
+              70% { transform: scale(1.02); opacity: 0.9; box-shadow: 0 0 30px currentColor; }
+              100% { transform: scale(1); opacity: 0.8; box-shadow: 0 0 25px currentColor; }
+            }
+            @keyframes psynergyRing {
+              0% { transform: scale(0.6); opacity: 0.8; }
+              100% { transform: scale(1.8); opacity: 0; }
+            }
+            @keyframes criticalFloat {
+              0% { opacity: 1; transform: translate(-50%, 0) scale(1.5); filter: brightness(1.5); }
+              15% { transform: translate(-50%, -4px) scale(1.8); filter: brightness(2); }
+              40% { opacity: 1; transform: translate(-50%, -10px) scale(1.4); filter: brightness(1.3); }
+              100% { opacity: 0; transform: translate(-50%, -32px) scale(1.2); filter: brightness(1); }
             }
           `}
         </style>
@@ -998,6 +1050,7 @@ export function QueueBattleView() {
               const isTargetCandidate = validTargetIds.has(enemy.id);
               const isResolvingTarget = highlightedTargets.has(enemy.id);
               const isActor = currentActorId === enemy.id;
+              const isShaking = shakingUnits.has(enemy.id);
               // Don't filter out KO'd units if they have ANY pending events related to them
               // This includes ability casts, hits, heals, status changes, and KO animations
               const hasPendingEvent = events.some(evt => {
@@ -1011,8 +1064,9 @@ export function QueueBattleView() {
                 return false;
               });
               if (isUnitKO(enemy) && !hasPendingEvent) return null;
-              const animationState: 'idle' | 'attack' | 'hit' =
-                isActor ? 'attack' : isResolvingTarget ? 'hit' : 'idle';
+              const mappedSprite = getEnemyBattleSprite(enemy.id, 'idle');
+              const nameBasedFallback = `/sprites/battle/enemies/${enemy.name.replace(/\s+/g, '')}.gif`;
+              const spriteId = mappedSprite ?? nameBasedFallback;
               return (
                 <div
                   key={enemy.id}
@@ -1048,19 +1102,29 @@ export function QueueBattleView() {
                       : isTargetCandidate
                         ? 'drop-shadow(0 0 8px rgba(255,216,127,0.7))'
                         : 'none',
+                      animation: isShaking ? 'unitDamageShake 240ms ease-in-out' : 'none',
                     }}
                   >
-                    <BattleUnitSprite
-                      unitId={enemy.id}
-                      state={animationState}
-                      size="large"
-                      isPlayer={false}
+                    <SimpleSprite
+                      id={spriteId}
+                      width={64}
+                      height={64}
+                      fallback={
+                        <SimpleSprite
+                          id="/sprites/battle/enemies/Goblin.gif"
+                          width={64}
+                          height={64}
+                          imageRendering="pixelated"
+                        />
+                      }
+                      imageRendering="pixelated"
                     />
                   </div>
                   {floatingNumbers
                     .filter((n) => n.unitId === enemy.id)
                     .map((num, idx) => {
                       const displayValue = Math.abs(num.amount);
+                      const isCritical = num.isCrit;
                       return (
                         <div
                           key={num.id}
@@ -1068,14 +1132,18 @@ export function QueueBattleView() {
                             position: 'absolute',
                             bottom: `calc(100% + ${idx * 16 + 6}px)`,
                             left: '50%',
-                            color: num.kind === 'heal' ? '#6df0a2' : '#ff6b6b',
+                            color: num.kind === 'heal' ? '#6df0a2' : isCritical ? '#FFD54A' : '#ff6b6b',
+                            fontSize: isCritical ? '1.4rem' : '1rem',
                             fontWeight: 800,
-                            textShadow: '0 0 6px rgba(0,0,0,0.8)',
-                            animation: 'floatNumber 1.05s ease-out forwards',
+                            textShadow: isCritical
+                              ? '0 0 12px rgba(255, 215, 74, 0.9), 0 0 20px rgba(255, 180, 0, 0.6), 2px 2px 4px rgba(0,0,0,0.9)'
+                              : '0 0 6px rgba(0,0,0,0.8)',
+                            animation: isCritical ? 'criticalFloat 1.3s ease-out forwards' : 'floatNumber 1.05s ease-out forwards',
                             pointerEvents: 'none',
-                            zIndex: 12,
+                            zIndex: isCritical ? 20 : 12,
                           }}
                         >
+                          {isCritical && <span style={{ display: 'block', fontSize: '0.7rem', color: '#FFD54A' }}>CRITICAL!</span>}
                           {num.kind === 'heal' ? `+${displayValue}` : `-${displayValue}`}
                         </div>
                       );
@@ -1141,8 +1209,7 @@ export function QueueBattleView() {
               if (isUnitKO(unit) && !hasPendingEvent) return null;
               const isActor = currentActorId === unit.id;
               const isTarget = highlightedTargets.has(unit.id);
-              const animationState: 'idle' | 'attack' | 'hit' =
-                isActor ? 'attack' : isTarget ? 'hit' : 'idle';
+              const isShaking = shakingUnits.has(unit.id);
               return (
                 <div
                   key={unit.id}
@@ -1174,9 +1241,10 @@ export function QueueBattleView() {
                       transform: isActor ? 'scale(2.7)' : 'scale(2.5)',
                       zIndex: 1,
                       filter: isTarget ? 'drop-shadow(0 0 12px rgba(255,216,127,0.8))' : 'none',
+                      animation: isShaking ? 'unitDamageShake 240ms ease-in-out' : 'none',
                     }}
                   >
-                    <BattleUnitSprite unitId={unit.id} state={animationState} size="large" />
+                    <BattleUnitSprite unitId={unit.id} state="idle" size="large" />
                   </div>
                   {isTarget && (
                     <div
@@ -1200,6 +1268,7 @@ export function QueueBattleView() {
                     .filter((n) => n.unitId === unit.id)
                     .map((num, idx) => {
                       const displayValue = Math.abs(num.amount);
+                      const isCritical = num.isCrit;
                       return (
                         <div
                           key={num.id}
@@ -1207,14 +1276,18 @@ export function QueueBattleView() {
                             position: 'absolute',
                             bottom: `calc(100% + ${idx * 16 + 6}px)`,
                             left: '50%',
-                            color: num.kind === 'heal' ? '#6df0a2' : '#ff6b6b',
+                            color: num.kind === 'heal' ? '#6df0a2' : isCritical ? '#FFD54A' : '#ff6b6b',
+                            fontSize: isCritical ? '1.4rem' : '1rem',
                             fontWeight: 800,
-                            textShadow: '0 0 6px rgba(0,0,0,0.8)',
-                            animation: 'floatNumber 1.05s ease-out forwards',
+                            textShadow: isCritical
+                              ? '0 0 12px rgba(255, 215, 74, 0.9), 0 0 20px rgba(255, 180, 0, 0.6), 2px 2px 4px rgba(0,0,0,0.9)'
+                              : '0 0 6px rgba(0,0,0,0.8)',
+                            animation: isCritical ? 'criticalFloat 1.3s ease-out forwards' : 'floatNumber 1.05s ease-out forwards',
                             pointerEvents: 'none',
-                            zIndex: 12,
+                            zIndex: isCritical ? 20 : 12,
                           }}
                         >
+                          {isCritical && <span style={{ display: 'block', fontSize: '0.7rem', color: '#FFD54A' }}>CRITICAL!</span>}
                           {num.kind === 'heal' ? `+${displayValue}` : `-${displayValue}`}
                         </div>
                       );
@@ -1518,6 +1591,19 @@ export function QueueBattleView() {
             if (!evt || evt.type !== 'ability') return null;
             const fx = getEventGif(evt);
             const abilityName = ABILITIES[evt.abilityId]?.name ?? evt.abilityId;
+            const ability = ABILITIES[evt.abilityId];
+
+            // Get element color for psynergy glow effect
+            const getElementColor = (element?: string): string => {
+              switch (element) {
+                case 'Venus': return '#8B4513'; // Brown/Earth
+                case 'Mars': return '#ff6600'; // Orange/Fire
+                case 'Mercury': return '#00ccff'; // Blue/Water
+                case 'Jupiter': return '#9932CC'; // Purple/Wind
+                default: return '#ffd87f'; // Golden default
+              }
+            };
+            const elementColor = getElementColor(ability?.element);
 
             // Find target names for display
             const targetNames = evt.targets.map(targetId => {
@@ -1529,26 +1615,62 @@ export function QueueBattleView() {
             return (
               <>
                 {fx && (
-                  <img
-                    src={fx}
-                    width={180}
-                    height={180}
+                  <div
                     style={{
-                      borderRadius: 10,
-                      imageRendering: 'pixelated',
-                      objectFit: 'cover',
-                      boxShadow: '0 0 24px rgba(255,255,255,0.65)',
-                      mixBlendMode: 'screen',
+                      position: 'relative',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
                     }}
-                    onLoad={() => loadedFxRef.current.add(fx)}
-                    onError={() => {
-                      loadedFxRef.current.add(FX_FALLBACK);
-                    }}
-                    alt="Ability effect"
-                  />
+                  >
+                    {/* Expanding ring effect */}
+                    <div
+                      style={{
+                        position: 'absolute',
+                        width: 180,
+                        height: 180,
+                        borderRadius: '50%',
+                        border: `3px solid ${elementColor}`,
+                        animation: 'psynergyRing 0.9s ease-out infinite',
+                        pointerEvents: 'none',
+                      }}
+                    />
+                    {/* Secondary ring with delay */}
+                    <div
+                      style={{
+                        position: 'absolute',
+                        width: 180,
+                        height: 180,
+                        borderRadius: '50%',
+                        border: `2px solid ${elementColor}`,
+                        animation: 'psynergyRing 0.9s ease-out 0.3s infinite',
+                        pointerEvents: 'none',
+                      }}
+                    />
+                    {/* GIF with burst animation */}
+                    <img
+                      src={fx}
+                      width={180}
+                      height={180}
+                      style={{
+                        borderRadius: 10,
+                        imageRendering: 'pixelated',
+                        objectFit: 'cover',
+                        boxShadow: `0 0 30px ${elementColor}, 0 0 60px ${elementColor}40`,
+                        mixBlendMode: 'screen',
+                        animation: 'psynergyBurst 0.6s ease-out forwards',
+                        color: elementColor,
+                      }}
+                      onLoad={() => loadedFxRef.current.add(fx)}
+                      onError={() => {
+                        loadedFxRef.current.add(FX_FALLBACK);
+                      }}
+                      alt="Ability effect"
+                    />
+                  </div>
                 )}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                  <div style={{ fontWeight: 800, color: '#ffd87f', fontSize: '1.05rem' }}>{abilityName}</div>
+                  <div style={{ fontWeight: 800, color: elementColor, fontSize: '1.05rem' }}>{abilityName}</div>
                   {targetNames && (
                     <div style={{ color: '#FFD87F', fontSize: '0.85rem', fontWeight: 600 }}>
                       Target: {targetNames}

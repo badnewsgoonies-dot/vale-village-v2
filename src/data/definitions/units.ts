@@ -256,8 +256,7 @@ export const ADEPT: UnitDefinition = {
     { ...GAIA_REBIRTH, unlockLevel: 20 },
   ],
   manaContribution: 1,
-  description:
-    'Born in the mountains of Vale, Isaac trained from childhood to channel the earth\'s power. When shadow forces invaded his homeland, he rose as its defender—steady as stone, unyielding in resolve. His Venus Psynergy draws strength from ancient roots, making him the bedrock upon which allies stand.',
+  description: 'A sturdy Earth adept who breaks through enemy defenses',
 };
 
 export const WAR_MAGE: UnitDefinition = {
@@ -308,8 +307,7 @@ export const WAR_MAGE: UnitDefinition = {
     { ...RAGNAROK_FLAMES, unlockLevel: 20 },
   ],
   manaContribution: 2,
-  description:
-    'Garet grew up alongside Isaac in Vale, his fiery temperament perfectly matched by his Mars affinity. While others study tactics, he charges headfirst into danger, his flames blazing a path for his allies. Beneath the brash exterior lies fierce loyalty—he would burn down the world for his friends.',
+  description: 'A fire mage who burns enemies with powerful psynergy',
 };
 
 export const MYSTIC: UnitDefinition = {
@@ -360,8 +358,7 @@ export const MYSTIC: UnitDefinition = {
     { ...LEVIATHAN_GRACE, unlockLevel: 20 },
   ],
   manaContribution: 2,
-  description:
-    'Mia hails from the frozen lighthouse of Imil, where she served as a healer before joining the liberation. Her Mercury Psynergy flows like water—gentle when mending wounds, devastating when unleashed as ice. She carries the wisdom of the northern seas and the compassion to use it.',
+  description: 'A water mystic who heals allies and freezes enemies',
 };
 
 export const RANGER: UnitDefinition = {
@@ -412,8 +409,7 @@ export const RANGER: UnitDefinition = {
     { ...STORM_SOVEREIGN, unlockLevel: 20 },
   ],
   manaContribution: 1,
-  description:
-    'Ivan was raised among the merchant caravans that traverse Weyard, his Jupiter Psynergy awakening during a storm that nearly claimed his life. Now he reads the wind like others read books, striking from unexpected angles with lightning precision. His quiet demeanor hides a mind sharper than any blade.',
+  description: 'A swift wind ranger who strikes with precision and blinds foes',
 };
 
 // ============================================================================
@@ -466,8 +462,7 @@ export const SENTINEL: UnitDefinition = {
     { ...ATLAS_STAND, unlockLevel: 20 },
   ],
   manaContribution: 1,
-  description:
-    'Once a prison guard forced to serve the Overseer, Sentinel chose honor over survival when he witnessed Isaac\'s stand at House 8. His Venus Psynergy manifests as an impenetrable shield—a fitting power for one who swore to never let another innocent fall while he stands.',
+  description: 'A defensive sentinel who protects allies and breaks enemy guards',
 };
 
 export const STORMCALLER: UnitDefinition = {
@@ -516,8 +511,7 @@ export const STORMCALLER: UnitDefinition = {
     { ...TEMPEST_TYRANT, unlockLevel: 20 },
   ],
   manaContribution: 3,
-  description:
-    'Imprisoned at House 15 for defying the Overseer\'s weather manipulation, Stormcaller spent years channeling her rage into raw Jupiter power. When freed, the sky itself wept with joy. Now she fights with the fury of a thousand storms, her chain lightning a testament to power that refused to be caged.',
+  description: 'A storm caller who unleashes chain lightning on all enemies',
 };
 
 export const BLAZE: UnitDefinition = {
@@ -566,8 +560,7 @@ export const BLAZE: UnitDefinition = {
     { ...SUPERNOVA_STRIKE, unlockLevel: 20 },
   ],
   manaContribution: 2,
-  description:
-    'A blacksmith\'s apprentice from House 5, Blaze discovered his Mars affinity when shadow soldiers torched his master\'s forge. The flames that should have consumed him instead answered his call. Now he wields fire as both weapon and shield, forging his own path through the liberation.',
+  description: 'A versatile Mars warrior who balances physical and magical combat',
 };
 
 export const KARIS: UnitDefinition = {
@@ -616,8 +609,7 @@ export const KARIS: UnitDefinition = {
     { ...AQUA_RESURRECTION, unlockLevel: 20 },
   ],
   manaContribution: 2,
-  description:
-    'Daughter of Vale\'s archivist, Karis spent her childhood among ancient texts describing the Psynergy arts. When her village fell, she fled with forbidden knowledge of Mercury healing techniques. Her ice magic carries the clarity of pure logic, while her heart holds warmth enough to mend any wound.',
+  description: 'A scholarly mage with mastery of ice magic and healing arts',
 };
 
 export const TYRELL: UnitDefinition = {
@@ -666,8 +658,7 @@ export const TYRELL: UnitDefinition = {
     { ...ONE_THOUSAND_CUTS, unlockLevel: 20 },
   ],
   manaContribution: 1,
-  description:
-    'Son of a legendary Mars Adept who died fighting the Overseer, Tyrell inherited both his father\'s burning spirit and his unfinished vengeance. Every strike carries the weight of that loss, every flame lit in his father\'s memory. He fights not just for liberation, but for legacy.',
+  description: 'A relentless damage dealer who excels in both physical and fire attacks',
 };
 
 export const FELIX: UnitDefinition = {
@@ -716,8 +707,7 @@ export const FELIX: UnitDefinition = {
     { ...GAIA_BLADE, unlockLevel: 20 },
   ],
   manaContribution: 1,
-  description:
-    'Once thought dead in the great calamity that struck Vale, Felix survived by burrowing deep into Gaia\'s embrace. He emerged changed—more stone than man, his Venus Psynergy resonating with the planet\'s very core. When he finally joined the liberation at House 19, even the Overseer\'s elite trembled.',
+  description: 'A legendary earth warrior with unmatched physical prowess and defensive mastery',
 };
 
 export const TOWER_CHAMPION: UnitDefinition = {

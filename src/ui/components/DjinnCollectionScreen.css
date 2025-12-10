@@ -214,6 +214,51 @@
   margin-top: 4px;
 }
 
+.djinn-effect {
+  font-size: 11px;
+  margin-top: 4px;
+  padding: 4px 8px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.effect-damage {
+  color: #ff7a7a;
+  font-weight: bold;
+}
+
+.effect-bonus {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.bonus-stat {
+  color: #50c878;
+  font-weight: bold;
+}
+
+.djinn-equipped-status {
+  font-size: 10px;
+  font-weight: bold;
+  padding: 2px 8px;
+  border-radius: 3px;
+  margin-top: 4px;
+  background: #4CAF50;
+  color: #000;
+}
+
+.djinn-card.standby .djinn-equipped-status {
+  background: #FF9800;
+}
+
+.djinn-card.recovery .djinn-equipped-status {
+  background: #F44336;
+  color: #fff;
+}
+
 .djinn-error {
   color: #fff;
   text-align: center;

@@ -39,8 +39,6 @@ export const DjinnSchema = z.object({
   name: z.string().min(1),
   element: ElementSchema,
   tier: z.enum(['1', '2', '3']),
-  description: z.string().optional(), // Lore/flavor text about the Djinn
-  voiceLines: z.array(z.string()).min(1).max(3).optional(), // Personality dialogue when collected
   summonEffect: DjinnSummonEffectSchema,
   grantedAbilities: z.record(z.string().min(1), DjinnGrantedAbilitiesSchema),
   availableIn: ContentAvailabilitySchema.optional().readonly(),

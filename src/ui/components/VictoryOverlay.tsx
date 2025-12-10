@@ -10,9 +10,13 @@ interface VictoryOverlayProps {
   onComplete: () => void;
   duration?: number; // Default 2000ms
   variant?: 'normal' | 'flawless' | 'boss';
+  // Optional debug payloads (ignored in this lightweight overlay)
+  party?: unknown;
+  levelUps?: unknown;
+  drops?: unknown;
 }
 
-export function VictoryOverlay({ onComplete, duration = 2000, variant = 'normal' }: VictoryOverlayProps) {
+export function VictoryOverlay({ onComplete, duration = 2000 }: VictoryOverlayProps) {
   const [stage, setStage] = useState<'fanfare' | 'sparkles' | 'complete'>('fanfare');
 
   useEffect(() => {
@@ -33,25 +37,11 @@ export function VictoryOverlay({ onComplete, duration = 2000, variant = 'normal'
 
   if (stage === 'complete') return null;
 
-  const title =
-    variant === 'flawless'
-      ? 'FLAWLESS VICTORY!'
-      : variant === 'boss'
-        ? 'BOSS DEFEATED!'
-        : 'VICTORY!';
-  const subtitle =
-    variant === 'flawless'
-      ? 'No damage taken.'
-      : variant === 'boss'
-        ? 'Overwhelming odds overcome.'
-        : 'Well fought.';
-
   return (
     <div className="victory-overlay">
       <div className="victory-flash" />
       <div className="victory-text">
-        <h1 className="victory-title">{title}</h1>
-        <div className="victory-subtitle">{subtitle}</div>
+        <h1 className="victory-title">VICTORY!</h1>
         <div className="victory-stars">
           <span className="star star-1">*</span>
           <span className="star star-2">*</span>

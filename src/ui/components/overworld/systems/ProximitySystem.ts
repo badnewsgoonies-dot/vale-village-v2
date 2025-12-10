@@ -4,7 +4,7 @@
  * Manages door markers and interaction prompts
  */
 
-import type { WorldPosition, TilePosition } from '../engine/types';
+import type { WorldPosition } from '../engine/types';
 import type { GameMap, MapTrigger } from '../../../../data/schemas/mapSchema';
 
 interface InteractiveZone {

@@ -37,42 +37,12 @@ export const TOWER_REWARDS: readonly TowerReward[] = [
     ],
   },
   {
-    floorNumber: 15,
-    rewards: [
-      {
-        type: 'equipment',
-        ids: ['gaia-blade'],
-        notes: 'Legendary Venus sword milestone',
-      },
-    ],
-  },
-  {
-    floorNumber: 18,
-    rewards: [
-      {
-        type: 'equipment',
-        ids: ['titans-axe'],
-        notes: 'Legendary Mars axe milestone',
-      },
-    ],
-  },
-  {
-    floorNumber: 22,
-    rewards: [
-      {
-        type: 'equipment',
-        ids: ['zodiac-wand'],
-        notes: 'Legendary Mercury wand milestone',
-      },
-    ],
-  },
-  {
     floorNumber: 25,
     rewards: [
       {
         type: 'equipment',
-        ids: ['trident-neptune', 'sol-blade'],
-        notes: 'Tower-exclusive legendary weapon cache',
+        ids: ['trident-neptune'],
+        notes: 'Tower-exclusive legendary weapon',
       },
       {
         type: 'djinn',
@@ -86,8 +56,8 @@ export const TOWER_REWARDS: readonly TowerReward[] = [
     rewards: [
       {
         type: 'equipment',
-        ids: ['zeus-thunderbolt', 'astral-blade', 'shadowflame-staff', 'aetheric-mantle'],
-        notes: 'Tower-exclusive ultimate artifact set',
+        ids: ['zeus-thunderbolt'],
+        notes: 'Tower-exclusive ultimate artifact',
       },
       {
         type: 'recruit',
@@ -102,3 +72,4 @@ export const TOWER_REWARDS: readonly TowerReward[] = [
     ],
   },
 ] as const;
+

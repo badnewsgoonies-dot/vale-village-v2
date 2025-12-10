@@ -73,7 +73,7 @@ export function DialogueBoxV2() {
       }
 
       let index = 0;
-      const typewriterSpeed = 30; // milliseconds per character
+      const typewriterSpeed = 50; // milliseconds per character
 
       typewriterInterval.current = setInterval(() => {
         if (index < currentNode.text.length) {
@@ -220,19 +220,24 @@ export function DialogueBoxV2() {
             {/* Choices */}
             {hasChoices && (
               <div class="dialogue-choices-v2">
-                {availableChoices.map((choice, idx) => (
-                  <button
-                    key={choice.id}
-                    class="choice-button-v2"
-                    data-number={idx + 1}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      makeChoice(choice.id);
-                    }}
-                  >
-                    {choice.text}
-                  </button>
-                ))}
+                {availableChoices.map((choice, idx) => {
+                  // Cycle through element colors: mercury, venus, mars, jupiter
+                  const elements = ['mercury', 'venus', 'mars', 'jupiter'];
+                  const elementClass = elements[idx % elements.length];
+                  return (
+                    <button
+                      key={choice.id}
+                      class={`choice-button-v2 ${elementClass}`}
+                      data-number={idx + 1}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        makeChoice(choice.id);
+                      }}
+                    >
+                      {choice.text}
+                    </button>
+                  );
+                })}
               </div>
             )}
           </div>
@@ -251,7 +256,7 @@ export function DialogueBoxV2() {
                 <span class="next-label-v2">{isTyping ? 'Skip' : 'Next'}</span>
                 <span class="next-icon-v2" aria-hidden="true">▶</span>
               </button>
-              <span class="dialogue-hotkey-v2">Space / Enter</span>
+              <span class="dialogue-hotkey-v2">PRESS SPACE</span>
               {!isTyping && <div class="arrow-sprite-v2"></div>}
             </div>
           )}

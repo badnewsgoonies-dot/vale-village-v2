@@ -64,6 +64,8 @@ export class TerrainLayer implements Layer {
   }
 
   private drawBands(ctx: CanvasRenderingContext2D): void {
+    if (!this.bands.length) return;
+
     const isNight = this.timeOfDay < 0.25 || this.timeOfDay > 0.80;
     const lightMod = isNight ? 0.5 : 1;
 
@@ -74,18 +76,20 @@ export class TerrainLayer implements Layer {
     }
 
     // Add subtle gradient overlay for depth
-    const gradient = ctx.createLinearGradient(0, this.bands[0].y, 0, ctx.canvas.height);
+    const firstBandY = this.bands[0]?.y ?? 0;
+    const gradient = ctx.createLinearGradient(0, firstBandY, 0, ctx.canvas.height);
     gradient.addColorStop(0, 'rgba(255, 255, 255, 0.08)');
     gradient.addColorStop(0.5, 'rgba(0, 0, 0, 0)');
     gradient.addColorStop(1, 'rgba(0, 0, 0, 0.15)');
     ctx.fillStyle = gradient;
-    ctx.fillRect(0, this.bands[0].y, ctx.canvas.width, ctx.canvas.height - this.bands[0].y);
+    ctx.fillRect(0, firstBandY, ctx.canvas.width, ctx.canvas.height - firstBandY);
   }
 
   private drawGrassTexture(ctx: CanvasRenderingContext2D, camera: Camera): void {
+    if (!this.bands.length) return;
     // Draw subtle grass blades across terrain
     const offset = camera.getParallaxOffset(0.8);
-    const startY = this.bands[0].y;
+    const startY = this.bands[0]?.y ?? 0;
 
     ctx.save();
 

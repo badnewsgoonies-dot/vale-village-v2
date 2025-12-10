@@ -55,7 +55,7 @@ export const VS1_GARET_ENCOUNTER: Encounter = createVs1Encounter('vs1-garet', "V
 export const HOUSE_02: Encounter = {
   id: 'house-02',
   name: 'House 2: The Bronze Trial',
-  enemies: ['earth-scout', 'venus-wolf', 'venus-sprite'],
+  enemies: ['earth-scout', 'venus-wolf'],
   difficulty: 'easy',
   reward: {
     xp: 70,
@@ -75,7 +75,7 @@ export const HOUSE_02: Encounter = {
 export const HOUSE_03: Encounter = {
   id: 'house-03',
   name: 'House 3: Iron Bonds',
-  enemies: ['flame-scout', 'mars-wolf', 'mars-sprite'],
+  enemies: ['flame-scout', 'mars-wolf'],
   difficulty: 'easy',
   reward: {
     xp: 80,
@@ -95,7 +95,7 @@ export const HOUSE_03: Encounter = {
 export const HOUSE_04: Encounter = {
   id: 'house-04',
   name: 'House 4: Arcane Power',
-  enemies: ['frost-scout', 'frost-mystic', 'mercury-sprite', 'aqua-drake'],
+  enemies: ['frost-scout', 'frost-mystic'],
   difficulty: 'easy',
   reward: {
     xp: 90,
@@ -135,12 +135,11 @@ export const HOUSE_05: Encounter = {
 export const HOUSE_06: Encounter = {
   id: 'house-06',
   name: 'House 6: The Steel Guardian',
-  enemies: ['stone-guardian', 'ember-cleric', 'flame-scout', 'storm-raven'],
+  enemies: ['stone-guardian', 'ember-cleric', 'flame-scout'],
   difficulty: 'medium',
   reward: {
     xp: 120,
     gold: 32,
-    djinn: 'gust', // Jupiter T1 Djinn
     equipment: {
       type: 'fixed',
       itemId: 'steel-helm',
@@ -158,7 +157,7 @@ export const HOUSE_06: Encounter = {
 export const HOUSE_07: Encounter = {
   id: 'house-07',
   name: 'House 7: Winds of Liberation',
-  enemies: ['terra-soldier', 'venus-bear', 'earth-shaman', 'jupiter-sprite', 'wind-hawk', 'glacier-wyrm'],
+  enemies: ['terra-soldier', 'venus-bear', 'earth-shaman'],
   difficulty: 'medium',
   reward: {
     xp: 150,
@@ -166,7 +165,7 @@ export const HOUSE_07: Encounter = {
     djinn: 'breeze', // Jupiter T1 Djinn - SUMMONS UNLOCK!
     equipment: {
       type: 'choice',
-      options: ['steel-sword', 'battle-axe', 'adepts-ring'],
+      options: ['steel-sword', 'battle-axe', 'crystal-rod'],
     },
   },
 };
@@ -184,7 +183,7 @@ export const HOUSE_07: Encounter = {
 export const HOUSE_08: Encounter = {
   id: 'house-08',
   name: 'House 8: The Frozen Sentinel',
-  enemies: ['ice-owl', 'wind-soldier', 'tide-enchanter', 'frost-serpent'],
+  enemies: ['jupiter-bear', 'wind-soldier', 'tide-enchanter'],
   difficulty: 'medium',
   reward: {
     xp: 200,
@@ -203,35 +202,32 @@ export const HOUSE_08: Encounter = {
 export const HOUSE_09: Encounter = {
   id: 'house-09',
   name: 'House 9: Inferno\'s Rage',
-  enemies: ['mercury-bear', 'frost-oracle', 'ice-elemental', 'fire-eagle', 'permafrost-golem'],
+  enemies: ['mercury-bear', 'frost-oracle', 'ice-elemental'],
   difficulty: 'medium',
   reward: {
     xp: 215,
     gold: 58,
     equipment: {
       type: 'fixed',
-      itemId: 'spirit-gloves',
+      itemId: 'battle-axe',
     },
   },
 };
 
 /**
  * HOUSE 10
- * - Quick-boots vs silver-circlet reward choice (mobility milestone)
+ * - No equipment/djinn rewards (progression house)
  * - Phase-change Flame Elemental (buffs then debuffs)
  */
 export const HOUSE_10: Encounter = {
   id: 'house-10',
   name: 'House 10: The Burning Gauntlet',
-  enemies: ['blaze-soldier', 'flame-elemental', 'wind-hawk', 'tundra-serpent'],
+  enemies: ['blaze-soldier', 'mars-bear', 'flame-elemental'],
   difficulty: 'medium',
   reward: {
     xp: 235,
     gold: 62,
-    equipment: {
-      type: 'choice',
-      options: ['silver-circlet', 'quick-boots', 'silver-blade'],
-    },
+    equipment: { type: 'fixed', itemId: 'silver-circlet' },
   },
 };
 
@@ -244,14 +240,14 @@ export const HOUSE_10: Encounter = {
 export const HOUSE_11: Encounter = {
   id: 'house-11',
   name: 'House 11: The Scholar\'s Trial',
-  enemies: ['stone-captain', 'rock-elemental', 'terra-warden', 'sentinel-enemy'],
+  enemies: ['stone-captain', 'rock-elemental', 'terra-warden'],
   difficulty: 'hard',
   reward: {
     xp: 255,
     gold: 68,
     equipment: {
-      type: 'choice',
-      options: ['silver-armor', 'glory-helm', 'silver-circlet'],
+      type: 'fixed',
+      itemId: 'silver-armor',
     },
     unlockUnit: 'karis', // Recruit Karis (Mercury Versatile Scholar)
   },
@@ -259,41 +255,38 @@ export const HOUSE_11: Encounter = {
 
 /**
  * HOUSE 12
- * - Reward: Granite Djinn (Venus T2) plus defensive reward choice
+ * - Reward: Granite Djinn (Venus T2) only - no equipment drop per locked table
  * - MILESTONE: First T2 Djinn! (Djinn swapping strategy unlocked)
  * - Boss Gauntlet: Flame Herald (buffer + debuffer) + Phoenix (3-phase boss)
  */
 export const HOUSE_12: Encounter = {
   id: 'house-12',
   name: 'House 12: The Granite Fortress',
-  enemies: ['inferno-captain', 'phoenix', 'flame-herald', 'clay-golem', 'tundra-serpent'],
+  enemies: ['inferno-captain', 'phoenix', 'flame-herald'],
   difficulty: 'hard',
   reward: {
     xp: 275,
     gold: 72,
-    equipment: {
-      type: 'choice',
-      options: ['valkyrie-mail', 'power-ring', 'guardian-ring'],
-    },
+    equipment: { type: 'fixed', itemId: 'valkyrie-mail' },
     djinn: 'granite', // Venus T2 Djinn - POWER SPIKE
   },
 };
 
 /**
  * HOUSE 13
- * - Equipment Choice (mid-tier weapons plus armor/robes)
+ * - Equipment Choice (mid-tier weapons)
  */
 export const HOUSE_13: Encounter = {
   id: 'house-13',
   name: 'House 13: The Silver Strike',
-  enemies: ['glacier-captain', 'leviathan', 'stormcaller-enemy', 'permafrost-golem'],
+  enemies: ['glacier-captain', 'leviathan'],
   difficulty: 'hard',
   reward: {
     xp: 295,
     gold: 76,
     equipment: {
       type: 'choice',
-      options: ['silver-blade', 'great-axe', 'lucky-medal'],
+      options: ['silver-blade', 'great-axe', 'zodiac-wand'],
     },
   },
 };
@@ -306,15 +299,14 @@ export const HOUSE_13: Encounter = {
 export const HOUSE_14: Encounter = {
   id: 'house-14',
   name: 'House 14: The Speed Demon',
-  enemies: ['thunder-captain', 'thunderbird', 'storm-golem'],
+  enemies: ['thunder-captain', 'thunderbird'],
   difficulty: 'hard',
   reward: {
     xp: 320,
     gold: 82,
-    djinn: 'bolt',
     equipment: {
-      type: 'choice',
-      options: ['hyper-boots', 'guardian-ring', 'lucky-medal'],
+      type: 'fixed',
+      itemId: 'hyper-boots',
     },
     unlockUnit: 'tyrell', // Recruit Tyrell (Mars Pure DPS)
   },
@@ -333,7 +325,7 @@ export const HOUSE_14: Encounter = {
 export const HOUSE_15: Encounter = {
   id: 'house-15',
   name: 'House 15: The Storm Unleashed',
-  enemies: ['terra-soldier', 'blaze-soldier', 'wind-soldier', 'iron-golem'],
+  enemies: ['terra-soldier', 'blaze-soldier', 'wind-soldier'],
   difficulty: 'hard',
   reward: {
     xp: 400,
@@ -342,7 +334,7 @@ export const HOUSE_15: Encounter = {
     unlockUnit: 'stormcaller', // Recruit Stormcaller (Jupiter AoE Mage)
     equipment: {
       type: 'choice',
-      options: ['mythril-armor', 'war-gloves', 'elemental-star'],
+      options: ['mythril-armor', 'zodiac-wand', 'elemental-star'],
     },
   },
 };
@@ -354,14 +346,14 @@ export const HOUSE_15: Encounter = {
 export const HOUSE_16: Encounter = {
   id: 'house-16',
   name: 'House 16: The Mythril Edge',
-  enemies: ['lightning-commander', 'storm-elemental', 'jupiter-bear', 'crystal-golem'],
+  enemies: ['lightning-commander', 'storm-elemental', 'jupiter-bear'],
   difficulty: 'boss',
   reward: {
     xp: 450,
     gold: 120,
     equipment: {
-      type: 'choice',
-      options: ['mythril-blade', 'hermes-sandals', 'hyper-boots'],
+      type: 'fixed',
+      itemId: 'mythril-blade',
     },
   },
 };
@@ -381,8 +373,8 @@ export const HOUSE_17: Encounter = {
     xp: 500,
     gold: 130,
     equipment: {
-      type: 'choice',
-      options: ['dragon-scales', 'gaia-helm', 'storm-circlet'],
+      type: 'fixed',
+      itemId: 'dragon-scales',
     },
     unlockUnit: 'felix', // Recruit Felix (Venus Master Warrior)
   },
@@ -390,21 +382,18 @@ export const HOUSE_17: Encounter = {
 
 /**
  * HOUSE 18
- * - Reward: Bane Djinn (Venus T3) plus defensive gear choice
+ * - Reward: Bane Djinn (Venus T3) only - no equipment drop (locked blueprint)
  * - MILESTONE: First T3 Djinn!
  */
 export const HOUSE_18: Encounter = {
   id: 'house-18',
   name: 'House 18: The Earth\'s Bane',
-  enemies: ['fire-commander', 'volcano-warlord', 'elder-basilisk'],
+  enemies: ['fire-commander', 'volcano-warlord'],
   difficulty: 'boss',
   reward: {
     xp: 550,
     gold: 140,
-    equipment: {
-      type: 'choice',
-      options: ['oracles-crown', 'dragon-scales', 'glacial-robes'],
-    },
+    equipment: { type: 'fixed', itemId: 'oracles-crown' },
     djinn: 'bane', // Venus T3 Djinn
   },
 };
@@ -416,14 +405,14 @@ export const HOUSE_18: Encounter = {
 export const HOUSE_19: Encounter = {
   id: 'house-19',
   name: 'House 19: The Final Armament',
-  enemies: ['storm-commander', 'granite-warlord', 'blizzard-warlord', 'hydra', 'leviathan'],
+  enemies: ['storm-commander', 'hydra'],
   difficulty: 'boss',
   reward: {
     xp: 600,
     gold: 150,
     equipment: {
       type: 'choice',
-      options: ['gaia-blade', 'titans-axe', 'dragons-eye'],
+      options: ['gaia-blade', 'titans-axe', 'staff-of-ages'],
     },
   },
 };
@@ -431,13 +420,13 @@ export const HOUSE_19: Encounter = {
 /**
  * HOUSE 20 (FINALE)
  * - Reward: Storm Djinn (Jupiter T3)
- * - Equipment Choice (3 options)
+ * - Equipment Choice (4 options!)
  * - MILESTONE: Final battle, full power achieved!
  */
 export const HOUSE_20_OVERSEER: Encounter = {
   id: 'house-20',
   name: 'House 20: The Overseer Falls',
-  enemies: ['overseer', 'chimera', 'tempest-warlord', 'volcano-warlord', 'tempest-dragon'],
+  enemies: ['overseer', 'chimera', 'tempest-warlord'],
   difficulty: 'boss',
   rules: {
     phaseChange: {
@@ -451,7 +440,7 @@ export const HOUSE_20_OVERSEER: Encounter = {
     djinn: 'storm', // Jupiter T3 Djinn - FINAL DJINN!
     equipment: {
       type: 'choice',
-      options: ['sol-blade', 'titans-axe', 'cosmos-shield'],
+      options: ['sol-blade', 'titans-axe', 'staff-of-ages', 'cosmos-shield'],
     },
   },
 };
@@ -469,7 +458,7 @@ export const HOUSE_20_OVERSEER: Encounter = {
 export const HOUSE_21: Encounter = {
   id: 'house-21',
   name: 'House 21: The Risen Dead',
-  enemies: ['skeleton-warrior', 'ghost-wisp', 'zombie-hound', 'tidal-wraith'],
+  enemies: ['skeleton-warrior', 'ghost-wisp', 'zombie-hound'],
   difficulty: 'medium',
   reward: {
     xp: 650,
@@ -489,7 +478,7 @@ export const HOUSE_21: Encounter = {
 export const HOUSE_22: Encounter = {
   id: 'house-22',
   name: 'House 22: Wings of Fury',
-  enemies: ['wind-hawk', 'fire-eagle', 'storm-raven', 'tidal-wraith'],
+  enemies: ['wind-hawk', 'fire-eagle', 'storm-raven'],
   difficulty: 'medium',
   reward: {
     xp: 700,
@@ -510,15 +499,15 @@ export const HOUSE_22: Encounter = {
 export const HOUSE_23: Encounter = {
   id: 'house-23',
   name: 'House 23: The Earthen Guardians',
-  enemies: ['clay-golem', 'iron-golem', 'frost-lich'],
+  enemies: ['clay-golem', 'iron-golem'],
   difficulty: 'hard',
   reward: {
     xp: 750,
     gold: 185,
     djinn: 'corona', // Mars T2 Djinn (reserved for future)
     equipment: {
-      type: 'choice',
-      options: ['dragon-scales', 'storm-circlet', 'oracles-crown'],
+      type: 'fixed',
+      itemId: 'dragon-scales',
     },
   },
 };
@@ -531,15 +520,14 @@ export const HOUSE_23: Encounter = {
 export const HOUSE_24: Encounter = {
   id: 'house-24',
   name: 'House 24: Frozen Depths',
-  enemies: ['frost-serpent', 'aqua-drake', 'ice-owl', 'frost-lich', 'kraken'],
+  enemies: ['frost-serpent', 'aqua-drake', 'ice-owl'],
   difficulty: 'hard',
   reward: {
     xp: 800,
     gold: 195,
-    djinn: 'chill',
     equipment: {
       type: 'choice',
-      options: ['mythril-blade', 'zodiac-wand', 'glacial-robes'],
+      options: ['mythril-blade', 'zodiac-wand', 'valkyrie-mail'],
     },
   },
 };
@@ -552,7 +540,7 @@ export const HOUSE_24: Encounter = {
 export const HOUSE_25: Encounter = {
   id: 'house-25',
   name: 'House 25: Storm\'s Wrath',
-  enemies: ['lightning-lynx', 'cyclone-djinni', 'thunderbird', 'storm-titan'],
+  enemies: ['lightning-lynx', 'cyclone-djinni', 'thunderbird'],
   difficulty: 'hard',
   reward: {
     xp: 850,
@@ -573,7 +561,7 @@ export const HOUSE_25: Encounter = {
 export const HOUSE_26: Encounter = {
   id: 'house-26',
   name: 'House 26: Necromantic Rites',
-  enemies: ['bone-mage', 'skeleton-warrior', 'ghost-wisp', 'zombie-hound', 'void-specter'],
+  enemies: ['bone-mage', 'skeleton-warrior', 'ghost-wisp', 'zombie-hound'],
   difficulty: 'boss',
   reward: {
     xp: 900,
@@ -614,7 +602,7 @@ export const HOUSE_27: Encounter = {
 export const HOUSE_28: Encounter = {
   id: 'house-28',
   name: 'House 28: Draconic Convergence',
-  enemies: ['glacier-wyrm', 'tempest-dragon', 'hydra', 'alpha-phoenix'],
+  enemies: ['glacier-wyrm', 'tempest-dragon', 'hydra'],
   difficulty: 'boss',
   reward: {
     xp: 1000,
@@ -622,45 +610,7 @@ export const HOUSE_28: Encounter = {
     djinn: 'fury', // Mars T3 Djinn (reserved for future)
     equipment: {
       type: 'choice',
-      options: ['sol-blade', 'titans-axe', 'staff-of-ages'],
-    },
-  },
-};
-
-/**
- * HOUSE 29 - Void Armada
- * - Boss-tier mix of sea, storm, and arcane threats
- */
-export const HOUSE_29: Encounter = {
-  id: 'house-29',
-  name: 'House 29: Void Armada',
-  enemies: ['kraken', 'storm-titan', 'void-specter', 'storm-golem', 'tidal-wraith'],
-  difficulty: 'boss',
-  reward: {
-    xp: 1100,
-    gold: 260,
-    equipment: {
-      type: 'choice',
-      options: ['cosmos-shield', 'aetheric-mantle', 'gaia-helm'],
-    },
-  },
-};
-
-/**
- * HOUSE 30 - Zeus's Judgment
- * - Final artifact drops before tower finale
- */
-export const HOUSE_30: Encounter = {
-  id: 'house-30',
-  name: 'House 30: Zeus\'s Judgment',
-  enemies: ['tempest-dragon', 'alpha-phoenix', 'storm-titan'],
-  difficulty: 'boss',
-  reward: {
-    xp: 1250,
-    gold: 300,
-    equipment: {
-      type: 'choice',
-      options: ['astral-blade', 'shadowflame-staff', 'aetheric-mantle'],
+      options: ['sol-blade', 'titans-axe', 'staff-of-ages', 'cosmos-shield'],
     },
   },
 };
@@ -713,7 +663,7 @@ export const ENCOUNTERS: Record<string, Encounter> = {
   'house-19': HOUSE_19,
   'house-20': HOUSE_20_OVERSEER,
 
-  // Chapter 2: Post-Vale Progression (Houses 21-30)
+  // Chapter 2: Post-Vale Progression (Houses 21-28)
   'house-21': HOUSE_21,
   'house-22': HOUSE_22,
   'house-23': HOUSE_23,
@@ -722,8 +672,6 @@ export const ENCOUNTERS: Record<string, Encounter> = {
   'house-26': HOUSE_26,
   'house-27': HOUSE_27,
   'house-28': HOUSE_28,
-  'house-29': HOUSE_29,
-  'house-30': HOUSE_30,
 
   // Bonus
   'training-dummy': TRAINING_DUMMY,
@@ -734,14 +682,13 @@ export const ENCOUNTERS: Record<string, Encounter> = {
 // ============================================================================
 
 /**
- * DJINN REWARDS BY HOUSE (9 Total):
+ * DJINN REWARDS BY HOUSE (8 Total):
  *
  * PRE-GAME: Flint (Venus T1) - Story gift
  *
  * ACT 1 (Houses 1-7):
  * - House 1:  Forge (Mars T1) - First earned Djinn!
- * - House 6:  Gust (Jupiter T1) - Early wind support
- * - House 7:  Breeze (Jupiter T1) - SUMMONS UNLOCKED! (3+ Djinn total)
+ * - House 7:  Breeze (Jupiter T1) - SUMMONS UNLOCKED! (3 Djinn total)
  *
  * ACT 2 (Houses 8-14):
  * - House 8:  Fizz (Mercury T1) - Complete T1 set (all 4 elements)

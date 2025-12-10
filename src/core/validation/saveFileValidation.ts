@@ -13,10 +13,7 @@
  * - Recovery suggestions for corrupted saves
  */
 
-import type { ZodSchema } from 'zod';
-import { Result, Err, Ok } from '../utils/result';
-import { SaveV1Schema, type SaveV1 } from '../../data/schemas/SaveV1Schema';
-import { CURRENT_SAVE_VERSION, migrateSaveData } from '../migrations';
+import { Result, Err } from '../utils/result';
 
 /**
  * Save file metadata
@@ -52,82 +49,13 @@ export type SaveFileValidationError =
  * 6. Validate game state using Zod schemas
  * 7. Return validated data or detailed error
  */
-export function validateSaveFile<T>(
-  wrapper: unknown,
-  schema: ZodSchema<unknown>,
-  currentVersion: string = CURRENT_SAVE_VERSION,
-  migrate?: (data: unknown) => Result<unknown, string>
-): Result<T, SaveFileValidationError> {
-  if (!wrapper || typeof wrapper !== 'object') {
-    return Err({
-      type: 'INVALID_FORMAT',
-      message: 'Save file is not an object',
-    });
-  }
-
-  const file = wrapper as Partial<{
-    version: string;
-    timestamp: number;
-    checksum: string;
-    data: unknown;
-  }>;
-
-  const missingFields = [
-    !file.version ? 'version' : null,
-    !file.timestamp ? 'timestamp' : null,
-    !file.checksum ? 'checksum' : null,
-    typeof file.data === 'undefined' ? 'data' : null,
-  ].filter((f): f is string => f !== null);
-
-  if (missingFields.length > 0) {
-    return Err({
-      type: 'MISSING_DATA',
-      missingFields,
-    });
-  }
-
-  let data = file.data;
-  const saveVersion = file.version!;
-
-  if (saveVersion !== currentVersion) {
-    if (migrate) {
-      const migrated = migrate(data);
-      if (!migrated.ok) {
-        return Err({
-          type: 'VERSION_MISMATCH',
-          saveVersion,
-          currentVersion,
-          canMigrate: true,
-        });
-      }
-      data = migrated.value;
-    } else {
-      return Err({
-        type: 'VERSION_MISMATCH',
-        saveVersion,
-        currentVersion,
-        canMigrate: false,
-      });
-    }
-  }
-
-  if (!verifyChecksum(data, file.checksum!)) {
-    return Err({
-      type: 'CHECKSUM_FAILED',
-      expected: file.checksum!,
-      actual: calculateChecksum(data),
-    });
-  }
-
-  const result = schema.safeParse(data);
-  if (!result.success) {
-    return Err({
-      type: 'INVALID_FORMAT',
-      message: result.error.message,
-    });
-  }
-
-  return Ok(result.data as T);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function validateSaveFile(_data: unknown): Result<unknown, SaveFileValidationError> {
+  // TODO: Implement validation when building save system
+  return Err({
+    type: 'INVALID_FORMAT',
+    message: 'Save file validation not yet implemented (Issue #20)',
+  });
 }
 
 /**
@@ -189,58 +117,13 @@ export function verifyChecksum(data: unknown, expectedChecksum: string): boolean
  * 3. If backup corrupted, offer to start new game
  * 4. Never crash - always provide graceful fallback
  */
-export function loadSaveFileSafe(slot: number): Result<SaveV1, SaveFileValidationError> {
-  if (slot < 0 || slot >= 3) {
-    return Err({
-      type: 'INVALID_FORMAT',
-      message: `Invalid slot: ${slot}`,
-    });
-  }
-
-  const key = `vale_chronicles_v2_save_slot_${slot}`;
-  const backupKey = `${key}_backup`;
-
-  const tryLoad = (storageKey: string): Result<SaveV1, SaveFileValidationError> => {
-    const raw = localStorage.getItem(storageKey);
-    if (!raw) {
-      return Err({
-        type: 'MISSING_DATA',
-        missingFields: ['data'],
-      });
-    }
-
-    let parsed: unknown;
-    try {
-      parsed = JSON.parse(raw);
-    } catch (error) {
-      return Err({
-        type: 'INVALID_FORMAT',
-        message: error instanceof Error ? error.message : 'Invalid JSON',
-      });
-    }
-
-    return validateSaveFile(parsed, SaveV1Schema, CURRENT_SAVE_VERSION, migrateSaveData);
-  };
-
-  const primaryResult = tryLoad(key);
-  if (primaryResult.ok) {
-    return primaryResult;
-  }
-
-  // Attempt backup if primary fails
-  const backupResult = tryLoad(backupKey);
-  if (backupResult.ok) {
-    // Restore backup to primary key for future loads
-    localStorage.setItem(key, JSON.stringify({
-      version: CURRENT_SAVE_VERSION,
-      timestamp: Date.now(),
-      checksum: calculateChecksum(backupResult.value),
-      data: backupResult.value,
-    }));
-    return backupResult;
-  }
-
-  return primaryResult;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function loadSaveFileSafe(_slot: number): Result<unknown, SaveFileValidationError> {
+  // TODO: Implement safe loading with recovery
+  return Err({
+    type: 'INVALID_FORMAT',
+    message: 'Save file loading not yet implemented (Issue #20)',
+  });
 }
 
 /**

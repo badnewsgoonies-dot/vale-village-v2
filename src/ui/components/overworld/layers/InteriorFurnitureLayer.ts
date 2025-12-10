@@ -80,7 +80,7 @@ export class InteriorFurnitureLayer implements Layer {
     this.playerFacing = facing;
   }
 
-  render(ctx: CanvasRenderingContext2D, camera: Camera): void {
+  render(ctx: CanvasRenderingContext2D, _camera: Camera): void {
     const { roomX, roomY } = this.config;
 
     // Combine furniture and player for Y-sorting
@@ -187,7 +187,8 @@ export class InteriorFurnitureLayer implements Layer {
         const bookColors = ['#c04040', '#4060c0', '#40a040', '#a0a040', '#8040a0'];
         for (let sy = 4; sy < item.height - 20; sy += 20) {
           for (let bx = 0; bx < 5; bx++) {
-            ctx.fillStyle = bookColors[(sy + bx) % bookColors.length];
+            const color = bookColors[(sy + bx) % bookColors.length] ?? '#c04040';
+            ctx.fillStyle = color;
             ctx.fillRect(x + 5 + bx * 7, y + sy, 6, 14);
           }
         }

@@ -20,7 +20,6 @@ import { updateUnit } from '../../core/models/Unit';
 import { calculateEquipmentBonuses } from '../../core/models/Equipment';
 import { calculateLevelBonuses } from '../../core/algorithms/stats';
 import './ShopEquipScreen.css';
-import type { Stats } from '../../core/models/types';
 import type { Equipment } from '../../data/schemas/EquipmentSchema';
 import type { Unit } from '../../core/models/Unit';
 import type { EquipmentSlot } from '../../core/models/Equipment';
@@ -35,72 +34,13 @@ interface ShopEquipScreenProps {
 
 const EQUIPMENT_SLOTS: EquipmentSlot[] = ['weapon', 'armor', 'helm', 'boots', 'accessory'];
 
-type StatKey = keyof Stats;
-const COMPARISON_STATS: StatKey[] = ['hp', 'pp', 'atk', 'def', 'mag', 'spd'];
-type TierFilter = 'all' | 'basic' | 'bronze' | 'iron' | 'steel' | 'mythril-plus';
-
-const TIER_FILTERS: Array<{ id: TierFilter; label: string }> = [
-  { id: 'all', label: 'All' },
-  { id: 'basic', label: 'Basic' },
-  { id: 'bronze', label: 'Bronze' },
-  { id: 'iron', label: 'Iron' },
-  { id: 'steel', label: 'Steel' },
-  { id: 'mythril-plus', label: 'Mythril+' },
-];
-
-function matchesTier(tier: Equipment['tier'] | undefined, filter: TierFilter) {
-  if (filter === 'all' || !tier) return true;
-  if (filter === 'mythril-plus') {
-    return tier === 'mythril' || tier === 'legendary' || tier === 'artifact';
-  }
-  if (filter === 'steel') {
-    return tier === 'steel' || tier === 'silver';
-  }
-  return tier === filter;
-}
-
-function getProgressionAllowedTiers(flags: Record<string, boolean>): Set<Equipment['tier']> {
-  const liberatedHouses = Object.keys(flags)
-    .filter((key) => key.startsWith('house:liberated:'))
-    .map((key) => Number(key.split(':').pop() || '0'))
-    .filter((n) => !Number.isNaN(n));
-  const maxHouse = liberatedHouses.length > 0 ? Math.max(...liberatedHouses) : 1;
-  if (maxHouse <= 10) {
-    return new Set<Equipment['tier']>(['basic', 'bronze']);
-  }
-  if (maxHouse <= 20) {
-    return new Set<Equipment['tier']>(['basic', 'bronze', 'iron', 'steel', 'silver']);
-  }
-  return new Set<Equipment['tier']>(['basic', 'bronze', 'iron', 'steel', 'silver', 'mythril', 'legendary', 'artifact']);
-}
-
-function buildStatDeltas(candidate: Equipment, current: Equipment | null | undefined) {
-  return COMPARISON_STATS
-    .map((stat) => {
-      const candidateVal = candidate.statBonus[stat] ?? 0;
-      const currentVal = current?.statBonus[stat] ?? 0;
-      const delta = candidateVal - currentVal;
-      return { stat, delta };
-    })
-    .filter(({ delta }) => delta !== 0);
-}
-
-function DeltaBadges({ deltas }: { deltas: ReturnType<typeof buildStatDeltas> }) {
-  if (deltas.length === 0) return null;
-  return (
-    <div class="item-deltas">
-      {deltas.map(({ stat, delta }) => (
-        <span
-          key={stat}
-          class={`delta-badge ${delta > 0 ? 'delta-up' : 'delta-down'}`}
-        >
-          {delta > 0 ? '+' : ''}
-          {delta} {stat.toUpperCase()}
-        </span>
-      ))}
-    </div>
-  );
-}
+const SLOT_ICONS: Record<EquipmentSlot, string> = {
+  weapon: '⚔️',
+  armor: '🛡️',
+  helm: '⛑️',
+  boots: '👢',
+  accessory: '💎',
+};
 
 export function ShopEquipScreen({ shopId, onClose }: ShopEquipScreenProps): JSX.Element {
   const { gold, addGold, addEquipment, removeEquipment, team, updateTeamUnits, equipment: inventory } = useStore((s) => ({
@@ -120,10 +60,8 @@ export function ShopEquipScreen({ shopId, onClose }: ShopEquipScreenProps): JSX.
   );
   const [selectedSlot, setSelectedSlot] = useState<EquipmentSlot | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [tierFilter, setTierFilter] = useState<TierFilter>('all');
 
   const selectedUnit = team?.units.find((u) => u.id === selectedUnitId) ?? null;
-  const progressionAllowedTiers = getProgressionAllowedTiers(storyFlags as Record<string, boolean>);
 
   // Shop tab logic
   const shop = shopId ? SHOPS[shopId] : null;
@@ -134,10 +72,6 @@ export function ShopEquipScreen({ shopId, onClose }: ShopEquipScreenProps): JSX.
         .filter((item): item is Equipment => Boolean(item))
         .filter(isAvailableInCampaign))
     : [];
-  const progressionFilteredItems = availableItems.filter(
-    (item) => !item.tier || progressionAllowedTiers.has(item.tier)
-  );
-  const filteredAvailableItems = progressionFilteredItems.filter((item) => matchesTier(item.tier, tierFilter));
 
   const starterKitEntries = team
     ? team.units
@@ -304,21 +238,6 @@ export function ShopEquipScreen({ shopId, onClose }: ShopEquipScreenProps): JSX.
                 <div class="shop-locked">This shop is not yet available.</div>
               ) : (
                 <>
-                  <div class="tier-filter-bar">
-                    <span class="tier-filter-label">Tier:</span>
-                    <div class="tier-filter-buttons">
-                      {TIER_FILTERS.map((filter) => (
-                        <button
-                          key={filter.id}
-                          class={`tier-filter-btn ${tierFilter === filter.id ? 'active' : ''}`}
-                          onClick={() => setTierFilter(filter.id)}
-                        >
-                          {filter.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
                   {starterKitEntries.length > 0 && (
                     <section class="starter-kits-section">
                       <h2>Starter Kits</h2>
@@ -353,13 +272,9 @@ export function ShopEquipScreen({ shopId, onClose }: ShopEquipScreenProps): JSX.
 
                   {unlockedUnits.map((unit) => {
                     // Filter equipment by element type (not unit-specific)
-                    const availableEquipment = Object.values(EQUIPMENT).filter(
-                      (item) =>
-                        isAvailableInCampaign(item) &&
-                        item.allowedElements.includes(unit.element) &&
-                        progressionAllowedTiers.has(item.tier as Equipment['tier']) &&
-                        matchesTier(item.tier, tierFilter)
-                    );
+            const availableEquipment = Object.values(EQUIPMENT).filter(
+              (item) => isAvailableInCampaign(item) && item.allowedElements.includes(unit.element)
+            );
                     return (
                       <section key={unit.id} class="unit-store-section">
                         <h2>{unit.name}&apos;s Equipment ({unit.element})</h2>
@@ -386,11 +301,6 @@ export function ShopEquipScreen({ shopId, onClose }: ShopEquipScreenProps): JSX.
                                         </span>
                                       ))}
                                     </div>
-                                    {selectedUnit && (
-                                      <DeltaBadges
-                                        deltas={buildStatDeltas(item, selectedUnit.equipment[item.slot])}
-                                      />
-                                    )}
                                     <div class="item-price">{item.cost}g</div>
                                   </div>
                                   <button
@@ -409,11 +319,11 @@ export function ShopEquipScreen({ shopId, onClose }: ShopEquipScreenProps): JSX.
                     );
                   })}
 
-                  {filteredAvailableItems.length > 0 && (
+                  {availableItems.length > 0 && (
                     <section class="shop-general-section">
                       <h2>General Equipment</h2>
                       <div class="shop-items-grid">
-                        {filteredAvailableItems.map((item) => {
+                        {availableItems.map((item) => {
                           const affordable = canAffordItem(gold, item.id);
                           return (
                             <div
@@ -423,25 +333,20 @@ export function ShopEquipScreen({ shopId, onClose }: ShopEquipScreenProps): JSX.
                               <div class="item-icon">
                                 <EquipmentIcon equipment={item} />
                               </div>
-                                <div class="item-details">
-                                  <div class="item-name">{item.name}</div>
-                                  <div class="item-stats">
-                                    {Object.entries(item.statBonus).map(([stat, value]) => (
-                                      <span key={stat} class="stat-badge">
-                                        +{value} {stat.toUpperCase()}
-                                      </span>
-                                    ))}
-                                  </div>
-                                  {selectedUnit && (
-                                    <DeltaBadges
-                                      deltas={buildStatDeltas(item, selectedUnit.equipment[item.slot])}
-                                    />
-                                  )}
-                                  <div class="item-price">{item.cost}g</div>
+                              <div class="item-details">
+                                <div class="item-name">{item.name}</div>
+                                <div class="item-stats">
+                                  {Object.entries(item.statBonus).map(([stat, value]) => (
+                                    <span key={stat} class="stat-badge">
+                                      +{value} {stat.toUpperCase()}
+                                    </span>
+                                  ))}
                                 </div>
-                                <button
-                                  class="buy-btn"
-                                  onClick={() => handleUnlock(item.id)}
+                                <div class="item-price">{item.cost}g</div>
+                              </div>
+                              <button
+                                class="buy-btn"
+                                onClick={() => handleUnlock(item.id)}
                                 disabled={!affordable}
                               >
                                 Unlock Equipment
@@ -455,9 +360,6 @@ export function ShopEquipScreen({ shopId, onClose }: ShopEquipScreenProps): JSX.
 
                   {starterKitEntries.length === 0 && unlockedUnits.length === 0 && availableItems.length === 0 && (
                     <div class="shop-empty">No items available.</div>
-                  )}
-                  {starterKitEntries.length === 0 && unlockedUnits.length === 0 && availableItems.length > 0 && filteredAvailableItems.length === 0 && (
-                    <div class="shop-empty">No items match this tier filter.</div>
                   )}
                 </>
               )}
@@ -508,7 +410,10 @@ export function ShopEquipScreen({ shopId, onClose }: ShopEquipScreenProps): JSX.
                                 class={`equipment-slot ${slot} ${isSelected ? 'selected' : ''}`}
                                 onClick={() => setSelectedSlot(isSelected ? null : slot)}
                               >
-                                <div class="equipment-label">{slot.toUpperCase()}</div>
+                                <div class="equipment-slot-header">
+                                <span class="equipment-label">{slot.toUpperCase()}</span>
+                                <span class="equipment-slot-icon">{SLOT_ICONS[slot]}</span>
+                              </div>
                                 {eq ? (
                                   <>
                                     <div class="equipment-value">{eq.name}</div>
@@ -600,9 +505,6 @@ export function ShopEquipScreen({ shopId, onClose }: ShopEquipScreenProps): JSX.
                                       {item.statBonus.mag && `+${item.statBonus.mag} MAG `}
                                       {item.statBonus.spd && `+${item.statBonus.spd} SPD `}
                                     </div>
-                                    <DeltaBadges
-                                      deltas={buildStatDeltas(item, selectedUnit.equipment[item.slot])}
-                                    />
                                   </div>
                                 ))}
                               </div>

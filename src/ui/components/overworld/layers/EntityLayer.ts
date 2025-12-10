@@ -122,10 +122,19 @@ export class EntityLayer implements Layer {
     _tileX: number,
     _tileY: number
   ): RenderableEntity {
+    let spriteId = this.findBuildingSpriteId(map, bounds);
     const worldX = bounds.x * this.tileSize;
     const worldY = bounds.y * this.tileSize;
     const pixelWidth = bounds.width * this.tileSize;
     const pixelHeight = bounds.height * this.tileSize;
+
+    // If no sprite specified, pick a Vale building based on position
+    if (!spriteId) {
+      const buildingIndex = ((bounds.x + bounds.y) % 8) + 1;
+      spriteId = `/sprites/buildings/Vale/Vale_Building${buildingIndex}.gif`;
+    }
+
+    this.loadSpriteAsync(spriteId);
 
     // Find door tile for trigger lookup
     let triggerId: string | undefined;
@@ -147,17 +156,33 @@ export class EntityLayer implements Layer {
       y: worldY + pixelHeight, // Y position at bottom for sorting
       width: pixelWidth,
       height: pixelHeight * 1.5, // Buildings are taller than their footprint
-      spriteId: 'building-placeholder',
+      spriteId,
       sprite: null,
       shadowWidth: pixelWidth * 0.8,
       shadowHeight: 8,
     };
   }
 
+  private findBuildingSpriteId(
+    map: GameMap,
+    bounds: { x: number; y: number; width: number; height: number }
+  ): string | null {
+    for (let y = bounds.y; y < bounds.y + bounds.height; y++) {
+      for (let x = bounds.x; x < bounds.x + bounds.width; x++) {
+        const tile = map.tiles[y]?.[x];
+        if (tile?.spriteId) {
+          return tile.spriteId;
+        }
+      }
+    }
+    return null;
+  }
+
   private addSceneryFromMap(map: GameMap): void {
     // Add procedural trees/scenery based on grass tiles
     // (In a real implementation, this would come from map data)
-    const treeChance = 0.05;
+    const treeChance = 0.04;
+    const shrubChance = 0.06;
 
     for (let y = 0; y < map.height; y++) {
       for (let x = 0; x < map.width; x++) {
@@ -168,6 +193,8 @@ export class EntityLayer implements Layer {
 
           if (random < treeChance) {
             this.entities.push(this.createTreeEntity(x, y, random));
+          } else if (random < treeChance + shrubChance) {
+            this.entities.push(this.createShrubEntity(x, y, random));
           }
         }
       }
@@ -178,19 +205,52 @@ export class EntityLayer implements Layer {
     const worldX = tileX * this.tileSize + this.tileSize / 2;
     const worldY = tileY * this.tileSize + this.tileSize;
 
+    // Pick a tree sprite based on position seed (Tree1-Tree12 available)
+    const treeIndex = Math.floor(seed * 12) + 1;
+    const spriteId = `/sprites/scenery/plants/Tree${treeIndex}.gif`;
+
+    // Load the sprite async
+    this.loadSpriteAsync(spriteId);
+
     return {
       type: 'tree',
       id: `tree-${tileX}-${tileY}`,
       x: worldX,
       y: worldY,
-      width: 24 + seed * 16,
-      height: 48 + seed * 32,
-      spriteId: 'tree-placeholder',
+      width: 32 + seed * 16,
+      height: 64 + seed * 24,
+      spriteId,
       sprite: null,
-      shadowWidth: 20,
-      shadowHeight: 6,
-      swayAmount: 2 + seed * 2,
+      shadowWidth: 24,
+      shadowHeight: 8,
+      swayAmount: 1 + seed,
       animOffset: seed * 1000,
+    };
+  }
+
+  private createShrubEntity(tileX: number, tileY: number, seed: number): RenderableEntity {
+    const worldX = tileX * this.tileSize + this.tileSize / 2;
+    const worldY = tileY * this.tileSize + this.tileSize;
+
+    // Pick a shrub/bush sprite (Bush, Bush2, Bush3, Shrub1, etc.)
+    const shrubTypes = ['Bush', 'Bush2', 'Bush3', 'Shrub1', 'Flowers'];
+    const shrubIndex = Math.floor(seed * 100) % shrubTypes.length;
+    const spriteId = `/sprites/scenery/plants/${shrubTypes[shrubIndex]}.gif`;
+
+    // Load the sprite async
+    this.loadSpriteAsync(spriteId);
+
+    return {
+      type: 'decoration',
+      id: `shrub-${tileX}-${tileY}`,
+      x: worldX,
+      y: worldY,
+      width: 20 + seed * 8,
+      height: 16 + seed * 8,
+      spriteId,
+      sprite: null,
+      shadowWidth: 16,
+      shadowHeight: 4,
     };
   }
 

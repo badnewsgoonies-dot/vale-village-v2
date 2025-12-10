@@ -1,0 +1,3962 @@
+/**
+ * Comprehensive Equipment System
+ * Based on Golden Sun progression: basic → bronze → iron → steel → silver → mythril → legendary → artifact
+ * 
+ * REFACTORED: Element-based equipment restrictions (not unit-specific)
+ * - Venus units (Adept, Sentinel) share swords and heavy armor
+ * - Mars units (War Mage) use axes/maces exclusively
+ * - Mercury units (Mystic) use staves and light armor
+ * - Jupiter units (Ranger, Stormcaller) use mixed weapons and light armor
+ */
+import type { Equipment, Consumable } from '../schemas/EquipmentSchema';
+
+// ========================================
+// WEAPONS - SWORDS (Venus + Jupiter Warriors)
+// ========================================
+export const WOODEN_SWORD: Equipment = {
+  id: 'wooden-sword',
+  name: 'Wooden Sword',
+  slot: 'weapon',
+  tier: 'basic',
+  cost: 50,
+  statBonus: { atk: 5 },
+  allowedElements: ['Venus', 'Jupiter'], // Adept, Sentinel, Ranger
+  unlocksAbility: 'wooden-strike',
+};
+
+export const BRONZE_SWORD: Equipment = {
+  id: 'bronze-sword',
+  name: 'Bronze Sword',
+  slot: 'weapon',
+  tier: 'bronze',
+  cost: 120,
+  statBonus: { atk: 9 },
+  allowedElements: ['Venus'], // Adept, Sentinel
+  unlocksAbility: 'bronze-slash',
+};
+
+export const IRON_SWORD: Equipment = {
+  id: 'iron-sword',
+  name: 'Iron Sword',
+  slot: 'weapon',
+  tier: 'iron',
+  cost: 200,
+  statBonus: { atk: 14 },
+  allowedElements: ['Venus'], // Adept, Sentinel
+  unlocksAbility: 'iron-thrust',
+};
+
+export const STEEL_SWORD: Equipment = {
+  id: 'steel-sword',
+  name: 'Steel Sword',
+  slot: 'weapon',
+  tier: 'steel',
+  cost: 500,
+  statBonus: { atk: 22 },
+  allowedElements: ['Venus'], // Adept, Sentinel
+  unlocksAbility: 'steel-slash',
+};
+
+export const SILVER_BLADE: Equipment = {
+  id: 'silver-blade',
+  name: 'Silver Blade',
+  slot: 'weapon',
+  tier: 'silver',
+  cost: 1200,
+  statBonus: { atk: 32 },
+  allowedElements: ['Venus'], // Adept, Sentinel
+  unlocksAbility: 'silver-strike',
+};
+
+export const MYTHRIL_BLADE: Equipment = {
+  id: 'mythril-blade',
+  name: 'Mythril Blade',
+  slot: 'weapon',
+  tier: 'mythril',
+  cost: 3000,
+  statBonus: { atk: 45 },
+  allowedElements: ['Venus'], // Adept, Sentinel
+  unlocksAbility: 'mythril-edge',
+};
+
+export const GAIA_BLADE: Equipment = {
+  id: 'gaia-blade',
+  name: 'Gaia Blade',
+  slot: 'weapon',
+  tier: 'legendary',
+  cost: 7500,
+  statBonus: { atk: 58 },
+  allowedElements: ['Venus'], // Adept, Sentinel
+  unlocksAbility: 'mythril-edge', // Reuse mythril-edge for legendary tier
+};
+
+export const SOL_BLADE: Equipment = {
+  id: 'sol-blade',
+  name: 'Sol Blade',
+  slot: 'weapon',
+  tier: 'artifact',
+  cost: 15000,
+  statBonus: { atk: 72 },
+  allowedElements: ['Venus'], // Adept, Sentinel
+  unlocksAbility: 'mythril-edge', // Reuse mythril-edge for artifact tier
+};
+
+// ========================================
+// WEAPONS - AXES (Mars Only)
+// ========================================
+export const WOODEN_AXE: Equipment = {
+  id: 'wooden-axe',
+  name: 'Wooden Axe',
+  slot: 'weapon',
+  tier: 'basic',
+  cost: 60,
+  statBonus: { atk: 7, spd: -1 },
+  allowedElements: ['Mars'], // War Mage
+};
+
+export const BATTLE_AXE: Equipment = {
+  id: 'battle-axe',
+  name: 'Battle Axe',
+  slot: 'weapon',
+  tier: 'iron',
+  cost: 280,
+  statBonus: { atk: 18, spd: -2 },
+  allowedElements: ['Mars'], // War Mage
+  unlocksAbility: 'axe-cleave',
+};
+
+export const GREAT_AXE: Equipment = {
+  id: 'great-axe',
+  name: 'Great Axe',
+  slot: 'weapon',
+  tier: 'steel',
+  cost: 800,
+  statBonus: { atk: 30, spd: -3 },
+  allowedElements: ['Mars'], // War Mage
+  unlocksAbility: 'great-cleave',
+};
+
+export const TITANS_AXE: Equipment = {
+  id: 'titans-axe',
+  name: "Titan's Axe",
+  slot: 'weapon',
+  tier: 'legendary',
+  cost: 9000,
+  statBonus: { atk: 65, def: 10, spd: -2 },
+  allowedElements: ['Mars'], // War Mage
+  unlocksAbility: 'great-cleave', // Reuse great-cleave for legendary tier
+};
+
+// ========================================
+// WEAPONS - MACES (Mars Only)
+// ========================================
+export const MACE: Equipment = {
+  id: 'mace',
+  name: 'Mace',
+  slot: 'weapon',
+  tier: 'bronze',
+  cost: 150,
+  statBonus: { atk: 11, def: 2 },
+  allowedElements: ['Mars'], // War Mage
+};
+
+export const HEAVY_MACE: Equipment = {
+  id: 'heavy-mace',
+  name: 'Heavy Mace',
+  slot: 'weapon',
+  tier: 'steel',
+  cost: 650,
+  statBonus: { atk: 26, def: 5 },
+  allowedElements: ['Mars'], // War Mage
+};
+
+export const DEMON_MACE: Equipment = {
+  id: 'demon-mace',
+  name: 'Demon Mace',
+  slot: 'weapon',
+  tier: 'mythril',
+  cost: 3500,
+  statBonus: { atk: 48, def: 8 },
+  allowedElements: ['Mars'], // War Mage
+};
+
+// ========================================
+// WEAPONS - STAVES (Mercury + Jupiter Mages)
+// ========================================
+export const WOODEN_STAFF: Equipment = {
+  id: 'wooden-staff',
+  name: 'Wooden Staff',
+  slot: 'weapon',
+  tier: 'basic',
+  cost: 40,
+  statBonus: { atk: 3, mag: 4 },
+  allowedElements: ['Mercury', 'Jupiter'], // Mystic, Stormcaller
+};
+
+export const MAGIC_ROD: Equipment = {
+  id: 'magic-rod',
+  name: 'Magic Rod',
+  slot: 'weapon',
+  tier: 'bronze',
+  cost: 180,
+  statBonus: { atk: 6, mag: 8 },
+  allowedElements: ['Mercury', 'Jupiter'], // Mystic, Stormcaller
+  unlocksAbility: 'arcane-bolt',
+};
+
+export const SHAMAN_ROD: Equipment = {
+  id: 'shaman-rod',
+  name: 'Shaman Rod',
+  slot: 'weapon',
+  tier: 'iron',
+  cost: 400,
+  statBonus: { atk: 10, mag: 14 },
+  allowedElements: ['Mercury', 'Jupiter'], // Mystic, Stormcaller
+};
+
+export const CRYSTAL_ROD: Equipment = {
+  id: 'crystal-rod',
+  name: 'Crystal Rod',
+  slot: 'weapon',
+  tier: 'silver',
+  cost: 1500,
+  statBonus: { atk: 18, mag: 24 },
+  allowedElements: ['Mercury', 'Jupiter'], // Mystic, Stormcaller
+  unlocksAbility: 'crystal-blast',
+};
+
+export const ZODIAC_WAND: Equipment = {
+  id: 'zodiac-wand',
+  name: 'Zodiac Wand',
+  slot: 'weapon',
+  tier: 'mythril',
+  cost: 4000,
+  statBonus: { atk: 28, mag: 38 },
+  allowedElements: ['Mercury', 'Jupiter'], // Mystic, Stormcaller
+  unlocksAbility: 'zodiac-bolt',
+};
+
+export const STAFF_OF_AGES: Equipment = {
+  id: 'staff-of-ages',
+  name: 'Staff of Ages',
+  slot: 'weapon',
+  tier: 'artifact',
+  cost: 18000,
+  statBonus: { atk: 42, mag: 58, pp: 25 },
+  allowedElements: ['Mercury', 'Jupiter'], // Mystic, Stormcaller
+  unlocksAbility: 'zodiac-bolt', // Reuse zodiac-bolt for artifact tier
+};
+
+
+// ========================================
+// WEAPONS - LIGHT BLADES (Jupiter/Venus Agility Focus)
+// ========================================
+export const SHORT_SWORD: Equipment = {
+  id: 'short-sword',
+  name: 'Short Sword',
+  slot: 'weapon',
+  tier: 'basic',
+  cost: 80,
+  statBonus: { atk: 6, spd: 2 },
+  allowedElements: ['Venus', 'Jupiter'],
+};
+
+export const MACHETE: Equipment = {
+  id: 'machete',
+  name: 'Machete',
+  slot: 'weapon',
+  tier: 'bronze',
+  cost: 160,
+  statBonus: { atk: 10, spd: 3 },
+  allowedElements: ['Venus', 'Jupiter'],
+};
+
+export const BATTLE_RAPIER: Equipment = {
+  id: 'battle-rapier',
+  name: 'Battle Rapier',
+  slot: 'weapon',
+  tier: 'iron',
+  cost: 320,
+  statBonus: { atk: 15, spd: 5 },
+  allowedElements: ['Jupiter'],
+  unlocksAbility: 'rapier-thrust',
+};
+
+export const ELVEN_RAPIER: Equipment = {
+  id: 'elven-rapier',
+  name: 'Elven Rapier',
+  slot: 'weapon',
+  tier: 'steel',
+  cost: 720,
+  statBonus: { atk: 24, spd: 8 },
+  allowedElements: ['Jupiter'],
+  unlocksAbility: 'elven-strike',
+};
+
+export const ASSASSIN_BLADE: Equipment = {
+  id: 'assassin-blade',
+  name: 'Assassin Blade',
+  slot: 'weapon',
+  tier: 'silver',
+  cost: 1600,
+  statBonus: { atk: 34, spd: 12 },
+  allowedElements: ['Jupiter'],
+  unlocksAbility: 'assassinate',
+};
+
+export const SWIFT_BLADE: Equipment = {
+  id: 'swift-blade',
+  name: 'Swift Blade',
+  slot: 'weapon',
+  tier: 'mythril',
+  cost: 3600,
+  statBonus: { atk: 46, spd: 16 },
+  allowedElements: ['Jupiter'],
+  unlocksAbility: 'swift-strike',
+};
+
+export const NINJA_BLADE: Equipment = {
+  id: 'ninja-blade',
+  name: 'Ninja Blade',
+  slot: 'weapon',
+  tier: 'legendary',
+  cost: 7800,
+  statBonus: { atk: 55, spd: 18, mag: 5 },
+  allowedElements: ['Jupiter'],
+  unlocksAbility: 'shadow-strike',
+};
+
+// ========================================
+// WEAPONS - LONG SWORDS (Venus Heavy Hitters)
+// ========================================
+export const LONG_SWORD: Equipment = {
+  id: 'long-sword',
+  name: 'Long Sword',
+  slot: 'weapon',
+  tier: 'bronze',
+  cost: 140,
+  statBonus: { atk: 11 },
+  allowedElements: ['Venus'],
+};
+
+export const BROAD_SWORD: Equipment = {
+  id: 'broad-sword',
+  name: 'Broad Sword',
+  slot: 'weapon',
+  tier: 'iron',
+  cost: 240,
+  statBonus: { atk: 16, def: 2 },
+  allowedElements: ['Venus'],
+};
+
+export const CLAYMORE: Equipment = {
+  id: 'claymore',
+  name: 'Claymore',
+  slot: 'weapon',
+  tier: 'steel',
+  cost: 600,
+  statBonus: { atk: 25, def: 3 },
+  allowedElements: ['Venus'],
+  unlocksAbility: 'claymore-slash',
+};
+
+export const GREAT_SWORD: Equipment = {
+  id: 'great-sword',
+  name: 'Great Sword',
+  slot: 'weapon',
+  tier: 'steel',
+  cost: 750,
+  statBonus: { atk: 28, spd: -1 },
+  allowedElements: ['Venus'],
+};
+
+export const RUNE_BLADE: Equipment = {
+  id: 'rune-blade',
+  name: 'Rune Blade',
+  slot: 'weapon',
+  tier: 'silver',
+  cost: 1400,
+  statBonus: { atk: 35, mag: 8 },
+  allowedElements: ['Venus'],
+  unlocksAbility: 'rune-strike',
+};
+
+export const MASAMUNE: Equipment = {
+  id: 'masamune',
+  name: 'Masamune',
+  slot: 'weapon',
+  tier: 'mythril',
+  cost: 3400,
+  statBonus: { atk: 48, spd: 4 },
+  allowedElements: ['Venus'],
+  unlocksAbility: 'masamune-edge',
+};
+
+export const EXCALIBUR: Equipment = {
+  id: 'excalibur',
+  name: 'Excalibur',
+  slot: 'weapon',
+  tier: 'legendary',
+  cost: 8500,
+  statBonus: { atk: 62, mag: 12, def: 8 },
+  allowedElements: ['Venus'],
+  unlocksAbility: 'excalibur-slash',
+};
+
+// ========================================
+// WEAPONS - ADDITIONAL AXES (Mars Power)
+// ========================================
+export const BROAD_AXE: Equipment = {
+  id: 'broad-axe',
+  name: 'Broad Axe',
+  slot: 'weapon',
+  tier: 'bronze',
+  cost: 180,
+  statBonus: { atk: 12, spd: -1 },
+  allowedElements: ['Mars'],
+};
+
+export const VIKING_AXE: Equipment = {
+  id: 'viking-axe',
+  name: 'Viking Axe',
+  slot: 'weapon',
+  tier: 'iron',
+  cost: 320,
+  statBonus: { atk: 19, def: 3, spd: -2 },
+  allowedElements: ['Mars'],
+};
+
+export const MIGHTY_AXE: Equipment = {
+  id: 'mighty-axe',
+  name: 'Mighty Axe',
+  slot: 'weapon',
+  tier: 'steel',
+  cost: 900,
+  statBonus: { atk: 32, def: 5, spd: -2 },
+  allowedElements: ['Mars'],
+  unlocksAbility: 'mighty-cleave',
+};
+
+export const DRAGON_AXE: Equipment = {
+  id: 'dragon-axe',
+  name: 'Dragon Axe',
+  slot: 'weapon',
+  tier: 'silver',
+  cost: 2000,
+  statBonus: { atk: 40, def: 8, spd: -2 },
+  allowedElements: ['Mars'],
+  unlocksAbility: 'dragon-cleave',
+};
+
+export const GAIAS_AXE: Equipment = {
+  id: 'gaias-axe',
+  name: "Gaia's Axe",
+  slot: 'weapon',
+  tier: 'mythril',
+  cost: 3800,
+  statBonus: { atk: 50, def: 12, hp: 20 },
+  allowedElements: ['Mars'],
+  unlocksAbility: 'gaia-crush',
+};
+
+// ========================================
+// WEAPONS - ADDITIONAL STAVES (Mercury/Jupiter Magic)
+// ========================================
+export const MEDITATION_ROD: Equipment = {
+  id: 'meditation-rod',
+  name: 'Meditation Rod',
+  slot: 'weapon',
+  tier: 'iron',
+  cost: 350,
+  statBonus: { atk: 8, mag: 12, pp: 5 },
+  allowedElements: ['Mercury', 'Jupiter'],
+};
+
+export const FROST_WAND: Equipment = {
+  id: 'frost-wand',
+  name: 'Frost Wand',
+  slot: 'weapon',
+  tier: 'steel',
+  cost: 700,
+  statBonus: { atk: 12, mag: 20, pp: 8 },
+  allowedElements: ['Mercury'],
+  unlocksAbility: 'frost-bolt',
+};
+
+export const CLOUD_WAND: Equipment = {
+  id: 'cloud-wand',
+  name: 'Cloud Wand',
+  slot: 'weapon',
+  tier: 'steel',
+  cost: 680,
+  statBonus: { atk: 11, mag: 19, pp: 10, spd: 2 },
+  allowedElements: ['Jupiter'],
+};
+
+export const NEBULA_WAND: Equipment = {
+  id: 'nebula-wand',
+  name: 'Nebula Wand',
+  slot: 'weapon',
+  tier: 'silver',
+  cost: 1700,
+  statBonus: { atk: 20, mag: 28, pp: 15 },
+  allowedElements: ['Mercury', 'Jupiter'],
+  unlocksAbility: 'nebula-burst',
+};
+
+export const ANGELIC_ANKH: Equipment = {
+  id: 'angelic-ankh',
+  name: 'Angelic Ankh',
+  slot: 'weapon',
+  tier: 'mythril',
+  cost: 4200,
+  statBonus: { atk: 30, mag: 40, pp: 20, def: 5 },
+  allowedElements: ['Mercury', 'Jupiter'],
+  unlocksAbility: 'angelic-blessing',
+};
+
+export const STAFF_OF_ANUBIS: Equipment = {
+  id: 'staff-of-anubis',
+  name: 'Staff of Anubis',
+  slot: 'weapon',
+  tier: 'legendary',
+  cost: 9500,
+  statBonus: { atk: 45, mag: 60, pp: 30, hp: 40 },
+  allowedElements: ['Mercury', 'Jupiter'],
+  unlocksAbility: 'anubis-curse',
+};
+
+// ========================================
+// WEAPONS - ADDITIONAL MACES (Mars Strength)
+// ========================================
+export const BATTLE_MACE: Equipment = {
+  id: 'battle-mace',
+  name: 'Battle Mace',
+  slot: 'weapon',
+  tier: 'iron',
+  cost: 300,
+  statBonus: { atk: 17, def: 4 },
+  allowedElements: ['Mars'],
+};
+
+export const WAR_MACE: Equipment = {
+  id: 'war-mace',
+  name: 'War Mace',
+  slot: 'weapon',
+  tier: 'steel',
+  cost: 720,
+  statBonus: { atk: 27, def: 6 },
+  allowedElements: ['Mars'],
+  unlocksAbility: 'war-smash',
+};
+
+export const BLESSED_MACE: Equipment = {
+  id: 'blessed-mace',
+  name: 'Blessed Mace',
+  slot: 'weapon',
+  tier: 'silver',
+  cost: 1550,
+  statBonus: { atk: 36, def: 9, mag: 5 },
+  allowedElements: ['Mars'],
+  unlocksAbility: 'holy-strike',
+};
+
+export const COMET_MACE: Equipment = {
+  id: 'comet-mace',
+  name: 'Comet Mace',
+  slot: 'weapon',
+  tier: 'mythril',
+  cost: 3700,
+  statBonus: { atk: 49, def: 12, hp: 15 },
+  allowedElements: ['Mars'],
+  unlocksAbility: 'comet-impact',
+};
+
+export const THANATOS_MACE: Equipment = {
+  id: 'thanatos-mace',
+  name: 'Thanatos Mace',
+  slot: 'weapon',
+  tier: 'legendary',
+  cost: 8800,
+  statBonus: { atk: 64, def: 16, hp: 30 },
+  allowedElements: ['Mars'],
+  unlocksAbility: 'death-blow',
+};
+
+// ========================================
+// ARMOR
+// ========================================
+export const COTTON_SHIRT: Equipment = {
+  id: 'cotton-shirt',
+  name: 'Cotton Shirt',
+  slot: 'armor',
+  tier: 'basic',
+  cost: 30,
+  statBonus: { def: 3, hp: 5 },
+  allowedElements: ['Mercury', 'Jupiter'], // Mystic, Stormcaller - light mage armor
+};
+
+export const LEATHER_VEST: Equipment = {
+  id: 'leather-vest',
+  name: 'Leather Vest',
+  slot: 'armor',
+  tier: 'basic',
+  cost: 80,
+  statBonus: { def: 6, hp: 10 },
+  allowedElements: ['Venus', 'Mars', 'Jupiter'], // Adept, Sentinel, War Mage, Ranger - medium armor
+};
+
+export const BRONZE_ARMOR: Equipment = {
+  id: 'bronze-armor',
+  name: 'Bronze Armor',
+  slot: 'armor',
+  tier: 'bronze',
+  cost: 200,
+  statBonus: { def: 10, hp: 15 },
+  allowedElements: ['Venus'], // Adept, Sentinel - heavy armor
+};
+
+export const IRON_ARMOR: Equipment = {
+  id: 'iron-armor',
+  name: 'Iron Armor',
+  slot: 'armor',
+  tier: 'iron',
+  cost: 350,
+  statBonus: { def: 15, hp: 25 },
+  allowedElements: ['Venus', 'Mars'], // Adept, Sentinel, War Mage - heavy/medium armor
+  unlocksAbility: 'iron-bulwark',
+};
+
+export const STEEL_ARMOR: Equipment = {
+  id: 'steel-armor',
+  name: 'Steel Armor',
+  slot: 'armor',
+  tier: 'steel',
+  cost: 800,
+  statBonus: { def: 24, hp: 40 },
+  allowedElements: ['Venus'], // Adept, Sentinel - heavy armor
+  unlocksAbility: 'steel-ward',
+};
+
+export const SILVER_ARMOR: Equipment = {
+  id: 'silver-armor',
+  name: 'Silver Armor',
+  slot: 'armor',
+  tier: 'silver',
+  cost: 2000,
+  statBonus: { def: 35, hp: 60 },
+  allowedElements: ['Venus'], // Adept, Sentinel - heavy armor
+  unlocksAbility: 'silver-shield',
+};
+
+export const MYTHRIL_ARMOR: Equipment = {
+  id: 'mythril-armor',
+  name: 'Mythril Armor',
+  slot: 'armor',
+  tier: 'mythril',
+  cost: 5000,
+  statBonus: { def: 48, hp: 85 },
+  allowedElements: ['Venus'], // Adept, Sentinel - heavy armor
+  unlocksAbility: 'steel-ward', // Reuse steel-ward for mythril tier
+};
+
+export const DRAGON_SCALES: Equipment = {
+  id: 'dragon-scales',
+  name: 'Dragon Scales',
+  slot: 'armor',
+  tier: 'legendary',
+  cost: 10000,
+  statBonus: { def: 62, hp: 110 },
+  allowedElements: ['Venus'], // Adept, Sentinel - legendary heavy armor
+  elementalResist: 0.25,
+  unlocksAbility: 'dragon-ward',
+};
+
+export const VALKYRIE_MAIL: Equipment = {
+  id: 'valkyrie-mail',
+  name: 'Valkyrie Mail',
+  slot: 'armor',
+  tier: 'artifact',
+  cost: 20000,
+  statBonus: { def: 78, hp: 140 },
+  allowedElements: ['Venus'], // Adept, Sentinel - artifact heavy armor
+  elementalResist: 0.3,
+};
+
+// Additional Armor - Mid-tier Progression
+export const CHAIN_MAIL: Equipment = {
+  id: 'chain-mail',
+  name: 'Chain Mail',
+  slot: 'armor',
+  tier: 'bronze',
+  cost: 220,
+  statBonus: { def: 11, hp: 18 },
+  allowedElements: ['Venus', 'Mars'], // Adept, Sentinel, War Mage - medium armor
+};
+
+export const PLATE_MAIL: Equipment = {
+  id: 'plate-mail',
+  name: 'Plate Mail',
+  slot: 'armor',
+  tier: 'iron',
+  cost: 380,
+  statBonus: { def: 16, hp: 28 },
+  allowedElements: ['Venus'], // Adept, Sentinel - heavy armor
+};
+
+export const SPIRIT_ARMOR: Equipment = {
+  id: 'spirit-armor',
+  name: 'Spirit Armor',
+  slot: 'armor',
+  tier: 'silver',
+  cost: 2200,
+  statBonus: { def: 32, mag: 8, hp: 50 },
+  allowedElements: ['Mercury', 'Jupiter'], // Mystic, Stormcaller - mage armor
+  elementalResist: 0.15,
+};
+
+export const DEMON_MAIL: Equipment = {
+  id: 'demon-mail',
+  name: 'Demon Mail',
+  slot: 'armor',
+  tier: 'mythril',
+  cost: 5200,
+  statBonus: { def: 46, atk: 8, hp: 80 },
+  allowedElements: ['Mars'], // War Mage - specialized Mars armor
+};
+
+export const DRAGON_MAIL: Equipment = {
+  id: 'dragon-mail',
+  name: 'Dragon Mail',
+  slot: 'armor',
+  tier: 'legendary',
+  cost: 10500,
+  statBonus: { def: 60, hp: 105 },
+  allowedElements: ['Venus', 'Mars'], // Heavy armor users
+  elementalResist: 0.2,
+};
+
+export const ASURAS_ARMOR: Equipment = {
+  id: 'asuras-armor',
+  name: "Asura's Armor",
+  slot: 'armor',
+  tier: 'artifact',
+  cost: 21000,
+  statBonus: { def: 76, atk: 12, hp: 135 },
+  allowedElements: ['Mars'], // War Mage - ultimate Mars armor
+  elementalResist: 0.25,
+};
+
+export const CHRONOS_MAIL: Equipment = {
+  id: 'chronos-mail',
+  name: 'Chronos Mail',
+  slot: 'armor',
+  tier: 'artifact',
+  cost: 22000,
+  statBonus: { def: 74, spd: 8, hp: 125 },
+  allowedElements: ['Jupiter'], // Ranger, Stormcaller - speed armor
+  elementalResist: 0.3,
+};
+
+export const PLANET_ARMOR: Equipment = {
+  id: 'planet-armor',
+  name: 'Planet Armor',
+  slot: 'armor',
+  tier: 'artifact',
+  cost: 23000,
+  statBonus: { def: 80, hp: 150, mag: 10 },
+  allowedElements: ['Venus'], // Adept, Sentinel - ultimate defense
+  elementalResist: 0.35,
+};
+
+export const PSYNERGY_ARMOR: Equipment = {
+  id: 'psynergy-armor',
+  name: 'Psynergy Armor',
+  slot: 'armor',
+  tier: 'legendary',
+  cost: 11000,
+  statBonus: { def: 56, mag: 18, pp: 25, hp: 90 },
+  allowedElements: ['Mercury', 'Jupiter'], // Mystic, Stormcaller - ultimate mage armor
+  elementalResist: 0.25,
+};
+
+export const SPIKED_ARMOR: Equipment = {
+  id: 'spiked-armor',
+  name: 'Spiked Armor',
+  slot: 'armor',
+  tier: 'iron',
+  cost: 420,
+  statBonus: { def: 17, atk: 4, hp: 20 },
+  allowedElements: ['Mars'], // War Mage - offensive armor
+};
+
+export const STEALTH_ARMOR: Equipment = {
+  id: 'stealth-armor',
+  name: 'Stealth Armor',
+  slot: 'armor',
+  tier: 'silver',
+  cost: 2400,
+  statBonus: { def: 28, spd: 6, hp: 45 },
+  allowedElements: ['Jupiter'], // Ranger, Stormcaller - stealth armor
+};
+
+export const PHANTASMAL_MAIL: Equipment = {
+  id: 'phantasmal-mail',
+  name: 'Phantasmal Mail',
+  slot: 'armor',
+  tier: 'artifact',
+  cost: 24000,
+  statBonus: { def: 72, mag: 16, spd: 6, hp: 130 },
+  allowedElements: ['Jupiter'], // Ranger, Stormcaller - ethereal armor
+  elementalResist: 0.3,
+};
+
+export const XYLION_ARMOR: Equipment = {
+  id: 'xylion-armor',
+  name: 'Xylion Armor',
+  slot: 'armor',
+  tier: 'artifact',
+  cost: 25000,
+  statBonus: { def: 82, hp: 160 },
+  allowedElements: ['Venus'], // Adept, Sentinel - ultimate tank armor
+  elementalResist: 0.4,
+};
+
+// ========================================
+// HELMS
+// ========================================
+export const LEATHER_CAP: Equipment = {
+  id: 'leather-cap',
+  name: 'Leather Cap',
+  slot: 'helm',
+  tier: 'basic',
+  cost: 25,
+  statBonus: { def: 2 },
+  allowedElements: ['Venus', 'Mars', 'Jupiter'], // Adept, Sentinel, War Mage, Ranger - medium helms
+};
+
+export const CLOTH_CAP: Equipment = {
+  id: 'cloth-cap',
+  name: 'Cloth Cap',
+  slot: 'helm',
+  tier: 'basic',
+  cost: 60,
+  statBonus: { def: 4 },
+  allowedElements: ['Mercury', 'Jupiter'], // Mystic, Stormcaller - light mage helms
+};
+
+export const BRONZE_HELM: Equipment = {
+  id: 'bronze-helm',
+  name: 'Bronze Helm',
+  slot: 'helm',
+  tier: 'bronze',
+  cost: 140,
+  statBonus: { def: 6 },
+  allowedElements: ['Venus', 'Mars'], // Adept, Sentinel, War Mage - heavy helms
+};
+
+export const IRON_HELM: Equipment = {
+  id: 'iron-helm',
+  name: 'Iron Helm',
+  slot: 'helm',
+  tier: 'iron',
+  cost: 220,
+  statBonus: { def: 9 },
+  allowedElements: ['Venus'], // Adept, Sentinel - heavy helms
+  unlocksAbility: 'iron-mind',
+};
+
+export const STEEL_HELM: Equipment = {
+  id: 'steel-helm',
+  name: 'Steel Helm',
+  slot: 'helm',
+  tier: 'steel',
+  cost: 500,
+  statBonus: { def: 14 },
+  allowedElements: ['Venus'], // Adept, Sentinel - heavy helms
+  unlocksAbility: 'steel-focus',
+};
+
+export const SILVER_CIRCLET: Equipment = {
+  id: 'silver-circlet',
+  name: 'Silver Circlet',
+  slot: 'helm',
+  tier: 'silver',
+  cost: 1300,
+  statBonus: { def: 20, mag: 5 },
+  allowedElements: ['Mercury', 'Jupiter'], // Mystic, Stormcaller - mage circlets
+};
+
+export const MYTHRIL_CROWN: Equipment = {
+  id: 'mythril-crown',
+  name: 'Mythril Crown',
+  slot: 'helm',
+  tier: 'mythril',
+  cost: 3200,
+  statBonus: { def: 28, mag: 8 },
+  allowedElements: ['Mercury', 'Jupiter'], // Mystic, Stormcaller - mage crowns
+  unlocksAbility: 'mythril-wisdom',
+};
+
+export const ORACLES_CROWN: Equipment = {
+  id: 'oracles-crown',
+  name: "Oracle's Crown",
+  slot: 'helm',
+  tier: 'legendary',
+  cost: 8000,
+  statBonus: { def: 38, mag: 14, pp: 20 },
+  allowedElements: ['Jupiter'], // Stormcaller - specialized Jupiter crown
+  unlocksAbility: 'oracle-vision',
+};
+
+export const GLORY_HELM: Equipment = {
+  id: 'glory-helm',
+  name: 'Glory Helm',
+  slot: 'helm',
+  tier: 'artifact',
+  cost: 16000,
+  statBonus: { def: 50, mag: 18, pp: 30 },
+  allowedElements: ['Venus'], // Adept, Sentinel - artifact heavy helm
+};
+
+// Additional Helms - Progression Gaps
+export const OPEN_HELM: Equipment = {
+  id: 'open-helm',
+  name: 'Open Helm',
+  slot: 'helm',
+  tier: 'basic',
+  cost: 100,
+  statBonus: { def: 5 },
+  allowedElements: ['Venus', 'Mars'], // Adept, Sentinel, War Mage - basic heavy helm
+};
+
+export const SILVER_HELM: Equipment = {
+  id: 'silver-helm',
+  name: 'Silver Helm',
+  slot: 'helm',
+  tier: 'silver',
+  cost: 1400,
+  statBonus: { def: 22 },
+  allowedElements: ['Venus', 'Mars'], // Adept, Sentinel, War Mage - heavy helm
+};
+
+export const MYTHRIL_HELM: Equipment = {
+  id: 'mythril-helm',
+  name: 'Mythril Helm',
+  slot: 'helm',
+  tier: 'mythril',
+  cost: 3500,
+  statBonus: { def: 32 },
+  allowedElements: ['Venus', 'Mars'], // Adept, Sentinel, War Mage - heavy helm
+};
+
+export const DRAGON_HELM: Equipment = {
+  id: 'dragon-helm',
+  name: 'Dragon Helm',
+  slot: 'helm',
+  tier: 'legendary',
+  cost: 8500,
+  statBonus: { def: 42, hp: 30 },
+  allowedElements: ['Venus', 'Mars'], // Heavy helm users
+  elementalResist: 0.15,
+};
+
+export const WARRIORS_HELM: Equipment = {
+  id: 'warriors-helm',
+  name: "Warrior's Helm",
+  slot: 'helm',
+  tier: 'steel',
+  cost: 600,
+  statBonus: { def: 16, atk: 3 },
+  allowedElements: ['Venus', 'Mars'], // Adept, Sentinel, War Mage - warrior helm
+};
+
+export const KNIGHTS_HELM: Equipment = {
+  id: 'knights-helm',
+  name: "Knight's Helm",
+  slot: 'helm',
+  tier: 'silver',
+  cost: 1600,
+  statBonus: { def: 24, hp: 15 },
+  allowedElements: ['Venus'], // Adept, Sentinel - knight helm
+};
+
+export const VIKING_HELM: Equipment = {
+  id: 'viking-helm',
+  name: 'Viking Helm',
+  slot: 'helm',
+  tier: 'iron',
+  cost: 280,
+  statBonus: { def: 10, atk: 2 },
+  allowedElements: ['Mars'], // War Mage - offensive helm
+};
+
+export const ADEPTS_HELM: Equipment = {
+  id: 'adepts-helm',
+  name: "Adept's Helm",
+  slot: 'helm',
+  tier: 'bronze',
+  cost: 180,
+  statBonus: { def: 7, mag: 2 },
+  allowedElements: ['Venus'], // Adept - balanced helm
+};
+
+export const MINERVA_HELM: Equipment = {
+  id: 'minerva-helm',
+  name: 'Minerva Helm',
+  slot: 'helm',
+  tier: 'legendary',
+  cost: 9000,
+  statBonus: { def: 40, mag: 12, pp: 22 },
+  allowedElements: ['Mercury', 'Jupiter'], // Mystic, Stormcaller - legendary mage helm
+  elementalResist: 0.2,
+};
+
+export const GLORIA_HELM: Equipment = {
+  id: 'gloria-helm',
+  name: 'Gloria Helm',
+  slot: 'helm',
+  tier: 'artifact',
+  cost: 17000,
+  statBonus: { def: 52, mag: 20, pp: 35 },
+  allowedElements: ['Mercury', 'Jupiter'], // Mystic, Stormcaller - artifact mage helm
+  elementalResist: 0.25,
+};
+
+// Additional Helms - Extended Collection
+export const WOODEN_CAP: Equipment = {
+  id: 'wooden-cap',
+  name: 'Wooden Cap',
+  slot: 'helm',
+  tier: 'basic',
+  cost: 15,
+  statBonus: { def: 1 },
+  allowedElements: ['Venus', 'Mars', 'Jupiter'], // Starter helm for all physical classes
+};
+
+export const MAIL_CAP: Equipment = {
+  id: 'mail-cap',
+  name: 'Mail Cap',
+  slot: 'helm',
+  tier: 'basic',
+  cost: 80,
+  statBonus: { def: 4 },
+  allowedElements: ['Venus', 'Mars'], // Basic chain mail cap
+};
+
+export const NINJA_HOOD: Equipment = {
+  id: 'ninja-hood',
+  name: 'Ninja Hood',
+  slot: 'helm',
+  tier: 'iron',
+  cost: 250,
+  statBonus: { def: 8, spd: 3 },
+  allowedElements: ['Jupiter'], // Ranger, Stormcaller - stealth helm
+};
+
+export const LURE_CAP: Equipment = {
+  id: 'lure-cap',
+  name: 'Lure Cap',
+  slot: 'helm',
+  tier: 'bronze',
+  cost: 160,
+  statBonus: { def: 6, pp: 5 },
+  allowedElements: ['Mercury', 'Jupiter'], // Mystic, Stormcaller - fishing/luck themed
+};
+
+export const PROPHETS_HAT: Equipment = {
+  id: 'prophets-hat',
+  name: "Prophet's Hat",
+  slot: 'helm',
+  tier: 'silver',
+  cost: 1400,
+  statBonus: { def: 18, mag: 6, pp: 10 },
+  allowedElements: ['Mercury', 'Jupiter'], // Mystic, Stormcaller - prophet helm
+};
+
+export const CIRCLET: Equipment = {
+  id: 'circlet',
+  name: 'Circlet',
+  slot: 'helm',
+  tier: 'bronze',
+  cost: 200,
+  statBonus: { def: 5, mag: 3 },
+  allowedElements: ['Mercury', 'Jupiter'], // Basic mage circlet
+};
+
+export const MYTHRIL_CIRCLET: Equipment = {
+  id: 'mythril-circlet',
+  name: 'Mythril Circlet',
+  slot: 'helm',
+  tier: 'mythril',
+  cost: 3000,
+  statBonus: { def: 26, mag: 10 },
+  allowedElements: ['Mercury', 'Jupiter'], // Advanced mage circlet
+};
+
+export const PLATINUM_CIRCLET: Equipment = {
+  id: 'platinum-circlet',
+  name: 'Platinum Circlet',
+  slot: 'helm',
+  tier: 'legendary',
+  cost: 7500,
+  statBonus: { def: 36, mag: 15, pp: 20 },
+  allowedElements: ['Mercury', 'Jupiter'], // Legendary mage circlet
+};
+
+export const ASTRAL_CIRCLET: Equipment = {
+  id: 'astral-circlet',
+  name: 'Astral Circlet',
+  slot: 'helm',
+  tier: 'artifact',
+  cost: 15000,
+  statBonus: { def: 48, mag: 22, pp: 32 },
+  allowedElements: ['Mercury', 'Jupiter'], // Artifact mage circlet
+  elementalResist: 0.2,
+};
+
+export const BERSERKER_BAND: Equipment = {
+  id: 'berserker-band',
+  name: 'Berserker Band',
+  slot: 'helm',
+  tier: 'steel',
+  cost: 550,
+  statBonus: { def: 12, atk: 5 },
+  allowedElements: ['Mars'], // War Mage - aggressive helm
+  unlocksAbility: 'berserker-rage',
+};
+
+export const BRILLIANT_CIRCLET: Equipment = {
+  id: 'brilliant-circlet',
+  name: 'Brilliant Circlet',
+  slot: 'helm',
+  tier: 'silver',
+  cost: 1500,
+  statBonus: { def: 21, mag: 8, pp: 12 },
+  allowedElements: ['Mercury', 'Jupiter'], // Enhanced mage circlet
+};
+
+export const CLARITY_CIRCLET: Equipment = {
+  id: 'clarity-circlet',
+  name: 'Clarity Circlet',
+  slot: 'helm',
+  tier: 'mythril',
+  cost: 3300,
+  statBonus: { def: 28, mag: 11, pp: 18 },
+  allowedElements: ['Mercury'], // Mystic specialized circlet
+  unlocksAbility: 'mental-clarity',
+};
+
+export const PSYCHIC_CIRCLET: Equipment = {
+  id: 'psychic-circlet',
+  name: 'Psychic Circlet',
+  slot: 'helm',
+  tier: 'legendary',
+  cost: 8200,
+  statBonus: { def: 39, mag: 16, pp: 25 },
+  allowedElements: ['Mercury'], // Mystic legendary circlet
+  elementalResist: 0.15,
+};
+
+// ========================================
+// BOOTS
+// ========================================
+export const LEATHER_BOOTS: Equipment = {
+  id: 'leather-boots',
+  name: 'Leather Boots',
+  slot: 'boots',
+  tier: 'basic',
+  cost: 70,
+  statBonus: { spd: 2 },
+  allowedElements: ['Venus', 'Mars', 'Jupiter'], // Adept, Sentinel, War Mage, Ranger - medium boots
+};
+
+export const IRON_BOOTS: Equipment = {
+  id: 'iron-boots',
+  name: 'Iron Boots',
+  slot: 'boots',
+  tier: 'iron',
+  cost: 150,
+  statBonus: { spd: 3, def: 2 },
+  allowedElements: ['Venus'], // Adept, Sentinel - heavy boots
+};
+
+export const STEEL_GREAVES: Equipment = {
+  id: 'steel-greaves',
+  name: 'Steel Greaves',
+  slot: 'boots',
+  tier: 'steel',
+  cost: 400,
+  statBonus: { spd: 5, def: 4 },
+  allowedElements: ['Venus'], // Adept, Sentinel - heavy greaves
+};
+
+export const SILVER_GREAVES: Equipment = {
+  id: 'silver-greaves',
+  name: 'Silver Greaves',
+  slot: 'boots',
+  tier: 'silver',
+  cost: 1100,
+  statBonus: { spd: 7, def: 6 },
+  allowedElements: ['Venus'], // Adept, Sentinel - heavy greaves
+};
+
+export const HYPER_BOOTS: Equipment = {
+  id: 'hyper-boots',
+  name: 'Hyper Boots',
+  slot: 'boots',
+  tier: 'mythril',
+  cost: 2800,
+  statBonus: { spd: 10, def: 8 },
+  allowedElements: ['Jupiter'], // Ranger, Stormcaller - speed boots
+  unlocksAbility: 'hyper-speed',
+};
+
+export const QUICK_BOOTS: Equipment = {
+  id: 'quick-boots',
+  name: 'Quick Boots',
+  slot: 'boots',
+  tier: 'legendary',
+  cost: 6500,
+  statBonus: { spd: 14, def: 10 },
+  allowedElements: ['Jupiter'], // Ranger, Stormcaller - legendary speed boots
+};
+
+export const HERMES_SANDALS: Equipment = {
+  id: 'hermes-sandals',
+  name: "Hermes' Sandals",
+  slot: 'boots',
+  tier: 'artifact',
+  cost: 14000,
+  statBonus: { spd: 20, def: 12 },
+  allowedElements: ['Jupiter'], // Ranger, Stormcaller - artifact speed boots
+  alwaysFirstTurn: true,
+};
+
+// Additional Boots - Progression Gaps
+export const FUR_BOOTS: Equipment = {
+  id: 'fur-boots',
+  name: 'Fur Boots',
+  slot: 'boots',
+  tier: 'basic',
+  cost: 90,
+  statBonus: { spd: 3, hp: 5 },
+  allowedElements: ['Venus', 'Mars', 'Jupiter'], // Medium boots with HP bonus
+};
+
+export const SAFETY_BOOTS: Equipment = {
+  id: 'safety-boots',
+  name: 'Safety Boots',
+  slot: 'boots',
+  tier: 'bronze',
+  cost: 180,
+  statBonus: { def: 5, spd: 2 },
+  allowedElements: ['Venus', 'Mars'], // Defensive boots
+};
+
+export const TURTLE_BOOTS: Equipment = {
+  id: 'turtle-boots',
+  name: 'Turtle Boots',
+  slot: 'boots',
+  tier: 'iron',
+  cost: 300,
+  statBonus: { def: 8, spd: 1, hp: 15 },
+  allowedElements: ['Venus'], // Tank boots with HP
+};
+
+export const KNIGHTS_GREAVE: Equipment = {
+  id: 'knights-greave',
+  name: "Knight's Greave",
+  slot: 'boots',
+  tier: 'steel',
+  cost: 500,
+  statBonus: { spd: 6, def: 5 },
+  allowedElements: ['Venus'], // Balanced knight greaves
+};
+
+export const NINJA_SANDALS: Equipment = {
+  id: 'ninja-sandals',
+  name: 'Ninja Sandals',
+  slot: 'boots',
+  tier: 'silver',
+  cost: 1300,
+  statBonus: { spd: 9, def: 3 },
+  allowedElements: ['Jupiter'], // Speed-focused sandals
+  unlocksAbility: 'ninja-step',
+};
+
+export const GOLDEN_BOOTS: Equipment = {
+  id: 'golden-boots',
+  name: 'Golden Boots',
+  slot: 'boots',
+  tier: 'mythril',
+  cost: 3000,
+  statBonus: { spd: 11, def: 9 },
+  allowedElements: ['Venus', 'Jupiter'], // Hybrid boots
+};
+
+export const DRAGON_BOOTS: Equipment = {
+  id: 'dragon-boots',
+  name: 'Dragon Boots',
+  slot: 'boots',
+  tier: 'legendary',
+  cost: 7000,
+  statBonus: { spd: 15, def: 12, hp: 25 },
+  allowedElements: ['Venus', 'Mars'], // Legendary heavy boots
+  elementalResist: 0.1,
+};
+
+// ========================================
+// ACCESSORIES
+// ========================================
+export const POWER_RING: Equipment = {
+  id: 'power-ring',
+  name: 'Power Ring',
+  slot: 'accessory',
+  tier: 'basic',
+  cost: 100,
+  statBonus: { atk: 5 },
+  allowedElements: ['Venus', 'Mars', 'Jupiter'], // Physical attackers - Adept, Sentinel, War Mage, Ranger
+};
+
+export const GUARDIAN_RING: Equipment = {
+  id: 'guardian-ring',
+  name: 'Guardian Ring',
+  slot: 'accessory',
+  tier: 'basic',
+  cost: 120,
+  statBonus: { def: 5 },
+  allowedElements: ['Venus', 'Jupiter'], // Adept, Sentinel, Ranger - defensive ring
+};
+
+export const ADEPTS_RING: Equipment = {
+  id: 'adepts-ring',
+  name: "Adept's Ring",
+  slot: 'accessory',
+  tier: 'bronze',
+  cost: 250,
+  statBonus: { mag: 6, pp: 5 },
+  allowedElements: ['Venus'], // Venus units - special ring (Adept focus but Sentinel can use too)
+};
+
+export const WAR_GLOVES: Equipment = {
+  id: 'war-gloves',
+  name: 'War Gloves',
+  slot: 'accessory',
+  tier: 'iron',
+  cost: 400,
+  statBonus: { atk: 10, def: 3 },
+  allowedElements: ['Mars'], // War Mage - specialized Mars accessory
+};
+
+export const SPIRIT_GLOVES: Equipment = {
+  id: 'spirit-gloves',
+  name: 'Spirit Gloves',
+  slot: 'accessory',
+  tier: 'steel',
+  cost: 900,
+  statBonus: { mag: 12, pp: 10 },
+  allowedElements: ['Mercury', 'Jupiter'], // Mystic, Stormcaller - mage gloves
+};
+
+export const LEATHER_GLOVES: Equipment = {
+  id: 'leather-gloves',
+  name: 'Leather Gloves',
+  slot: 'accessory',
+  tier: 'basic',
+  cost: 120,
+  statBonus: { def: 2 },
+  allowedElements: ['Venus', 'Mars', 'Jupiter', 'Mercury'],
+};
+
+export const PADDED_GLOVES: Equipment = {
+  id: 'padded-gloves',
+  name: 'Padded Gloves',
+  slot: 'accessory',
+  tier: 'basic',
+  cost: 150,
+  statBonus: { atk: 2 },
+  allowedElements: ['Venus', 'Mars', 'Jupiter', 'Mercury'],
+};
+
+export const BATTLE_GLOVES: Equipment = {
+  id: 'battle-gloves',
+  name: 'Battle Gloves',
+  slot: 'accessory',
+  tier: 'bronze',
+  cost: 240,
+  statBonus: { atk: 4 },
+  allowedElements: ['Venus', 'Mars', 'Jupiter', 'Mercury'],
+};
+
+export const CRAFTED_GLOVES: Equipment = {
+  id: 'crafted-gloves',
+  name: 'Crafted Gloves',
+  slot: 'accessory',
+  tier: 'bronze',
+  cost: 280,
+  statBonus: { def: 4 },
+  allowedElements: ['Venus', 'Mars', 'Jupiter', 'Mercury'],
+};
+
+export const GAUNTLETS: Equipment = {
+  id: 'gauntlets',
+  name: 'Gauntlets',
+  slot: 'accessory',
+  tier: 'iron',
+  cost: 360,
+  statBonus: { atk: 6, def: 2 },
+  allowedElements: ['Venus', 'Mars', 'Jupiter', 'Mercury'],
+};
+
+export const VAMBRACE: Equipment = {
+  id: 'vambrace',
+  name: 'Vambrace',
+  slot: 'accessory',
+  tier: 'iron',
+  cost: 420,
+  statBonus: { def: 6 },
+  allowedElements: ['Venus', 'Mars', 'Jupiter', 'Mercury'],
+};
+
+export const RIOT_GLOVES: Equipment = {
+  id: 'riot-gloves',
+  name: 'Riot Gloves',
+  slot: 'accessory',
+  tier: 'steel',
+  cost: 800,
+  statBonus: { atk: 8, def: 4 },
+  allowedElements: ['Venus', 'Mars'],
+};
+
+export const AERIAL_GLOVES: Equipment = {
+  id: 'aerial-gloves',
+  name: 'Aerial Gloves',
+  slot: 'accessory',
+  tier: 'steel',
+  cost: 950,
+  statBonus: { spd: 8 },
+  allowedElements: ['Jupiter', 'Mercury'],
+};
+
+export const AURA_GLOVES: Equipment = {
+  id: 'aura-gloves',
+  name: 'Aura Gloves',
+  slot: 'accessory',
+  tier: 'silver',
+  cost: 1600,
+  statBonus: { mag: 12, pp: 8 },
+  allowedElements: ['Mercury', 'Jupiter'],
+};
+
+export const TITAN_GLOVES: Equipment = {
+  id: 'titan-gloves',
+  name: 'Titan Gloves',
+  slot: 'accessory',
+  tier: 'silver',
+  cost: 2000,
+  statBonus: { atk: 12, def: 6 },
+  allowedElements: ['Venus', 'Mars'],
+};
+
+export const BIG_BANG_GLOVES: Equipment = {
+  id: 'big-bang-gloves',
+  name: 'Big Bang Gloves',
+  slot: 'accessory',
+  tier: 'mythril',
+  cost: 4800,
+  statBonus: { atk: 16, mag: 14 },
+  allowedElements: ['Mars', 'Mercury'],
+  elementalResist: 0.1,
+};
+
+export const LUCKY_MEDAL: Equipment = {
+  id: 'lucky-medal',
+  name: 'Lucky Medal',
+  slot: 'accessory',
+  tier: 'silver',
+  cost: 1800,
+  statBonus: { spd: 5 },
+  allowedElements: ['Jupiter'], // Jupiter units - speed-focused (Ranger focus but Stormcaller can use)
+};
+
+export const ELEMENTAL_STAR: Equipment = {
+  id: 'elemental-star',
+  name: 'Elemental Star',
+  slot: 'accessory',
+  tier: 'mythril',
+  cost: 4500,
+  statBonus: { mag: 18, pp: 20 },
+  allowedElements: ['Mercury', 'Jupiter'], // Mystic, Stormcaller - powerful mage accessory
+  elementalResist: 0.15,
+  unlocksAbility: 'mythril-wisdom', // Reuse mythril-wisdom for mage accessory
+};
+
+export const DRAGONS_EYE: Equipment = {
+  id: 'dragons-eye',
+  name: "Dragon's Eye",
+  slot: 'accessory',
+  tier: 'legendary',
+  cost: 8500,
+  statBonus: { atk: 15, mag: 15, def: 10 },
+  allowedElements: ['Venus', 'Jupiter'], // Adept, Sentinel, Ranger - hybrid accessory
+};
+
+export const CLERIC_RING: Equipment = {
+  id: 'cleric-ring',
+  name: 'Cleric Ring',
+  slot: 'accessory',
+  tier: 'legendary',
+  cost: 9000,
+  statBonus: { pp: 30, mag: 12 },
+  allowedElements: ['Mercury', 'Jupiter'], // Mystic, Stormcaller - healing ring
+};
+
+export const IRIS_ROBE: Equipment = {
+  id: 'iris-robe',
+  name: 'Iris Robe',
+  slot: 'accessory',
+  tier: 'artifact',
+  cost: 12000,
+  statBonus: { def: 20, mag: 20 },
+  allowedElements: ['Mercury', 'Jupiter'], // Mystic, Stormcaller - ultimate mage robe
+  elementalResist: 0.2,
+};
+
+export const COSMOS_SHIELD: Equipment = {
+  id: 'cosmos-shield',
+  name: 'Cosmos Shield',
+  slot: 'accessory',
+  tier: 'artifact',
+  cost: 17000,
+  statBonus: { def: 30, hp: 50 },
+  allowedElements: ['Venus'], // Adept, Sentinel - ultimate tank accessory
+  elementalResist: 0.25,
+  unlocksAbility: 'silver-shield', // Reuse silver-shield for artifact tier
+};
+
+// ========================================
+// ADDITIONAL RINGS
+// ========================================
+export const SPEED_RING: Equipment = {
+  id: 'speed-ring',
+  name: 'Speed Ring',
+  slot: 'accessory',
+  tier: 'bronze',
+  cost: 200,
+  statBonus: { spd: 3 },
+  allowedElements: ['Jupiter', 'Venus'],
+};
+
+export const WAR_RING: Equipment = {
+  id: 'war-ring',
+  name: 'War Ring',
+  slot: 'accessory',
+  tier: 'iron',
+  cost: 350,
+  statBonus: { atk: 8, def: 2 },
+  allowedElements: ['Mars', 'Venus'],
+};
+
+export const SOUL_RING: Equipment = {
+  id: 'soul-ring',
+  name: 'Soul Ring',
+  slot: 'accessory',
+  tier: 'steel',
+  cost: 700,
+  statBonus: { mag: 10, pp: 8 },
+  allowedElements: ['Mercury', 'Jupiter'],
+};
+
+export const HEALING_RING: Equipment = {
+  id: 'healing-ring',
+  name: 'Healing Ring',
+  slot: 'accessory',
+  tier: 'silver',
+  cost: 1500,
+  statBonus: { hp: 30, mag: 8 },
+  allowedElements: ['Mercury'],
+};
+
+export const STARDUST_RING: Equipment = {
+  id: 'stardust-ring',
+  name: 'Stardust Ring',
+  slot: 'accessory',
+  tier: 'mythril',
+  cost: 3800,
+  statBonus: { mag: 16, pp: 18, spd: 4 },
+  allowedElements: ['Jupiter'],
+  elementalResist: 0.1,
+};
+
+export const GOLDEN_RING: Equipment = {
+  id: 'golden-ring',
+  name: 'Golden Ring',
+  slot: 'accessory',
+  tier: 'silver',
+  cost: 1600,
+  statBonus: { atk: 8, def: 8, mag: 8 },
+  allowedElements: ['Venus', 'Jupiter'],
+};
+
+export const RAINBOW_RING: Equipment = {
+  id: 'rainbow-ring',
+  name: 'Rainbow Ring',
+  slot: 'accessory',
+  tier: 'legendary',
+  cost: 7500,
+  statBonus: { atk: 12, def: 12, mag: 12, spd: 6 },
+  allowedElements: ['Venus', 'Mars', 'Mercury', 'Jupiter'],
+  elementalResist: 0.2,
+};
+
+export const UNICORN_RING: Equipment = {
+  id: 'unicorn-ring',
+  name: 'Unicorn Ring',
+  slot: 'accessory',
+  tier: 'legendary',
+  cost: 8000,
+  statBonus: { hp: 50, pp: 25, mag: 10 },
+  allowedElements: ['Mercury', 'Jupiter'],
+};
+
+export const FAIRY_RING: Equipment = {
+  id: 'fairy-ring',
+  name: 'Fairy Ring',
+  slot: 'accessory',
+  tier: 'mythril',
+  cost: 4000,
+  statBonus: { mag: 14, pp: 16, spd: 5 },
+  allowedElements: ['Jupiter'],
+};
+
+export const SPIRIT_RING: Equipment = {
+  id: 'spirit-ring',
+  name: 'Spirit Ring',
+  slot: 'accessory',
+  tier: 'steel',
+  cost: 850,
+  statBonus: { mag: 11, pp: 10 },
+  allowedElements: ['Mercury', 'Jupiter'],
+};
+
+export const AROMA_RING: Equipment = {
+  id: 'aroma-ring',
+  name: 'Aroma Ring',
+  slot: 'accessory',
+  tier: 'iron',
+  cost: 500,
+  statBonus: { mag: 8, pp: 8, hp: 20 },
+  allowedElements: ['Mercury', 'Jupiter', 'Venus'],
+};
+
+export const SLEEP_RING: Equipment = {
+  id: 'sleep-ring',
+  name: 'Sleep Ring',
+  slot: 'accessory',
+  tier: 'bronze',
+  cost: 300,
+  statBonus: { def: 6, hp: 25 },
+  allowedElements: ['Venus', 'Mercury'],
+};
+
+// ========================================
+// BRACELETS & ARMLETS
+// ========================================
+export const LEATHER_ARMLET: Equipment = {
+  id: 'leather-armlet',
+  name: 'Leather Armlet',
+  slot: 'accessory',
+  tier: 'basic',
+  cost: 90,
+  statBonus: { def: 4, hp: 10 },
+  allowedElements: ['Venus', 'Mars', 'Jupiter'],
+};
+
+export const GUARDIAN_ARMLET: Equipment = {
+  id: 'guardian-armlet',
+  name: 'Guardian Armlet',
+  slot: 'accessory',
+  tier: 'bronze',
+  cost: 220,
+  statBonus: { def: 7, hp: 15 },
+  allowedElements: ['Venus'],
+};
+
+export const SILVER_ARMLET: Equipment = {
+  id: 'silver-armlet',
+  name: 'Silver Armlet',
+  slot: 'accessory',
+  tier: 'silver',
+  cost: 1700,
+  statBonus: { def: 12, hp: 30, mag: 6 },
+  allowedElements: ['Venus', 'Mercury'],
+};
+
+export const MYTHRIL_ARMLET: Equipment = {
+  id: 'mythril-armlet',
+  name: 'Mythril Armlet',
+  slot: 'accessory',
+  tier: 'mythril',
+  cost: 4100,
+  statBonus: { def: 16, hp: 45, mag: 10 },
+  allowedElements: ['Venus', 'Mercury'],
+};
+
+export const HEAVY_ARMLET: Equipment = {
+  id: 'heavy-armlet',
+  name: 'Heavy Armlet',
+  slot: 'accessory',
+  tier: 'iron',
+  cost: 420,
+  statBonus: { def: 10, atk: 4 },
+  allowedElements: ['Mars', 'Venus'],
+};
+
+export const SPIRIT_ARMLET: Equipment = {
+  id: 'spirit-armlet',
+  name: 'Spirit Armlet',
+  slot: 'accessory',
+  tier: 'steel',
+  cost: 950,
+  statBonus: { mag: 13, pp: 12, def: 4 },
+  allowedElements: ['Mercury', 'Jupiter'],
+};
+
+export const VIRTUOUS_ARMLET: Equipment = {
+  id: 'virtuous-armlet',
+  name: 'Virtuous Armlet',
+  slot: 'accessory',
+  tier: 'legendary',
+  cost: 8200,
+  statBonus: { def: 18, hp: 60, mag: 14, pp: 20 },
+  allowedElements: ['Mercury', 'Jupiter'],
+  elementalResist: 0.15,
+};
+
+export const BONE_ARMLET: Equipment = {
+  id: 'bone-armlet',
+  name: 'Bone Armlet',
+  slot: 'accessory',
+  tier: 'bronze',
+  cost: 180,
+  statBonus: { atk: 6, def: 3 },
+  allowedElements: ['Mars', 'Venus'],
+};
+
+export const CLEAR_BRACELET: Equipment = {
+  id: 'clear-bracelet',
+  name: 'Clear Bracelet',
+  slot: 'accessory',
+  tier: 'silver',
+  cost: 2000,
+  statBonus: { mag: 15, pp: 15 },
+  allowedElements: ['Mercury', 'Jupiter'],
+  elementalResist: 0.1,
+};
+
+export const ARMLET: Equipment = {
+  id: 'armlet',
+  name: 'Armlet',
+  slot: 'accessory',
+  tier: 'basic',
+  cost: 80,
+  statBonus: { def: 3, hp: 8 },
+  allowedElements: ['Venus', 'Mars', 'Jupiter', 'Mercury'],
+};
+
+export const JESTERS_ARMLET: Equipment = {
+  id: 'jesters-armlet',
+  name: "Jester's Armlet",
+  slot: 'accessory',
+  tier: 'iron',
+  cost: 600,
+  statBonus: { spd: 8, atk: 5, mag: 5 },
+  allowedElements: ['Jupiter', 'Mercury'],
+};
+
+export const LEDAS_BRACELET: Equipment = {
+  id: 'ledas-bracelet',
+  name: "Leda's Bracelet",
+  slot: 'accessory',
+  tier: 'mythril',
+  cost: 4500,
+  statBonus: { mag: 16, pp: 18, spd: 6 },
+  allowedElements: ['Mercury', 'Jupiter'],
+};
+
+// ========================================
+// SHIELDS
+// ========================================
+export const WOODEN_SHIELD: Equipment = {
+  id: 'wooden-shield',
+  name: 'Wooden Shield',
+  slot: 'accessory',
+  tier: 'basic',
+  cost: 80,
+  statBonus: { def: 6 },
+  allowedElements: ['Venus', 'Mars'],
+};
+
+export const BRONZE_SHIELD: Equipment = {
+  id: 'bronze-shield',
+  name: 'Bronze Shield',
+  slot: 'accessory',
+  tier: 'bronze',
+  cost: 190,
+  statBonus: { def: 10, hp: 10 },
+  allowedElements: ['Venus', 'Mars'],
+};
+
+export const IRON_SHIELD: Equipment = {
+  id: 'iron-shield',
+  name: 'Iron Shield',
+  slot: 'accessory',
+  tier: 'iron',
+  cost: 380,
+  statBonus: { def: 15, hp: 20 },
+  allowedElements: ['Venus', 'Mars'],
+};
+
+export const KNIGHTS_SHIELD: Equipment = {
+  id: 'knights-shield',
+  name: "Knight's Shield",
+  slot: 'accessory',
+  tier: 'steel',
+  cost: 850,
+  statBonus: { def: 20, hp: 30 },
+  allowedElements: ['Venus'],
+  unlocksAbility: 'knight-guard',
+};
+
+export const DRAGON_SHIELD: Equipment = {
+  id: 'dragon-shield',
+  name: 'Dragon Shield',
+  slot: 'accessory',
+  tier: 'mythril',
+  cost: 4300,
+  statBonus: { def: 28, hp: 50 },
+  allowedElements: ['Venus'],
+  elementalResist: 0.2,
+};
+
+export const EARTH_SHIELD: Equipment = {
+  id: 'earth-shield',
+  name: 'Earth Shield',
+  slot: 'accessory',
+  tier: 'silver',
+  cost: 1850,
+  statBonus: { def: 22, hp: 35 },
+  allowedElements: ['Venus'],
+  elementalResist: 0.15,
+};
+
+export const FLAME_SHIELD: Equipment = {
+  id: 'flame-shield',
+  name: 'Flame Shield',
+  slot: 'accessory',
+  tier: 'silver',
+  cost: 1900,
+  statBonus: { def: 20, hp: 30, atk: 6 },
+  allowedElements: ['Mars'],
+  elementalResist: 0.15,
+};
+
+export const TERRA_SHIELD: Equipment = {
+  id: 'terra-shield',
+  name: 'Terra Shield',
+  slot: 'accessory',
+  tier: 'legendary',
+  cost: 7800,
+  statBonus: { def: 32, hp: 70 },
+  allowedElements: ['Venus'],
+  elementalResist: 0.25,
+};
+
+export const LUNA_SHIELD: Equipment = {
+  id: 'luna-shield',
+  name: 'Luna Shield',
+  slot: 'accessory',
+  tier: 'legendary',
+  cost: 8500,
+  statBonus: { def: 28, hp: 60, mag: 12 },
+  allowedElements: ['Mercury'],
+  elementalResist: 0.25,
+};
+
+export const MIRRORED_SHIELD: Equipment = {
+  id: 'mirrored-shield',
+  name: 'Mirrored Shield',
+  slot: 'accessory',
+  tier: 'mythril',
+  cost: 4500,
+  statBonus: { def: 25, mag: 10 },
+  allowedElements: ['Venus', 'Mercury'],
+  elementalResist: 0.18,
+};
+
+export const AEGIS_SHIELD: Equipment = {
+  id: 'aegis-shield',
+  name: 'Aegis Shield',
+  slot: 'accessory',
+  tier: 'artifact',
+  cost: 16000,
+  statBonus: { def: 38, hp: 80, mag: 10 },
+  allowedElements: ['Venus'],
+  elementalResist: 0.3,
+  unlocksAbility: 'aegis-ward',
+};
+
+export const FUJIN_SHIELD: Equipment = {
+  id: 'fujin-shield',
+  name: 'Fujin Shield',
+  slot: 'accessory',
+  tier: 'legendary',
+  cost: 8200,
+  statBonus: { def: 26, hp: 55, spd: 8 },
+  allowedElements: ['Jupiter'],
+  elementalResist: 0.25,
+};
+
+export const DRAGON_SHIELD_2: Equipment = {
+  id: 'dragon-shield-2',
+  name: 'Dragon Shield II',
+  slot: 'accessory',
+  tier: 'legendary',
+  cost: 9500,
+  statBonus: { def: 30, hp: 65, atk: 8 },
+  allowedElements: ['Mars', 'Venus'],
+  elementalResist: 0.28,
+};
+
+export const ECLIPSE_BLADE: Equipment = {
+  id: 'eclipse-blade',
+  name: 'Eclipse Blade',
+  slot: 'weapon',
+  tier: 'artifact',
+  cost: 0,
+  statBonus: { atk: 80, mag: 15, spd: 5 },
+  allowedElements: ['Venus', 'Mars'],
+  unlocksAbility: 'mythril-edge',
+  availableIn: ['tower'],
+};
+
+// ========================================
+// TOWER-EXCLUSIVE EQUIPMENT (Floors 21-30)
+// ========================================
+
+// Tower Weapons - Mythril+ Tier
+export const STORM_CLEAVER: Equipment = {
+  id: 'storm-cleaver',
+  name: 'Storm Cleaver',
+  slot: 'weapon',
+  tier: 'legendary',
+  cost: 0, // Tower drop only
+  statBonus: { atk: 55, mag: 20, spd: 8 },
+  allowedElements: ['Jupiter'],
+  unlocksAbility: 'storm-slash',
+  availableIn: ['tower'],
+};
+
+export const FROST_REAVER: Equipment = {
+  id: 'frost-reaver',
+  name: 'Frost Reaver',
+  slot: 'weapon',
+  tier: 'legendary',
+  cost: 0,
+  statBonus: { atk: 52, mag: 25, def: 5 },
+  allowedElements: ['Mercury'],
+  unlocksAbility: 'frost-strike',
+  availableIn: ['tower'],
+};
+
+export const VOLCANIC_HAMMER: Equipment = {
+  id: 'volcanic-hammer',
+  name: 'Volcanic Hammer',
+  slot: 'weapon',
+  tier: 'legendary',
+  cost: 0,
+  statBonus: { atk: 68, def: 15, spd: -3 },
+  allowedElements: ['Mars'],
+  unlocksAbility: 'volcanic-smash',
+  availableIn: ['tower'],
+};
+
+export const GAIA_GREATSHIELD: Equipment = {
+  id: 'gaia-greatshield',
+  name: 'Gaia Greatshield',
+  slot: 'accessory',
+  tier: 'legendary',
+  cost: 0,
+  statBonus: { def: 45, hp: 80 },
+  allowedElements: ['Venus'],
+  elementalResist: 0.3,
+  availableIn: ['tower'],
+};
+
+// Tower Armor - Elemental Sets
+export const TEMPEST_ARMOR: Equipment = {
+  id: 'tempest-armor',
+  name: 'Tempest Armor',
+  slot: 'armor',
+  tier: 'legendary',
+  cost: 0,
+  statBonus: { def: 55, spd: 12, mag: 10 },
+  allowedElements: ['Jupiter'],
+  elementalResist: 0.2,
+  availableIn: ['tower'],
+};
+
+export const GLACIER_MAIL: Equipment = {
+  id: 'glacier-mail',
+  name: 'Glacier Mail',
+  slot: 'armor',
+  tier: 'legendary',
+  cost: 0,
+  statBonus: { def: 58, hp: 75, mag: 8 },
+  allowedElements: ['Mercury'],
+  elementalResist: 0.25,
+  availableIn: ['tower'],
+};
+
+export const INFERNO_PLATE: Equipment = {
+  id: 'inferno-plate',
+  name: 'Inferno Plate',
+  slot: 'armor',
+  tier: 'legendary',
+  cost: 0,
+  statBonus: { def: 52, atk: 15, hp: 50 },
+  allowedElements: ['Mars'],
+  elementalResist: 0.2,
+  availableIn: ['tower'],
+};
+
+// Tower Helms - Element Crowns
+export const STORMKING_CROWN: Equipment = {
+  id: 'stormking-crown',
+  name: 'Stormking Crown',
+  slot: 'helm',
+  tier: 'legendary',
+  cost: 0,
+  statBonus: { def: 42, mag: 20, pp: 25 },
+  allowedElements: ['Jupiter'],
+  unlocksAbility: 'storm-mastery',
+  availableIn: ['tower'],
+};
+
+export const FROSTQUEEN_TIARA: Equipment = {
+  id: 'frostqueen-tiara',
+  name: 'Frostqueen Tiara',
+  slot: 'helm',
+  tier: 'legendary',
+  cost: 0,
+  statBonus: { def: 38, mag: 22, pp: 30 },
+  allowedElements: ['Mercury'],
+  unlocksAbility: 'frost-mastery',
+  availableIn: ['tower'],
+};
+
+export const VOLCANIC_VISOR: Equipment = {
+  id: 'volcanic-visor',
+  name: 'Volcanic Visor',
+  slot: 'helm',
+  tier: 'legendary',
+  cost: 0,
+  statBonus: { def: 45, atk: 12, hp: 30 },
+  allowedElements: ['Mars'],
+  availableIn: ['tower'],
+};
+
+// Tower Boots - Speed Set
+export const WINDSTRIDER_BOOTS: Equipment = {
+  id: 'windstrider-boots',
+  name: 'Windstrider Boots',
+  slot: 'boots',
+  tier: 'legendary',
+  cost: 0,
+  statBonus: { spd: 18, def: 15 },
+  allowedElements: ['Jupiter'],
+  alwaysFirstTurn: true,
+  availableIn: ['tower'],
+};
+
+export const TIDAL_TREADS: Equipment = {
+  id: 'tidal-treads',
+  name: 'Tidal Treads',
+  slot: 'boots',
+  tier: 'legendary',
+  cost: 0,
+  statBonus: { spd: 12, def: 18, mag: 8 },
+  allowedElements: ['Mercury'],
+  availableIn: ['tower'],
+};
+
+// Tower Accessories - Milestone Rewards (Floor 25, 30)
+export const TOWER_CHAMPIONS_RING: Equipment = {
+  id: 'tower-champions-ring',
+  name: "Tower Champion's Ring",
+  slot: 'accessory',
+  tier: 'artifact',
+  cost: 0,
+  statBonus: { atk: 20, def: 20, mag: 20, spd: 10 },
+  allowedElements: ['Venus', 'Mars', 'Mercury', 'Jupiter'],
+  elementalResist: 0.15,
+  availableIn: ['tower'],
+};
+
+export const TOWER_MASTERS_MEDALLION: Equipment = {
+  id: 'tower-masters-medallion',
+  name: "Tower Master's Medallion",
+  slot: 'accessory',
+  tier: 'artifact',
+  cost: 0,
+  statBonus: { atk: 25, def: 25, mag: 25, spd: 15, hp: 100, pp: 50 },
+  allowedElements: ['Venus', 'Mars', 'Mercury', 'Jupiter'],
+  elementalResist: 0.25,
+  availableIn: ['tower'],
+};
+
+// ========================================
+// MYTHRIL TIER ITEMS (Late-game shop items)
+// ========================================
+
+// Mythril Weapons
+export const MYTHRIL_AXE: Equipment = {
+  id: 'mythril-axe',
+  name: 'Mythril Axe',
+  slot: 'weapon',
+  tier: 'mythril',
+  cost: 3200,
+  statBonus: { atk: 46, spd: -2 },
+  allowedElements: ['Mars'],
+  unlocksAbility: 'mythril-cleave',
+};
+
+export const MYTHRIL_STAFF: Equipment = {
+  id: 'mythril-staff',
+  name: 'Mythril Staff',
+  slot: 'weapon',
+  tier: 'mythril',
+  cost: 3800,
+  statBonus: { atk: 26, mag: 36 },
+  allowedElements: ['Mercury'],
+  unlocksAbility: 'mythril-surge',
+};
+
+export const MYTHRIL_LANCE: Equipment = {
+  id: 'mythril-lance',
+  name: 'Mythril Lance',
+  slot: 'weapon',
+  tier: 'mythril',
+  cost: 3100,
+  statBonus: { atk: 42, spd: 3 },
+  allowedElements: ['Jupiter'],
+  unlocksAbility: 'mythril-pierce',
+};
+
+// Mythril Armor Pieces
+export const MYTHRIL_GREAVES: Equipment = {
+  id: 'mythril-greaves',
+  name: 'Mythril Greaves',
+  slot: 'boots',
+  tier: 'mythril',
+  cost: 2600,
+  statBonus: { spd: 9, def: 10 },
+  allowedElements: ['Venus', 'Mars'],
+};
+
+export const MYTHRIL_GAUNTLETS: Equipment = {
+  id: 'mythril-gauntlets',
+  name: 'Mythril Gauntlets',
+  slot: 'accessory',
+  tier: 'mythril',
+  cost: 4200,
+  statBonus: { atk: 16, def: 12 },
+  allowedElements: ['Venus', 'Mars'],
+  unlocksAbility: 'mythril-strike',
+};
+
+// ========================================
+// ELEMENT-SPECIFIC GEAR (All 4 elements)
+// ========================================
+
+// Venus Element Gear
+export const EARTH_WARDEN_SHIELD: Equipment = {
+  id: 'earth-warden-shield',
+  name: 'Earth Warden Shield',
+  slot: 'accessory',
+  tier: 'silver',
+  cost: 1900,
+  statBonus: { def: 18, hp: 40 },
+  allowedElements: ['Venus'],
+  elementalResist: 0.2,
+  unlocksAbility: 'earth-wall',
+};
+
+export const GAIA_HELM: Equipment = {
+  id: 'gaia-helm',
+  name: 'Gaia Helm',
+  slot: 'helm',
+  tier: 'mythril',
+  cost: 3400,
+  statBonus: { def: 30, hp: 25 },
+  allowedElements: ['Venus'],
+  unlocksAbility: 'gaia-fortitude',
+};
+
+// Mars Element Gear
+export const FLAME_BRANDED_AXE: Equipment = {
+  id: 'flame-branded-axe',
+  name: 'Flame Branded Axe',
+  slot: 'weapon',
+  tier: 'silver',
+  cost: 2200,
+  statBonus: { atk: 38, mag: 8, spd: -1 },
+  allowedElements: ['Mars'],
+  unlocksAbility: 'flame-burst',
+};
+
+export const INFERNO_GAUNTLETS: Equipment = {
+  id: 'inferno-gauntlets',
+  name: 'Inferno Gauntlets',
+  slot: 'accessory',
+  tier: 'mythril',
+  cost: 4000,
+  statBonus: { atk: 18, mag: 10, def: 6 },
+  allowedElements: ['Mars'],
+  elementalResist: 0.15,
+  unlocksAbility: 'inferno-fist',
+};
+
+// Mercury Element Gear
+export const FROST_SCEPTER: Equipment = {
+  id: 'frost-scepter',
+  name: 'Frost Scepter',
+  slot: 'weapon',
+  tier: 'silver',
+  cost: 2100,
+  statBonus: { atk: 20, mag: 28, pp: 10 },
+  allowedElements: ['Mercury'],
+  unlocksAbility: 'frost-nova',
+};
+
+export const GLACIAL_ROBES: Equipment = {
+  id: 'glacial-robes',
+  name: 'Glacial Robes',
+  slot: 'armor',
+  tier: 'mythril',
+  cost: 4800,
+  statBonus: { def: 40, mag: 15, hp: 60 },
+  allowedElements: ['Mercury'],
+  elementalResist: 0.2,
+};
+
+// Jupiter Element Gear
+export const THUNDERBOLT_BOW: Equipment = {
+  id: 'thunderbolt-bow',
+  name: 'Thunderbolt Bow',
+  slot: 'weapon',
+  tier: 'silver',
+  cost: 2400,
+  statBonus: { atk: 35, spd: 6, mag: 5 },
+  allowedElements: ['Jupiter'],
+  unlocksAbility: 'lightning-shot',
+};
+
+export const STORM_CIRCLET: Equipment = {
+  id: 'storm-circlet',
+  name: 'Storm Circlet',
+  slot: 'helm',
+  tier: 'mythril',
+  cost: 3600,
+  statBonus: { def: 26, mag: 12, spd: 4, pp: 15 },
+  allowedElements: ['Jupiter'],
+  unlocksAbility: 'storm-focus',
+};
+
+// ========================================
+// ADDITIONAL TOWER-EXCLUSIVE ITEMS
+// ========================================
+
+export const ASTRAL_BLADE: Equipment = {
+  id: 'astral-blade',
+  name: 'Astral Blade',
+  slot: 'weapon',
+  tier: 'artifact',
+  cost: 0,
+  statBonus: { atk: 70, mag: 20, spd: 8, pp: 20 },
+  allowedElements: ['Venus', 'Jupiter'],
+  unlocksAbility: 'astral-strike',
+  availableIn: ['tower'],
+};
+
+export const SHADOWFLAME_STAFF: Equipment = {
+  id: 'shadowflame-staff',
+  name: 'Shadowflame Staff',
+  slot: 'weapon',
+  tier: 'artifact',
+  cost: 0,
+  statBonus: { atk: 35, mag: 55, pp: 30 },
+  allowedElements: ['Mars', 'Mercury'],
+  elementalResist: 0.2,
+  unlocksAbility: 'shadowflame',
+  availableIn: ['tower'],
+};
+
+// ========================================
+// WEAPONS - BOWS (Jupiter Ranged)
+// ========================================
+export const HUNTING_BOW: Equipment = {
+  id: 'hunting-bow',
+  name: 'Hunting Bow',
+  slot: 'weapon',
+  tier: 'basic',
+  cost: 70,
+  statBonus: { atk: 6, spd: 1 },
+  allowedElements: ['Jupiter'],
+};
+
+export const COMPOSITE_BOW: Equipment = {
+  id: 'composite-bow',
+  name: 'Composite Bow',
+  slot: 'weapon',
+  tier: 'bronze',
+  cost: 170,
+  statBonus: { atk: 11, spd: 2 },
+  allowedElements: ['Jupiter'],
+};
+
+export const LONGBOW: Equipment = {
+  id: 'longbow',
+  name: 'Longbow',
+  slot: 'weapon',
+  tier: 'iron',
+  cost: 290,
+  statBonus: { atk: 16, spd: 3 },
+  allowedElements: ['Jupiter'],
+  unlocksAbility: 'longbow-shot',
+};
+
+export const ELVEN_BOW: Equipment = {
+  id: 'elven-bow',
+  name: 'Elven Bow',
+  slot: 'weapon',
+  tier: 'steel',
+  cost: 670,
+  statBonus: { atk: 23, spd: 5, mag: 3 },
+  allowedElements: ['Jupiter'],
+  unlocksAbility: 'elven-arrow',
+};
+
+export const ARTEMIS_BOW: Equipment = {
+  id: 'artemis-bow',
+  name: 'Artemis Bow',
+  slot: 'weapon',
+  tier: 'silver',
+  cost: 1800,
+  statBonus: { atk: 33, spd: 7, mag: 6 },
+  allowedElements: ['Jupiter'],
+  unlocksAbility: 'artemis-volley',
+};
+
+export const GALE_BOW: Equipment = {
+  id: 'gale-bow',
+  name: 'Gale Bow',
+  slot: 'weapon',
+  tier: 'mythril',
+  cost: 3900,
+  statBonus: { atk: 44, spd: 10, mag: 8 },
+  allowedElements: ['Jupiter'],
+  unlocksAbility: 'gale-shot',
+};
+
+export const HURRICANE_BOW: Equipment = {
+  id: 'hurricane-bow',
+  name: 'Hurricane Bow',
+  slot: 'weapon',
+  tier: 'legendary',
+  cost: 8200,
+  statBonus: { atk: 56, spd: 14, mag: 12 },
+  allowedElements: ['Jupiter'],
+  unlocksAbility: 'hurricane-barrage',
+};
+
+// ========================================
+// WEAPONS - CLAWS (Jupiter/Mars Agility)
+// ========================================
+export const IRON_CLAWS: Equipment = {
+  id: 'iron-claws',
+  name: 'Iron Claws',
+  slot: 'weapon',
+  tier: 'bronze',
+  cost: 130,
+  statBonus: { atk: 9, spd: 4 },
+  allowedElements: ['Jupiter', 'Mars'],
+};
+
+export const STEEL_CLAWS: Equipment = {
+  id: 'steel-claws',
+  name: 'Steel Claws',
+  slot: 'weapon',
+  tier: 'iron',
+  cost: 250,
+  statBonus: { atk: 13, spd: 6 },
+  allowedElements: ['Jupiter', 'Mars'],
+  unlocksAbility: 'claw-slash',
+};
+
+export const TIGERS_CLAW: Equipment = {
+  id: 'tigers-claw',
+  name: "Tiger's Claw",
+  slot: 'weapon',
+  tier: 'steel',
+  cost: 580,
+  statBonus: { atk: 21, spd: 9 },
+  allowedElements: ['Jupiter'],
+  unlocksAbility: 'tiger-fury',
+};
+
+export const DEMON_CLAWS: Equipment = {
+  id: 'demon-claws',
+  name: 'Demon Claws',
+  slot: 'weapon',
+  tier: 'silver',
+  cost: 1650,
+  statBonus: { atk: 31, spd: 11, mag: 4 },
+  allowedElements: ['Mars'],
+  unlocksAbility: 'demon-rend',
+};
+
+export const DRAGONS_CLAW: Equipment = {
+  id: 'dragons-claw',
+  name: "Dragon's Claw",
+  slot: 'weapon',
+  tier: 'mythril',
+  cost: 3700,
+  statBonus: { atk: 43, spd: 13, mag: 6 },
+  allowedElements: ['Mars', 'Jupiter'],
+  unlocksAbility: 'dragon-rend',
+};
+
+export const PHOENIX_TALONS: Equipment = {
+  id: 'phoenix-talons',
+  name: 'Phoenix Talons',
+  slot: 'weapon',
+  tier: 'legendary',
+  cost: 8100,
+  statBonus: { atk: 54, spd: 16, mag: 10 },
+  allowedElements: ['Mars'],
+  unlocksAbility: 'phoenix-strike',
+};
+
+// ========================================
+// WEAPONS - KATANAS (Venus/Jupiter Balance)
+// ========================================
+export const BRONZE_KATANA: Equipment = {
+  id: 'bronze-katana',
+  name: 'Bronze Katana',
+  slot: 'weapon',
+  tier: 'bronze',
+  cost: 155,
+  statBonus: { atk: 10, spd: 1 },
+  allowedElements: ['Venus', 'Jupiter'],
+};
+
+export const IRON_KATANA: Equipment = {
+  id: 'iron-katana',
+  name: 'Iron Katana',
+  slot: 'weapon',
+  tier: 'iron',
+  cost: 270,
+  statBonus: { atk: 15, spd: 2 },
+  allowedElements: ['Venus', 'Jupiter'],
+  unlocksAbility: 'katana-cut',
+};
+
+export const STEEL_KATANA: Equipment = {
+  id: 'steel-katana',
+  name: 'Steel Katana',
+  slot: 'weapon',
+  tier: 'steel',
+  cost: 640,
+  statBonus: { atk: 24, spd: 4 },
+  allowedElements: ['Venus', 'Jupiter'],
+  unlocksAbility: 'katana-strike',
+};
+
+export const MURAMASA: Equipment = {
+  id: 'muramasa',
+  name: 'Muramasa',
+  slot: 'weapon',
+  tier: 'silver',
+  cost: 1750,
+  statBonus: { atk: 36, spd: 7, mag: 3 },
+  allowedElements: ['Venus'],
+  unlocksAbility: 'cursed-blade',
+};
+
+export const KUSANAGI: Equipment = {
+  id: 'kusanagi',
+  name: 'Kusanagi',
+  slot: 'weapon',
+  tier: 'legendary',
+  cost: 8400,
+  statBonus: { atk: 60, spd: 10, mag: 8 },
+  allowedElements: ['Venus', 'Jupiter'],
+  unlocksAbility: 'divine-slash',
+};
+
+// ========================================
+// WEAPONS - SPEARS/LANCES (Venus/Jupiter)
+// ========================================
+export const BRONZE_SPEAR: Equipment = {
+  id: 'bronze-spear',
+  name: 'Bronze Spear',
+  slot: 'weapon',
+  tier: 'bronze',
+  cost: 145,
+  statBonus: { atk: 10 },
+  allowedElements: ['Venus', 'Jupiter'],
+};
+
+export const IRON_LANCE: Equipment = {
+  id: 'iron-lance',
+  name: 'Iron Lance',
+  slot: 'weapon',
+  tier: 'iron',
+  cost: 260,
+  statBonus: { atk: 15, def: 1 },
+  allowedElements: ['Venus', 'Jupiter'],
+};
+
+export const STEEL_LANCE: Equipment = {
+  id: 'steel-lance',
+  name: 'Steel Lance',
+  slot: 'weapon',
+  tier: 'steel',
+  cost: 620,
+  statBonus: { atk: 23, def: 2 },
+  allowedElements: ['Venus'],
+  unlocksAbility: 'lance-thrust',
+};
+
+export const SILVER_LANCE: Equipment = {
+  id: 'silver-lance',
+  name: 'Silver Lance',
+  slot: 'weapon',
+  tier: 'silver',
+  cost: 1700,
+  statBonus: { atk: 34, def: 3, spd: 2 },
+  allowedElements: ['Venus', 'Jupiter'],
+  unlocksAbility: 'silver-pierce',
+};
+
+export const TRIDENT: Equipment = {
+  id: 'trident',
+  name: 'Trident',
+  slot: 'weapon',
+  tier: 'mythril',
+  cost: 3600,
+  statBonus: { atk: 45, def: 4, mag: 6 },
+  allowedElements: ['Mercury'],
+  unlocksAbility: 'trident-thrust',
+};
+
+export const GUNGNIR: Equipment = {
+  id: 'gungnir',
+  name: 'Gungnir',
+  slot: 'weapon',
+  tier: 'legendary',
+  cost: 8600,
+  statBonus: { atk: 61, def: 6, spd: 5, mag: 8 },
+  allowedElements: ['Venus', 'Jupiter'],
+  unlocksAbility: 'divine-pierce',
+};
+
+// ========================================
+// WEAPONS - HAMMERS (Mars Power)
+// ========================================
+export const WAR_HAMMER: Equipment = {
+  id: 'war-hammer',
+  name: 'War Hammer',
+  slot: 'weapon',
+  tier: 'bronze',
+  cost: 165,
+  statBonus: { atk: 13, spd: -1 },
+  allowedElements: ['Mars'],
+};
+
+export const BATTLE_HAMMER: Equipment = {
+  id: 'battle-hammer',
+  name: 'Battle Hammer',
+  slot: 'weapon',
+  tier: 'iron',
+  cost: 310,
+  statBonus: { atk: 18, def: 1, spd: -1 },
+  allowedElements: ['Mars'],
+};
+
+export const GREAT_HAMMER: Equipment = {
+  id: 'great-hammer',
+  name: 'Great Hammer',
+  slot: 'weapon',
+  tier: 'steel',
+  cost: 740,
+  statBonus: { atk: 29, def: 2, spd: -2 },
+  allowedElements: ['Mars'],
+  unlocksAbility: 'hammer-smash',
+};
+
+export const MJOLNIR: Equipment = {
+  id: 'mjolnir',
+  name: 'Mjolnir',
+  slot: 'weapon',
+  tier: 'legendary',
+  cost: 9200,
+  statBonus: { atk: 66, def: 8, mag: 6, spd: -1 },
+  allowedElements: ['Mars', 'Jupiter'],
+  unlocksAbility: 'thunder-strike',
+};
+
+// ========================================
+// WEAPONS - DAGGERS (Jupiter/Venus Speed)
+// ========================================
+export const BRONZE_DAGGER: Equipment = {
+  id: 'bronze-dagger',
+  name: 'Bronze Dagger',
+  slot: 'weapon',
+  tier: 'basic',
+  cost: 85,
+  statBonus: { atk: 7, spd: 3 },
+  allowedElements: ['Jupiter', 'Venus'],
+};
+
+export const IRON_DAGGER: Equipment = {
+  id: 'iron-dagger',
+  name: 'Iron Dagger',
+  slot: 'weapon',
+  tier: 'bronze',
+  cost: 140,
+  statBonus: { atk: 9, spd: 4 },
+  allowedElements: ['Jupiter', 'Venus'],
+};
+
+export const THIEFS_BLADE: Equipment = {
+  id: 'thiefs-blade',
+  name: "Thief's Blade",
+  slot: 'weapon',
+  tier: 'iron',
+  cost: 270,
+  statBonus: { atk: 13, spd: 6 },
+  allowedElements: ['Jupiter'],
+  unlocksAbility: 'backstab',
+};
+
+export const POISONED_DAGGER: Equipment = {
+  id: 'poisoned-dagger',
+  name: 'Poisoned Dagger',
+  slot: 'weapon',
+  tier: 'steel',
+  cost: 690,
+  statBonus: { atk: 20, spd: 8 },
+  allowedElements: ['Jupiter'],
+  unlocksAbility: 'poison-strike',
+};
+
+export const STILETTO: Equipment = {
+  id: 'stiletto',
+  name: 'Stiletto',
+  slot: 'weapon',
+  tier: 'silver',
+  cost: 1550,
+  statBonus: { atk: 29, spd: 11 },
+  allowedElements: ['Jupiter'],
+  unlocksAbility: 'critical-stab',
+};
+
+export const VIPER_FANG: Equipment = {
+  id: 'viper-fang',
+  name: 'Viper Fang',
+  slot: 'weapon',
+  tier: 'mythril',
+  cost: 3500,
+  statBonus: { atk: 40, spd: 14, mag: 5 },
+  allowedElements: ['Jupiter'],
+  unlocksAbility: 'viper-strike',
+};
+
+// ========================================
+// WEAPONS - WANDS (Mercury/Jupiter Magic)
+// ========================================
+export const WOODEN_STICK: Equipment = {
+  id: 'wooden-stick',
+  name: 'Wooden Stick',
+  slot: 'weapon',
+  tier: 'basic',
+  cost: 60,
+  statBonus: { atk: 4 },
+  allowedElements: ['Mercury', 'Jupiter'],
+};
+
+export const WITCH_WAND: Equipment = {
+  id: 'witch-wand',
+  name: 'Witch Wand',
+  slot: 'weapon',
+  tier: 'iron',
+  cost: 480,
+  statBonus: { atk: 16 },
+  allowedElements: ['Mercury', 'Jupiter'],
+};
+
+export const APPRENTICE_WAND: Equipment = {
+  id: 'apprentice-wand',
+  name: 'Apprentice Wand',
+  slot: 'weapon',
+  tier: 'basic',
+  cost: 55,
+  statBonus: { atk: 2, mag: 5 },
+  allowedElements: ['Mercury', 'Jupiter'],
+};
+
+export const BRONZE_WAND: Equipment = {
+  id: 'bronze-wand',
+  name: 'Bronze Wand',
+  slot: 'weapon',
+  tier: 'bronze',
+  cost: 160,
+  statBonus: { atk: 5, mag: 9 },
+  allowedElements: ['Mercury', 'Jupiter'],
+};
+
+export const MYSTIC_WAND: Equipment = {
+  id: 'mystic-wand',
+  name: 'Mystic Wand',
+  slot: 'weapon',
+  tier: 'iron',
+  cost: 360,
+  statBonus: { atk: 8, mag: 13, pp: 6 },
+  allowedElements: ['Mercury', 'Jupiter'],
+  unlocksAbility: 'mystic-beam',
+};
+
+export const SORCERERS_WAND: Equipment = {
+  id: 'sorcerers-wand',
+  name: "Sorcerer's Wand",
+  slot: 'weapon',
+  tier: 'steel',
+  cost: 760,
+  statBonus: { atk: 13, mag: 21, pp: 10 },
+  allowedElements: ['Mercury', 'Jupiter'],
+  unlocksAbility: 'sorcery-blast',
+};
+
+export const ASTRAL_WAND: Equipment = {
+  id: 'astral-wand',
+  name: 'Astral Wand',
+  slot: 'weapon',
+  tier: 'silver',
+  cost: 1850,
+  statBonus: { atk: 19, mag: 29, pp: 16 },
+  allowedElements: ['Jupiter'],
+  unlocksAbility: 'astral-beam',
+};
+
+// ========================================
+// WEAPONS - SCYTHES (Mixed Elements)
+// ========================================
+export const BATTLE_SCYTHE: Equipment = {
+  id: 'battle-scythe',
+  name: 'Battle Scythe',
+  slot: 'weapon',
+  tier: 'steel',
+  cost: 710,
+  statBonus: { atk: 26, mag: 5, spd: 1 },
+  allowedElements: ['Mars', 'Mercury'],
+  unlocksAbility: 'reaping-slash',
+};
+
+export const DEATHS_SCYTHE: Equipment = {
+  id: 'deaths-scythe',
+  name: "Death's Scythe",
+  slot: 'weapon',
+  tier: 'mythril',
+  cost: 4100,
+  statBonus: { atk: 47, mag: 12, def: 3 },
+  allowedElements: ['Mars', 'Mercury'],
+  unlocksAbility: 'death-reap',
+};
+
+export const AETHERIC_MANTLE: Equipment = {
+  id: 'aetheric-mantle',
+  name: 'Aetheric Mantle',
+  slot: 'armor',
+  tier: 'artifact',
+  cost: 0,
+  statBonus: { def: 70, mag: 25, hp: 120, pp: 40 },
+  allowedElements: ['Mercury', 'Jupiter'],
+  elementalResist: 0.3,
+  availableIn: ['tower'],
+};
+
+// ========================================
+// ROBES (Light Armor for Mages)
+// ========================================
+export const TRAVEL_ROBE: Equipment = {
+  id: 'travel-robe',
+  name: 'Travel Robe',
+  slot: 'armor',
+  tier: 'basic',
+  cost: 60,
+  statBonus: { def: 4, mag: 3, pp: 5 },
+  allowedElements: ['Mercury', 'Jupiter'],
+};
+
+export const JERKIN: Equipment = {
+  id: 'jerkin',
+  name: 'Jerkin',
+  slot: 'armor',
+  tier: 'basic',
+  cost: 75,
+  statBonus: { def: 5, spd: 2 },
+  allowedElements: ['Jupiter', 'Venus'],
+};
+
+export const SILK_ROBE: Equipment = {
+  id: 'silk-robe',
+  name: 'Silk Robe',
+  slot: 'armor',
+  tier: 'bronze',
+  cost: 180,
+  statBonus: { def: 8, mag: 6, pp: 8 },
+  allowedElements: ['Mercury', 'Jupiter'],
+};
+
+export const CHINA_DRESS: Equipment = {
+  id: 'china-dress',
+  name: 'China Dress',
+  slot: 'armor',
+  tier: 'bronze',
+  cost: 220,
+  statBonus: { def: 9, mag: 5, spd: 3 },
+  allowedElements: ['Jupiter'],
+};
+
+export const MUNI_ROBE: Equipment = {
+  id: 'muni-robe',
+  name: 'Muni Robe',
+  slot: 'armor',
+  tier: 'iron',
+  cost: 380,
+  statBonus: { def: 13, mag: 10, pp: 12 },
+  allowedElements: ['Mercury', 'Jupiter'],
+};
+
+export const ONE_PIECE_DRESS: Equipment = {
+  id: 'one-piece-dress',
+  name: 'One-Piece Dress',
+  slot: 'armor',
+  tier: 'iron',
+  cost: 340,
+  statBonus: { def: 12, mag: 8, hp: 20 },
+  allowedElements: ['Mercury', 'Jupiter'],
+};
+
+export const COCKTAIL_DRESS: Equipment = {
+  id: 'cocktail-dress',
+  name: 'Cocktail Dress',
+  slot: 'armor',
+  tier: 'steel',
+  cost: 650,
+  statBonus: { def: 18, mag: 12, spd: 4 },
+  allowedElements: ['Jupiter'],
+};
+
+export const FEATHERED_ROBE: Equipment = {
+  id: 'feathered-robe',
+  name: 'Feathered Robe',
+  slot: 'armor',
+  tier: 'steel',
+  cost: 720,
+  statBonus: { def: 20, mag: 14, spd: 6 },
+  allowedElements: ['Jupiter'],
+};
+
+export const AEOLIAN_CASSOCK: Equipment = {
+  id: 'aeolian-cassock',
+  name: 'Aeolian Cassock',
+  slot: 'armor',
+  tier: 'silver',
+  cost: 1800,
+  statBonus: { def: 28, mag: 18, pp: 20 },
+  allowedElements: ['Jupiter'],
+  elementalResist: 0.15,
+};
+
+export const ARDAGH_ROBE: Equipment = {
+  id: 'ardagh-robe',
+  name: 'Ardagh Robe',
+  slot: 'armor',
+  tier: 'silver',
+  cost: 1950,
+  statBonus: { def: 30, mag: 20, hp: 40 },
+  allowedElements: ['Mercury', 'Jupiter'],
+  elementalResist: 0.15,
+};
+
+export const MAGICAL_CASSOCK: Equipment = {
+  id: 'magical-cassock',
+  name: 'Magical Cassock',
+  slot: 'armor',
+  tier: 'mythril',
+  cost: 4500,
+  statBonus: { def: 42, mag: 28, pp: 30 },
+  allowedElements: ['Mercury', 'Jupiter'],
+  elementalResist: 0.2,
+};
+
+export const MYSTERIOUS_ROBE: Equipment = {
+  id: 'mysterious-robe',
+  name: 'Mysterious Robe',
+  slot: 'armor',
+  tier: 'mythril',
+  cost: 4800,
+  statBonus: { def: 44, mag: 30, pp: 35 },
+  allowedElements: ['Mercury', 'Jupiter'],
+  elementalResist: 0.2,
+};
+
+export const BLESSED_ROBE: Equipment = {
+  id: 'blessed-robe',
+  name: 'Blessed Robe',
+  slot: 'armor',
+  tier: 'legendary',
+  cost: 9500,
+  statBonus: { def: 54, mag: 38, pp: 45, hp: 80 },
+  allowedElements: ['Mercury', 'Jupiter'],
+  elementalResist: 0.25,
+};
+
+export const ORACLES_ROBE: Equipment = {
+  id: 'oracles-robe',
+  name: "Oracle's Robe",
+  slot: 'armor',
+  tier: 'legendary',
+  cost: 10500,
+  statBonus: { def: 58, mag: 42, pp: 50, hp: 90 },
+  allowedElements: ['Jupiter'],
+  elementalResist: 0.3,
+};
+
+export const DRAGON_ROBE: Equipment = {
+  id: 'dragon-robe',
+  name: 'Dragon Robe',
+  slot: 'armor',
+  tier: 'artifact',
+  cost: 18000,
+  statBonus: { def: 68, mag: 50, pp: 60, hp: 100 },
+  allowedElements: ['Mercury', 'Jupiter'],
+  elementalResist: 0.35,
+};
+
+// ========================================
+// ADDITIONAL HEAVY ARMOR
+// ========================================
+export const LEATHER_ARMOR: Equipment = {
+  id: 'leather-armor',
+  name: 'Leather Armor',
+  slot: 'armor',
+  tier: 'basic',
+  cost: 100,
+  statBonus: { def: 7, hp: 12 },
+  allowedElements: ['Venus', 'Mars', 'Jupiter'],
+};
+
+export const ARMORED_SHELL: Equipment = {
+  id: 'armored-shell',
+  name: 'Armored Shell',
+  slot: 'armor',
+  tier: 'iron',
+  cost: 450,
+  statBonus: { def: 18, hp: 35, spd: -2 },
+  allowedElements: ['Venus'],
+};
+
+export const IXION_MAIL: Equipment = {
+  id: 'ixion-mail',
+  name: 'Ixion Mail',
+  slot: 'armor',
+  tier: 'silver',
+  cost: 2100,
+  statBonus: { def: 34, hp: 55, spd: 4 },
+  allowedElements: ['Jupiter'],
+  elementalResist: 0.15,
+};
+
+export const EREBUS_ARMOR: Equipment = {
+  id: 'erebus-armor',
+  name: 'Erebus Armor',
+  slot: 'armor',
+  tier: 'mythril',
+  cost: 5500,
+  statBonus: { def: 50, hp: 90, atk: 10 },
+  allowedElements: ['Mars', 'Venus'],
+  elementalResist: 0.2,
+};
+
+// ========================================
+// ADDITIONAL HELMS
+// ========================================
+export const FEAR_HELM: Equipment = {
+  id: 'fear-helm',
+  name: 'Fear Helm',
+  slot: 'helm',
+  tier: 'iron',
+  cost: 320,
+  statBonus: { def: 11, atk: 4 },
+  allowedElements: ['Mars'],
+};
+
+export const MILLENIUM_HELM: Equipment = {
+  id: 'millenium-helm',
+  name: 'Millenium Helm',
+  slot: 'helm',
+  tier: 'artifact',
+  cost: 19000,
+  statBonus: { def: 55, mag: 22, pp: 40, hp: 50 },
+  allowedElements: ['Venus', 'Mercury', 'Jupiter'],
+  elementalResist: 0.3,
+};
+
+// ========================================
+// ADDITIONAL ARMOR VARIANTS (Tier Progression Fillers)
+// ========================================
+
+// Light Armor Variants
+export const PADDED_VEST: Equipment = {
+  id: 'padded-vest',
+  name: 'Padded Vest',
+  slot: 'armor',
+  tier: 'basic',
+  cost: 90,
+  statBonus: { def: 6, hp: 8, spd: 1 },
+  allowedElements: ['Venus', 'Jupiter'],
+};
+
+export const RANGER_JERKIN: Equipment = {
+  id: 'ranger-jerkin',
+  name: 'Ranger Jerkin',
+  slot: 'armor',
+  tier: 'bronze',
+  cost: 190,
+  statBonus: { def: 9, spd: 4, hp: 12 },
+  allowedElements: ['Jupiter'],
+};
+
+export const SCOUT_ARMOR: Equipment = {
+  id: 'scout-armor',
+  name: 'Scout Armor',
+  slot: 'armor',
+  tier: 'iron',
+  cost: 360,
+  statBonus: { def: 14, spd: 5, hp: 18 },
+  allowedElements: ['Jupiter', 'Venus'],
+};
+
+export const BATTLE_VEST: Equipment = {
+  id: 'battle-vest',
+  name: 'Battle Vest',
+  slot: 'armor',
+  tier: 'steel',
+  cost: 680,
+  statBonus: { def: 21, atk: 6, hp: 30 },
+  allowedElements: ['Mars', 'Venus'],
+};
+
+// Medium Armor Variants
+export const REINFORCED_MAIL: Equipment = {
+  id: 'reinforced-mail',
+  name: 'Reinforced Mail',
+  slot: 'armor',
+  tier: 'bronze',
+  cost: 240,
+  statBonus: { def: 12, hp: 20 },
+  allowedElements: ['Venus', 'Mars'],
+};
+
+export const GUARDIAN_MAIL: Equipment = {
+  id: 'guardian-mail',
+  name: 'Guardian Mail',
+  slot: 'armor',
+  tier: 'iron',
+  cost: 400,
+  statBonus: { def: 21, hp: 30 },
+  allowedElements: ['Venus'],
+};
+
+export const KNIGHT_ARMOR: Equipment = {
+  id: 'knight-armor',
+  name: 'Knight Armor',
+  slot: 'armor',
+  tier: 'steel',
+  cost: 850,
+  statBonus: { def: 25, hp: 45 },
+  allowedElements: ['Venus'],
+};
+
+export const CRUSADER_ARMOR: Equipment = {
+  id: 'crusader-armor',
+  name: 'Crusader Armor',
+  slot: 'armor',
+  tier: 'silver',
+  cost: 2050,
+  statBonus: { def: 36, hp: 65 },
+  allowedElements: ['Venus'],
+  elementalResist: 0.1,
+};
+
+export const CHAMPION_PLATE: Equipment = {
+  id: 'champion-plate',
+  name: 'Champion Plate',
+  slot: 'armor',
+  tier: 'mythril',
+  cost: 4900,
+  statBonus: { def: 49, hp: 88, atk: 6 },
+  allowedElements: ['Venus', 'Mars'],
+  elementalResist: 0.15,
+};
+
+// Specialized Armor
+export const WIND_ARMOR: Equipment = {
+  id: 'wind-armor',
+  name: 'Wind Armor',
+  slot: 'armor',
+  tier: 'silver',
+  cost: 1900,
+  statBonus: { def: 29, spd: 8, hp: 38 },
+  allowedElements: ['Jupiter'],
+  elementalResist: 0.15,
+};
+
+export const STORM_MAIL: Equipment = {
+  id: 'storm-mail',
+  name: 'Storm Mail',
+  slot: 'armor',
+  tier: 'mythril',
+  cost: 4700,
+  statBonus: { def: 43, spd: 10, mag: 12, hp: 70 },
+  allowedElements: ['Jupiter'],
+  elementalResist: 0.2,
+};
+
+export const THUNDER_ARMOR: Equipment = {
+  id: 'thunder-armor',
+  name: 'Thunder Armor',
+  slot: 'armor',
+  tier: 'legendary',
+  cost: 9800,
+  statBonus: { def: 57, spd: 14, mag: 18, hp: 95 },
+  allowedElements: ['Jupiter'],
+  elementalResist: 0.25,
+};
+
+// Heavy Tank Armor
+export const FORTRESS_ARMOR: Equipment = {
+  id: 'fortress-armor',
+  name: 'Fortress Armor',
+  slot: 'armor',
+  tier: 'legendary',
+  cost: 10800,
+  statBonus: { def: 64, hp: 120, spd: -3 },
+  allowedElements: ['Venus'],
+  elementalResist: 0.25,
+};
+
+export const TITAN_MAIL: Equipment = {
+  id: 'titan-mail',
+  name: 'Titan Mail',
+  slot: 'armor',
+  tier: 'artifact',
+  cost: 20500,
+  statBonus: { def: 77, hp: 145, atk: 10 },
+  allowedElements: ['Venus', 'Mars'],
+  elementalResist: 0.3,
+};
+
+// Additional Helms
+export const COMBAT_HELM: Equipment = {
+  id: 'combat-helm',
+  name: 'Combat Helm',
+  slot: 'helm',
+  tier: 'bronze',
+  cost: 160,
+  statBonus: { def: 8, hp: 10 },
+  allowedElements: ['Venus', 'Mars'],
+};
+
+export const BATTLE_HELM: Equipment = {
+  id: 'battle-helm',
+  name: 'Battle Helm',
+  slot: 'helm',
+  tier: 'steel',
+  cost: 520,
+  statBonus: { def: 15, hp: 18, atk: 2 },
+  allowedElements: ['Venus', 'Mars'],
+};
+
+export const TEMPLAR_HELM: Equipment = {
+  id: 'templar-helm',
+  name: 'Templar Helm',
+  slot: 'helm',
+  tier: 'silver',
+  cost: 1500,
+  statBonus: { def: 23, hp: 25 },
+  allowedElements: ['Venus'],
+};
+
+export const CRUSADER_HELM: Equipment = {
+  id: 'crusader-helm',
+  name: 'Crusader Helm',
+  slot: 'helm',
+  tier: 'mythril',
+  cost: 3700,
+  statBonus: { def: 38, hp: 35 },
+  allowedElements: ['Venus'],
+  elementalResist: 0.1,
+};
+
+export const CHAMPION_HELM: Equipment = {
+  id: 'champion-helm',
+  name: 'Champion Helm',
+  slot: 'helm',
+  tier: 'legendary',
+  cost: 8800,
+  statBonus: { def: 44, hp: 45, atk: 8 },
+  allowedElements: ['Venus', 'Mars'],
+  elementalResist: 0.15,
+};
+
+// ========================================
+// EQUIPMENT REGISTRY
+// ========================================
+export const EQUIPMENT: Record<string, Equipment> = {
+  // Swords
+  'wooden-sword': WOODEN_SWORD,
+  'bronze-sword': BRONZE_SWORD,
+  'iron-sword': IRON_SWORD,
+  'steel-sword': STEEL_SWORD,
+  'silver-blade': SILVER_BLADE,
+  'mythril-blade': MYTHRIL_BLADE,
+  'gaia-blade': GAIA_BLADE,
+  'sol-blade': SOL_BLADE,
+  'eclipse-blade': ECLIPSE_BLADE,
+
+  // Axes
+  'wooden-axe': WOODEN_AXE,
+  'battle-axe': BATTLE_AXE,
+  'great-axe': GREAT_AXE,
+  'titans-axe': TITANS_AXE,
+
+  // Maces
+  'mace': MACE,
+  'heavy-mace': HEAVY_MACE,
+  'demon-mace': DEMON_MACE,
+  'mythril-axe': MYTHRIL_AXE,
+
+  // Staves
+  'wooden-staff': WOODEN_STAFF,
+  'magic-rod': MAGIC_ROD,
+  'shaman-rod': SHAMAN_ROD,
+  'crystal-rod': CRYSTAL_ROD,
+  'zodiac-wand': ZODIAC_WAND,
+  'staff-of-ages': STAFF_OF_AGES,
+  'mythril-staff': MYTHRIL_STAFF,
+  'mythril-lance': MYTHRIL_LANCE,
+
+  // Light Blades
+  'short-sword': SHORT_SWORD,
+  'machete': MACHETE,
+  'battle-rapier': BATTLE_RAPIER,
+  'elven-rapier': ELVEN_RAPIER,
+  'assassin-blade': ASSASSIN_BLADE,
+  'swift-blade': SWIFT_BLADE,
+  'ninja-blade': NINJA_BLADE,
+
+  // Long Swords
+  'long-sword': LONG_SWORD,
+  'broad-sword': BROAD_SWORD,
+  'claymore': CLAYMORE,
+  'great-sword': GREAT_SWORD,
+  'rune-blade': RUNE_BLADE,
+  'masamune': MASAMUNE,
+  'excalibur': EXCALIBUR,
+
+  // Additional Axes
+  'broad-axe': BROAD_AXE,
+  'viking-axe': VIKING_AXE,
+  'mighty-axe': MIGHTY_AXE,
+  'dragon-axe': DRAGON_AXE,
+  'gaias-axe': GAIAS_AXE,
+
+  // Additional Staves
+  'meditation-rod': MEDITATION_ROD,
+  'frost-wand': FROST_WAND,
+  'cloud-wand': CLOUD_WAND,
+  'nebula-wand': NEBULA_WAND,
+  'angelic-ankh': ANGELIC_ANKH,
+  'staff-of-anubis': STAFF_OF_ANUBIS,
+
+  // Additional Maces
+  'battle-mace': BATTLE_MACE,
+  'war-mace': WAR_MACE,
+  'blessed-mace': BLESSED_MACE,
+  'comet-mace': COMET_MACE,
+  'thanatos-mace': THANATOS_MACE,
+
+  // Armor
+  'cotton-shirt': COTTON_SHIRT,
+  'leather-vest': LEATHER_VEST,
+  'padded-vest': PADDED_VEST,
+  'leather-armor': LEATHER_ARMOR,
+  'bronze-armor': BRONZE_ARMOR,
+  'chain-mail': CHAIN_MAIL,
+  'reinforced-mail': REINFORCED_MAIL,
+  'ranger-jerkin': RANGER_JERKIN,
+  'iron-armor': IRON_ARMOR,
+  'guardian-mail': GUARDIAN_MAIL,
+  'scout-armor': SCOUT_ARMOR,
+  'plate-mail': PLATE_MAIL,
+  'armored-shell': ARMORED_SHELL,
+  'steel-armor': STEEL_ARMOR,
+  'battle-vest': BATTLE_VEST,
+  'knight-armor': KNIGHT_ARMOR,
+  'silver-armor': SILVER_ARMOR,
+  'wind-armor': WIND_ARMOR,
+  'crusader-armor': CRUSADER_ARMOR,
+  'spirit-armor': SPIRIT_ARMOR,
+  'ixion-mail': IXION_MAIL,
+  'mythril-armor': MYTHRIL_ARMOR,
+  'storm-mail': STORM_MAIL,
+  'champion-plate': CHAMPION_PLATE,
+  'demon-mail': DEMON_MAIL,
+  'erebus-armor': EREBUS_ARMOR,
+  'dragon-scales': DRAGON_SCALES,
+  'dragon-mail': DRAGON_MAIL,
+  'thunder-armor': THUNDER_ARMOR,
+  'psynergy-armor': PSYNERGY_ARMOR,
+  'fortress-armor': FORTRESS_ARMOR,
+  'spiked-armor': SPIKED_ARMOR,
+  'stealth-armor': STEALTH_ARMOR,
+  'phantasmal-mail': PHANTASMAL_MAIL,
+  'xylion-armor': XYLION_ARMOR,
+  'titan-mail': TITAN_MAIL,
+  'valkyrie-mail': VALKYRIE_MAIL,
+  'asuras-armor': ASURAS_ARMOR,
+  'chronos-mail': CHRONOS_MAIL,
+  'planet-armor': PLANET_ARMOR,
+  'glacial-robes': GLACIAL_ROBES,
+
+  // Robes
+  'travel-robe': TRAVEL_ROBE,
+  'jerkin': JERKIN,
+  'silk-robe': SILK_ROBE,
+  'china-dress': CHINA_DRESS,
+  'muni-robe': MUNI_ROBE,
+  'one-piece-dress': ONE_PIECE_DRESS,
+  'cocktail-dress': COCKTAIL_DRESS,
+  'feathered-robe': FEATHERED_ROBE,
+  'aeolian-cassock': AEOLIAN_CASSOCK,
+  'ardagh-robe': ARDAGH_ROBE,
+  'magical-cassock': MAGICAL_CASSOCK,
+  'mysterious-robe': MYSTERIOUS_ROBE,
+  'blessed-robe': BLESSED_ROBE,
+  'oracles-robe': ORACLES_ROBE,
+  'dragon-robe': DRAGON_ROBE,
+
+  // Helms
+  'leather-cap': LEATHER_CAP,
+  'cloth-cap': CLOTH_CAP,
+  'open-helm': OPEN_HELM,
+  'bronze-helm': BRONZE_HELM,
+  'combat-helm': COMBAT_HELM,
+  'adepts-helm': ADEPTS_HELM,
+  'iron-helm': IRON_HELM,
+  'fear-helm': FEAR_HELM,
+  'viking-helm': VIKING_HELM,
+  'steel-helm': STEEL_HELM,
+  'battle-helm': BATTLE_HELM,
+  'warriors-helm': WARRIORS_HELM,
+  'silver-circlet': SILVER_CIRCLET,
+  'silver-helm': SILVER_HELM,
+  'templar-helm': TEMPLAR_HELM,
+  'knights-helm': KNIGHTS_HELM,
+  'mythril-crown': MYTHRIL_CROWN,
+  'mythril-helm': MYTHRIL_HELM,
+  'crusader-helm': CRUSADER_HELM,
+  'oracles-crown': ORACLES_CROWN,
+  'dragon-helm': DRAGON_HELM,
+  'champion-helm': CHAMPION_HELM,
+  'minerva-helm': MINERVA_HELM,
+  'glory-helm': GLORY_HELM,
+  'gloria-helm': GLORIA_HELM,
+  'millenium-helm': MILLENIUM_HELM,
+  'gaia-helm': GAIA_HELM,
+  'storm-circlet': STORM_CIRCLET,
+  'wooden-cap': WOODEN_CAP,
+  'mail-cap': MAIL_CAP,
+  'ninja-hood': NINJA_HOOD,
+  'lure-cap': LURE_CAP,
+  'prophets-hat': PROPHETS_HAT,
+  'circlet': CIRCLET,
+  'mythril-circlet': MYTHRIL_CIRCLET,
+  'platinum-circlet': PLATINUM_CIRCLET,
+  'astral-circlet': ASTRAL_CIRCLET,
+  'berserker-band': BERSERKER_BAND,
+  'brilliant-circlet': BRILLIANT_CIRCLET,
+  'clarity-circlet': CLARITY_CIRCLET,
+  'psychic-circlet': PSYCHIC_CIRCLET,
+
+  // Boots
+  'leather-boots': LEATHER_BOOTS,
+  'fur-boots': FUR_BOOTS,
+  'safety-boots': SAFETY_BOOTS,
+  'iron-boots': IRON_BOOTS,
+  'turtle-boots': TURTLE_BOOTS,
+  'steel-greaves': STEEL_GREAVES,
+  'knights-greave': KNIGHTS_GREAVE,
+  'silver-greaves': SILVER_GREAVES,
+  'ninja-sandals': NINJA_SANDALS,
+  'mythril-greaves': MYTHRIL_GREAVES,
+  'golden-boots': GOLDEN_BOOTS,
+  'hyper-boots': HYPER_BOOTS,
+  'quick-boots': QUICK_BOOTS,
+  'dragon-boots': DRAGON_BOOTS,
+  'hermes-sandals': HERMES_SANDALS,
+
+  // Accessories
+  'power-ring': POWER_RING,
+  'guardian-ring': GUARDIAN_RING,
+  'adepts-ring': ADEPTS_RING,
+  'war-gloves': WAR_GLOVES,
+  'spirit-gloves': SPIRIT_GLOVES,
+  'lucky-medal': LUCKY_MEDAL,
+  'elemental-star': ELEMENTAL_STAR,
+  'dragons-eye': DRAGONS_EYE,
+  'cleric-ring': CLERIC_RING,
+  'iris-robe': IRIS_ROBE,
+  'cosmos-shield': COSMOS_SHIELD,
+  'mythril-gauntlets': MYTHRIL_GAUNTLETS,
+  'earth-warden-shield': EARTH_WARDEN_SHIELD,
+  'inferno-gauntlets': INFERNO_GAUNTLETS,
+
+  // Additional Rings
+  'speed-ring': SPEED_RING,
+  'war-ring': WAR_RING,
+  'soul-ring': SOUL_RING,
+  'healing-ring': HEALING_RING,
+  'stardust-ring': STARDUST_RING,
+  'golden-ring': GOLDEN_RING,
+  'rainbow-ring': RAINBOW_RING,
+  'unicorn-ring': UNICORN_RING,
+  'fairy-ring': FAIRY_RING,
+  'spirit-ring': SPIRIT_RING,
+  'aroma-ring': AROMA_RING,
+  'sleep-ring': SLEEP_RING,
+
+  // Bracelets & Armlets
+  'leather-armlet': LEATHER_ARMLET,
+  'guardian-armlet': GUARDIAN_ARMLET,
+  'silver-armlet': SILVER_ARMLET,
+  'mythril-armlet': MYTHRIL_ARMLET,
+  'heavy-armlet': HEAVY_ARMLET,
+  'spirit-armlet': SPIRIT_ARMLET,
+  'virtuous-armlet': VIRTUOUS_ARMLET,
+  'bone-armlet': BONE_ARMLET,
+  'clear-bracelet': CLEAR_BRACELET,
+  'armlet': ARMLET,
+  'jesters-armlet': JESTERS_ARMLET,
+  'ledas-bracelet': LEDAS_BRACELET,
+
+  // Shields
+  'wooden-shield': WOODEN_SHIELD,
+  'bronze-shield': BRONZE_SHIELD,
+  'iron-shield': IRON_SHIELD,
+  'knights-shield': KNIGHTS_SHIELD,
+  'dragon-shield': DRAGON_SHIELD,
+  'earth-shield': EARTH_SHIELD,
+  'flame-shield': FLAME_SHIELD,
+  'terra-shield': TERRA_SHIELD,
+  'luna-shield': LUNA_SHIELD,
+  'mirrored-shield': MIRRORED_SHIELD,
+  'aegis-shield': AEGIS_SHIELD,
+  'fujin-shield': FUJIN_SHIELD,
+  'dragon-shield-2': DRAGON_SHIELD_2,
+
+  // Element-specific weapons
+  'flame-branded-axe': FLAME_BRANDED_AXE,
+  'frost-scepter': FROST_SCEPTER,
+  'thunderbolt-bow': THUNDERBOLT_BOW,
+
+  // Bows
+  'hunting-bow': HUNTING_BOW,
+  'composite-bow': COMPOSITE_BOW,
+  'longbow': LONGBOW,
+  'elven-bow': ELVEN_BOW,
+  'artemis-bow': ARTEMIS_BOW,
+  'gale-bow': GALE_BOW,
+  'hurricane-bow': HURRICANE_BOW,
+
+  // Claws
+  'iron-claws': IRON_CLAWS,
+  'steel-claws': STEEL_CLAWS,
+  'tigers-claw': TIGERS_CLAW,
+  'demon-claws': DEMON_CLAWS,
+  'dragons-claw': DRAGONS_CLAW,
+  'phoenix-talons': PHOENIX_TALONS,
+
+  // Katanas
+  'bronze-katana': BRONZE_KATANA,
+  'iron-katana': IRON_KATANA,
+  'steel-katana': STEEL_KATANA,
+  'muramasa': MURAMASA,
+  'kusanagi': KUSANAGI,
+
+  // Spears/Lances
+  'bronze-spear': BRONZE_SPEAR,
+  'iron-lance': IRON_LANCE,
+  'steel-lance': STEEL_LANCE,
+  'silver-lance': SILVER_LANCE,
+  'trident': TRIDENT,
+  'gungnir': GUNGNIR,
+
+  // Hammers
+  'war-hammer': WAR_HAMMER,
+  'battle-hammer': BATTLE_HAMMER,
+  'great-hammer': GREAT_HAMMER,
+  'mjolnir': MJOLNIR,
+
+  // Daggers
+  'bronze-dagger': BRONZE_DAGGER,
+  'iron-dagger': IRON_DAGGER,
+  'thiefs-blade': THIEFS_BLADE,
+  'poisoned-dagger': POISONED_DAGGER,
+  'stiletto': STILETTO,
+  'viper-fang': VIPER_FANG,
+
+  // Wands
+  'wooden-stick': WOODEN_STICK,
+  'apprentice-wand': APPRENTICE_WAND,
+  'bronze-wand': BRONZE_WAND,
+  'mystic-wand': MYSTIC_WAND,
+  'sorcerers-wand': SORCERERS_WAND,
+  'astral-wand': ASTRAL_WAND,
+  'witch-wand': WITCH_WAND,
+
+  // Scythes
+  'battle-scythe': BATTLE_SCYTHE,
+  'deaths-scythe': DEATHS_SCYTHE,
+
+  // Tower-exclusive items
+  'storm-cleaver': STORM_CLEAVER,
+  'frost-reaver': FROST_REAVER,
+  'volcanic-hammer': VOLCANIC_HAMMER,
+  'gaia-greatshield': GAIA_GREATSHIELD,
+  'tempest-armor': TEMPEST_ARMOR,
+  'glacier-mail': GLACIER_MAIL,
+  'inferno-plate': INFERNO_PLATE,
+  'stormking-crown': STORMKING_CROWN,
+  'frostqueen-tiara': FROSTQUEEN_TIARA,
+  'volcanic-visor': VOLCANIC_VISOR,
+  'windstrider-boots': WINDSTRIDER_BOOTS,
+  'tidal-treads': TIDAL_TREADS,
+  'tower-champions-ring': TOWER_CHAMPIONS_RING,
+  'tower-masters-medallion': TOWER_MASTERS_MEDALLION,
+  'astral-blade': ASTRAL_BLADE,
+  'shadowflame-staff': SHADOWFLAME_STAFF,
+  'aetheric-mantle': AETHERIC_MANTLE,
+};
+
+// ========================================
+// CONSUMABLES
+// ========================================
+
+// Healing Items
+export const HERB: Consumable = {
+  id: 'herb',
+  name: 'Herb',
+  type: 'consumable',
+  effect: 'heal',
+  value: 50,
+  cost: 10,
+};
+
+export const POTION: Consumable = {
+  id: 'potion',
+  name: 'Potion',
+  type: 'consumable',
+  effect: 'heal',
+  value: 100,
+  cost: 25,
+};
+
+export const VIAL: Consumable = {
+  id: 'vial',
+  name: 'Vial',
+  type: 'consumable',
+  effect: 'heal',
+  value: 150,
+  cost: 40,
+};
+
+export const ELIXIR: Consumable = {
+  id: 'elixir',
+  name: 'Elixir',
+  type: 'consumable',
+  effect: 'heal',
+  value: 300,
+  cost: 100,
+};
+
+export const WATER_OF_LIFE: Consumable = {
+  id: 'water-of-life',
+  name: 'Water of Life',
+  type: 'consumable',
+  effect: 'revive',
+  value: 100,
+  cost: 150,
+};
+
+export const HERMES_WATER: Consumable = {
+  id: 'hermes-water',
+  name: 'Hermes Water',
+  type: 'consumable',
+  effect: 'buff',
+  value: 50,
+  cost: 75,
+};
+
+export const MIST_POTION: Consumable = {
+  id: 'mist-potion',
+  name: 'Mist Potion',
+  type: 'consumable',
+  effect: 'buff',
+  value: 30,
+  cost: 50,
+};
+
+export const PSY_CRYSTAL: Consumable = {
+  id: 'psy-crystal',
+  name: 'Psy Crystal',
+  type: 'consumable',
+  effect: 'heal',
+  value: 200,
+  cost: 60,
+};
+
+export const ANTIDOTE: Consumable = {
+  id: 'antidote',
+  name: 'Antidote',
+  type: 'consumable',
+  effect: 'cure',
+  value: 1,
+  cost: 20,
+};
+
+export const CORN: Consumable = {
+  id: 'corn',
+  name: 'Corn',
+  type: 'consumable',
+  effect: 'heal',
+  value: 30,
+  cost: 5,
+};
+
+export const NUT: Consumable = {
+  id: 'nut',
+  name: 'Nut',
+  type: 'consumable',
+  effect: 'heal',
+  value: 25,
+  cost: 5,
+};
+
+// Battle Items
+export const BRAMBLE_SEED: Consumable = {
+  id: 'bramble-seed',
+  name: 'Bramble Seed',
+  type: 'consumable',
+  effect: 'damage',
+  value: 40,
+  cost: 30,
+};
+
+export const CRYSTAL_POWDER: Consumable = {
+  id: 'crystal-powder',
+  name: 'Crystal Powder',
+  type: 'consumable',
+  effect: 'damage',
+  value: 60,
+  cost: 50,
+};
+
+export const OIL_DROP: Consumable = {
+  id: 'oil-drop',
+  name: 'Oil Drop',
+  type: 'consumable',
+  effect: 'damage',
+  value: 50,
+  cost: 35,
+};
+
+export const SLEEP_BOMB: Consumable = {
+  id: 'sleep-bomb',
+  name: 'Sleep Bomb',
+  type: 'consumable',
+  effect: 'buff',
+  value: 20,
+  cost: 40,
+};
+
+export const SMOKE_BOMB: Consumable = {
+  id: 'smoke-bomb',
+  name: 'Smoke Bomb',
+  type: 'consumable',
+  effect: 'buff',
+  value: 15,
+  cost: 30,
+};
+
+export const WEASELS_CLAW: Consumable = {
+  id: 'weasels-claw',
+  name: "Weasel's Claw",
+  type: 'consumable',
+  effect: 'damage',
+  value: 35,
+  cost: 25,
+};
+
+// Important/Quest Items
+export const ANCHOR_CHARM: Consumable = {
+  id: 'anchor-charm',
+  name: 'Anchor Charm',
+  type: 'consumable',
+  effect: 'buff',
+  value: 100,
+  cost: 200,
+};
+
+export const BLACK_ORB: Consumable = {
+  id: 'black-orb',
+  name: 'Black Orb',
+  type: 'consumable',
+  effect: 'buff',
+  value: 150,
+  cost: 500,
+};
+
+export const BLUE_KEY: Consumable = {
+  id: 'blue-key',
+  name: 'Blue Key',
+  type: 'consumable',
+  effect: 'buff',
+  value: 1,
+  cost: 0,
+};
+
+export const BOAT_TICKET: Consumable = {
+  id: 'boat-ticket',
+  name: 'Boat Ticket',
+  type: 'consumable',
+  effect: 'buff',
+  value: 1,
+  cost: 50,
+};
+
+export const BONE: Consumable = {
+  id: 'bone',
+  name: 'Bone',
+  type: 'consumable',
+  effect: 'buff',
+  value: 10,
+  cost: 5,
+};
+
+export const CELL_KEY: Consumable = {
+  id: 'cell-key',
+  name: 'Cell Key',
+  type: 'consumable',
+  effect: 'buff',
+  value: 1,
+  cost: 0,
+};
+
+export const DRAGONS_EYE_CONSUMABLE: Consumable = {
+  id: 'dragons-eye-consumable',
+  name: "Dragon's Eye (Consumable)",
+  type: 'consumable',
+  effect: 'buff',
+  value: 200,
+  cost: 1000,
+};
+
+export const EMPTY_BOTTLE: Consumable = {
+  id: 'empty-bottle',
+  name: 'Empty Bottle',
+  type: 'consumable',
+  effect: 'buff',
+  value: 1,
+  cost: 5,
+};
+
+export const JUPITER_STAR: Consumable = {
+  id: 'jupiter-star',
+  name: 'Jupiter Star',
+  type: 'consumable',
+  effect: 'buff',
+  value: 100,
+  cost: 300,
+};
+
+export const MARS_STAR: Consumable = {
+  id: 'mars-star',
+  name: 'Mars Star',
+  type: 'consumable',
+  effect: 'buff',
+  value: 100,
+  cost: 300,
+};
+
+export const MERCURY_STAR: Consumable = {
+  id: 'mercury-star',
+  name: 'Mercury Star',
+  type: 'consumable',
+  effect: 'buff',
+  value: 100,
+  cost: 300,
+};
+
+export const MYSTIC_DRAUGHT: Consumable = {
+  id: 'mystic-draught',
+  name: 'Mystic Draught',
+  type: 'consumable',
+  effect: 'heal',
+  value: 500,
+  cost: 250,
+};
+
+export const MYTHRIL_BAG: Consumable = {
+  id: 'mythril-bag',
+  name: 'Mythril Bag',
+  type: 'consumable',
+  effect: 'buff',
+  value: 50,
+  cost: 400,
+};
+
+export const RED_KEY: Consumable = {
+  id: 'red-key',
+  name: 'Red Key',
+  type: 'consumable',
+  effect: 'buff',
+  value: 1,
+  cost: 0,
+};
+
+export const SMALL_JEWEL: Consumable = {
+  id: 'small-jewel',
+  name: 'Small Jewel',
+  type: 'consumable',
+  effect: 'buff',
+  value: 100,
+  cost: 150,
+};
+
+export const VENUS_STAR: Consumable = {
+  id: 'venus-star',
+  name: 'Venus Star',
+  type: 'consumable',
+  effect: 'buff',
+  value: 100,
+  cost: 300,
+};
+
+// Other Consumables
+export const APPLE: Consumable = {
+  id: 'apple',
+  name: 'Apple',
+  type: 'consumable',
+  effect: 'heal',
+  value: 40,
+  cost: 8,
+};
+
+export const COOKIE: Consumable = {
+  id: 'cookie',
+  name: 'Cookie',
+  type: 'consumable',
+  effect: 'heal',
+  value: 35,
+  cost: 7,
+};
+
+export const GAME_TICKET: Consumable = {
+  id: 'game-ticket',
+  name: 'Game Ticket',
+  type: 'consumable',
+  effect: 'buff',
+  value: 1,
+  cost: 20,
+};
+
+export const HARD_NUT: Consumable = {
+  id: 'hard-nut',
+  name: 'Hard Nut',
+  type: 'consumable',
+  effect: 'heal',
+  value: 50,
+  cost: 10,
+};
+
+export const LUCKY_MEDAL_CONSUMABLE: Consumable = {
+  id: 'lucky-medal-consumable',
+  name: 'Lucky Medal (Consumable)',
+  type: 'consumable',
+  effect: 'buff',
+  value: 75,
+  cost: 100,
+};
+
+export const LUCKY_PEPPER: Consumable = {
+  id: 'lucky-pepper',
+  name: 'Lucky Pepper',
+  type: 'consumable',
+  effect: 'buff',
+  value: 50,
+  cost: 60,
+};
+
+export const MINT: Consumable = {
+  id: 'mint',
+  name: 'Mint',
+  type: 'consumable',
+  effect: 'cure',
+  value: 1,
+  cost: 15,
+};
+
+export const POWER_BREAD: Consumable = {
+  id: 'power-bread',
+  name: 'Power Bread',
+  type: 'consumable',
+  effect: 'buff',
+  value: 40,
+  cost: 50,
+};
+
+export const SACRED_FEATHER: Consumable = {
+  id: 'sacred-feather',
+  name: 'Sacred Feather',
+  type: 'consumable',
+  effect: 'revive',
+  value: 200,
+  cost: 300,
+};

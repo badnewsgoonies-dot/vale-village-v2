@@ -127,9 +127,9 @@ export function normalizeUnitForFloor(
   curve: NormalizationCurve = 'stepped'
 ): NormalizedUnit {
   // Use floor's explicit normalizedLevel if available, otherwise calculate
-  const targetLevel = hasNormalizedLevelOverride(floor)
-    ? floor.normalizedLevel
-    : calculateFloorTargetLevel(floor.floorNumber, curve);
+  const targetLevel =
+    (floor as any).normalizedLevel ??
+    calculateFloorTargetLevel(floor.floorNumber, curve);
 
   const normalizedStats = calculateLevelScaledStats(
     unit.baseStats,
@@ -168,12 +168,6 @@ export function normalizePartyForFloor(
   curve: NormalizationCurve = 'stepped'
 ): NormalizedUnit[] {
   return party.map(unit => normalizeUnitForFloor(unit, floor, curve));
-}
-
-function hasNormalizedLevelOverride(
-  floor: TowerFloor
-): floor is TowerFloor & { normalizedLevel: number } {
-  return typeof (floor as { normalizedLevel?: unknown }).normalizedLevel === 'number';
 }
 
 /**

@@ -5,7 +5,6 @@
 
 import type { Team } from './Team';
 import type { Unit } from './Unit';
-import type { SerializedPRNG } from '../random/prng';
 import { createEmptyQueue } from '../constants';
 import { updateTeam } from './Team';
 import { mergeDjinnAbilitiesIntoUnit } from '../algorithms/djinnAbilities';
@@ -144,9 +143,6 @@ export interface BattleState extends BattleTurnOrder, BattleQueue, BattleProgres
 
   /** Djinn recovery timers: djinnId → turns until recovery */
   djinnRecoveryTimers: Record<string, number>; // Plain object instead of Map
-
-  /** Optional RNG snapshot for deterministic mid-battle resumes */
-  rngSnapshot?: SerializedPRNG;
 }
 
 /**

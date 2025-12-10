@@ -51,9 +51,7 @@ export const createStorySlice: StateCreator<
       // Update team if Djinn was granted
       if (result.djinnGranted) {
         get().updateTeam(result.team);
-        if (import.meta.env.DEV) {
-          console.log(`🎉 Djinn ${result.djinnGranted} granted from story flag: ${key}`);
-        }
+        console.log(`🎉 Djinn ${result.djinnGranted} granted from story flag: ${key}`);
       }
     } else {
       // No team available, just update story
@@ -84,9 +82,7 @@ export const createStorySlice: StateCreator<
           // Update team if Djinn was granted
           if (djinnResult.djinnGranted) {
             get().updateTeam(djinnResult.team);
-            if (import.meta.env.DEV) {
-              console.log(`🎉 Djinn ${djinnResult.djinnGranted} granted from encounter: ${e.encounterId}`);
-            }
+            console.log(`🎉 Djinn ${djinnResult.djinnGranted} granted from encounter: ${e.encounterId}`);
           }
         }
 
@@ -101,9 +97,7 @@ export const createStorySlice: StateCreator<
         // Add recruited unit to roster if applicable
         if (unitResult.recruitedUnit) {
           get().addUnitToRoster(unitResult.recruitedUnit);
-          if (import.meta.env.DEV) {
-            console.log(`🎉 Unit ${unitResult.recruitedUnit.name} recruited from story join: ${e.encounterId}`);
-          }
+          console.log(`🎉 Unit ${unitResult.recruitedUnit.name} recruited from story join: ${e.encounterId}`);
         }
 
         const adv = advanceChapter(st, flagKey);
@@ -122,3 +116,4 @@ export const createStorySlice: StateCreator<
     _set({ story: st });
   },
 });
+

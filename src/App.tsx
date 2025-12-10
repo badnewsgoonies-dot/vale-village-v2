@@ -6,24 +6,13 @@ import { useGameStore, ScreenType, ModalType, GameStore } from './store/gameStor
 
 import { TitleScreen } from './screens/TitleScreen';
 import { OverworldMap } from './screens/OverworldMap';
-import { OverworldCanvas } from './ui/components/overworld';
 import { QueueBattleView } from './screens/QueueBattleView';
-
-// Feature flag for new canvas renderer (set via URL param or localStorage)
-const USE_CANVAS_OVERWORLD = (() => {
-  if (typeof window === 'undefined') return false;
-  const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.has('canvas')) return urlParams.get('canvas') !== 'false';
-  return localStorage.getItem('useCanvasOverworld') === 'true';
-})();
 import { MainMenu } from './screens/MainMenu';
 import { CompendiumScreen } from './screens/CompendiumScreen';
 import { PreBattleTeamSelectScreenV2 } from './ui/components/PreBattleTeamSelectScreenV2';
 import { RewardsScreen } from './ui/components/RewardsScreen';
 import { ShopScreen } from './ui/components/ShopScreen';
 import { TowerHubScreen } from './ui/components/TowerHubScreen';
-import { CreditsScreen } from './ui/components/CreditsScreen';
-import { EpilogueScreen } from './ui/components/EpilogueScreen';
 import { useStore, store } from './ui/state/store';
 
 // Wrapper that reads team-select props from V1 store
@@ -127,14 +116,13 @@ const ShopWrapper: FunctionComponent = () => {
 };
 
 import { PauseMenu } from './modals/PauseMenu';
-import { DialogueBox } from './modals/DialogueBox';
+import { DialogueBoxV2 } from './ui/components/DialogueBoxV2';
 import { InventoryModal } from './modals/InventoryModal';
 import { SettingsModal } from './modals/SettingsModal';
 import { SaveMenu } from './ui/components/SaveMenu';
 import { HowToPlay } from './modals/HowToPlay';
 import { PartyManagementScreen } from './ui/components/PartyManagementScreen';
 import { DjinnCollectionScreen } from './ui/components/DjinnCollectionScreen';
-import { DebugRouter, isDebugRouting } from './debug';
 
 import './index.css';
 
@@ -143,10 +131,7 @@ import './index.css';
 function useStoreSync() {
   const mode = useStore((s) => s.mode);
   const towerStatus = useStore((s) => s.towerStatus);
-  const showCredits = useStore((s) => s.showCredits);
-  const setShowCredits = useStore((s) => s.setShowCredits);
   const setScreen = useGameStore((s) => s.setScreen);
-  const startTransition = useGameStore((s) => s.startTransition);
 
   useEffect(() => {
     // Only sync tower mode - other modes are handled by their respective components
@@ -154,15 +139,6 @@ function useStoreSync() {
       setScreen('tower');
     }
   }, [mode, towerStatus, setScreen]);
-
-  // Sync showCredits flag to credits screen
-  useEffect(() => {
-    if (showCredits) {
-      startTransition('credits');
-      // Reset the flag so it doesn't re-trigger
-      setShowCredits(false);
-    }
-  }, [showCredits, startTransition, setShowCredits]);
 }
 
 type DevOverlayProps = {
@@ -233,16 +209,6 @@ const App: FunctionComponent = () => {
         return;
       }
 
-      // Inventory shortcut 'I' - works on overworld/menu screens regardless of dev mode
-      if (event.code === 'KeyI' && !isDevMode) {
-        const allowedScreens: ScreenType[] = ['overworld', 'menu', 'team-management', 'djinn-collection'];
-        if (allowedScreens.includes(screen)) {
-          event.preventDefault();
-          setModal('inventory');
-        }
-        return;
-      }
-
       if (!isDevMode) {
         return;
       }
@@ -282,14 +248,14 @@ const App: FunctionComponent = () => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isDevMode, screen, setScreen, setModal]);
+  }, [isDevMode, setScreen, setModal]);
 
   const renderScreen = (): JSX.Element => {
     switch (screen) {
       case 'title':
         return <TitleScreen />;
       case 'overworld':
-        return USE_CANVAS_OVERWORLD ? <OverworldCanvas /> : <OverworldMap />;
+        return <OverworldMap />;
       case 'battle':
         return <QueueBattleView />;
       case 'menu':
@@ -308,10 +274,6 @@ const App: FunctionComponent = () => {
         return <DjinnCollectionScreen onClose={() => startTransition('overworld')} />;
       case 'tower':
         return <TowerHubScreen />;
-      case 'credits':
-        return <CreditsScreen onExit={() => startTransition('epilogue')} />;
-      case 'epilogue':
-        return <EpilogueScreen onComplete={() => startTransition('title')} />;
       default:
         return <TitleScreen />;
     }
@@ -327,8 +289,7 @@ const App: FunctionComponent = () => {
         return <InventoryModal onClose={closeModal} />;
       case 'settings':
         return <SettingsModal onClose={closeModal} />;
-      case 'dialogue':
-        return <DialogueBox />;
+      // 'dialogue' case removed - DialogueBoxV2 is always rendered and self-manages visibility
       case 'save':
         return <SaveMenu onClose={closeModal} />;
       case 'help':
@@ -370,15 +331,12 @@ const App: FunctionComponent = () => {
     }
   };
 
-  // Check if we're in debug routing mode
-  const debugRouting = isDebugRouting();
-
   return (
     <div className={`app-root${isTransitioning ? ' app-root--transitioning' : ''}`}>
-      {/* Debug router handles URL-based navigation for screenshots */}
-      {debugRouting && <DebugRouter />}
       {renderScreen()}
       {renderModal()}
+      {/* DialogueBoxV2 always rendered - uses portal and self-manages visibility */}
+      <DialogueBoxV2 />
       {isDevMode && <DevOverlay screen={screen} modal={modal} />}
     </div>
   );

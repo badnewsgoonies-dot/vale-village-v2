@@ -10,7 +10,7 @@
  */
 
 import { JSX } from 'preact';
-import { useEffect, useCallback, useMemo } from 'preact/hooks';
+import { useEffect, useCallback, useMemo, useState } from 'preact/hooks';
 import { useStore } from '../state/store';
 import { ENCOUNTERS } from '@/data/definitions/encounters';
 import { validateBattleConfig } from '../state/battleConfig';
@@ -21,6 +21,8 @@ import { getPortraitSprite } from '../sprites/mappings';
 import { EnemyPortalTile } from './EnemyPortalTile';
 import type { Unit } from '@/core/models/Unit';
 import { DJINN } from '@/data/definitions/djinn';
+import type { Equipment } from '@/core/models/Equipment';
+import { ToolboxHelpers } from './debug/ToolboxHelpers';
 import './PreBattleTeamSelectScreenV2.css';
 
 interface PreBattleTeamSelectScreenV2Props {
@@ -50,12 +52,18 @@ export function PreBattleTeamSelectScreenV2({
     team,
     currentBattleConfig,
     updateBattleConfigSlot,
+    updateBattleSlotEquipment,
+    addEquipment,
+    removeEquipment,
     equipment: inventory,
   } = useStore((s) => ({
     roster: s.roster,
     team: s.team,
     currentBattleConfig: s.currentBattleConfig,
     updateBattleConfigSlot: s.updateBattleConfigSlot,
+    updateBattleSlotEquipment: s.updateBattleSlotEquipment,
+    addEquipment: s.addEquipment,
+    removeEquipment: s.removeEquipment,
     equipment: s.equipment,
   }));
 
@@ -63,6 +71,9 @@ export function PreBattleTeamSelectScreenV2({
   const battleConfig = currentBattleConfig;
   const slots = battleConfig?.slots ?? [];
   const djinnSlots = battleConfig?.djinnSlots ?? [];
+
+  // Track which unit is selected for the details panel
+  const [selectedUnitForDetails, setSelectedUnitForDetails] = useState<Unit | null>(null);
 
   // Get all available units (roster + team units)
   const allUnits = useMemo(() => {
@@ -94,6 +105,11 @@ export function PreBattleTeamSelectScreenV2({
       });
   }, [selectedUnitIds, allUnits]);
 
+  const detailUnit = selectedUnitForDetails ?? selectedUnits[0] ?? null;
+  const [equipmentModalOpen, setEquipmentModalOpen] = useState(false);
+  const [equipmentModalUnitId, setEquipmentModalUnitId] = useState<string | null>(detailUnit?.id ?? null);
+  const [equipmentModalSlot, setEquipmentModalSlot] = useState<EquipmentSlot | null>(null);
+
   // Available units (not selected)
   const availableUnits = useMemo(() =>
     allUnits.filter((u) => !selectedUnitIds.includes(u.id)),
@@ -109,6 +125,30 @@ export function PreBattleTeamSelectScreenV2({
     });
     return map;
   }, [slots]);
+
+  // Team stats summary
+  const teamSummary = useMemo(() => {
+    if (selectedUnits.length === 0) {
+      return { totalHP: 0, totalATK: 0, avgLevel: 0, avgSPD: 0 };
+    }
+    const totalHP = selectedUnits.reduce((sum, u) => sum + u.baseStats.hp, 0);
+    const totalATK = selectedUnits.reduce((sum, u) => sum + u.baseStats.atk, 0);
+    const avgLevel = Math.round(selectedUnits.reduce((sum, u) => sum + u.level, 0) / selectedUnits.length);
+    const avgSPD = Math.round(selectedUnits.reduce((sum, u) => sum + u.baseStats.spd, 0) / selectedUnits.length);
+    return { totalHP, totalATK, avgLevel, avgSPD };
+  }, [selectedUnits]);
+  const { totalHP, avgLevel, avgSPD } = teamSummary;
+
+  // Helpers for equipment modal
+  const equipmentModalUnit = equipmentModalUnitId
+    ? selectedUnits.find((u) => u.id === equipmentModalUnitId) ?? detailUnit
+    : detailUnit;
+  const equipmentModalSlotIndex = equipmentModalUnit
+    ? slots.find((s) => s.unitId === equipmentModalUnit.id)?.slotIndex ?? null
+    : null;
+  const equipmentModalLoadout = equipmentModalUnit
+    ? loadoutByUnitId.get(equipmentModalUnit.id) ?? createEmptyLoadout()
+    : createEmptyLoadout();
 
   // Validation
   const configValidation = useMemo(() => {
@@ -150,6 +190,39 @@ export function PreBattleTeamSelectScreenV2({
     if (!battleConfig || !configValidation.valid) return;
     onConfirm();
   }, [battleConfig, configValidation.valid, onConfirm]);
+
+  // Equipment modal handlers
+  const handleEquipItem = (slot: EquipmentSlot, item: Equipment) => {
+    if (!equipmentModalUnit || equipmentModalSlotIndex === null) return;
+
+    // Return currently equipped item to inventory
+    const currentItem = equipmentModalLoadout[slot];
+    if (currentItem) {
+      addEquipment([currentItem]);
+    }
+
+    // Remove selected item from inventory and update loadout
+    removeEquipment(item.id);
+    updateBattleSlotEquipment(equipmentModalSlotIndex, slot, item);
+  };
+
+  const handleUnequipItem = (slot: EquipmentSlot) => {
+    if (!equipmentModalUnit || equipmentModalSlotIndex === null) return;
+    const currentItem = equipmentModalLoadout[slot];
+    if (!currentItem) return;
+
+    addEquipment([currentItem]);
+    updateBattleSlotEquipment(equipmentModalSlotIndex, slot, null);
+  };
+
+  const availableEquipmentForModal = useMemo(() => {
+    if (!equipmentModalUnit || !equipmentModalSlot) return [];
+    return inventory.filter(
+      (item) =>
+        item.slot === equipmentModalSlot &&
+        (item.allowedElements.length === 0 || item.allowedElements.includes(equipmentModalUnit.element))
+    );
+  }, [equipmentModalUnit, equipmentModalSlot, inventory]);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -210,8 +283,13 @@ export function PreBattleTeamSelectScreenV2({
               {availableUnits.map((unit) => (
                 <div
                   key={unit.id}
-                  class={`roster-unit ${selectedUnitIds.length >= 4 ? 'disabled' : ''}`}
+                  class={`roster-unit ${selectedUnitIds.length >= 4 ? 'disabled' : ''} ${selectedUnitForDetails?.id === unit.id ? 'viewing' : ''}`}
+                  title={`${unit.name} • ${unit.role} • SPD ${unit.baseStats.spd} • ${unit.element}`}
                   onClick={() => handleUnitToggle(unit)}
+                  onContextMenu={(e) => {
+                    e.preventDefault();
+                    setSelectedUnitForDetails(unit);
+                  }}
                 >
                   <div class="roster-unit-sprite">
                     <SimpleSprite
@@ -222,12 +300,18 @@ export function PreBattleTeamSelectScreenV2({
                   </div>
                   <div class="roster-unit-info">
                     <div class="roster-unit-name">{unit.name}</div>
-                    <div class="roster-unit-stats">
-                      Lv.{unit.level} | SPD: <span class="unit-speed">{unit.baseStats.spd}</span>
+                    <div class="roster-unit-class">
+                      Lv.{unit.level} • {unit.element}
+                    </div>
+                    <div class="roster-unit-stats-grid">
+                      <span class="stat-hp">HP:{unit.baseStats.hp}</span>
+                      <span class="stat-atk">ATK:{unit.baseStats.atk}</span>
+                      <span class="stat-def">DEF:{unit.baseStats.def}</span>
+                      <span class="stat-spd">SPD:{unit.baseStats.spd}</span>
                     </div>
                   </div>
                   <div class={`roster-unit-element element-${unit.element.toLowerCase()}`}>
-                    {unit.element}
+                    {unit.element.substring(0, 3)}
                   </div>
                 </div>
               ))}
@@ -239,14 +323,34 @@ export function PreBattleTeamSelectScreenV2({
 
           {/* Right Panel: Selected Team */}
           <div class="prebattle-v2-selected">
-            <div class="panel-title">Battle Party (Sorted by Speed)</div>
+            {/* Turn Order Explainer */}
+            <div class="turn-order-explainer">
+              <span class="turn-order-icon">⚡</span>
+              <span class="turn-order-text">
+                <strong>Turn Order:</strong> Units attack from fastest to slowest (by SPD stat)
+              </span>
+              <button
+                class="manage-equip-btn"
+                type="button"
+                onClick={() => {
+                  setEquipmentModalUnitId(detailUnit?.id ?? selectedUnits[0]?.id ?? null);
+                  setEquipmentModalSlot(null);
+                  setEquipmentModalOpen(true);
+                }}
+              >
+                Manage Equipment
+              </button>
+            </div>
+
+            <div class="panel-title">Battle Party</div>
             <div class="team-slots">
               {[0, 1, 2, 3].map((slotIndex) => {
                 const unit = selectedUnits[slotIndex];
                 return (
                   <div
                     key={slotIndex}
-                    class={`team-slot ${unit ? 'filled' : 'empty'}`}
+                    class={`team-slot ${unit ? 'filled' : 'empty'} ${selectedUnitForDetails?.id === unit?.id ? 'viewing' : ''}`}
+                    onClick={() => unit && setSelectedUnitForDetails(unit)}
                   >
                     <span class="slot-badge">{ORDINALS[slotIndex]}</span>
                     <span class="slot-order">{slotIndex + 1}</span>
@@ -262,7 +366,11 @@ export function PreBattleTeamSelectScreenV2({
                         </div>
                         <div class="slot-unit-info">
                           <div class="slot-unit-name">{unit.name}</div>
-                          <div class="slot-unit-speed">SPD: {unit.baseStats.spd}</div>
+                          <div class="slot-unit-stats-row">
+                            <span class="stat-hp">HP:{unit.baseStats.hp}</span>
+                            <span class="stat-atk">ATK:{unit.baseStats.atk}</span>
+                            <span class="stat-spd">SPD:{unit.baseStats.spd}</span>
+                          </div>
                         </div>
                         <button
                           class="remove-btn"
@@ -285,17 +393,94 @@ export function PreBattleTeamSelectScreenV2({
               })}
             </div>
 
-            {/* Enemy Preview */}
-            <div class="enemy-preview">
-              <div class="panel-title">Enemies</div>
-              <div class="enemy-portal-wrap">
-                <EnemyPortalTile encounterId={encounterId} />
+            {/* Team Summary Stats */}
+            {selectedUnits.length > 0 && (
+              <div class="team-summary">
+                <div class="team-stat-item">
+                  <span class="team-stat-label">Total HP</span>
+                  <span class="team-stat-value">{totalHP}</span>
+                </div>
+                <div class="team-stat-item">
+                  <span class="team-stat-label">Avg Level</span>
+                  <span class="team-stat-value">{avgLevel}</span>
+                </div>
+                <div class="team-stat-item">
+                  <span class="team-stat-label">Avg SPD</span>
+                  <span class="team-stat-value">{avgSPD}</span>
+                </div>
               </div>
-            </div>
+            )}
 
-            {/* Loadout Preview */}
-            <div class="loadout-preview">
-              <div class="panel-title">Equipment &amp; Djinn</div>
+            {/* Unit Details Panel */}
+            <div class="unit-details-panel">
+              <div class="panel-title">Unit Details</div>
+              {detailUnit ? (
+                <div class="unit-details-body">
+                  <div class="unit-details-header">
+                    <div class="unit-details-avatar">
+                      <SimpleSprite id={getPortraitSprite(detailUnit.id)} width={48} height={48} />
+                    </div>
+                    <div class="unit-details-meta">
+                      <div class="unit-details-name">{detailUnit.name}</div>
+                      <div class="unit-details-sub">
+                        <span class={`unit-element element-${detailUnit.element.toLowerCase()}`}>{detailUnit.element}</span>
+                        <span class="unit-role">{detailUnit.role}</span>
+                        <span class="unit-level">Lv {detailUnit.level}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="unit-details-stats">
+                    <div class="stat-chip hp">HP {detailUnit.baseStats.hp}</div>
+                    <div class="stat-chip atk">ATK {detailUnit.baseStats.atk}</div>
+                    <div class="stat-chip def">DEF {detailUnit.baseStats.def}</div>
+                    <div class="stat-chip mag">MAG {detailUnit.baseStats.mag}</div>
+                    <div class="stat-chip spd">SPD {detailUnit.baseStats.spd}</div>
+                  </div>
+                  <div class="unit-details-note">
+                    Right-click or tap-and-hold a unit in the roster to pin their details here.
+                  </div>
+                </div>
+              ) : (
+                <div class="unit-details-empty">Select a unit to see detailed stats.</div>
+              )}
+      </div>
+
+      {/* Enemy Preview */}
+      <div class="enemy-preview">
+        <div class="panel-title">Enemies</div>
+        <div class="enemy-portal-wrap">
+          <EnemyPortalTile encounterId={encounterId} />
+        </div>
+      </div>
+
+      <ToolboxHelpers
+        title="Team Toolbox"
+        actions={[
+          {
+            id: 'open-equip',
+            label: 'Manage Equipment',
+            tooltip: 'Open equipment manager (Alt+T toggles panel)',
+            onClick: () => {
+              setEquipmentModalUnitId(detailUnit?.id ?? selectedUnits[0]?.id ?? null);
+              setEquipmentModalSlot(null);
+              setEquipmentModalOpen(true);
+            },
+          },
+          {
+            id: 'clear-party',
+            label: 'Clear party slots',
+            tooltip: 'Remove all selected units',
+            onClick: () => {
+              slots.forEach((slot) => updateBattleConfigSlot(slot.slotIndex, null));
+            },
+          },
+        ]}
+        position="bottom-right"
+      />
+
+      {/* Loadout Preview */}
+      <div class="loadout-preview">
+        <div class="panel-title">Equipment &amp; Djinn</div>
               <div class="loadout-columns">
                 <div class="gear-summary">
                   <div class="loadout-subtitle">Selected Gear</div>
@@ -319,7 +504,11 @@ export function PreBattleTeamSelectScreenV2({
                             {EQUIPMENT_SLOT_ORDER.map((slot) => {
                               const item = loadout[slot];
                               return (
-                                <span class={`gear-tag ${item ? 'filled' : 'empty'}`} key={`${unit.id}-${slot}`}>
+                                <span
+                                  class={`gear-tag ${item ? 'filled' : 'empty'}`}
+                                  key={`${unit.id}-${slot}`}
+                                  title={`${EQUIPMENT_SLOT_LABELS[slot]} • ${item ? item.name : 'None'}`}
+                                >
                                   <span class="gear-slot-label">{EQUIPMENT_SLOT_LABELS[slot]}</span>
                                   <span class="gear-item-name">{item ? item.name : 'None'}</span>
                                 </span>
@@ -381,6 +570,108 @@ export function PreBattleTeamSelectScreenV2({
           </div>
         </div>
       </div>
+
+      {/* Equipment Modal */}
+      {equipmentModalOpen && (
+        <div class="equip-modal-backdrop" onClick={() => setEquipmentModalOpen(false)}>
+          <div class="equip-modal" onClick={(e) => e.stopPropagation()}>
+            <div class="equip-modal-header">
+              <div class="equip-modal-title">Equipment Management</div>
+              <button class="close-btn" onClick={() => setEquipmentModalOpen(false)} aria-label="Close">×</button>
+            </div>
+
+            <div class="equip-modal-body">
+              <div class="equip-modal-column">
+                <div class="panel-title">Party</div>
+                <div class="equip-unit-list">
+                  {selectedUnits.map((u) => (
+                    <button
+                      key={u.id}
+                      class={`equip-unit-item ${equipmentModalUnitId === u.id ? 'active' : ''}`}
+                      onClick={() => {
+                        setEquipmentModalUnitId(u.id);
+                        setEquipmentModalSlot(null);
+                      }}
+                    >
+                      <SimpleSprite id={getPortraitSprite(u.id)} width={28} height={28} />
+                      <div class="equip-unit-meta">
+                        <span class="equip-unit-name">{u.name}</span>
+                        <span class="equip-unit-sub">Lv {u.level} • {u.role}</span>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div class="equip-modal-column">
+                <div class="panel-title">Slots</div>
+                <div class="equip-slot-grid">
+                  {EQUIPMENT_SLOT_ORDER.map((slot) => {
+                    const item = equipmentModalLoadout[slot];
+                    const isSelected = equipmentModalSlot === slot;
+                    return (
+                      <button
+                        key={slot}
+                        class={`equip-slot-card ${isSelected ? 'active' : ''}`}
+                        onClick={() => setEquipmentModalSlot(isSelected ? null : slot)}
+                      >
+                        <div class="equip-slot-label">{EQUIPMENT_SLOT_LABELS[slot]}</div>
+                        <div class="equip-slot-value">{item ? item.name : '[None]'}</div>
+                        <div class="equip-slot-bonus">
+                          {item?.statBonus.atk ? `+${item.statBonus.atk} ATK ` : ''}
+                          {item?.statBonus.def ? `+${item.statBonus.def} DEF ` : ''}
+                          {item?.statBonus.spd ? `+${item.statBonus.spd} SPD` : ''}
+                        </div>
+                        {item && (
+                          <button
+                            type="button"
+                            class="unequip-button small"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleUnequipItem(slot);
+                            }}
+                          >
+                            Unequip
+                          </button>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div class="equip-modal-column">
+                <div class="panel-title">Inventory</div>
+                {equipmentModalSlot && equipmentModalUnit ? (
+                  <div class="equip-inventory-list">
+                    {availableEquipmentForModal.length === 0 ? (
+                      <div class="equip-empty">No items for this slot.</div>
+                    ) : (
+                      availableEquipmentForModal.map((item) => (
+                        <button
+                          key={item.id}
+                          class="equip-item"
+                          onClick={() => handleEquipItem(equipmentModalSlot, item)}
+                          title={item.name}
+                        >
+                          <div class="equip-item-name">{item.name}</div>
+                          <div class="equip-item-bonus">
+                            {item.statBonus.atk ? `+${item.statBonus.atk} ATK ` : ''}
+                            {item.statBonus.def ? `+${item.statBonus.def} DEF ` : ''}
+                            {item.statBonus.spd ? `+${item.statBonus.spd} SPD` : ''}
+                          </div>
+                        </button>
+                      ))
+                    )}
+                  </div>
+                ) : (
+                  <div class="equip-empty">Select a slot to see available gear.</div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
