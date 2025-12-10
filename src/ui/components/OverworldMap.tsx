@@ -4,6 +4,7 @@ import { useStore } from '../state/store';
 import { useGameStore } from '../../store/gameStore';
 import { SimpleSprite } from '../sprites/SimpleSprite';
 import { getPlayerSprite, shouldMirrorSprite, getNPCSprite } from '../sprites/mappings';
+import { ToolboxHelpers } from './debug/ToolboxHelpers';
 import { warnIfPlaceholderSprite } from '../sprites/utils/warnIfPlaceholderSprite';
 import { getTriggerAt } from '@/core/services/OverworldService';
 import { isHouseUnlocked } from '@/core/services/StoryService';
@@ -173,6 +174,37 @@ export function OverworldMap() {
           <span class="location-chip location-chip--ghost">ESC for pause menu</span>
         </div>
       </div>
+
+      <ToolboxHelpers
+        title="Overworld"
+        actions={[
+          {
+            id: 'pause',
+            label: 'Pause Menu',
+            tooltip: 'Open pause (Esc)',
+            onClick: () => openModal('pause'),
+          },
+          {
+            id: 'help',
+            label: 'How to Play',
+            tooltip: 'Open how-to-play modal',
+            onClick: () => openModal('help'),
+          },
+          {
+            id: 'tower',
+            label: 'Jump to Tower',
+            tooltip: 'Jump to Battle Tower hub',
+            onClick: () => startTransition('tower'),
+          },
+          {
+            id: 'reset',
+            label: 'Reset Position',
+            tooltip: 'Teleport to Vale spawn',
+            onClick: () => teleportPlayer('vale-village', MAPS['vale-village']?.spawnPoint ?? playerPosition),
+          },
+        ]}
+        position="top-right"
+      />
 
       <div class="overworld-stage">
         <div class="overworld-container">

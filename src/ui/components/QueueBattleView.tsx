@@ -4,6 +4,7 @@
  */
 
 import { useEffect, useState, useMemo, useRef, useCallback } from 'preact/hooks';
+import { ToolboxHelpers } from './debug/ToolboxHelpers';
 import { useStore } from '../state/store';
 import { useGameStore } from '../../store/gameStore';
 import { renderEventText } from '../utils/text';
@@ -368,6 +369,7 @@ const STYLES = {
 export function QueueBattleView() {
   // V2 gameStore for screen navigation
   const setScreen = useGameStore((s) => s.setScreen);
+  const openModal = useGameStore((s) => s.openModal);
 
   // V1 store for battle domain state
   const battle = useStore((s) => s.battle);
@@ -425,6 +427,7 @@ export function QueueBattleView() {
   const [floatingNumbers, setFloatingNumbers] = useState<
     { id: number; unitId: string; amount: number; kind: 'damage' | 'heal'; isCrit?: boolean }[]
   >([]);
+  const [showBattleTips, setShowBattleTips] = useState<boolean>(false);
   const floatingIdRef = useRef(0);
   const [shakingUnits, setShakingUnits] = useState<Set<string>>(new Set());
   const shakeTimeoutsRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
@@ -854,7 +857,34 @@ export function QueueBattleView() {
   // Button should only be enabled in planning phase with complete queue
   const canExecute = isQueueComplete && uiPhase === 'planning';
 
-  // --- RENDER ---
+  const toolboxActions = [
+    {
+      id: 'toggle-tips',
+      label: showBattleTips ? 'Hide Tips' : 'Show Tips',
+      tooltip: 'Toggle inline battle control hints',
+      onClick: () => setShowBattleTips((v) => !v),
+    },
+    {
+      id: 'speed-1x',
+      label: 'Speed: 1x',
+      tooltip: 'Normal battle speed',
+      onClick: () => applySpeed(1),
+    },
+    {
+      id: 'speed-2x',
+      label: 'Speed: 2x',
+      tooltip: 'Faster battle speed',
+      onClick: () => applySpeed(2),
+    },
+    {
+      id: 'open-settings',
+      label: 'Settings',
+      tooltip: 'Open settings modal',
+      onClick: () => openModal('settings'),
+    },
+  ];
+
+// --- RENDER ---
 
   if (!battle) return <div>Loading Battle...</div>;
 
@@ -936,6 +966,23 @@ export function QueueBattleView() {
           color: '#fff',
         }}
       >
+        <ToolboxHelpers title="Battle" position="top-right" actions={toolboxActions} />
+        {showBattleTips && (
+          <div style={{
+            position: 'absolute',
+            top: 8,
+            left: 8,
+            background: 'rgba(0,0,0,0.5)',
+            border: '1px solid rgba(255,255,255,0.2)',
+            borderRadius: 6,
+            padding: '6px 8px',
+            fontSize: 12,
+            zIndex: 101,
+          }}>
+            <div>Controls: Q = auto-attack | S = cycle speed | Click = select | Esc = pause</div>
+          </div>
+        )}
+
         <style>
           {`
             @keyframes floatNumber {
