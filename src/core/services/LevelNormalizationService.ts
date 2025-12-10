@@ -128,7 +128,7 @@ export function normalizeUnitForFloor(
 ): NormalizedUnit {
   // Use floor's explicit normalizedLevel if available, otherwise calculate
   const targetLevel =
-    (floor as any).normalizedLevel ??
+    floor.normalizedLevel ??
     calculateFloorTargetLevel(floor.floorNumber, curve);
 
   const normalizedStats = calculateLevelScaledStats(

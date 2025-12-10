@@ -1,0 +1,381 @@
+{
+  "$schema": "./screenshot-manifest.schema.json",
+  "description": "Screenshot manifest for Vale Village v2 automated UI capture",
+  "version": "1.0.0",
+  "baseUrl": "http://localhost:5173",
+  "defaultDelay": 500,
+  "entries": [
+    {
+      "id": "title-screen",
+      "category": "main-menu",
+      "route": "/debug/title",
+      "description": "Title screen with animated logo and Start prompt"
+    },
+    {
+      "id": "main-menu",
+      "category": "main-menu",
+      "route": "/debug/menu",
+      "description": "Main menu with New Game, Continue, Compendium, Battle Tower options"
+    },
+    {
+      "id": "main-menu-continue-enabled",
+      "category": "main-menu",
+      "route": "/debug/menu?hasSave=true",
+      "description": "Main menu with Continue option enabled (has save file)"
+    },
+
+    {
+      "id": "settings-audio",
+      "category": "settings",
+      "route": "/debug/settings?tab=audio",
+      "description": "Settings modal - Audio tab with volume sliders"
+    },
+    {
+      "id": "settings-display",
+      "category": "settings",
+      "route": "/debug/settings?tab=display",
+      "description": "Settings modal - Display tab with UI scale, text size"
+    },
+    {
+      "id": "settings-gameplay",
+      "category": "settings",
+      "route": "/debug/settings?tab=gameplay",
+      "description": "Settings modal - Gameplay tab with battle speed, difficulty"
+    },
+
+    {
+      "id": "overworld-vale",
+      "category": "overworld",
+      "route": "/debug/overworld?location=vale",
+      "description": "Overworld map centered on Vale starting area"
+    },
+    {
+      "id": "overworld-with-party",
+      "category": "overworld",
+      "route": "/debug/overworld?party=isaac,garet,ivan,mia",
+      "description": "Overworld with full party visible"
+    },
+
+    {
+      "id": "battle-planning",
+      "category": "battle",
+      "route": "/debug/battle?phase=planning",
+      "description": "Battle screen during planning phase - action queue visible"
+    },
+    {
+      "id": "battle-executing",
+      "category": "battle",
+      "route": "/debug/battle?phase=executing",
+      "description": "Battle screen during execution - animations playing"
+    },
+    {
+      "id": "battle-djinn-menu",
+      "category": "battle",
+      "route": "/debug/battle?panel=djinn",
+      "description": "Battle with Djinn selection panel open"
+    },
+    {
+      "id": "battle-psynergy-menu",
+      "category": "battle",
+      "route": "/debug/battle?panel=psynergy",
+      "description": "Battle with Psynergy selection menu open"
+    },
+    {
+      "id": "battle-item-menu",
+      "category": "battle",
+      "route": "/debug/battle?panel=item",
+      "description": "Battle with Item selection menu open"
+    },
+    {
+      "id": "battle-boss",
+      "category": "battle",
+      "route": "/debug/battle?encounter=boss-saturos",
+      "description": "Battle against boss enemy (Saturos)"
+    },
+
+    {
+      "id": "victory-normal",
+      "category": "victory",
+      "route": "/debug/victory?variant=normal",
+      "description": "Victory overlay - normal win",
+      "delayMs": 1000,
+      "notes": "Wait for sparkle animation to start"
+    },
+    {
+      "id": "victory-flawless",
+      "category": "victory",
+      "route": "/debug/victory?variant=flawless",
+      "description": "Victory overlay - flawless (no damage taken)",
+      "delayMs": 1000
+    },
+    {
+      "id": "victory-boss",
+      "category": "victory",
+      "route": "/debug/victory?variant=boss",
+      "description": "Victory overlay - boss defeated",
+      "delayMs": 1000
+    },
+    {
+      "id": "victory-with-levelup",
+      "category": "victory",
+      "route": "/debug/victory?levelup=true",
+      "description": "Victory with level up notification",
+      "delayMs": 1200
+    },
+    {
+      "id": "victory-with-drops",
+      "category": "victory",
+      "route": "/debug/victory?drops=true",
+      "description": "Victory with equipment drops shown",
+      "delayMs": 1200
+    },
+
+    {
+      "id": "defeat-overlay",
+      "category": "defeat",
+      "route": "/debug/defeat",
+      "description": "Defeat overlay - party has fallen",
+      "delayMs": 800
+    },
+
+    {
+      "id": "rewards-xp-gold",
+      "category": "victory",
+      "route": "/debug/rewards?type=basic",
+      "description": "Rewards screen showing XP and gold earned"
+    },
+    {
+      "id": "rewards-equipment-choice",
+      "category": "victory",
+      "route": "/debug/rewards?type=equipment-choice",
+      "description": "Rewards screen with equipment choice picker"
+    },
+    {
+      "id": "rewards-levelup",
+      "category": "victory",
+      "route": "/debug/rewards?type=levelup",
+      "description": "Rewards screen with level up stats"
+    },
+
+    {
+      "id": "pause-menu",
+      "category": "pause-menu",
+      "route": "/debug/pause",
+      "description": "Pause menu modal with all options"
+    },
+    {
+      "id": "save-menu",
+      "category": "pause-menu",
+      "route": "/debug/save",
+      "description": "Save/Load menu with 3 save slots"
+    },
+    {
+      "id": "how-to-play",
+      "category": "pause-menu",
+      "route": "/debug/help",
+      "description": "How to Play help modal"
+    },
+
+    {
+      "id": "shop-weapons",
+      "category": "shops",
+      "route": "/debug/shop?type=weapons",
+      "description": "Weapon shop with buy/sell interface"
+    },
+    {
+      "id": "shop-armor",
+      "category": "shops",
+      "route": "/debug/shop?type=armor",
+      "description": "Armor shop interface"
+    },
+    {
+      "id": "shop-items",
+      "category": "shops",
+      "route": "/debug/shop?type=items",
+      "description": "Item shop with consumables"
+    },
+
+    {
+      "id": "compendium-units",
+      "category": "compendium",
+      "route": "/debug/compendium?tab=units",
+      "description": "Compendium - Units tab with ownership badges"
+    },
+    {
+      "id": "compendium-djinn",
+      "category": "compendium",
+      "route": "/debug/compendium?tab=djinn",
+      "description": "Compendium - Djinn tab with element filtering"
+    },
+    {
+      "id": "compendium-equipment",
+      "category": "compendium",
+      "route": "/debug/compendium?tab=equipment",
+      "description": "Compendium - Equipment tab"
+    },
+    {
+      "id": "compendium-enemies",
+      "category": "compendium",
+      "route": "/debug/compendium?tab=enemies",
+      "description": "Compendium - Enemies/Bestiary tab"
+    },
+
+    {
+      "id": "dialogue-basic",
+      "category": "dialogue",
+      "route": "/debug/dialogue?scene=village-intro",
+      "description": "Dialogue box with NPC portrait and text"
+    },
+    {
+      "id": "dialogue-choice",
+      "category": "dialogue",
+      "route": "/debug/dialogue?scene=yes-no",
+      "description": "Dialogue with Yes/No choice prompt"
+    },
+    {
+      "id": "dialogue-long-text",
+      "category": "dialogue",
+      "route": "/debug/dialogue?scene=lore-dump",
+      "description": "Dialogue with longer text, typewriter effect"
+    },
+
+    {
+      "id": "pre-battle-team-select",
+      "category": "pre-battle",
+      "route": "/debug/team-select",
+      "description": "Pre-battle team selection screen"
+    },
+    {
+      "id": "pre-battle-boss-warning",
+      "category": "pre-battle",
+      "route": "/debug/team-select?boss=true",
+      "description": "Pre-battle with boss encounter warning"
+    },
+
+    {
+      "id": "djinn-collection",
+      "category": "djinn",
+      "route": "/debug/djinn-collection",
+      "description": "Djinn collection screen - all collected djinn"
+    },
+    {
+      "id": "djinn-detail-modal",
+      "category": "djinn",
+      "route": "/debug/djinn-detail?djinn=flint",
+      "description": "Djinn detail modal with stats and abilities"
+    },
+    {
+      "id": "djinn-equip",
+      "category": "djinn",
+      "route": "/debug/djinn-equip",
+      "description": "Djinn equip interface - assigning djinn to party"
+    },
+
+    {
+      "id": "inventory-modal",
+      "category": "pause-menu",
+      "route": "/debug/inventory",
+      "description": "Inventory modal with equipment and items"
+    },
+    {
+      "id": "party-management",
+      "category": "pause-menu",
+      "route": "/debug/party",
+      "description": "Party management - swap/reorder party members"
+    },
+
+    {
+      "id": "tower-hub",
+      "category": "debug-other",
+      "route": "/debug/tower",
+      "description": "Battle Tower hub screen"
+    },
+    {
+      "id": "tower-floor-preview",
+      "category": "debug-other",
+      "route": "/debug/tower?floor=5",
+      "description": "Battle Tower floor preview before battle"
+    },
+
+    {
+      "id": "credits-scroll",
+      "category": "debug-other",
+      "route": "/debug/credits",
+      "description": "Credits screen with scrolling text",
+      "delayMs": 2000
+    },
+    {
+      "id": "epilogue",
+      "category": "debug-other",
+      "route": "/debug/epilogue",
+      "description": "Epilogue screen after credits"
+    },
+
+    {
+      "id": "error-boundary",
+      "category": "debug-other",
+      "route": "/debug/error",
+      "description": "Error boundary fallback UI"
+    },
+    {
+      "id": "loading-state",
+      "category": "debug-other",
+      "route": "/debug/loading",
+      "description": "Generic loading state"
+    }
+  ],
+  "categories": {
+    "main-menu": {
+      "description": "Title and main menu screens",
+      "outputDir": "main-menu"
+    },
+    "settings": {
+      "description": "Settings modal tabs",
+      "outputDir": "settings"
+    },
+    "overworld": {
+      "description": "Overworld exploration map",
+      "outputDir": "overworld"
+    },
+    "battle": {
+      "description": "Battle system screens and states",
+      "outputDir": "battle"
+    },
+    "victory": {
+      "description": "Victory overlays and rewards",
+      "outputDir": "victory"
+    },
+    "defeat": {
+      "description": "Defeat overlay",
+      "outputDir": "defeat"
+    },
+    "pause-menu": {
+      "description": "Pause menu and sub-modals",
+      "outputDir": "pause"
+    },
+    "shops": {
+      "description": "Shop interfaces",
+      "outputDir": "shops"
+    },
+    "compendium": {
+      "description": "Compendium/encyclopedia screens",
+      "outputDir": "compendium"
+    },
+    "dialogue": {
+      "description": "Dialogue box variations",
+      "outputDir": "dialogue"
+    },
+    "pre-battle": {
+      "description": "Pre-battle team selection",
+      "outputDir": "pre-battle"
+    },
+    "djinn": {
+      "description": "Djinn management screens",
+      "outputDir": "djinn"
+    },
+    "debug-other": {
+      "description": "Miscellaneous screens",
+      "outputDir": "other"
+    }
+  }
+}
