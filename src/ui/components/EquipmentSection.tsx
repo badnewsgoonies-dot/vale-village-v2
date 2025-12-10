@@ -4,12 +4,18 @@
  */
 
 import { JSX } from 'preact';
-import { useState, useEffect } from 'preact/hooks';
+import { useState, useEffect, useCallback } from 'preact/hooks';
 import type { Unit } from '@/core/models/Unit';
 import type { EquipmentSlot, Equipment, EquipmentLoadout } from '@/core/models/Equipment';
 import { calculateEquipmentBonuses } from '@/core/models/Equipment';
 import { calculateLevelBonuses } from '@/core/algorithms/stats';
 import { EquipmentIcon } from './EquipmentIcon';
+
+// Drag-and-drop state management
+type DragState = {
+  item: Equipment | null;
+  sourceSlot: EquipmentSlot | null; // null if from inventory
+};
 
 interface EquipmentSectionProps {
   unit: Unit;
@@ -33,6 +39,51 @@ export function EquipmentSection({
   onUnequip,
 }: EquipmentSectionProps): JSX.Element {
   const [activeTab, setActiveTab] = useState<EquipmentSlot>('weapon');
+  const [dragState, setDragState] = useState<DragState>({ item: null, sourceSlot: null });
+  const [dragOverSlot, setDragOverSlot] = useState<EquipmentSlot | null>(null);
+
+  // Drag handlers for inventory items
+  const handleDragStart = useCallback((e: DragEvent, item: Equipment, sourceSlot: EquipmentSlot | null = null) => {
+    if (!e.dataTransfer) return;
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', item.id);
+    setDragState({ item, sourceSlot });
+  }, []);
+
+  const handleDragEnd = useCallback(() => {
+    setDragState({ item: null, sourceSlot: null });
+    setDragOverSlot(null);
+  }, []);
+
+  // Drop handlers for equipment slots
+  const handleDragOver = useCallback((e: DragEvent, slot: EquipmentSlot) => {
+    e.preventDefault();
+    if (!e.dataTransfer) return;
+    // Only allow drop if dragged item matches slot type
+    if (dragState.item && dragState.item.slot === slot) {
+      e.dataTransfer.dropEffect = 'move';
+      setDragOverSlot(slot);
+    } else {
+      e.dataTransfer.dropEffect = 'none';
+    }
+  }, [dragState.item]);
+
+  const handleDragLeave = useCallback(() => {
+    setDragOverSlot(null);
+  }, []);
+
+  const handleDrop = useCallback((e: DragEvent, slot: EquipmentSlot) => {
+    e.preventDefault();
+    if (dragState.item && dragState.item.slot === slot) {
+      // If dragging from another slot, unequip first
+      if (dragState.sourceSlot && dragState.sourceSlot !== slot) {
+        onUnequip(dragState.sourceSlot);
+      }
+      onEquip(slot, dragState.item);
+    }
+    setDragState({ item: null, sourceSlot: null });
+    setDragOverSlot(null);
+  }, [dragState, onEquip, onUnequip]);
 
   // Sync activeTab with selectedSlot
   useEffect(() => {
@@ -73,20 +124,30 @@ export function EquipmentSection({
       <div class="equipment-panel">
         <div class="section-title">EQUIPMENT ({unit.name})</div>
 
-        {/* Slots */}
+        {/* Slots - Drop Targets */}
         <div class="equipment-grid compact">
           {EQUIPMENT_SLOTS.map((slot) => {
             const eq = equipmentLoadout[slot];
             const isSelected = selectedSlot === slot;
+            const isDragOver = dragOverSlot === slot;
+            const canDrop = dragState.item?.slot === slot;
             return (
               <div
                 key={slot}
-                class={`equipment-slot ${slot} ${isSelected ? 'selected' : ''}`}
+                class={`equipment-slot ${slot} ${isSelected ? 'selected' : ''} ${isDragOver ? 'drag-over' : ''} ${canDrop ? 'can-drop' : ''}`}
                 onClick={() => onSelectSlot(isSelected ? null : slot)}
+                onDragOver={(e: DragEvent) => handleDragOver(e, slot)}
+                onDragLeave={handleDragLeave}
+                onDrop={(e: DragEvent) => handleDrop(e, slot)}
               >
                 <div class="equipment-label">{slot.toUpperCase()}</div>
                 {eq ? (
-                  <>
+                  <div
+                    draggable
+                    onDragStart={(e: DragEvent) => handleDragStart(e, eq, slot)}
+                    onDragEnd={handleDragEnd}
+                    style={{ cursor: 'grab' }}
+                  >
                     <div class="equipment-slot-row">
                       <EquipmentIcon equipment={eq} size="medium" className="equipment-slot-icon" />
                       <div class="equipment-value">{eq.name}</div>
@@ -96,10 +157,10 @@ export function EquipmentSection({
                       {eq.statBonus.def && <span>+{eq.statBonus.def} DEF</span>}
                       {eq.statBonus.spd && <span>+{eq.statBonus.spd} SPD</span>}
                     </div>
-                  </>
+                  </div>
                 ) : (
                   <div class="equipment-value" style={{ color: '#666' }}>
-                    [None]
+                    {isDragOver && canDrop ? '[ Drop Here ]' : '[None]'}
                   </div>
                 )}
               </div>
@@ -148,8 +209,12 @@ export function EquipmentSection({
             availableEquipment.map((item) => (
               <button
                 key={item.id}
-                class="compendium-item compact"
+                class={`compendium-item compact ${dragState.item?.id === item.id ? 'dragging' : ''}`}
                 onClick={() => handleEquip(item)}
+                draggable
+                onDragStart={(e: DragEvent) => handleDragStart(e, item)}
+                onDragEnd={handleDragEnd}
+                style={{ cursor: 'grab' }}
               >
                 <EquipmentIcon equipment={item} size="medium" className="item-icon" />
                 <div class="item-name">{item.name}</div>
