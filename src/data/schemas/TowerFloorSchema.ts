@@ -12,6 +12,7 @@ const TowerFloorBaseSchema = z.object({
   id: z.string().min(1),
   floorNumber: z.number().int().min(1),
   difficultyTier: z.number().int().min(1).optional(),
+  normalizedLevel: z.number().int().min(1).optional(),
   tags: z.array(z.string().min(1)).default([]).readonly(),
 });
 

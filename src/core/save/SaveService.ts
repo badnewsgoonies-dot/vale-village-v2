@@ -103,7 +103,12 @@ export async function saveReplay(
     // Also store tape data in a separate key (hack for now)
     // TODO: Create separate ReplayPort interface
     const tapeJson = JSON.stringify(tape);
-    localStorage.setItem('vale:replay:tape', tapeJson);
+    try {
+      localStorage.setItem('vale:replay:tape', tapeJson);
+    } catch (storageError) {
+      // Storage quota exceeded or other localStorage error
+      console.warn('Failed to store replay tape:', storageError);
+    }
     
     return { ok: true, value: undefined };
   } catch (error) {
