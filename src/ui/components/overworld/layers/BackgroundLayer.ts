@@ -12,7 +12,7 @@ interface MountainRange {
 }
 
 export class BackgroundLayer implements Layer {
-  zIndex = 1;
+  zIndex = 2; // Behind terrain (was 1, swapped to fix rendering order)
 
   private mountainRanges: MountainRange[] = [];
   private baseY: number = 300; // Where mountains meet terrain

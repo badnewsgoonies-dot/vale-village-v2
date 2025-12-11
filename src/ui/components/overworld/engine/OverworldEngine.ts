@@ -693,11 +693,20 @@ export class OverworldEngine {
       this.proximitySystem.checkProximity(this.playerPos);
 
       // Check for interaction input (SPACE/Enter)
-      if (this.input.interact && this.proximitySystem.canInteract()) {
-        const zone = this.proximitySystem.getNearestZone();
-        if (zone && (zone.type === 'door' || zone.type === 'trigger')) {
+      if (this.input.interact) {
+        // First check SceneBuildings (EntityLayer proximity)
+        const nearbyBuilding = this.entityLayer.getNearbyBuilding();
+        if (nearbyBuilding) {
           this.input.interact = false; // Consume input
-          this.enterBuilding();
+          this.enterBuilding(); // Will use nearbyBuilding.triggerId
+        }
+        // Then check ProximitySystem for tile-based triggers
+        else if (this.proximitySystem.canInteract()) {
+          const zone = this.proximitySystem.getNearestZone();
+          if (zone && (zone.type === 'door' || zone.type === 'trigger')) {
+            this.input.interact = false; // Consume input
+            this.enterBuilding();
+          }
         }
       }
 

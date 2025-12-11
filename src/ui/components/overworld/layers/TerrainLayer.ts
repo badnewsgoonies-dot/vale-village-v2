@@ -15,7 +15,7 @@ interface TerrainBand {
 }
 
 export class TerrainLayer implements Layer {
-  zIndex = 2;
+  zIndex = 1; // In front of background (was 2, swapped to fix rendering order)
 
   private bands: TerrainBand[] = [];
   private mapData: GameMap | null = null;

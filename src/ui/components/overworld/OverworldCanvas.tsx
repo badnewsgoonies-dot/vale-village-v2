@@ -199,6 +199,22 @@ export function OverworldCanvas({
   const handleInteraction = useCallback(() => {
     if (!map) return;
 
+    const engine = engineRef.current;
+
+    // First check SceneBuildings (for canvas-based pseudo-3D layout)
+    if (engine) {
+      const nearbyBuilding = engine['entityLayer']?.getNearbyBuilding?.();
+      if (nearbyBuilding && nearbyBuilding.triggerId) {
+        // Find the trigger in map data by ID
+        const sceneTrigger = map.triggers.find(t => t.id === nearbyBuilding.triggerId);
+        if (sceneTrigger) {
+          handleTrigger(sceneTrigger);
+          return;
+        }
+      }
+    }
+
+    // Fallback to tile-based triggers for backwards compatibility
     // Get facing position for interaction check
     const delta: Record<'up' | 'down' | 'left' | 'right', Position> = {
       up: { x: 0, y: -1 },
