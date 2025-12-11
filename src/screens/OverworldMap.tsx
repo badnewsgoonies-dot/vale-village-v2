@@ -10,7 +10,7 @@
  */
 
 // Legacy DOM-based tile renderer
-export { OverworldMap } from '../ui/components/OverworldMap';
+// export { OverworldMap } from '../ui/components/OverworldMap';
 
 // Advanced 3D canvas-based renderer with smooth movement
-// export { OverworldCanvas as OverworldMap } from '../ui/components/overworld/OverworldCanvas';
+export { OverworldCanvas as OverworldMap } from '../ui/components/overworld/OverworldCanvas';

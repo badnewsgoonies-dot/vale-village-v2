@@ -8,7 +8,7 @@ import { TitleScreen } from './screens/TitleScreen';
 import { OverworldMap } from './screens/OverworldMap';
 import { QueueBattleView } from './screens/QueueBattleView';
 import { MainMenu } from './screens/MainMenu';
-import { CompendiumScreen } from './screens/CompendiumScreen';
+import { CompendiumScreen } from './ui/components/CompendiumScreen';
 import { PreBattleTeamSelectScreenV2 } from './ui/components/PreBattleTeamSelectScreenV2';
 import { RewardsScreen } from './ui/components/RewardsScreen';
 import { ShopScreen } from './ui/components/ShopScreen';
