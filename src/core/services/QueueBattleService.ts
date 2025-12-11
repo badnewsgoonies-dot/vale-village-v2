@@ -872,6 +872,16 @@ function generateEnemyActions(
  * PR-QUEUE-BATTLE: Determines victory/defeat
  */
 function checkBattleEnd(state: BattleState): 'PLAYER_VICTORY' | 'PLAYER_DEFEAT' | null {
+  // Guard against empty arrays (.every() returns true for empty arrays)
+  if (state.enemies.length === 0) {
+    console.error('[QueueBattle] BUG: checkBattleEnd called with empty enemies array!');
+    return null; // Battle should not have been created with no enemies
+  }
+  if (state.playerTeam.units.length === 0) {
+    console.error('[QueueBattle] BUG: checkBattleEnd called with empty player team!');
+    return null; // Battle should not have been created with no players
+  }
+
   const allEnemiesKO = state.enemies.every(e => isUnitKO(e));
   const allPlayersKO = state.playerTeam.units.every(u => isUnitKO(u));
 

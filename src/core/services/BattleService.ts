@@ -809,6 +809,16 @@ export function endTurn(
 export function checkBattleEnd(
   state: BattleState
 ): 'PLAYER_VICTORY' | 'PLAYER_DEFEAT' | null {
+  // Guard against empty arrays (.every() returns true for empty arrays)
+  if (state.enemies.length === 0) {
+    console.error('[Battle] BUG: checkBattleEnd called with empty enemies array!');
+    return null;
+  }
+  if (state.playerTeam.units.length === 0) {
+    console.error('[Battle] BUG: checkBattleEnd called with empty player team!');
+    return null;
+  }
+
   const allPlayerKO = state.playerTeam.units.every(u => isUnitKO(u));
   const allEnemiesKO = state.enemies.every(u => isUnitKO(u));
 
