@@ -180,7 +180,7 @@ export class OverworldEngine {
     // Initialize overworld layers
     this.skyLayer = new SkyLayer();
     this.backgroundLayer = new BackgroundLayer();
-    this.terrainLayer = new TerrainLayer(300, this.config.canvasHeight);
+    this.terrainLayer = new TerrainLayer(256, this.config.canvasHeight); // Start at 4/10 (256px)
     this.entityLayer = new EntityLayer();
 
     this.overworldLayers = [
