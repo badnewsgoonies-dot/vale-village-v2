@@ -132,6 +132,89 @@ const ENEMY_SPRITES: Record<string, SpriteStateMap> = {
   'mercury-sprite': makeSinglePose('/sprites/battle/enemies/Will_Head.gif'),
   'venus-sprite': makeSinglePose('/sprites/battle/enemies/Faery.gif'),
   'jupiter-sprite': makeSinglePose('/sprites/battle/enemies/Pixie.gif'),
+
+  // Counter-Strategy Support Enemies
+  'frost-mystic': makeSinglePose('/sprites/battle/enemies/Gnome_Mage.gif'),
+  'gale-priest': makeSinglePose('/sprites/battle/enemies/Gnome_Wizard.gif'),
+  'stone-guardian': makeSinglePose('/sprites/battle/enemies/Golem.gif'),
+  'ember-cleric': makeSinglePose('/sprites/battle/enemies/Gnome.gif'),
+  'earth-shaman': makeSinglePose('/sprites/battle/enemies/Mole_Mage.gif'),
+  'tide-enchanter': makeSinglePose('/sprites/battle/enemies/Siren.gif'),
+  'frost-oracle': makeSinglePose('/sprites/battle/enemies/Lich.gif'),
+  'terra-warden': makeSinglePose('/sprites/battle/enemies/Living_Armor.gif'),
+  'flame-herald': makeSinglePose('/sprites/battle/enemies/Mad_Demon.gif'),
+
+  // Undead Category
+  'skeleton-warrior': makeSinglePose('/sprites/battle/enemies/Skeleton.gif'),
+  'ghost-wisp': makeSinglePose('/sprites/battle/enemies/Willowisp.gif'),
+  'zombie-hound': makeSinglePose('/sprites/battle/enemies/Dread_Hound.gif'),
+  'bone-mage': makeSinglePose('/sprites/battle/enemies/Bone_Fighter.gif'),
+
+  // Golem Category
+  'clay-golem': makeSinglePose('/sprites/battle/enemies/Clay_Gargoyle.gif'),
+  'iron-golem': makeSinglePose('/sprites/battle/enemies/Golem.gif'),
+  'crystal-golem': makeSinglePose('/sprites/battle/enemies/Ice_Gargoyle.gif'),
+  'storm-golem': makeSinglePose('/sprites/battle/enemies/Gargoyle.gif'),
+
+  // Avian Category
+  'wind-hawk': makeSinglePose('/sprites/battle/enemies/Harpy.gif'),
+  'fire-eagle': makeSinglePose('/sprites/battle/enemies/Wild_Gryphon.gif'),
+  'ice-owl': makeSinglePose('/sprites/battle/enemies/Wonder_Bird.gif'),
+  'stone-roc': makeSinglePose('/sprites/battle/enemies/Roc.gif'),
+
+  // Mercury Beasts (Tier 3-4)
+  'frost-serpent': makeSinglePose('/sprites/battle/enemies/Chimera_Worm.gif'),
+  'aqua-drake': makeSinglePose('/sprites/battle/enemies/Sky_Dragon.gif'),
+  'tidal-wraith': makeSinglePose('/sprites/battle/enemies/Ghost.gif'),
+  'glacier-wyrm': makeSinglePose('/sprites/battle/enemies/Wyvern.gif'),
+
+  // Jupiter Beasts (Tier 3-4)
+  'storm-raven': makeSinglePose('/sprites/battle/enemies/Harridan.gif'),
+  'lightning-lynx': makeSinglePose('/sprites/battle/enemies/Cerebus.gif'),
+  'cyclone-djinni': makeSinglePose('/sprites/battle/enemies/Horned_Ghost.gif'),
+  'tempest-dragon': makeSinglePose('/sprites/battle/enemies/Cruel_Dragon.gif'),
+
+  // Boss Variants (Tier 5)
+  'alpha-phoenix': makeSinglePose('/sprites/battle/enemies/Phoenix.gif'),
+  'elder-basilisk': makeSinglePose('/sprites/battle/enemies/Earth_Lizard.gif'),
+  'kraken': makeSinglePose('/sprites/battle/enemies/Calamar.gif'),
+  'storm-titan': makeSinglePose('/sprites/battle/enemies/Minotaurus.gif'),
+
+  // Tier 5 Enemies
+  'void-specter': makeSinglePose('/sprites/battle/enemies/Ghost_Army.gif'),
+  'frost-lich': makeSinglePose('/sprites/battle/enemies/Lich_2.gif'),
+  'magma-colossus': makeSinglePose('/sprites/battle/enemies/Grand_Golem.gif'),
+  'terra-guardian': makeSinglePose('/sprites/battle/enemies/Minos_Warrior.gif'),
+
+  // Mercury Elite Bosses (Tower Floor 15-20)
+  'arctic-sovereign': makeSinglePose('/sprites/battle/enemies/Druj.gif'),
+  'neptune-warden': makeSinglePose('/sprites/battle/enemies/Gillman.gif'),
+  'abyssal-emperor': makeSinglePose('/sprites/battle/enemies/Turtle_Dragon.gif'),
+
+  // Jupiter Elite Bosses (Tower Floor 15-20)
+  'stratosphere-lord': makeSinglePose('/sprites/battle/enemies/Magicore.gif'),
+  'zeus-avatar': makeSinglePose('/sprites/battle/enemies/Manticore_King.gif'),
+  'celestial-fury': makeSinglePose('/sprites/battle/enemies/Sky_Dragon.gif'),
+
+  // Mercury Tier 5 Variants
+  'permafrost-golem': makeSinglePose('/sprites/battle/enemies/Ice_Gargoyle.gif'),
+  'tundra-serpent': makeSinglePose('/sprites/battle/enemies/Angle_Worm.gif'),
+  'polar-guardian': makeSinglePose('/sprites/battle/enemies/Living_Statue.gif'),
+
+  // Jupiter Tier 5 Variants
+  'voltage-chimera': makeSinglePose('/sprites/battle/enemies/Chimera_Mage.gif'),
+  'monsoon-drake': makeSinglePose('/sprites/battle/enemies/Wyvern_Chick.gif'),
+  'aurora-elemental': makeSinglePose('/sprites/battle/enemies/Virago.gif'),
+  'vortex-sentinel': makeSinglePose('/sprites/battle/enemies/Living_Armor.gif'),
+
+  // Hybrid Tier 5 Bosses
+  'maelstrom-beast': makeSinglePose('/sprites/battle/enemies/Slime_Beast.gif'),
+  'thunderstorm-colossus': makeSinglePose('/sprites/battle/enemies/Bombander.gif'),
+
+  // Legacy aliases (point to same sprites as canonical IDs)
+  'slime': makeSinglePose('/sprites/battle/enemies/Slime.gif'),
+  'wolf': makeSinglePose('/sprites/battle/enemies/Wild_Wolf.gif'),
+  'beetle': makeSinglePose('/sprites/battle/enemies/Punch_Ant.gif'),
 };
 
 export const EARLY_GAME_ENEMY_IDS = collectEarlyEnemyIds();
@@ -157,6 +240,24 @@ export function getEnemyBattleSprite(enemyId: string, state: BattleSpriteState):
     return null;
   }
   return spriteMap[state] ?? null;
+}
+
+/**
+ * Resolve an enemy battle sprite with optional NPC override for leaders.
+ * If overrideSpriteId is provided and has a mapping, use that instead.
+ */
+export function getEnemyBattleSpriteWithOverride(
+  enemyId: string,
+  state: BattleSpriteState,
+  overrideSpriteId?: string
+): string | null {
+  if (overrideSpriteId) {
+    const overrideMap = ENEMY_SPRITES[overrideSpriteId];
+    if (overrideMap) {
+      return overrideMap[state] ?? null;
+    }
+  }
+  return getEnemyBattleSprite(enemyId, state);
 }
 
 /**

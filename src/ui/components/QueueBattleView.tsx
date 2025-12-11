@@ -23,7 +23,7 @@ import { ModeLabel } from './ModeLabel';
 import type { Ability } from '../../data/schemas/AbilitySchema';
 import type { Unit } from '../../core/models/Unit';
 import type { BattleEvent } from '../../core/services/types';
-import { getEnemyBattleSprite } from '../sprites/mappings/battleSprites';
+import { getEnemyBattleSprite, getEnemyBattleSpriteWithOverride } from '../sprites/mappings/battleSprites';
 import { SimpleSprite } from '../sprites/SimpleSprite';
 import { BattleUnitSprite } from './BattleUnitSprite';
 import { ABILITIES } from '../../data/definitions/abilities';
@@ -33,6 +33,7 @@ import { VS1_ENCOUNTER_ID, VS1_SCENE_PRE } from '../../story/vs1Constants';
 import { type BattleUIPhase, deriveUIPhase } from '../types/BattleUIPhase';
 import { getEventTiming } from '../constants/animationTiming';
 import { useBattleSpeed } from '../hooks/useBattleSpeed';
+import { getBackgroundPath, getTowerFloorBackground } from '../sprites/backgrounds';
 
 // Z-Index layering constants to prevent overlay conflicts
 const Z_INDEX = {
@@ -681,6 +682,21 @@ export function QueueBattleView() {
   const currentFloor = useMemo(() => (towerStatus === 'in-run' ? getCurrentTowerFloor() : null), [towerStatus, getCurrentTowerFloor]);
   const battleType = towerStatus === 'in-run' ? 'tower' : 'story';
   const locationName = battle?.meta?.encounterId || battle?.encounterId || 'Story Battle';
+
+  // Determine battle background: tower floor > encounter > default
+  const backgroundUrl = useMemo(() => {
+    // For tower battles, use floor-based background rotation
+    if (currentFloor?.floorNumber) {
+      const towerBgId = getTowerFloorBackground(currentFloor.floorNumber);
+      return getBackgroundPath(towerBgId);
+    }
+    // For story/encounter battles, use encounter's backgroundId
+    if (battle?.backgroundId) {
+      return getBackgroundPath(battle.backgroundId);
+    }
+    // Default background
+    return getBackgroundPath(undefined);
+  }, [currentFloor?.floorNumber, battle?.backgroundId]);
   const currentEvent = events[0];
   const currentActorId =
     currentEvent?.type === 'ability' ? currentEvent.casterId :
@@ -1034,7 +1050,7 @@ export function QueueBattleView() {
             left: 0,
             width: '100%',
             height: '100%',
-            backgroundImage: 'url(/sprites/backgrounds/gs1/Kolima_Forest.gif)',
+            backgroundImage: `url(${backgroundUrl})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center 70%',
             imageRendering: 'pixelated',
@@ -1093,7 +1109,7 @@ export function QueueBattleView() {
               zIndex: 10,
             }}
           >
-            {battle.enemies.map((enemy) => {
+            {battle.enemies.map((enemy, enemyIndex) => {
               const isTargetCandidate = validTargetIds.has(enemy.id);
               const isResolvingTarget = highlightedTargets.has(enemy.id);
               const isActor = currentActorId === enemy.id;
@@ -1111,7 +1127,11 @@ export function QueueBattleView() {
                 return false;
               });
               if (isUnitKO(enemy) && !hasPendingEvent) return null;
-              const mappedSprite = getEnemyBattleSprite(enemy.id, 'idle');
+              // Use NPC sprite override for the first enemy (leader) if available
+              const isLeader = enemyIndex === 0;
+              const mappedSprite = isLeader
+                ? getEnemyBattleSpriteWithOverride(enemy.id, 'idle', battle.leaderSpriteId)
+                : getEnemyBattleSprite(enemy.id, 'idle');
               const nameBasedFallback = `/sprites/battle/enemies/${enemy.name.replace(/\s+/g, '')}.gif`;
               const spriteId = mappedSprite ?? nameBasedFallback;
               return (

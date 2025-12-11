@@ -70,6 +70,8 @@ export function createBattleFromEncounter(
       difficulty: encounter.difficulty === 'boss' ? 'boss' : 'normal',
     },
     isBossBattle: encounter.difficulty === 'boss',
+    leaderSpriteId: encounter.leaderSpriteId,
+    backgroundId: encounter.backgroundId,
   };
 
   return { battle: battleWithMeta, encounter };

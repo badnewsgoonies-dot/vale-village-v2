@@ -24,6 +24,7 @@ const createVs1Encounter = (id: string, name: string): Encounter => ({
   name,
   enemies: ['garet-enemy'], // Enemy version of War Mage
   difficulty: 'easy',
+  backgroundId: 'gs1/Vale', // Vale village background for first battle
   reward: {
     xp: 60,
     gold: 20,
@@ -57,6 +58,7 @@ export const HOUSE_02: Encounter = {
   name: 'House 2: The Bronze Trial',
   enemies: ['earth-scout', 'venus-wolf'],
   difficulty: 'easy',
+  backgroundId: 'gs1/Sol_Sanctum', // Temple interior
   reward: {
     xp: 70,
     gold: 22,
@@ -77,6 +79,7 @@ export const HOUSE_03: Encounter = {
   name: 'House 3: Iron Bonds',
   enemies: ['flame-scout', 'mars-wolf'],
   difficulty: 'easy',
+  backgroundId: 'gs1/Kolima_Forest', // Forest setting
   reward: {
     xp: 80,
     gold: 24,
@@ -97,6 +100,7 @@ export const HOUSE_04: Encounter = {
   name: 'House 4: Arcane Power',
   enemies: ['frost-scout', 'frost-mystic'],
   difficulty: 'easy',
+  backgroundId: 'gs1/Mercury_Lighthouse', // Mercury lighthouse for frost enemies
   reward: {
     xp: 90,
     gold: 26,
@@ -119,6 +123,7 @@ export const HOUSE_05: Encounter = {
   name: 'House 5: The Blazing Warrior',
   enemies: ['gale-scout', 'gale-priest'],
   difficulty: 'easy',
+  backgroundId: 'gs1/Vault_Inn', // Inn setting
   reward: {
     xp: 100,
     gold: 28,
@@ -440,7 +445,7 @@ export const HOUSE_20_OVERSEER: Encounter = {
     djinn: 'storm', // Jupiter T3 Djinn - FINAL DJINN!
     equipment: {
       type: 'choice',
-      options: ['sol-blade', 'titans-axe', 'staff-of-ages', 'cosmos-shield'],
+      options: ['sol-blade', 'titans-axe', 'cosmos-shield'],
     },
   },
 };
@@ -610,7 +615,189 @@ export const HOUSE_28: Encounter = {
     djinn: 'fury', // Mars T3 Djinn (reserved for future)
     equipment: {
       type: 'choice',
-      options: ['sol-blade', 'titans-axe', 'staff-of-ages', 'cosmos-shield'],
+      options: ['sol-blade', 'titans-axe', 'cosmos-shield'],
+    },
+  },
+};
+
+// ============================================================================
+// CHAPTER 3: THE ELEMENTAL TRIALS (Houses 29-36)
+// ============================================================================
+
+/**
+ * HOUSE 29 - Abyssal Depths
+ * - Deep sea and water elementals
+ * - First Chapter 3 encounter
+ * - Introduces high-tier Mercury enemies
+ */
+export const HOUSE_29: Encounter = {
+  id: 'house-29',
+  name: 'House 29: Abyssal Depths',
+  enemies: ['tidal-wraith', 'neptune-warden', 'frost-serpent'],
+  difficulty: 'boss',
+  reward: {
+    xp: 1100,
+    gold: 270,
+    equipment: {
+      type: 'choice',
+      options: ['mythril-armor', 'zodiac-wand', 'hyper-boots'],
+    },
+  },
+};
+
+/**
+ * HOUSE 30 - Volcanic Summit
+ * - Mars elite enemies
+ * - Extreme fire damage
+ * - Magma Colossus as main threat
+ */
+export const HOUSE_30: Encounter = {
+  id: 'house-30',
+  name: 'House 30: Volcanic Summit',
+  enemies: ['magma-colossus', 'flame-elemental', 'fire-commander'],
+  difficulty: 'boss',
+  reward: {
+    xp: 1200,
+    gold: 290,
+    djinn: 'scorch', // Mars T3 Djinn
+    equipment: {
+      type: 'fixed',
+      itemId: 'titans-axe',
+    },
+  },
+};
+
+/**
+ * HOUSE 31 - Frozen Citadel
+ * - Arctic themed encounter
+ * - Permafrost and polar enemies
+ * - High defense, ice-based attacks
+ */
+export const HOUSE_31: Encounter = {
+  id: 'house-31',
+  name: 'House 31: Frozen Citadel',
+  enemies: ['permafrost-golem', 'polar-guardian', 'arctic-sovereign'],
+  difficulty: 'boss',
+  reward: {
+    xp: 1300,
+    gold: 310,
+    equipment: {
+      type: 'choice',
+      options: ['valkyrie-mail', 'oracles-crown', 'elemental-star'],
+    },
+  },
+};
+
+/**
+ * HOUSE 32 - Stratosphere Keep
+ * - Jupiter elite encounter
+ * - Flying and lightning enemies
+ * - High speed, devastating AoE
+ */
+export const HOUSE_32: Encounter = {
+  id: 'house-32',
+  name: 'House 32: Stratosphere Keep',
+  enemies: ['stratosphere-lord', 'thunderstorm-colossus', 'storm-titan'],
+  difficulty: 'boss',
+  reward: {
+    xp: 1400,
+    gold: 330,
+    djinn: 'crystal', // Mercury T3 Djinn
+    equipment: {
+      type: 'fixed',
+      itemId: 'staff-of-ages',
+    },
+  },
+};
+
+/**
+ * HOUSE 33 - Chimera's Lair
+ * - Multi-element mythical beasts
+ * - Chimera variants
+ * - Tests elemental coverage
+ */
+export const HOUSE_33: Encounter = {
+  id: 'house-33',
+  name: "House 33: Chimera's Lair",
+  enemies: ['voltage-chimera', 'chimera', 'elder-basilisk'],
+  difficulty: 'boss',
+  reward: {
+    xp: 1500,
+    gold: 350,
+    equipment: {
+      type: 'choice',
+      options: ['gaia-blade', 'sol-blade', 'cosmos-shield'],
+    },
+  },
+};
+
+/**
+ * HOUSE 34 - Spectral Void
+ * - Undead and spectral enemies
+ * - Lich as main boss
+ * - Resurrection mechanics
+ */
+export const HOUSE_34: Encounter = {
+  id: 'house-34',
+  name: 'House 34: Spectral Void',
+  enemies: ['frost-lich', 'void-specter', 'bone-mage', 'ghost-wisp'],
+  difficulty: 'boss',
+  reward: {
+    xp: 1600,
+    gold: 370,
+    equipment: {
+      type: 'fixed',
+      itemId: 'oracles-crown',
+    },
+  },
+};
+
+/**
+ * HOUSE 35 - Elemental Convergence
+ * - All four elements represented
+ * - Aurora Elemental as centerpiece
+ * - Elemental synergy test
+ */
+export const HOUSE_35: Encounter = {
+  id: 'house-35',
+  name: 'House 35: Elemental Convergence',
+  enemies: ['aurora-elemental', 'storm-elemental', 'flame-elemental', 'rock-elemental'],
+  difficulty: 'boss',
+  reward: {
+    xp: 1800,
+    gold: 400,
+    djinn: 'serac', // Venus T4 Djinn (endgame)
+    equipment: {
+      type: 'choice',
+      options: ['sol-blade', 'titans-axe', 'cosmos-shield'],
+    },
+  },
+};
+
+/**
+ * HOUSE 36 - Divine Judgment (Chapter 3 Finale)
+ * - Celestial themed boss encounter
+ * - Ultimate challenge before endgame
+ * - Zeus Avatar as final boss
+ */
+export const HOUSE_36: Encounter = {
+  id: 'house-36',
+  name: 'House 36: Divine Judgment',
+  enemies: ['zeus-avatar', 'celestial-fury', 'vortex-sentinel'],
+  difficulty: 'boss',
+  rules: {
+    phaseChange: {
+      hpPct: 0.3, // At 30% HP, Zeus Avatar becomes enraged
+      addAbility: 'party-heal', // Divine restoration at low HP
+    },
+  },
+  reward: {
+    xp: 2500,
+    gold: 500,
+    djinn: 'eclipse', // Jupiter T4 Djinn (endgame)
+    equipment: {
+      type: 'choice',
+      options: ['sol-blade', 'titans-axe', 'cosmos-shield'],
     },
   },
 };
@@ -672,6 +859,16 @@ export const ENCOUNTERS: Record<string, Encounter> = {
   'house-26': HOUSE_26,
   'house-27': HOUSE_27,
   'house-28': HOUSE_28,
+
+  // Chapter 3: The Elemental Trials (Houses 29-36)
+  'house-29': HOUSE_29,
+  'house-30': HOUSE_30,
+  'house-31': HOUSE_31,
+  'house-32': HOUSE_32,
+  'house-33': HOUSE_33,
+  'house-34': HOUSE_34,
+  'house-35': HOUSE_35,
+  'house-36': HOUSE_36,
 
   // Bonus
   'training-dummy': TRAINING_DUMMY,

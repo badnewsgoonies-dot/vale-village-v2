@@ -21,13 +21,59 @@ import type { GameMap, Position } from '../../../../data/schemas/mapSchema';
 import { SkyLayer } from '../layers/SkyLayer';
 import { BackgroundLayer } from '../layers/BackgroundLayer';
 import { TerrainLayer } from '../layers/TerrainLayer';
-import { EntityLayer } from '../layers/EntityLayer';
+import { EntityLayer, type SceneBuilding } from '../layers/EntityLayer';
 import { InteriorFloorLayer } from '../layers/InteriorFloorLayer';
 import { InteriorFurnitureLayer } from '../layers/InteriorFurnitureLayer';
 import { ProximitySystem } from '../systems/ProximitySystem';
 import { SceneTransition } from '../systems/SceneTransition';
 import { TimeOfDay } from '../systems/TimeOfDay';
 import type { SceneType } from '../systems/SceneTransition';
+
+// Re-export SceneBuilding for external use
+export type { SceneBuilding } from '../layers/EntityLayer';
+
+// --- Animation Types ---
+
+/** Animated tree with sway effect */
+interface AnimatedTree {
+  img: HTMLImageElement | null;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  sway: number;
+  loaded: boolean;
+}
+
+/** NPC with path animation */
+interface AnimatedNPC {
+  id: string;
+  x: number;
+  y: number;
+  baseX: number;
+  baseY: number;
+  path: Array<{ x: number; y: number }>;
+  pathIndex: number;
+  targetX: number;
+  targetY: number;
+  spriteId: string;
+}
+
+/** Particle for weather/ambient effects */
+interface Particle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  type: 'rain' | 'snow' | 'leaf';
+  lifetime: number;
+  rotation?: number;
+  size?: number;
+  length?: number;
+}
+
+/** Weather types */
+type WeatherType = 'clear' | 'rain' | 'snow';
 
 export class OverworldEngine {
   private canvas: HTMLCanvasElement;
@@ -90,6 +136,28 @@ export class OverworldEngine {
   // Debug mode
   private debugMode: boolean = false;
 
+  // --- Animation State ---
+
+  // Animated trees with sway effect
+  private trees: AnimatedTree[] = [];
+
+  // NPCs with path animation
+  private animatedNPCs: AnimatedNPC[] = [];
+
+  // Particle system
+  private particles: Particle[] = [];
+  private weather: WeatherType = 'clear';
+  private particlesEnabled: boolean = true;
+  private readonly MAX_PARTICLES = 500;
+
+  // Animation time (seconds, for smooth animations)
+  private time: number = 0;
+
+  // Minimap
+  private minimapCanvas: HTMLCanvasElement | null = null;
+  private minimapCtx: CanvasRenderingContext2D | null = null;
+  private readonly MINIMAP_SIZE = 150;
+
   constructor(canvas: HTMLCanvasElement, config: Partial<EngineConfig> = {}) {
     this.canvas = canvas;
     const ctx = canvas.getContext('2d');
@@ -149,6 +217,12 @@ export class OverworldEngine {
 
     // Set up canvas for pixel art rendering
     this.ctx.imageSmoothingEnabled = false;
+
+    // Initialize animated trees
+    this.initializeTrees();
+
+    // Initialize minimap canvas
+    this.initializeMinimap();
   }
 
   // --- Lifecycle Methods ---
@@ -208,6 +282,28 @@ export class OverworldEngine {
     this.terrainLayer.setMap(map);
     this.entityLayer.setMapData(map);
     this.proximitySystem.setMapData(map);
+  }
+
+  /**
+   * Set scene buildings for pseudo-3D layout
+   * Buildings at varied Y positions create depth illusion (higher Y = closer to viewer)
+   */
+  setSceneBuildings(buildings: SceneBuilding[]): void {
+    this.entityLayer.setSceneBuildings(buildings);
+  }
+
+  /**
+   * Get nearby building (for interaction)
+   */
+  getNearbyBuilding(): SceneBuilding | null {
+    return this.entityLayer.getNearbyBuilding();
+  }
+
+  /**
+   * Check if in scene mode
+   */
+  isSceneMode(): boolean {
+    return this.entityLayer.isSceneMode();
   }
 
   /**
@@ -364,6 +460,115 @@ export class OverworldEngine {
     this.debugMode = enabled;
   }
 
+  // --- Animation Initialization ---
+
+  /**
+   * Initialize animated trees with sway effect
+   * TODO: Implement tree rendering in render loop
+   */
+  private initializeTrees(): void {
+    const treeSprites = [
+      { src: '/sprites/scenery/plants/Tree1.gif', x: 80, y: 330, w: 60, h: 80, sway: 0 },
+      { src: '/sprites/scenery/plants/Tree3.gif', x: 720, y: 290, w: 70, h: 90, sway: 0.5 },
+      { src: '/sprites/scenery/plants/Small_Tree2.gif', x: 200, y: 490, w: 50, h: 60, sway: 1.2 },
+      { src: '/sprites/scenery/plants/Tree5.gif', x: 850, y: 450, w: 60, h: 80, sway: 0.8 },
+      { src: '/sprites/scenery/plants/Tree2.gif', x: 450, y: 310, w: 70, h: 90, sway: 1.5 },
+    ];
+
+    // Store trees for future rendering implementation
+    void (this.trees = treeSprites.map((t) => {
+      const img = new Image();
+      img.src = t.src;
+      const tree: AnimatedTree = {
+        img: null,
+        x: t.x,
+        y: t.y,
+        w: t.w,
+        h: t.h,
+        sway: t.sway,
+        loaded: false,
+      };
+      img.onload = () => {
+        tree.img = img;
+        tree.loaded = true;
+      };
+      return tree;
+    }));
+  }
+
+  /**
+   * Initialize NPCs with path animation
+   */
+  initializeAnimatedNPCs(npcs: Array<{ id: string; x: number; y: number; spriteId: string; path: Array<{ x: number; y: number }> }>): void {
+    this.animatedNPCs = npcs.map((npc) => ({
+      id: npc.id,
+      x: npc.x,
+      y: npc.y,
+      baseX: npc.x,
+      baseY: npc.y,
+      path: npc.path.length > 0 ? npc.path : [{ x: 0, y: 0 }],
+      pathIndex: 0,
+      targetX: npc.x + (npc.path[0]?.x ?? 0),
+      targetY: npc.y + (npc.path[0]?.y ?? 0),
+      spriteId: npc.spriteId,
+    }));
+  }
+
+  /**
+   * Initialize minimap canvas element
+   */
+  private initializeMinimap(): void {
+    // Create minimap canvas
+    this.minimapCanvas = document.createElement('canvas');
+    this.minimapCanvas.width = this.MINIMAP_SIZE;
+    this.minimapCanvas.height = this.MINIMAP_SIZE;
+    this.minimapCanvas.style.cssText = `
+      position: absolute;
+      bottom: 16px;
+      right: 16px;
+      width: ${this.MINIMAP_SIZE}px;
+      height: ${this.MINIMAP_SIZE}px;
+      background: rgba(0, 0, 0, 0.8);
+      border: 3px solid #d4af37;
+      border-radius: 8px;
+      pointer-events: none;
+      z-index: 100;
+    `;
+
+    this.minimapCtx = this.minimapCanvas.getContext('2d');
+    if (this.minimapCtx) {
+      this.minimapCtx.imageSmoothingEnabled = false;
+    }
+
+    // Append to canvas parent
+    if (this.canvas.parentElement) {
+      this.canvas.parentElement.appendChild(this.minimapCanvas);
+    }
+  }
+
+  // --- Weather Controls ---
+
+  /**
+   * Set weather type (clear, rain, snow)
+   */
+  setWeather(weather: WeatherType): void {
+    this.weather = weather;
+  }
+
+  /**
+   * Toggle particles enabled
+   */
+  setParticlesEnabled(enabled: boolean): void {
+    this.particlesEnabled = enabled;
+  }
+
+  /**
+   * Get current weather type
+   */
+  getWeather(): WeatherType {
+    return this.weather;
+  }
+
   // --- Input Handling ---
 
   /**
@@ -453,6 +658,9 @@ export class OverworldEngine {
   };
 
   private update(dt: number): void {
+    // Update animation time (convert ms to seconds)
+    this.time += dt * 0.001;
+
     // Update systems
     this.sceneTransition.update(dt);
     this.timeOfDay.update(dt);
@@ -492,6 +700,12 @@ export class OverworldEngine {
           this.enterBuilding();
         }
       }
+
+      // Update NPC path animation
+      this.updateNPCPaths();
+
+      // Update particle system
+      this.updateParticles();
     } else {
       // Interior scene - sync to furniture layer
       this.interiorFurnitureLayer.setPlayerPosition(
@@ -503,6 +717,105 @@ export class OverworldEngine {
     // Update layers
     for (const layer of this.layers) {
       layer.update?.(dt);
+    }
+  }
+
+  /**
+   * Update NPC path animation
+   */
+  private updateNPCPaths(): void {
+    const NPC_SPEED = 0.5; // pixels per frame
+
+    for (const npc of this.animatedNPCs) {
+      const dx = npc.targetX - npc.x;
+      const dy = npc.targetY - npc.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+
+      if (dist < 2) {
+        // Reached waypoint, advance to next
+        npc.pathIndex = (npc.pathIndex + 1) % npc.path.length;
+        const waypoint = npc.path[npc.pathIndex];
+        if (waypoint) {
+          npc.targetX = npc.baseX + waypoint.x;
+          npc.targetY = npc.baseY + waypoint.y;
+        }
+      } else {
+        // Move toward target
+        npc.x += (dx / dist) * NPC_SPEED;
+        npc.y += (dy / dist) * NPC_SPEED;
+      }
+    }
+  }
+
+  /**
+   * Update particle system
+   */
+  private updateParticles(): void {
+    if (!this.particlesEnabled) return;
+
+    // Spawn new particles based on weather
+    this.spawnParticles();
+
+    // Update existing particles
+    this.particles = this.particles.filter((p) => {
+      // Update position
+      p.x += p.vx;
+      p.y += p.vy;
+
+      // Update lifetime
+      p.lifetime -= 0.001;
+
+      // Update rotation for leaves
+      if (p.type === 'leaf' && p.rotation !== undefined) {
+        p.rotation += 0.02;
+        p.vx += (Math.random() - 0.5) * 0.1;
+      }
+
+      // Keep particle if still visible and alive
+      return p.y < this.config.canvasHeight && p.lifetime > 0;
+    });
+
+    // Limit particle count
+    if (this.particles.length > this.MAX_PARTICLES) {
+      this.particles = this.particles.slice(-this.MAX_PARTICLES);
+    }
+  }
+
+  /**
+   * Spawn new particles based on weather type
+   */
+  private spawnParticles(): void {
+    if (this.weather === 'rain' && Math.random() < 0.3) {
+      this.particles.push({
+        x: Math.random() * this.config.canvasWidth,
+        y: -10,
+        vx: -1,
+        vy: 5 + Math.random() * 3,
+        type: 'rain',
+        lifetime: 1,
+        length: 10 + Math.random() * 5,
+      });
+    } else if (this.weather === 'snow' && Math.random() < 0.15) {
+      this.particles.push({
+        x: Math.random() * this.config.canvasWidth,
+        y: -10,
+        vx: Math.random() * 0.5 - 0.25,
+        vy: 0.5 + Math.random(),
+        type: 'snow',
+        lifetime: 1,
+        size: 2 + Math.random() * 2,
+      });
+    } else if (this.weather === 'clear' && Math.random() < 0.02) {
+      this.particles.push({
+        x: Math.random() * this.config.canvasWidth,
+        y: -10,
+        vx: Math.random() * 2 - 1,
+        vy: 0.5 + Math.random() * 0.5,
+        type: 'leaf',
+        lifetime: 1,
+        size: 3 + Math.random() * 3,
+        rotation: Math.random() * Math.PI * 2,
+      });
     }
   }
 
@@ -619,7 +932,13 @@ export class OverworldEngine {
 
     // Render proximity markers (overworld only)
     if (this.currentSceneType === 'overworld') {
+      // Render animated trees with sway
+      this.renderTrees();
+
       this.proximitySystem.render(this.ctx, this.camera);
+
+      // Render particles
+      this.renderParticles();
 
       // Render ambient lighting overlay (night/dusk tint)
       const ambient = this.timeOfDay.getAmbientLighting();
@@ -629,6 +948,9 @@ export class OverworldEngine {
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.globalAlpha = 1;
       }
+
+      // Render minimap
+      this.renderMinimap();
     }
 
     // Render scene transition overlay (on top of everything)
@@ -756,6 +1078,182 @@ export class OverworldEngine {
     ctx.fillText(`Tile: (${tile.x}, ${tile.y})`, 20, 50);
     ctx.fillText(`Facing: ${this.playerFacing}`, 20, 70);
     ctx.fillText(`Camera: (${this.camera.x.toFixed(1)}, ${this.camera.y.toFixed(1)})`, 20, 90);
+  }
+
+  /**
+   * Render animated trees with sway effect
+   */
+  private renderTrees(): void {
+    const ctx = this.ctx;
+
+    for (const tree of this.trees) {
+      // Calculate sway offset
+      const swayOffset = Math.sin(this.time * 0.5 + tree.sway) * 3;
+
+      // Get screen position
+      const screenPos = this.camera.worldToScreen(tree.x, tree.y);
+
+      // Draw shadow
+      ctx.save();
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+      ctx.beginPath();
+      ctx.ellipse(
+        screenPos.x + tree.w * 0.5,
+        screenPos.y + tree.h + 5,
+        tree.w * 0.6,
+        8,
+        0,
+        0,
+        Math.PI * 2
+      );
+      ctx.fill();
+      ctx.restore();
+
+      // Draw tree with sway
+      ctx.save();
+      ctx.translate(screenPos.x + tree.w * 0.5 + swayOffset, screenPos.y);
+
+      if (tree.loaded && tree.img) {
+        ctx.drawImage(tree.img, -tree.w * 0.5, 0, tree.w, tree.h);
+      } else {
+        // Fallback placeholder tree
+        ctx.fillStyle = '#6a5840';
+        ctx.fillRect(-4, tree.h * 0.6, 8, tree.h * 0.4);
+        ctx.fillStyle = '#5a7850';
+        ctx.beginPath();
+        ctx.arc(0, tree.h * 0.3, tree.w * 0.4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.restore();
+    }
+  }
+
+  /**
+   * Render particles (rain, snow, leaves)
+   */
+  private renderParticles(): void {
+    const ctx = this.ctx;
+
+    for (const p of this.particles) {
+      ctx.save();
+      ctx.globalAlpha = p.lifetime;
+
+      if (p.type === 'rain') {
+        // Draw rain as blue line
+        ctx.strokeStyle = '#5090d8';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(p.x - p.vx * 2, p.y - p.vy);
+        ctx.stroke();
+      } else if (p.type === 'snow') {
+        // Draw snow as white circle
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size ?? 2, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (p.type === 'leaf') {
+        // Draw leaf as green square with rotation
+        ctx.fillStyle = '#7aa880';
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rotation ?? 0);
+        const size = p.size ?? 4;
+        ctx.fillRect(-size / 2, -size / 2, size, size);
+      }
+
+      ctx.restore();
+    }
+  }
+
+  /**
+   * Render minimap (150x150)
+   */
+  private renderMinimap(): void {
+    if (!this.minimapCtx || !this.minimapCanvas) return;
+
+    const ctx = this.minimapCtx;
+    const size = this.MINIMAP_SIZE;
+
+    // Clear minimap
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(0, 0, size, size);
+
+    // Draw terrain bands
+    ctx.fillStyle = '#5a8aa8'; // Sky
+    ctx.fillRect(0, 0, size, 70);
+
+    ctx.fillStyle = '#7aa880'; // Upper ground
+    ctx.fillRect(0, 70, size, 25);
+
+    ctx.fillStyle = '#6a9870'; // Mid ground
+    ctx.fillRect(0, 95, size, 25);
+
+    ctx.fillStyle = '#5a8860'; // Lower ground
+    ctx.fillRect(0, 120, size, 20);
+
+    ctx.fillStyle = '#3070b0'; // River
+    ctx.fillRect(0, 140, size, 10);
+
+    // Draw trees as green dots
+    ctx.fillStyle = '#4a6840';
+    for (const tree of this.trees) {
+      const mx = (tree.x / this.config.canvasWidth) * size;
+      const my = (tree.y / this.config.canvasHeight) * size;
+      ctx.beginPath();
+      ctx.arc(mx, my, 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Draw buildings as brown rectangles from map data
+    if (this.mapData) {
+      ctx.fillStyle = '#8a6840';
+      for (let y = 0; y < this.mapData.height; y++) {
+        for (let x = 0; x < this.mapData.width; x++) {
+          const tile = this.mapData.tiles[y]?.[x];
+          if (tile?.type === 'wall') {
+            const mx =
+              ((x * this.config.tileSize) /
+                (this.mapData.width * this.config.tileSize)) *
+              size;
+            const my =
+              ((y * this.config.tileSize) /
+                (this.mapData.height * this.config.tileSize)) *
+              size;
+            ctx.fillRect(mx, my, 2, 2);
+          }
+        }
+      }
+    }
+
+    // Draw player as gold pulsing circle
+    const pulseSize = 3 + Math.sin(this.time * 2) * 0.5;
+    const playerMx = (this.playerPos.x / this.config.canvasWidth) * size;
+    const playerMy = (this.playerPos.y / this.config.canvasHeight) * size;
+
+    ctx.fillStyle = '#d4af37';
+    ctx.beginPath();
+    ctx.arc(playerMx, playerMy, pulseSize, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // Draw NPCs as green dots
+    ctx.fillStyle = '#50d850';
+    for (const npc of this.animatedNPCs) {
+      const mx = (npc.x / this.config.canvasWidth) * size;
+      const my = (npc.y / this.config.canvasHeight) * size;
+      ctx.beginPath();
+      ctx.arc(mx, my, 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Border
+    ctx.strokeStyle = '#d4af37';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(0, 0, size, size);
   }
 
   // --- Public Getters ---

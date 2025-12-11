@@ -30,9 +30,9 @@ export const DjinnSummonEffectSchema = z.discriminatedUnion('type', [
 ]);
 
 export const DjinnGrantedAbilitiesSchema = z.object({
-  same: z.array(z.string()).min(0).max(4),
-  counter: z.array(z.string()).min(0).max(4),
-  neutral: z.array(z.string()).min(0).max(4),
+  same: z.array(z.string()).min(0).max(6),
+  counter: z.array(z.string()).min(0).max(6),
+  neutral: z.array(z.string()).min(0).max(6),
 });
 export const DjinnSchema = z.object({
   id: z.string().min(1),

@@ -1,6 +1,7 @@
 /**
  * Data Validation at Startup
  * Validates all game data against Zod schemas before app renders
+ * Includes cross-reference validation to catch orphaned references
  */
 
 import { z } from 'zod';
@@ -20,6 +21,7 @@ import { EQUIPMENT } from './definitions/equipment';
 import { ENEMIES } from './definitions/enemies';
 import { ENCOUNTERS } from './definitions/encounters';
 import { SHOPS } from './definitions/shops';
+import { ABILITIES } from './definitions/abilities';
 
 export interface ValidationError {
   category: string;
@@ -58,6 +60,104 @@ function validateRecord<T>(
 }
 
 /**
+ * Cross-reference validation to catch orphaned references
+ * Checks that all referenced IDs actually exist in their target collections
+ */
+function validateCrossReferences(): ValidationError[] {
+  const errors: ValidationError[] = [];
+
+  // 1. Validate Equipment.unlocksAbility references
+  for (const [id, equipment] of Object.entries(EQUIPMENT)) {
+    const equip = equipment as { unlocksAbility?: string };
+    if (equip.unlocksAbility && !ABILITIES[equip.unlocksAbility]) {
+      errors.push({
+        category: 'Equipment',
+        id,
+        errors: [`unlocksAbility '${equip.unlocksAbility}' does not exist in ABILITIES`],
+      });
+    }
+  }
+
+  // 2. Validate Encounter references
+  for (const [id, encounter] of Object.entries(ENCOUNTERS)) {
+    const enc = encounter as {
+      enemies: string[];
+      reward: {
+        djinn?: string;
+        unlockUnit?: string;
+        equipment: { type: string; itemId?: string; options?: string[] };
+      };
+    };
+
+    // Check enemy references
+    for (const enemyId of enc.enemies) {
+      if (!ENEMIES[enemyId]) {
+        errors.push({
+          category: 'Encounter',
+          id,
+          errors: [`enemy '${enemyId}' does not exist in ENEMIES`],
+        });
+      }
+    }
+
+    // Check djinn reward reference
+    if (enc.reward.djinn && !DJINN[enc.reward.djinn]) {
+      errors.push({
+        category: 'Encounter',
+        id,
+        errors: [`reward.djinn '${enc.reward.djinn}' does not exist in DJINN`],
+      });
+    }
+
+    // Check unit unlock reference
+    if (enc.reward.unlockUnit && !UNIT_DEFINITIONS[enc.reward.unlockUnit]) {
+      errors.push({
+        category: 'Encounter',
+        id,
+        errors: [`reward.unlockUnit '${enc.reward.unlockUnit}' does not exist in UNIT_DEFINITIONS`],
+      });
+    }
+
+    // Check equipment reward references
+    if (enc.reward.equipment.type === 'fixed' && enc.reward.equipment.itemId) {
+      if (!EQUIPMENT[enc.reward.equipment.itemId]) {
+        errors.push({
+          category: 'Encounter',
+          id,
+          errors: [`reward.equipment.itemId '${enc.reward.equipment.itemId}' does not exist in EQUIPMENT`],
+        });
+      }
+    }
+    if (enc.reward.equipment.type === 'choice' && enc.reward.equipment.options) {
+      for (const optionId of enc.reward.equipment.options) {
+        if (!EQUIPMENT[optionId]) {
+          errors.push({
+            category: 'Encounter',
+            id,
+            errors: [`reward.equipment.options '${optionId}' does not exist in EQUIPMENT`],
+          });
+        }
+      }
+    }
+  }
+
+  // 3. Validate Shop item references
+  for (const [id, shop] of Object.entries(SHOPS)) {
+    for (const itemId of shop.availableItems) {
+      if (!EQUIPMENT[itemId]) {
+        errors.push({
+          category: 'Shop',
+          id,
+          errors: [`availableItems '${itemId}' does not exist in EQUIPMENT`],
+        });
+      }
+    }
+  }
+
+  return errors;
+}
+
+/**
  * Validate all game data at startup
  */
 export function validateGameData(): ValidationResult {
@@ -80,6 +180,10 @@ export function validateGameData(): ValidationResult {
   errors.push(...validateRecord(ENCOUNTERS, EncounterSchema, 'Encounters'));
   // Validate Shops
   errors.push(...validateRecord(SHOPS, ShopSchema, 'Shops'));
+
+  // Cross-reference validation (only if schema validation passed)
+  // This catches orphaned references like equipment pointing to non-existent abilities
+  errors.push(...validateCrossReferences());
 
   // Add warnings for empty collections
   if (Object.keys(DJINN).length === 0) {

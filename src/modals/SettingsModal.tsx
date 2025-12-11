@@ -1,17 +1,13 @@
 import { FunctionComponent } from 'preact';
-import { useState } from 'preact/hooks';
+import { useSettings } from '../ui/hooks/useSettings';
+import './modals.css';
 
 interface SettingsModalProps {
   onClose?: () => void;
 }
 
 export const SettingsModal: FunctionComponent<SettingsModalProps> = ({ onClose }) => {
-  // Local state for settings (could be moved to global store later)
-  const [musicVolume, setMusicVolume] = useState(70);
-  const [sfxVolume, setSfxVolume] = useState(80);
-  const [battleSpeed, setBattleSpeed] = useState<'slow' | 'normal' | 'fast'>('normal');
-  const [showDamageNumbers, setShowDamageNumbers] = useState(true);
-  const [autoSave, setAutoSave] = useState(true);
+  const { settings, updateSettings, resetSettings } = useSettings();
 
   return (
     <div class="modal-overlay" onClick={onClose}>
@@ -29,30 +25,30 @@ export const SettingsModal: FunctionComponent<SettingsModalProps> = ({ onClose }
 
             <div class="setting-item">
               <label class="setting-label" for="music-volume">
-                Music Volume: {musicVolume}%
+                Music Volume: {settings.musicVolume}%
               </label>
               <input
                 id="music-volume"
                 type="range"
                 min="0"
                 max="100"
-                value={musicVolume}
-                onInput={(e) => setMusicVolume(parseInt((e.target as HTMLInputElement).value))}
+                value={settings.musicVolume}
+                onInput={(e) => updateSettings({ musicVolume: parseInt((e.target as HTMLInputElement).value) })}
                 class="setting-slider"
               />
             </div>
 
             <div class="setting-item">
               <label class="setting-label" for="sfx-volume">
-                Sound Effects: {sfxVolume}%
+                Sound Effects: {settings.sfxVolume}%
               </label>
               <input
                 id="sfx-volume"
                 type="range"
                 min="0"
                 max="100"
-                value={sfxVolume}
-                onInput={(e) => setSfxVolume(parseInt((e.target as HTMLInputElement).value))}
+                value={settings.sfxVolume}
+                onInput={(e) => updateSettings({ sfxVolume: parseInt((e.target as HTMLInputElement).value) })}
                 class="setting-slider"
               />
             </div>
@@ -65,20 +61,20 @@ export const SettingsModal: FunctionComponent<SettingsModalProps> = ({ onClose }
               <label class="setting-label">Battle Speed</label>
               <div class="setting-buttons">
                 <button
-                  class={`setting-btn ${battleSpeed === 'slow' ? 'active' : ''}`}
-                  onClick={() => setBattleSpeed('slow')}
+                  class={`setting-btn ${settings.battleSpeed === 'slow' ? 'active' : ''}`}
+                  onClick={() => updateSettings({ battleSpeed: 'slow' })}
                 >
                   Slow
                 </button>
                 <button
-                  class={`setting-btn ${battleSpeed === 'normal' ? 'active' : ''}`}
-                  onClick={() => setBattleSpeed('normal')}
+                  class={`setting-btn ${settings.battleSpeed === 'normal' ? 'active' : ''}`}
+                  onClick={() => updateSettings({ battleSpeed: 'normal' })}
                 >
                   Normal
                 </button>
                 <button
-                  class={`setting-btn ${battleSpeed === 'fast' ? 'active' : ''}`}
-                  onClick={() => setBattleSpeed('fast')}
+                  class={`setting-btn ${settings.battleSpeed === 'fast' ? 'active' : ''}`}
+                  onClick={() => updateSettings({ battleSpeed: 'fast' })}
                 >
                   Fast
                 </button>
@@ -89,8 +85,8 @@ export const SettingsModal: FunctionComponent<SettingsModalProps> = ({ onClose }
               <label class="setting-checkbox">
                 <input
                   type="checkbox"
-                  checked={showDamageNumbers}
-                  onChange={(e) => setShowDamageNumbers((e.target as HTMLInputElement).checked)}
+                  checked={settings.showDamageNumbers}
+                  onChange={(e) => updateSettings({ showDamageNumbers: (e.target as HTMLInputElement).checked })}
                 />
                 <span>Show Damage Numbers</span>
               </label>
@@ -100,8 +96,8 @@ export const SettingsModal: FunctionComponent<SettingsModalProps> = ({ onClose }
               <label class="setting-checkbox">
                 <input
                   type="checkbox"
-                  checked={autoSave}
-                  onChange={(e) => setAutoSave((e.target as HTMLInputElement).checked)}
+                  checked={settings.autoSave}
+                  onChange={(e) => updateSettings({ autoSave: (e.target as HTMLInputElement).checked })}
                 />
                 <span>Auto-Save After Battles</span>
               </label>
@@ -111,13 +107,16 @@ export const SettingsModal: FunctionComponent<SettingsModalProps> = ({ onClose }
           <section class="settings-section">
             <h3>Display</h3>
             <div class="setting-info">
-              Resolution: {window.innerWidth} × {window.innerHeight}
+              Resolution: {typeof window !== 'undefined' ? `${window.innerWidth} × ${window.innerHeight}` : 'N/A'}
             </div>
           </section>
 
           <div class="settings-footer">
+            <button class="btn btn-secondary" onClick={resetSettings}>
+              Reset to Defaults
+            </button>
             <button class="btn btn-primary" onClick={onClose}>
-              Apply & Close
+              Close
             </button>
           </div>
         </div>

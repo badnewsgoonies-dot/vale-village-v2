@@ -1,6 +1,7 @@
 import { FunctionComponent } from 'preact';
 import { useState } from 'preact/hooks';
 import { useStore } from '../ui/state/store';
+import './modals.css';
 
 interface SaveMenuProps {
   onClose: () => void;

@@ -33,6 +33,7 @@ export const AbilitySchema = z.object({
     def: z.number().optional(),
     mag: z.number().optional(),
     spd: z.number().optional(),
+    hp: z.number().optional(), // Max HP increase
   }).optional(),
   duration: z.number().int().min(1).optional(),
   

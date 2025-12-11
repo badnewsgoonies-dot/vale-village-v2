@@ -27,7 +27,8 @@ export const EquipmentRewardSchema = z.discriminatedUnion('type', [
     type: z.literal('choice'),
     options: z
       .array(z.string().min(1))
-      .length(3)
+      .min(2)
+      .max(4)
       .refine(equipmentOptionsUnique, {
         message: 'Choice options must be unique',
       }),
@@ -50,6 +51,10 @@ export const EncounterSchema = z.object({
   difficulty: z.enum(['easy', 'medium', 'hard', 'boss']).optional(),
   rules: EncounterRulesSchema.optional(),
   reward: EncounterRewardsSchema,
+  /** NPC sprite ID to use for the first enemy (leader) in battle */
+  leaderSpriteId: z.string().min(1).optional(),
+  /** Background ID for battle scene (e.g., 'gs1/Vale', 'gs2/Mars_Lighthouse') */
+  backgroundId: z.string().min(1).optional(),
 });
 
 export type Encounter = z.infer<typeof EncounterSchema>;

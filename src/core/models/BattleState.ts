@@ -109,6 +109,10 @@ export interface BattleMetadata {
     /** Encounter difficulty tier */
     difficulty?: 'normal' | 'elite' | 'boss';
   };
+  /** NPC sprite ID to use for the first enemy (leader) in battle visuals */
+  readonly leaderSpriteId?: string;
+  /** Background ID for battle scene (e.g., 'gs1/Vale', 'gs2/Mars_Lighthouse') */
+  readonly backgroundId?: string;
 }
 
 /**
