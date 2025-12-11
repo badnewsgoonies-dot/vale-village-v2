@@ -43,7 +43,7 @@ export class SkyLayer implements Layer {
   private timeOfDay: number = 0.5; // 0=midnight, 0.5=noon
   private clouds: Cloud[] = [];
   private cloudOffset: number = 0;
-  private skyHeight: number = 300; // Height of sky area
+  private skyHeight: number = 256; // Height of sky area (4/10 of 640px)
 
   constructor() {
     this.initClouds();
