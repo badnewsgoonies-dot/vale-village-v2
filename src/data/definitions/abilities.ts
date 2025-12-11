@@ -758,6 +758,257 @@ export const ZODIAC_BOLT: Ability = {
 };
 
 // ============================================================================
+// EQUIPMENT-SPECIFIC ABILITIES (Tower & Elemental Equipment)
+// ============================================================================
+
+export const STORM_SLASH: Ability = {
+  id: 'storm-slash',
+  name: 'Storm Slash',
+  type: 'physical',
+  element: 'Jupiter',
+  manaCost: 1,
+  basePower: 28,
+  targets: 'single-enemy',
+  unlockLevel: 1,
+  description: 'A lightning-fast slash imbued with storm energy.',
+  aiHints: { priority: 2.2, target: 'weakest', avoidOverkill: false },
+};
+
+export const FROST_STRIKE: Ability = {
+  id: 'frost-strike',
+  name: 'Frost Strike',
+  type: 'physical',
+  element: 'Mercury',
+  manaCost: 1,
+  basePower: 26,
+  targets: 'single-enemy',
+  unlockLevel: 1,
+  description: 'A chilling strike that may slow the enemy.',
+  statusEffect: { type: 'freeze', duration: 1, chance: 0.2 },
+  aiHints: { priority: 2.1, target: 'weakest', avoidOverkill: false },
+};
+
+export const VOLCANIC_SMASH: Ability = {
+  id: 'volcanic-smash',
+  name: 'Volcanic Smash',
+  type: 'physical',
+  element: 'Mars',
+  manaCost: 1,
+  basePower: 30,
+  targets: 'single-enemy',
+  unlockLevel: 1,
+  description: 'A devastating smash with volcanic fury.',
+  statusEffect: { type: 'burn', duration: 2, chance: 0.25 },
+  aiHints: { priority: 2.3, target: 'weakest', avoidOverkill: false },
+};
+
+export const STORM_MASTERY: Ability = {
+  id: 'storm-mastery',
+  name: 'Storm Mastery',
+  type: 'buff',
+  element: 'Jupiter',
+  manaCost: 2,
+  basePower: 0,
+  targets: 'self',
+  unlockLevel: 1,
+  description: 'Channel storm energy to boost SPD and ATK.',
+  buffEffect: { spd: 8, atk: 5 },
+  duration: 3,
+  aiHints: { priority: 2.0, target: 'random', opener: true },
+};
+
+export const FROST_MASTERY: Ability = {
+  id: 'frost-mastery',
+  name: 'Frost Mastery',
+  type: 'buff',
+  element: 'Mercury',
+  manaCost: 2,
+  basePower: 0,
+  targets: 'self',
+  unlockLevel: 1,
+  description: 'Channel frost energy to boost MAG and DEF.',
+  buffEffect: { mag: 8, def: 5 },
+  duration: 3,
+  aiHints: { priority: 2.0, target: 'random', opener: true },
+};
+
+export const MYTHRIL_CLEAVE: Ability = {
+  id: 'mythril-cleave',
+  name: 'Mythril Cleave',
+  type: 'physical',
+  manaCost: 2,
+  basePower: 45,
+  targets: 'single-enemy',
+  unlockLevel: 1,
+  description: 'A powerful cleave with mythril weaponry.',
+  aiHints: { priority: 2.5, target: 'weakest', avoidOverkill: false },
+};
+
+export const MYTHRIL_SURGE: Ability = {
+  id: 'mythril-surge',
+  name: 'Mythril Surge',
+  type: 'psynergy',
+  manaCost: 2,
+  basePower: 42,
+  targets: 'single-enemy',
+  unlockLevel: 1,
+  description: 'Channel magic through mythril for a surge of power.',
+  aiHints: { priority: 2.5, target: 'weakest', avoidOverkill: false },
+};
+
+export const MYTHRIL_PIERCE: Ability = {
+  id: 'mythril-pierce',
+  name: 'Mythril Pierce',
+  type: 'physical',
+  manaCost: 2,
+  basePower: 35,
+  targets: 'single-enemy',
+  ignoreDefensePercent: 0.35,
+  unlockLevel: 1,
+  description: 'A precise strike that pierces through armor.',
+  aiHints: { priority: 2.4, target: 'highestDef', avoidOverkill: false },
+};
+
+export const MYTHRIL_STRIKE: Ability = {
+  id: 'mythril-strike',
+  name: 'Mythril Strike',
+  type: 'physical',
+  manaCost: 1,
+  basePower: 38,
+  targets: 'single-enemy',
+  unlockLevel: 1,
+  description: 'A swift strike with mythril weaponry.',
+  aiHints: { priority: 2.3, target: 'weakest', avoidOverkill: false },
+};
+
+export const EARTH_WALL: Ability = {
+  id: 'earth-wall',
+  name: 'Earth Wall',
+  type: 'buff',
+  element: 'Venus',
+  manaCost: 2,
+  basePower: 0,
+  targets: 'all-allies',
+  unlockLevel: 1,
+  description: 'Raise an earth wall to protect all allies.',
+  damageReductionPercent: 0.2,
+  duration: 2,
+  aiHints: { priority: 2.2, target: 'random', opener: true },
+};
+
+export const GAIA_FORTITUDE: Ability = {
+  id: 'gaia-fortitude',
+  name: 'Gaia Fortitude',
+  type: 'buff',
+  element: 'Venus',
+  manaCost: 2,
+  basePower: 0,
+  targets: 'self',
+  unlockLevel: 1,
+  description: 'Draw upon Gaia\'s power to fortify yourself.',
+  buffEffect: { def: 12 },
+  damageReductionPercent: 0.15,
+  duration: 3,
+  aiHints: { priority: 2.3, target: 'random', opener: true },
+};
+
+export const FLAME_BURST: Ability = {
+  id: 'flame-burst',
+  name: 'Flame Burst',
+  type: 'psynergy',
+  element: 'Mars',
+  manaCost: 2,
+  basePower: 35,
+  targets: 'single-enemy',
+  unlockLevel: 1,
+  description: 'A burst of flame from Mars element equipment.',
+  aiHints: { priority: 2.2, target: 'weakest', avoidOverkill: false },
+};
+
+export const INFERNO_FIST: Ability = {
+  id: 'inferno-fist',
+  name: 'Inferno Fist',
+  type: 'physical',
+  element: 'Mars',
+  manaCost: 2,
+  basePower: 38,
+  targets: 'single-enemy',
+  unlockLevel: 1,
+  description: 'A fiery punch that burns on impact.',
+  statusEffect: { type: 'burn', duration: 2, chance: 0.35 },
+  aiHints: { priority: 2.4, target: 'weakest', avoidOverkill: false },
+};
+
+export const FROST_NOVA: Ability = {
+  id: 'frost-nova',
+  name: 'Frost Nova',
+  type: 'psynergy',
+  element: 'Mercury',
+  manaCost: 3,
+  basePower: 28,
+  targets: 'all-enemies',
+  unlockLevel: 1,
+  description: 'An expanding nova of frost energy.',
+  statusEffect: { type: 'freeze', duration: 1, chance: 0.3 },
+  aiHints: { priority: 2.5, target: 'random', avoidOverkill: false },
+};
+
+export const LIGHTNING_SHOT: Ability = {
+  id: 'lightning-shot',
+  name: 'Lightning Shot',
+  type: 'psynergy',
+  element: 'Jupiter',
+  manaCost: 2,
+  basePower: 32,
+  targets: 'single-enemy',
+  unlockLevel: 1,
+  description: 'A rapid bolt of lightning at high speed.',
+  aiHints: { priority: 2.3, target: 'weakest', avoidOverkill: false },
+};
+
+export const STORM_FOCUS: Ability = {
+  id: 'storm-focus',
+  name: 'Storm Focus',
+  type: 'buff',
+  element: 'Jupiter',
+  manaCost: 2,
+  basePower: 0,
+  targets: 'self',
+  unlockLevel: 1,
+  description: 'Focus the storm within to boost all combat stats.',
+  buffEffect: { atk: 6, mag: 6, spd: 4 },
+  duration: 3,
+  aiHints: { priority: 2.2, target: 'random', opener: true },
+};
+
+export const ASTRAL_STRIKE: Ability = {
+  id: 'astral-strike',
+  name: 'Astral Strike',
+  type: 'physical',
+  manaCost: 3,
+  basePower: 55,
+  targets: 'single-enemy',
+  unlockLevel: 1,
+  description: 'A devastating strike channeling astral power.',
+  ignoreDefensePercent: 0.25,
+  aiHints: { priority: 2.8, target: 'weakest', avoidOverkill: false },
+};
+
+export const SHADOWFLAME: Ability = {
+  id: 'shadowflame',
+  name: 'Shadowflame',
+  type: 'psynergy',
+  element: 'Mars',
+  manaCost: 3,
+  basePower: 50,
+  targets: 'single-enemy',
+  unlockLevel: 1,
+  description: 'Dark fire that burns both body and soul.',
+  statusEffect: { type: 'burn', duration: 3, chance: 0.4 },
+  aiHints: { priority: 2.7, target: 'weakest', avoidOverkill: false },
+};
+
+// ============================================================================
 // BALANCED ABILITY SETS (for balanced gameplay)
 // ============================================================================
 
@@ -3191,6 +3442,25 @@ export const ABILITIES: Record<string, Ability> = {
   'silver-strike': SILVER_STRIKE,
   'great-cleave': GREAT_CLEAVE,
   'zodiac-bolt': ZODIAC_BOLT,
+  // Equipment-Specific Abilities (Tower & Elemental Equipment)
+  'storm-slash': STORM_SLASH,
+  'frost-strike': FROST_STRIKE,
+  'volcanic-smash': VOLCANIC_SMASH,
+  'storm-mastery': STORM_MASTERY,
+  'frost-mastery': FROST_MASTERY,
+  'mythril-cleave': MYTHRIL_CLEAVE,
+  'mythril-surge': MYTHRIL_SURGE,
+  'mythril-pierce': MYTHRIL_PIERCE,
+  'mythril-strike': MYTHRIL_STRIKE,
+  'earth-wall': EARTH_WALL,
+  'gaia-fortitude': GAIA_FORTITUDE,
+  'flame-burst': FLAME_BURST,
+  'inferno-fist': INFERNO_FIST,
+  'frost-nova': FROST_NOVA,
+  'lightning-shot': LIGHTNING_SHOT,
+  'storm-focus': STORM_FOCUS,
+  'astral-strike': ASTRAL_STRIKE,
+  'shadowflame': SHADOWFLAME,
   // Balanced Ability Sets
   'earth-spike-damage': EARTH_SPIKE_DAMAGE,
   'stone-skin': STONE_SKIN_UTILITY,

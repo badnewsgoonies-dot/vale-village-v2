@@ -30,6 +30,10 @@ export function calculateTurnOrder(
   // Filter out KO'd units
   const aliveUnits = units.filter(u => !isUnitKO(u));
 
+  // Pre-compute player unit IDs as Set for O(1) lookup
+  // This avoids O(n) .some() calls inside sort comparator, which would make sort O(n² log n)
+  const playerUnitIds = new Set(team.units.map(u => u.id));
+
   // Separate by priority tier (Hermes' Sandals = priority 1, others = priority 0)
   const priorityUnits = aliveUnits.filter(u =>
     u.equipment.boots?.alwaysFirstTurn === true
@@ -55,16 +59,17 @@ export function calculateTurnOrder(
       const aSpd = getEffectiveSPD(a, team);
       const bSpd = getEffectiveSPD(b, team);
       const spdDiff = bSpd - aSpd;
-      
+
       if (spdDiff === 0) {
         // Same effective SPD: player units before enemies, then lexicographic ID
-        const aIsPlayer = team.units.some(u => u.id === a.id);
-        const bIsPlayer = team.units.some(u => u.id === b.id);
-        
+        // O(1) Set lookup instead of O(n) .some()
+        const aIsPlayer = playerUnitIds.has(a.id);
+        const bIsPlayer = playerUnitIds.has(b.id);
+
         if (aIsPlayer !== bIsPlayer) {
           return aIsPlayer ? -1 : 1; // Player before enemy
         }
-        
+
         // Both same side: stable tiebreaker using deterministic RNG
         return tieRng.next() - 0.5;
       }
@@ -78,16 +83,17 @@ export function calculateTurnOrder(
       const aSpd = getEffectiveSPD(a, team);
       const bSpd = getEffectiveSPD(b, team);
       const spdDiff = bSpd - aSpd;
-      
+
       if (spdDiff === 0) {
         // Same effective SPD: player units before enemies, then lexicographic ID
-        const aIsPlayer = team.units.some(u => u.id === a.id);
-        const bIsPlayer = team.units.some(u => u.id === b.id);
-        
+        // O(1) Set lookup instead of O(n) .some()
+        const aIsPlayer = playerUnitIds.has(a.id);
+        const bIsPlayer = playerUnitIds.has(b.id);
+
         if (aIsPlayer !== bIsPlayer) {
           return aIsPlayer ? -1 : 1; // Player before enemy
         }
-        
+
         // Both same side: stable tiebreaker using deterministic RNG
         return tieRng.next() - 0.5;
       }

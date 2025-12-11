@@ -76,7 +76,7 @@ export interface PlayerData {
     team: TeamMember[];
     inventory: InventoryState;
     currency: number;
-    storyFlags: Set<string>;
+    storyFlags: string[];  // Changed from Set<string> for JSON serialization
     saves: SaveSlot[];
 }
 
@@ -141,9 +141,12 @@ const initialPlayerData: PlayerData = {
         capacity: DEFAULT_INVENTORY_CAPACITY,
     },
     currency: 0,
-    storyFlags: new Set<string>(),
+    storyFlags: [],  // Changed from Set<string> for JSON serialization
     saves: [],
 };
+
+/** Counter to track transition requests and cancel stale ones */
+let transitionId = 0;
 
 const createGameSlice = (set: GameStoreSetState, _get: GameStoreGetState): GameSlice => ({
     flow: initialFlowState,
@@ -152,6 +155,9 @@ const createGameSlice = (set: GameStoreSetState, _get: GameStoreGetState): GameS
             state.flow.screen = screen;
         }),
     startTransition: (screen) => {
+        // Increment transition ID to cancel any previous in-flight transitions
+        const currentTransitionId = ++transitionId;
+
         // Start fade to black
         set((state) => {
             state.flow.isTransitioning = true;
@@ -159,12 +165,22 @@ const createGameSlice = (set: GameStoreSetState, _get: GameStoreGetState): GameS
 
         // Wait 150ms, change screen at peak darkness
         setTimeout(() => {
+            // Check if this transition was cancelled by a newer one
+            if (currentTransitionId !== transitionId) {
+                return;
+            }
+
             set((state) => {
                 state.flow.screen = screen;
             });
 
             // Wait another 150ms, then fade back in
             setTimeout(() => {
+                // Check again before completing
+                if (currentTransitionId !== transitionId) {
+                    return;
+                }
+
                 set((state) => {
                     state.flow.isTransitioning = false;
                 });
@@ -313,30 +329,69 @@ export const useGameStore = createWithEqualityFn<GameStore>()(
     })),
 );
 
+/**
+ * Extract GameSlice properties from full state
+ * This ensures selectors only receive the slice they expect
+ */
+const extractGameSlice = (state: GameStore): GameSlice => ({
+    flow: state.flow,
+    setScreen: state.setScreen,
+    startTransition: state.startTransition,
+    openModal: state.openModal,
+    closeModal: state.closeModal,
+    setTransitioning: state.setTransitioning,
+    resetFlow: state.resetFlow,
+});
+
+const extractBattleSlice = (state: GameStore): BattleSlice => ({
+    battleSession: state.battleSession,
+    startBattle: state.startBattle,
+    endBattle: state.endBattle,
+    queueBattleEvent: state.queueBattleEvent,
+    advanceTurn: state.advanceTurn,
+    setBattlePhase: state.setBattlePhase,
+    clearBattleEvents: state.clearBattleEvents,
+});
+
+const extractTeamSlice = (state: GameStore): TeamSlice => ({
+    playerData: state.playerData,
+    setTeam: state.setTeam,
+    addTeamMember: state.addTeamMember,
+    updateTeamMember: state.updateTeamMember,
+    removeTeamMember: state.removeTeamMember,
+});
+
+const extractInventorySlice = (state: GameStore): InventorySlice => ({
+    setInventory: state.setInventory,
+    addItem: state.addItem,
+    removeItem: state.removeItem,
+    clearInventory: state.clearInventory,
+});
+
 export const useFlowStore = <T>(
     selector: (slice: GameSlice) => T,
     equalityFn?: EqualityFn<T>,
 ): T => equalityFn
-    ? useGameStore((state) => selector(state), equalityFn)
-    : useGameStore((state) => selector(state));
+    ? useGameStore((state) => selector(extractGameSlice(state)), equalityFn)
+    : useGameStore((state) => selector(extractGameSlice(state)));
 
 export const useBattleStore = <T>(
     selector: (slice: BattleSlice) => T,
     equalityFn?: EqualityFn<T>,
 ): T => equalityFn
-    ? useGameStore((state) => selector(state), equalityFn)
-    : useGameStore((state) => selector(state));
+    ? useGameStore((state) => selector(extractBattleSlice(state)), equalityFn)
+    : useGameStore((state) => selector(extractBattleSlice(state)));
 
 export const useTeamStore = <T>(
     selector: (slice: TeamSlice) => T,
     equalityFn?: EqualityFn<T>,
 ): T => equalityFn
-    ? useGameStore((state) => selector(state), equalityFn)
-    : useGameStore((state) => selector(state));
+    ? useGameStore((state) => selector(extractTeamSlice(state)), equalityFn)
+    : useGameStore((state) => selector(extractTeamSlice(state)));
 
 export const useInventoryStore = <T>(
     selector: (slice: InventorySlice) => T,
     equalityFn?: EqualityFn<T>,
 ): T => equalityFn
-    ? useGameStore((state) => selector(state), equalityFn)
-    : useGameStore((state) => selector(state));
+    ? useGameStore((state) => selector(extractInventorySlice(state)), equalityFn)
+    : useGameStore((state) => selector(extractInventorySlice(state)));

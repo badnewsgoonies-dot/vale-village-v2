@@ -2,17 +2,20 @@
  * AI Service
  * Deterministic AI decision-making for enemy units
  * Uses ability scoring and target selection based on tactical rules
+ * Supports phase-change bosses with HP-triggered behavior
  */
 
 import type { Unit } from '../models/Unit';
 import type { BattleState } from '../models/BattleState';
 import type { Ability } from '../../data/schemas/AbilitySchema';
+import type { PhaseConfig } from '../../data/schemas/EnemySchema';
 import type { PRNG } from '../random/prng';
 import { calculateMaxHp, isUnitKO } from '../models/Unit';
 import { getElementModifier } from '../algorithms/damage';
 import { resolveTargets } from '../algorithms/targeting';
 import type { Team } from '../models/Team';
 import { calculateEffectiveStats } from '../algorithms/stats';
+import { ENEMIES } from '../../data/definitions/enemies';
 
 /**
  * AI hints for abilities (optional metadata)
@@ -313,8 +316,38 @@ function selectTargets(
 }
 
 /**
+ * Get the current phase for a boss based on HP percentage
+ * Returns the active phase config or undefined if no phases defined
+ */
+function getCurrentPhase(actor: Unit): PhaseConfig | undefined {
+  // Look up enemy definition to get phase config
+  const enemyDef = ENEMIES[actor.id];
+  if (!enemyDef?.phases || enemyDef.phases.length === 0) {
+    return undefined;
+  }
+
+  const maxHp = calculateMaxHp(actor);
+  const hpPercent = actor.currentHp / maxHp;
+
+  // Phases are sorted by threshold ascending
+  // Find the highest threshold that HP is below
+  // E.g., phases: [{threshold: 0.5}, {threshold: 0.25}]
+  // HP at 40% -> phase 0.5 active
+  // HP at 20% -> phase 0.25 active (most recent)
+  let activePhase: PhaseConfig | undefined;
+  for (const phase of enemyDef.phases) {
+    if (hpPercent <= phase.threshold) {
+      activePhase = phase;
+    }
+  }
+
+  return activePhase;
+}
+
+/**
  * Make an AI decision for an enemy unit
  * Returns the ability ID and target IDs to use
+ * Supports phase-change bosses with HP-triggered behavior
  */
 export function makeAIDecision(
   state: BattleState,
@@ -327,6 +360,10 @@ export function makeAIDecision(
   if (!actor || isUnitKO(actor)) {
     throw new Error(`Invalid actor: ${actorId}`);
   }
+
+  // Check for phase-change boss behavior
+  const currentPhase = getCurrentPhase(actor);
+  const priorityAbilityIds = currentPhase?.priorityAbilities ?? [];
 
   // Get available abilities (unlocked and with valid targets)
   const availableAbilities = actor.abilities.filter(ability => {
@@ -349,11 +386,17 @@ export function makeAIDecision(
     throw new Error(`No available abilities for ${actorId}`);
   }
 
-  // Score all abilities
-  const scored = availableAbilities.map(ability => ({
-    ability,
-    score: scoreAbility(ability, actor, state),
-  }));
+  // Score all abilities with phase bonus
+  const scored = availableAbilities.map(ability => {
+    let score = scoreAbility(ability, actor, state);
+
+    // Phase priority bonus: +10 to abilities in phase's priority list
+    if (priorityAbilityIds.includes(ability.id)) {
+      score += 10;
+    }
+
+    return { ability, score };
+  });
 
   // Sort by score (highest first)
   scored.sort((a, b) => b.score - a.score);

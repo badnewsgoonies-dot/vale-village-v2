@@ -208,7 +208,7 @@ export const HOUSE_08_RECRUIT: DialogueTree = {
       text: "I found this Fizz Djinn while guarding the waters. It's yours now.",
       portrait: 'sentinel',
       effects: {
-        recruitUnit: "war-mage",
+        recruitUnit: "sentinel",
         grantDjinn: "fizz",
       },
     },
@@ -324,7 +324,7 @@ export const HOUSE_15_RECRUIT: DialogueTree = {
       text: "I bring both myself and Squall Djinn. Together, we'll unleash the tempest!",
       portrait: 'stormcaller',
       effects: {
-        recruitUnit: "war-mage",
+        recruitUnit: "stormcaller",
         grantDjinn: "squall",
       },
     },

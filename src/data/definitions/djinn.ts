@@ -1184,19 +1184,81 @@ export const NOVA: Djinn = {
   availableIn: ['tower'],
 };
 
+// Missing Djinn referenced in encounters (scorch, serac, eclipse)
+export const SCORCH: Djinn = {
+  id: 'scorch',
+  name: 'Scorch',
+  element: 'Mars',
+  tier: '3',
+  summonEffect: {
+    type: 'damage',
+    description: 'Volcanic eruption engulfs all enemies in magma.',
+    damage: 280,
+  },
+  grantedAbilities: {
+    adept: { same: [], counter: [], neutral: ['scorch-heat-pulse'] },
+    sentinel: { same: [], counter: [], neutral: ['scorch-heat-pulse'] },
+    'war-mage': { same: ['scorch-inferno', 'scorch-lava-burst'], counter: [], neutral: [] },
+    mystic: { same: [], counter: [], neutral: ['scorch-heat-pulse'] },
+    ranger: { same: [], counter: [], neutral: ['scorch-heat-pulse'] },
+    stormcaller: { same: [], counter: [], neutral: ['scorch-heat-pulse'] },
+  },
+};
+
+export const SERAC: Djinn = {
+  id: 'serac',
+  name: 'Serac',
+  element: 'Venus',
+  tier: '3',
+  summonEffect: {
+    type: 'buff',
+    description: 'Crystal ice fortress shields all allies.',
+    statBonus: { def: 15 },
+  },
+  grantedAbilities: {
+    adept: { same: ['serac-stone-wall', 'serac-terra-guard'], counter: [], neutral: [] },
+    sentinel: { same: ['serac-stone-wall', 'serac-terra-guard'], counter: [], neutral: [] },
+    'war-mage': { same: [], counter: [], neutral: ['serac-earth-pulse'] },
+    mystic: { same: [], counter: [], neutral: ['serac-earth-pulse'] },
+    ranger: { same: [], counter: [], neutral: ['serac-earth-pulse'] },
+    stormcaller: { same: [], counter: [], neutral: ['serac-earth-pulse'] },
+  },
+};
+
+export const ECLIPSE: Djinn = {
+  id: 'eclipse',
+  name: 'Eclipse',
+  element: 'Jupiter',
+  tier: '3',
+  summonEffect: {
+    type: 'special',
+    description: 'Solar eclipse blinds and disorients all foes.',
+  },
+  grantedAbilities: {
+    adept: { same: [], counter: [], neutral: ['eclipse-shadow-pulse'] },
+    sentinel: { same: [], counter: [], neutral: ['eclipse-shadow-pulse'] },
+    'war-mage': { same: [], counter: [], neutral: ['eclipse-shadow-pulse'] },
+    mystic: { same: [], counter: [], neutral: ['eclipse-shadow-pulse'] },
+    ranger: { same: ['eclipse-wind-slash', 'eclipse-storm-strike'], counter: [], neutral: [] },
+    stormcaller: { same: ['eclipse-thunder-flash', 'eclipse-lightning-veil'], counter: [], neutral: [] },
+  },
+};
+
 export const DJINN: Record<string, Djinn> = {
-  // Venus (4)
+  // Venus (5)
   flint: FLINT,
   granite: GRANITE,
   bane: BANE,
   rockling: ROCKLING, // VS1 Demo
+  serac: SERAC, // Chapter 3 reward
 
-  // Mars (5)
+  // Mars (6)
   forge: FORGE,
   corona: CORONA,
   fury: FURY,
   ember: EMBER, // VS1 Demo
   nova: NOVA, // VS1 Demo
+  scorch: SCORCH, // Chapter 3 reward
 
   // Mercury (5 - balanced with Mars)
   fizz: FIZZ,
@@ -1205,11 +1267,12 @@ export const DJINN: Record<string, Djinn> = {
   surge: SURGE, // NEW
   chill: CHILL, // NEW
 
-  // Jupiter (6 - balanced with Venus+Mars)
+  // Jupiter (7 - balanced with Venus+Mars)
   breeze: BREEZE,
   squall: SQUALL,
   storm: STORM,
   gust: GUST, // NEW
   bolt: BOLT, // NEW
   tempest: TEMPEST, // NEW (tower-exclusive)
+  eclipse: ECLIPSE, // Chapter 3 reward
 };

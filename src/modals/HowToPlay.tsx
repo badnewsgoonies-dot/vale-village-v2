@@ -1,4 +1,5 @@
 import { FunctionComponent } from 'preact';
+import './modals.css';
 
 interface HowToPlayProps {
   onClose: () => void;

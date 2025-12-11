@@ -415,7 +415,425 @@ export const BANTER_TRIGGERS: BanterTrigger[] = [
     chance: 1.0, // Always triggers after final victory
     context: 'milestone',
   },
+
+  // New combat banter triggers
+  {
+    id: 'banter-mars-duo',
+    requiredParty: ['war-mage', 'blaze'],
+    chance: 0.15,
+    context: 'combat',
+  },
+  {
+    id: 'banter-mercury-mystic-calm',
+    requiredParty: ['mystic', 'isaac'],
+    minHousesLiberated: 4,
+    chance: 0.1,
+    context: 'combat',
+  },
+  {
+    id: 'banter-ranger-first-strike',
+    requiredParty: ['ranger', 'sentinel'],
+    minHousesLiberated: 6,
+    chance: 0.12,
+    context: 'combat',
+  },
+  {
+    id: 'banter-felix-reunion',
+    requiredParty: ['isaac', 'felix'],
+    minHousesLiberated: 17,
+    chance: 0.2,
+    context: 'combat',
+  },
+  {
+    id: 'banter-karis-wind-sense',
+    requiredParty: ['karis', 'stormcaller'],
+    minHousesLiberated: 11,
+    chance: 0.15,
+    context: 'combat',
+  },
+  {
+    id: 'banter-tyrell-eager',
+    requiredParty: ['tyrell', 'mystic'],
+    minHousesLiberated: 14,
+    chance: 0.12,
+    context: 'combat',
+  },
+  {
+    id: 'banter-djinn-chatter',
+    requiredParty: ['isaac'],
+    minHousesLiberated: 1,
+    maxHousesLiberated: 5,
+    chance: 0.08,
+    context: 'combat',
+  },
+  {
+    id: 'banter-boss-intimidation',
+    requiredParty: ['isaac', 'sentinel', 'ranger', 'blaze'],
+    minHousesLiberated: 12,
+    chance: 0.2,
+    context: 'combat',
+  },
+
+  // New overworld banter triggers
+  {
+    id: 'banter-supplies-low',
+    requiredParty: ['mystic', 'war-mage'],
+    minHousesLiberated: 5,
+    chance: 0.08,
+    context: 'overworld',
+  },
+  {
+    id: 'banter-djinn-collection',
+    requiredParty: ['isaac', 'ranger'],
+    minHousesLiberated: 8,
+    chance: 0.1,
+    context: 'overworld',
+  },
+  {
+    id: 'banter-night-watch',
+    requiredParty: ['isaac', 'sentinel'],
+    minHousesLiberated: 10,
+    chance: 0.1,
+    context: 'overworld',
+  },
 ];
+
+// ============================================================================
+// ADDITIONAL COMBAT BANTER - Element-based team interactions
+// ============================================================================
+
+export const BANTER_MARS_DUO: DialogueTree = {
+  id: 'banter-mars-duo',
+  name: 'Mars Duo Fire',
+  startNodeId: 'blaze-hype',
+  nodes: [
+    {
+      id: 'blaze-hype',
+      speaker: 'Blaze',
+      text: 'Two Mars Adepts? This is going to get HOT!',
+      portrait: 'blaze',
+      nextNodeId: 'warmage-agree',
+    },
+    {
+      id: 'warmage-agree',
+      speaker: 'War Mage',
+      text: "Let's show them what double the fire means!",
+      portrait: 'garet',
+    },
+  ],
+};
+
+export const BANTER_MERCURY_MYSTIC_CALM: DialogueTree = {
+  id: 'banter-mercury-mystic-calm',
+  name: 'Mystic Calm Before Storm',
+  startNodeId: 'mystic-calm',
+  nodes: [
+    {
+      id: 'mystic-calm',
+      speaker: 'Mystic',
+      text: '*deep breath* Water flows. Water adapts. Water wins.',
+      portrait: 'mystic',
+      nextNodeId: 'isaac-curious',
+    },
+    {
+      id: 'isaac-curious',
+      speaker: 'Isaac',
+      text: 'Is that a Mercury Adept thing?',
+      portrait: 'isaac',
+      nextNodeId: 'mystic-smile',
+    },
+    {
+      id: 'mystic-smile',
+      speaker: 'Mystic',
+      text: '*small smile* It helps me focus. You should try it.',
+      portrait: 'mystic',
+    },
+  ],
+};
+
+export const BANTER_RANGER_FIRST_STRIKE: DialogueTree = {
+  id: 'banter-ranger-first-strike',
+  name: 'Ranger First Strike',
+  startNodeId: 'ranger-ready',
+  nodes: [
+    {
+      id: 'ranger-ready',
+      speaker: 'Ranger',
+      text: '*draws bow* I go first. Always. Speed is everything.',
+      portrait: 'ranger',
+      nextNodeId: 'sentinel-counter',
+    },
+    {
+      id: 'sentinel-counter',
+      speaker: 'Sentinel',
+      text: 'And what happens if they survive your first shot?',
+      portrait: 'sentinel',
+      nextNodeId: 'ranger-confident',
+    },
+    {
+      id: 'ranger-confident',
+      speaker: 'Ranger',
+      text: "Then I take a second. And a third. I don't miss.",
+      portrait: 'ranger',
+    },
+  ],
+};
+
+export const BANTER_FELIX_REUNION: DialogueTree = {
+  id: 'banter-felix-reunion',
+  name: 'Felix Reunion',
+  startNodeId: 'felix-nostalgia',
+  nodes: [
+    {
+      id: 'felix-nostalgia',
+      speaker: 'Felix',
+      text: "Remember when we used to spar in the training grounds, Isaac?",
+      portrait: 'felix',
+      nextNodeId: 'isaac-remember',
+    },
+    {
+      id: 'isaac-remember',
+      speaker: 'Isaac',
+      text: "You always won. You were faster, stronger...",
+      portrait: 'isaac',
+      nextNodeId: 'felix-correction',
+    },
+    {
+      id: 'felix-correction',
+      speaker: 'Felix',
+      text: "But you never gave up. That's why you're leading this liberation. Not me.",
+      portrait: 'felix',
+    },
+  ],
+};
+
+export const BANTER_KARIS_WIND_SENSE: DialogueTree = {
+  id: 'banter-karis-wind-sense',
+  name: 'Karis Wind Sense',
+  startNodeId: 'karis-sense',
+  nodes: [
+    {
+      id: 'karis-sense',
+      speaker: 'Karis',
+      text: 'The winds tell me three enemies behind that door. One strong, two weak.',
+      portrait: 'karis',
+      nextNodeId: 'stormcaller-impressed',
+    },
+    {
+      id: 'stormcaller-impressed',
+      speaker: 'Stormcaller',
+      text: 'Whoa, you can do that? All I sense is "time to zap things."',
+      portrait: 'stormcaller',
+      nextNodeId: 'karis-tease',
+    },
+    {
+      id: 'karis-tease',
+      speaker: 'Karis',
+      text: 'Jupiter Psynergy has nuance. Perhaps I could teach you... subtlety.',
+      portrait: 'karis',
+      nextNodeId: 'stormcaller-reject',
+    },
+    {
+      id: 'stormcaller-reject',
+      speaker: 'Stormcaller',
+      text: "Subtle? Me? HA! Where's the fun in that?",
+      portrait: 'stormcaller',
+    },
+  ],
+};
+
+export const BANTER_TYRELL_EAGER: DialogueTree = {
+  id: 'banter-tyrell-eager',
+  name: 'Tyrell Eager',
+  startNodeId: 'tyrell-punch',
+  nodes: [
+    {
+      id: 'tyrell-punch',
+      speaker: 'Tyrell',
+      text: '*cracks knuckles* Finally, some action! I was getting bored.',
+      portrait: 'tyrell',
+      nextNodeId: 'mystic-concern',
+    },
+    {
+      id: 'mystic-concern',
+      speaker: 'Mystic',
+      text: "Tyrell, please don't rush in without-",
+      portrait: 'mystic',
+      nextNodeId: 'tyrell-charge',
+    },
+    {
+      id: 'tyrell-charge',
+      speaker: 'Tyrell',
+      text: "TOO LATE! LET'S GOOOO!",
+      portrait: 'tyrell',
+      nextNodeId: 'mystic-sigh',
+    },
+    {
+      id: 'mystic-sigh',
+      speaker: 'Mystic',
+      text: '*sighs* I\'ll prepare the healing spells...',
+      portrait: 'mystic',
+    },
+  ],
+};
+
+export const BANTER_DJINN_CHATTER: DialogueTree = {
+  id: 'banter-djinn-chatter',
+  name: 'Djinn Chatter',
+  startNodeId: 'flint-nervous',
+  nodes: [
+    {
+      id: 'flint-nervous',
+      speaker: 'Flint',
+      text: '*hides behind Isaac* These enemies look mean...',
+      portrait: 'djinn-venus',
+      nextNodeId: 'forge-bravado',
+    },
+    {
+      id: 'forge-bravado',
+      speaker: 'Forge',
+      text: 'Mean? BAH! I\'ll burn them to cinders! Right, Flint?',
+      portrait: 'djinn-mars',
+      nextNodeId: 'flint-scared',
+    },
+    {
+      id: 'flint-scared',
+      speaker: 'Flint',
+      text: "I'll just... provide moral support. From back here. Way back here.",
+      portrait: 'djinn-venus',
+      nextNodeId: 'isaac-comfort',
+    },
+    {
+      id: 'isaac-comfort',
+      speaker: 'Isaac',
+      text: "*pats Flint* It's okay, little guy. We've got this.",
+      portrait: 'isaac',
+    },
+  ],
+};
+
+export const BANTER_BOSS_INTIMIDATION: DialogueTree = {
+  id: 'banter-boss-intimidation',
+  name: 'Boss Intimidation',
+  startNodeId: 'sentinel-assess',
+  nodes: [
+    {
+      id: 'sentinel-assess',
+      speaker: 'Sentinel',
+      text: '*analyzes enemy* This one is different. Stronger. More dangerous.',
+      portrait: 'sentinel',
+      nextNodeId: 'blaze-undeterred',
+    },
+    {
+      id: 'blaze-undeterred',
+      speaker: 'Blaze',
+      text: 'Good. I was worried we might get bored.',
+      portrait: 'blaze',
+      nextNodeId: 'ranger-strategy',
+    },
+    {
+      id: 'ranger-strategy',
+      speaker: 'Ranger',
+      text: "Focus fire. Don't let it recover. Isaac, you call the shots.",
+      portrait: 'ranger',
+      nextNodeId: 'isaac-lead',
+    },
+    {
+      id: 'isaac-lead',
+      speaker: 'Isaac',
+      text: 'Everyone together. On my mark!',
+      portrait: 'isaac',
+    },
+  ],
+};
+
+// ============================================================================
+// OVERWORLD BANTER - Additional exploration dialogue
+// ============================================================================
+
+export const BANTER_SUPPLIES_LOW: DialogueTree = {
+  id: 'banter-supplies-low',
+  name: 'Supplies Running Low',
+  startNodeId: 'mystic-concern',
+  nodes: [
+    {
+      id: 'mystic-concern',
+      speaker: 'Mystic',
+      text: "We're running low on healing herbs. Should we visit the healer?",
+      portrait: 'mystic',
+      nextNodeId: 'warmage-dismiss',
+    },
+    {
+      id: 'warmage-dismiss',
+      speaker: 'War Mage',
+      text: "Herbs? Who needs 'em! Just don't get hit!",
+      portrait: 'garet',
+      nextNodeId: 'mystic-exasperated',
+    },
+    {
+      id: 'mystic-exasperated',
+      speaker: 'Mystic',
+      text: "That's... that's not how healing works, War Mage.",
+      portrait: 'mystic',
+    },
+  ],
+};
+
+export const BANTER_DJINN_COLLECTION: DialogueTree = {
+  id: 'banter-djinn-collection',
+  name: 'Djinn Collection',
+  startNodeId: 'ranger-notice',
+  nodes: [
+    {
+      id: 'ranger-notice',
+      speaker: 'Ranger',
+      text: 'How many Djinn do we have now? I lost count.',
+      portrait: 'ranger',
+      nextNodeId: 'isaac-count',
+    },
+    {
+      id: 'isaac-count',
+      speaker: 'Isaac',
+      text: 'Enough for some powerful Summons. But there are more out there.',
+      portrait: 'isaac',
+      nextNodeId: 'ranger-hunt',
+    },
+    {
+      id: 'ranger-hunt',
+      speaker: 'Ranger',
+      text: "Then let's hunt them down. Every Djinn makes us stronger.",
+      portrait: 'ranger',
+    },
+  ],
+};
+
+export const BANTER_NIGHT_WATCH: DialogueTree = {
+  id: 'banter-night-watch',
+  name: 'Night Watch',
+  startNodeId: 'sentinel-watch',
+  nodes: [
+    {
+      id: 'sentinel-watch',
+      speaker: 'Sentinel',
+      text: '*stares at horizon* I can take first watch. You all rest.',
+      portrait: 'sentinel',
+      nextNodeId: 'isaac-offer',
+    },
+    {
+      id: 'isaac-offer',
+      speaker: 'Isaac',
+      text: "I'll join you. Can't sleep anyway.",
+      portrait: 'isaac',
+      nextNodeId: 'sentinel-grateful',
+    },
+    {
+      id: 'sentinel-grateful',
+      speaker: 'Sentinel',
+      text: '*nods* The burden is lighter when shared.',
+      portrait: 'sentinel',
+    },
+  ],
+};
 
 // ============================================================================
 // Export all banter dialogues
@@ -432,4 +850,17 @@ export const BANTER_DIALOGUES: Record<string, DialogueTree> = {
   'banter-halfway-point': BANTER_HALFWAY_POINT,
   'banter-near-end': BANTER_NEAR_END,
   'banter-victory': BANTER_VICTORY,
+  // New combat banter
+  'banter-mars-duo': BANTER_MARS_DUO,
+  'banter-mercury-mystic-calm': BANTER_MERCURY_MYSTIC_CALM,
+  'banter-ranger-first-strike': BANTER_RANGER_FIRST_STRIKE,
+  'banter-felix-reunion': BANTER_FELIX_REUNION,
+  'banter-karis-wind-sense': BANTER_KARIS_WIND_SENSE,
+  'banter-tyrell-eager': BANTER_TYRELL_EAGER,
+  'banter-djinn-chatter': BANTER_DJINN_CHATTER,
+  'banter-boss-intimidation': BANTER_BOSS_INTIMIDATION,
+  // New overworld banter
+  'banter-supplies-low': BANTER_SUPPLIES_LOW,
+  'banter-djinn-collection': BANTER_DJINN_COLLECTION,
+  'banter-night-watch': BANTER_NIGHT_WATCH,
 };

@@ -1,11 +1,7 @@
 /**
- * Save File Validation (PLACEHOLDER - Issue #20)
- * To be implemented when building save system
+ * Save File Validation
  *
- * This file provides the infrastructure for save file validation.
- * Implementation will be completed as part of the save/load system.
- *
- * Planned Features:
+ * Provides infrastructure for save file validation:
  * - Checksum validation (detect tampering/corruption)
  * - Version migration support
  * - Schema validation using Zod
@@ -13,7 +9,15 @@
  * - Recovery suggestions for corrupted saves
  */
 
-import { Result, Err } from '../utils/result';
+import { Result, Ok, Err } from '../utils/result';
+import { SaveV1Schema, type SaveV1 } from '../../data/schemas/SaveV1Schema';
+import { ZodError } from 'zod';
+
+/** Current save file version */
+export const CURRENT_SAVE_VERSION = '1.0.0';
+
+/** Supported versions that can be migrated */
+const MIGRATABLE_VERSIONS = ['1.0.0'];
 
 /**
  * Save file metadata
@@ -25,6 +29,14 @@ export interface SaveFileMetadata {
 }
 
 /**
+ * Wrapper structure for save files with metadata
+ */
+export interface SaveFileWrapper {
+  metadata: SaveFileMetadata;
+  data: SaveV1;
+}
+
+/**
  * Save file validation error types
  */
 export type SaveFileValidationError =
@@ -32,30 +44,120 @@ export type SaveFileValidationError =
   | { type: 'VERSION_MISMATCH'; saveVersion: string; currentVersion: string; canMigrate: boolean }
   | { type: 'CHECKSUM_FAILED'; expected: string; actual: string }
   | { type: 'MISSING_DATA'; missingFields: string[] }
-  | { type: 'INVALID_FORMAT'; message: string };
+  | { type: 'INVALID_FORMAT'; message: string }
+  | { type: 'SCHEMA_VALIDATION_FAILED'; issues: string[] };
 
 /**
- * TODO (Issue #20): Implement save file validation
+ * Type guard to check if value is a plain object
+ */
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+/**
+ * Validate save file structure, checksum, version, and schema
  *
  * @param data - Unknown data from storage (localStorage, file, etc.)
  * @returns Validated save file or validation error
- *
- * Implementation checklist:
- * 1. Parse JSON safely (try/catch)
- * 2. Validate save file structure (has version, timestamp, checksum, data)
- * 3. Validate checksum (calculateChecksum(data) === stored checksum)
- * 4. Validate version (compare with CURRENT_VERSION)
- * 5. Migrate if needed (runMigrations(data, saveVersion, currentVersion))
- * 6. Validate game state using Zod schemas
- * 7. Return validated data or detailed error
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function validateSaveFile(_data: unknown): Result<unknown, SaveFileValidationError> {
-  // TODO: Implement validation when building save system
-  return Err({
-    type: 'INVALID_FORMAT',
-    message: 'Save file validation not yet implemented (Issue #20)',
-  });
+export function validateSaveFile(data: unknown): Result<SaveV1, SaveFileValidationError> {
+  // Step 1: Check basic structure
+  if (!isPlainObject(data)) {
+    return Err({
+      type: 'INVALID_FORMAT',
+      message: 'Save file must be an object',
+    });
+  }
+
+  // Step 2: Check for wrapped format (metadata + data) vs raw format
+  const hasWrapper = 'metadata' in data && 'data' in data;
+
+  let saveData: unknown;
+  let storedChecksum: string | null = null;
+  let saveVersion: string | null = null;
+
+  if (hasWrapper) {
+    // Wrapped format with metadata
+    const wrapper = data as { metadata: unknown; data: unknown };
+
+    if (!isPlainObject(wrapper.metadata)) {
+      return Err({
+        type: 'MISSING_DATA',
+        missingFields: ['metadata'],
+      });
+    }
+
+    const metadata = wrapper.metadata as Record<string, unknown>;
+
+    // Extract metadata fields
+    if (typeof metadata.checksum !== 'string') {
+      return Err({
+        type: 'MISSING_DATA',
+        missingFields: ['metadata.checksum'],
+      });
+    }
+
+    if (typeof metadata.version !== 'string') {
+      return Err({
+        type: 'MISSING_DATA',
+        missingFields: ['metadata.version'],
+      });
+    }
+
+    storedChecksum = metadata.checksum;
+    saveVersion = metadata.version;
+    saveData = wrapper.data;
+
+    // Step 3: Validate checksum
+    const actualChecksum = calculateChecksum(saveData);
+    if (actualChecksum !== storedChecksum) {
+      return Err({
+        type: 'CHECKSUM_FAILED',
+        expected: storedChecksum,
+        actual: actualChecksum,
+      });
+    }
+  } else {
+    // Raw format - extract version directly from data
+    saveData = data;
+    if ('version' in data && typeof data.version === 'string') {
+      saveVersion = data.version;
+    }
+  }
+
+  // Step 4: Validate version
+  if (saveVersion && saveVersion !== CURRENT_SAVE_VERSION) {
+    const canMigrate = MIGRATABLE_VERSIONS.includes(saveVersion);
+    if (!canMigrate) {
+      return Err({
+        type: 'VERSION_MISMATCH',
+        saveVersion,
+        currentVersion: CURRENT_SAVE_VERSION,
+        canMigrate: false,
+      });
+    }
+    // If we can migrate, we'd run migrations here
+    // For now, 1.0.0 is the only version so no migration needed
+  }
+
+  // Step 5: Validate schema using Zod
+  const parseResult = SaveV1Schema.safeParse(saveData);
+
+  if (!parseResult.success) {
+    const zodError = parseResult.error as ZodError;
+    const issues = zodError.issues.map(issue => {
+      const path = issue.path.join('.');
+      return `${path}: ${issue.message}`;
+    });
+
+    return Err({
+      type: 'SCHEMA_VALIDATION_FAILED',
+      issues,
+    });
+  }
+
+  // Step 6: Return validated data
+  return Ok(parseResult.data);
 }
 
 /**
@@ -105,25 +207,133 @@ export function verifyChecksum(data: unknown, expectedChecksum: string): boolean
   return actualChecksum === expectedChecksum;
 }
 
+/** Storage key prefix for save slots */
+const SAVE_SLOT_KEY_PREFIX = 'vale-village-save-slot-';
+
+/** Storage key for backup saves */
+const BACKUP_KEY_PREFIX = 'vale-village-backup-';
+
 /**
- * TODO (Issue #20): Load save file with validation and recovery
+ * Load save file with validation and recovery
  *
- * @param slot - Save slot number (1-3)
+ * @param slot - Save slot number (0-2)
  * @returns Validated game state or error with recovery options
  *
  * Recovery strategy:
  * 1. Try to load save
  * 2. If corrupted, check for backup save
- * 3. If backup corrupted, offer to start new game
+ * 3. If backup corrupted, return error with recovery info
  * 4. Never crash - always provide graceful fallback
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function loadSaveFileSafe(_slot: number): Result<unknown, SaveFileValidationError> {
-  // TODO: Implement safe loading with recovery
-  return Err({
-    type: 'INVALID_FORMAT',
-    message: 'Save file loading not yet implemented (Issue #20)',
-  });
+export function loadSaveFileSafe(slot: number): Result<SaveV1, SaveFileValidationError> {
+  // Step 1: Try to load primary save
+  const key = `${SAVE_SLOT_KEY_PREFIX}${slot}`;
+  const rawData = localStorage.getItem(key);
+
+  if (rawData === null) {
+    return Err({
+      type: 'MISSING_DATA',
+      missingFields: [`Save slot ${slot}`],
+    });
+  }
+
+  // Step 2: Parse JSON safely
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(rawData);
+  } catch {
+    // Step 3: Try backup if primary is corrupted JSON
+    const backupKey = `${BACKUP_KEY_PREFIX}${slot}`;
+    const backupData = localStorage.getItem(backupKey);
+
+    if (backupData) {
+      try {
+        const backupParsed = JSON.parse(backupData);
+        const backupResult = validateSaveFile(backupParsed);
+        if (backupResult.ok) {
+          // Restore from backup
+          localStorage.setItem(key, backupData);
+          return backupResult;
+        }
+      } catch {
+        // Backup also corrupted
+      }
+    }
+
+    return Err({
+      type: 'CORRUPTED',
+      reason: 'Save file contains invalid JSON',
+      recoverable: false,
+    });
+  }
+
+  // Step 4: Validate the parsed data
+  const validationResult = validateSaveFile(parsed);
+
+  if (!validationResult.ok) {
+    // Step 5: Try backup if validation fails
+    const backupKey = `${BACKUP_KEY_PREFIX}${slot}`;
+    const backupData = localStorage.getItem(backupKey);
+
+    if (backupData) {
+      try {
+        const backupParsed = JSON.parse(backupData);
+        const backupResult = validateSaveFile(backupParsed);
+        if (backupResult.ok) {
+          // Restore from backup
+          localStorage.setItem(key, backupData);
+          return backupResult;
+        }
+      } catch {
+        // Backup also corrupted
+      }
+    }
+
+    // Return original error, but mark as potentially recoverable if backup exists
+    return validationResult;
+  }
+
+  return validationResult;
+}
+
+/**
+ * Save game state with checksum and backup
+ *
+ * @param slot - Save slot number (0-2)
+ * @param data - Game state to save
+ * @returns Success or error
+ */
+export function saveGameSafe(slot: number, data: SaveV1): Result<void, SaveFileValidationError> {
+  const key = `${SAVE_SLOT_KEY_PREFIX}${slot}`;
+  const backupKey = `${BACKUP_KEY_PREFIX}${slot}`;
+
+  // Create backup of existing save first
+  const existingSave = localStorage.getItem(key);
+  if (existingSave) {
+    localStorage.setItem(backupKey, existingSave);
+  }
+
+  // Calculate checksum and wrap with metadata
+  const checksum = calculateChecksum(data);
+  const wrapper: SaveFileWrapper = {
+    metadata: {
+      version: CURRENT_SAVE_VERSION,
+      timestamp: Date.now(),
+      checksum,
+    },
+    data,
+  };
+
+  try {
+    localStorage.setItem(key, JSON.stringify(wrapper));
+    return Ok(undefined);
+  } catch {
+    return Err({
+      type: 'CORRUPTED',
+      reason: 'Failed to save game - storage may be full',
+      recoverable: true,
+    });
+  }
 }
 
 /**
@@ -154,21 +364,7 @@ export function formatSaveFileError(error: SaveFileValidationError): string {
       return `Save file is incomplete. Missing: ${error.missingFields.join(', ')}`;
     case 'INVALID_FORMAT':
       return `Invalid save file format: ${error.message}`;
+    case 'SCHEMA_VALIDATION_FAILED':
+      return `Save file data is invalid: ${error.issues.slice(0, 3).join('; ')}${error.issues.length > 3 ? ` (+${error.issues.length - 3} more issues)` : ''}`;
   }
 }
-
-/**
- * NOTE: This file is a placeholder for the save system (Issue #20)
- *
- * When implementing the save system, refer to:
- * - docs/architect/save-system-spec.md (if exists)
- * - src/data/schemas/SaveV1Schema.ts (for schema)
- * - src/core/services/SaveService.ts (for implementation)
- *
- * Key requirements:
- * - Versioned save format (support migration)
- * - Checksum validation (detect corruption)
- * - Graceful error handling (never crash)
- * - Backup saves (auto-create on save)
- * - User-friendly error messages
- */

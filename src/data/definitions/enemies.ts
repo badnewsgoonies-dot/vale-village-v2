@@ -67,9 +67,9 @@ export const VENUS_WOLF: Enemy = {
   level: 1,
   element: 'Venus',
   stats: {
-    hp: 275, // Increased from 55 (5x) for longer battles (target: 10-20 turns)
+    hp: 55, // Reverted: 275 was 5x inflated, making battles impossible
     pp: 8,
-    atk: 16, // Increased from 11 to encourage defensive play
+    atk: 11, // Reverted: 16 was too high for L1
     def: 7,
     mag: 3,
     spd: 11,
@@ -157,9 +157,9 @@ export const MARS_WOLF: Enemy = {
   level: 2,
   element: 'Mars',
   stats: {
-    hp: 290, // Increased from 58 (5x) for longer battles (target: 10-20 turns)
+    hp: 58, // Reverted: 290 was 5x inflated
     pp: 10,
-    atk: 18, // Increased from 12 to encourage defensive play
+    atk: 12, // Reverted: 18 was too high
     def: 6,
     mag: 5,
     spd: 13,
@@ -179,9 +179,9 @@ export const MERCURY_WOLF: Enemy = {
   level: 2,
   element: 'Mercury',
   stats: {
-    hp: 280, // Increased from 56 (5x) for longer battles (target: 10-20 turns)
+    hp: 56, // Reverted: 280 was 5x inflated
     pp: 12,
-    atk: 17, // Increased from 10 to encourage defensive play
+    atk: 10, // Reverted: 17 was too high
     def: 7,
     mag: 6,
     spd: 14,
@@ -438,9 +438,9 @@ export const JUPITER_WOLF: Enemy = {
   level: 2,
   element: 'Jupiter',
   stats: {
-    hp: 260, // Increased from 52 (5x) for longer battles (target: 10-20 turns)
+    hp: 52, // Reverted: 260 was 5x inflated
     pp: 11,
-    atk: 18, // Increased from 11 to encourage defensive play
+    atk: 11, // Reverted: 18 was too high
     def: 6,
     mag: 7,
     spd: 16,
@@ -556,9 +556,9 @@ export const EARTH_SCOUT: Enemy = {
   level: 1,
   element: 'Venus',
   stats: {
-    hp: 250, // Increased from 50 (5x) for longer battles (target: 10-20 turns)
+    hp: 50, // Reverted: 250 was 5x inflated
     pp: 10,
-    atk: 14, // Increased from 9 to encourage defensive play
+    atk: 9, // Reverted: 14 was too high
     def: 8,
     mag: 5,
     spd: 8,
@@ -577,9 +577,9 @@ export const FLAME_SCOUT: Enemy = {
   level: 1,
   element: 'Mars',
   stats: {
-    hp: 225, // Increased from 45 (5x) for longer battles (target: 10-20 turns)
+    hp: 45, // Reverted: 225 was 5x inflated
     pp: 12,
-    atk: 15, // Increased from 10 to encourage defensive play
+    atk: 10, // Reverted: 15 was too high
     def: 6,
     mag: 8,
     spd: 10,
@@ -598,9 +598,9 @@ export const FROST_SCOUT: Enemy = {
   level: 1,
   element: 'Mercury',
   stats: {
-    hp: 240, // Increased from 48 (5x) for longer battles (target: 10-20 turns)
+    hp: 48, // Reverted: 240 was 5x inflated
     pp: 11,
-    atk: 14, // Increased from 8 to encourage defensive play
+    atk: 8, // Reverted: 14 was too high
     def: 7,
     mag: 7,
     spd: 9,
@@ -619,9 +619,9 @@ export const GALE_SCOUT: Enemy = {
   level: 1,
   element: 'Jupiter',
   stats: {
-    hp: 210, // Increased from 42 (5x) for longer battles (target: 10-20 turns)
+    hp: 42, // Reverted: 210 was 5x inflated
     pp: 13,
-    atk: 15, // Increased from 9 to encourage defensive play
+    atk: 9, // Reverted: 15 was too high
     def: 6,
     mag: 9,
     spd: 12,
@@ -1058,22 +1058,30 @@ export const FLAME_ELEMENTAL: Enemy = {
   level: 6,
   element: 'Mars',
   stats: {
-    hp: 180,   // CHANGED from 120 - first phase-change boss
-    pp: 35,    // CHANGED from 28
+    hp: 180,   // First phase-change boss
+    pp: 35,
     atk: 14,
     def: 14,
-    mag: 24,   // CHANGED from 20
+    mag: 24,
     spd: 14,
   },
   abilities: [
     { ...STRIKE, unlockLevel: 1 },
     { ...FIREBALL, unlockLevel: 1 },
     { ...BURN_TOUCH, unlockLevel: 1 },
-    { ...BOOST_ATK, unlockLevel: 1 },    // ADDED - Phase 1: buffs self
-    { ...WEAKEN_DEF, unlockLevel: 1 },   // ADDED - Phase 2: debuffs player
+    { ...BOOST_ATK, unlockLevel: 1 },    // Phase 1: buffs self
+    { ...WEAKEN_DEF, unlockLevel: 1 },   // Phase 2: debuffs player
   ],
-  baseXp: 60,   // CHANGED from 45
-  baseGold: 30, // CHANGED from 24
+  baseXp: 60,
+  baseGold: 30,
+  // Phase-change boss: prioritizes debuffs when below 50% HP
+  phases: [
+    {
+      threshold: 0.5, // Below 50% HP
+      priorityAbilities: ['weaken-def', 'burn-touch'], // Aggressive debuffs
+      statMultiplier: { atk: 1.2, spd: 1.1 }, // 20% ATK, 10% SPD boost in rage mode
+    },
+  ],
 };
 
 export const ICE_ELEMENTAL: Enemy = {
@@ -1154,11 +1162,11 @@ export const PHOENIX: Enemy = {
   level: 8,
   element: 'Mars',
   stats: {
-    hp: 240,   // CHANGED from 180 - phase-change boss with rebirth mechanic
-    pp: 40,    // CHANGED from 35
+    hp: 240,   // Phase-change boss with rebirth mechanic
+    pp: 40,
     atk: 22,
     def: 18,
-    mag: 28,   // CHANGED from 26
+    mag: 28,
     spd: 18,
   },
   abilities: [
@@ -1166,11 +1174,23 @@ export const PHOENIX: Enemy = {
     { ...FIREBALL, unlockLevel: 1 },
     { ...BURN_TOUCH, unlockLevel: 1 },
     { ...HEAL, unlockLevel: 1 },
-    { ...PARTY_HEAL, unlockLevel: 1 },   // ADDED - Phase 2: rebirth mode
-    { ...BOOST_ATK, unlockLevel: 1 },    // ADDED - Phase 2: buffs self
+    { ...PARTY_HEAL, unlockLevel: 1 },   // Phase 2: rebirth mode
+    { ...BOOST_ATK, unlockLevel: 1 },    // Phase 2: buffs self
   ],
-  baseXp: 110,  // CHANGED from 90
-  baseGold: 60, // CHANGED from 50
+  baseXp: 110,
+  baseGold: 60,
+  // Phase-change boss: "Rebirth Mode" - prioritizes healing when near death
+  phases: [
+    {
+      threshold: 0.5, // Below 50% HP - enters rebirth preparation
+      priorityAbilities: ['heal', 'boost-atk'], // Heal self, buff for comeback
+    },
+    {
+      threshold: 0.25, // Below 25% HP - desperate rebirth mode
+      priorityAbilities: ['party-heal', 'heal'], // Focus entirely on healing
+      statMultiplier: { mag: 1.5 }, // 50% MAG boost for stronger heals
+    },
+  ],
 };
 
 export const LEVIATHAN: Enemy = {
@@ -2486,13 +2506,13 @@ export const GARET_ENEMY = unitDefinitionToEnemy(
   2, // Level 2 for VS1
   60, // Base XP
   19, // Base Gold
-  { 
+  {
     id: 'garet-enemy',
     stats: {
       // HP reduced from 3x to 1.5x for winnable House 1 (~6 hits instead of 13)
-      hp: (warMageDef.baseStats.hp + (1 * warMageDef.growthRates.hp)) * 1.5, // 1.5x HP (balanced for VS1)
+      hp: 142, // Math.floor((80 + 15) * 1.5) = 142 (hardcoded to avoid float issues)
       // ATK reduced from +4 to +2 for fairer damage output
-      atk: warMageDef.baseStats.atk + (1 * warMageDef.growthRates.atk) + 2, // +2 ATK
+      atk: 14, // 10 + 2 + 2 = 14 (hardcoded)
     }
   }
 );
