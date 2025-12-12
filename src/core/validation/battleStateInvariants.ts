@@ -205,14 +205,24 @@ function validatePhaseInvariants(state: BattleState): void {
     }
   }
 
-  // Executing phase: queue must be complete
+  // Executing phase: queue must be complete for ALIVE units only
+  // KO'd units don't need actions (matching validateQueueForExecution logic)
   if (state.phase === 'executing') {
-    const isComplete = state.queuedActions.every(a => a !== null);
+    const aliveUnits = state.playerTeam.units.filter(u => !isUnitKO(u));
+    const aliveUnitActions = state.queuedActions.filter((action, index) => {
+      const unit = state.playerTeam.units[index];
+      return unit && !isUnitKO(unit) && action !== null;
+    });
+    const isComplete = aliveUnitActions.length === aliveUnits.length;
     if (!isComplete) {
       throw new BattleStateInvariantError(
-        'Executing phase with incomplete queue',
+        'Executing phase with incomplete queue for alive units',
         'PHASE_EXECUTING_INCOMPLETE_QUEUE',
-        { queuedActions: state.queuedActions.map(a => (a ? a.unitId : null)) }
+        {
+          queuedActions: state.queuedActions.map(a => (a ? a.unitId : null)),
+          aliveUnitCount: aliveUnits.length,
+          aliveActionsCount: aliveUnitActions.length
+        }
       );
     }
   }
