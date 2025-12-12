@@ -5,7 +5,7 @@ import { shallow } from 'zustand/shallow';
 import { useGameStore, ScreenType, ModalType, GameStore } from './store/gameStore';
 
 import { TitleScreen } from './screens/TitleScreen';
-import { OverworldMap } from './screens/OverworldMap';
+import { OverworldMapV4 } from './screens/OverworldMapV4';
 import { QueueBattleView } from './screens/QueueBattleView';
 import { MainMenu } from './screens/MainMenu';
 import { CompendiumScreen } from './ui/components/CompendiumScreen';
@@ -256,13 +256,13 @@ const App: FunctionComponent = () => {
       case 'title':
         return <TitleScreen />;
       case 'overworld':
-        return <OverworldMap />;
+        return <OverworldMapV4 />;
       case 'battle':
         return <QueueBattleView />;
       case 'menu':
         return <MainMenu />;
       case 'compendium':
-        return <CompendiumScreen />;
+        return <CompendiumScreen onClose={() => startTransition('menu')} />;
       case 'team-select':
         return <TeamSelectWrapper />;
       case 'rewards':

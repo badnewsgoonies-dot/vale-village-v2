@@ -213,6 +213,7 @@ export class OverworldEngine {
 
     // Set tile size on layers that need it
     this.terrainLayer.setTileSize(this.config.tileSize);
+    this.terrainLayer.setCanvasSize(this.config.canvasWidth, this.config.canvasHeight);
     this.entityLayer.setTileSize(this.config.tileSize);
 
     // Set up canvas for pixel art rendering
@@ -290,6 +291,7 @@ export class OverworldEngine {
    */
   setSceneBuildings(buildings: SceneBuilding[]): void {
     this.entityLayer.setSceneBuildings(buildings);
+    this.terrainLayer.setSceneMode(buildings.length > 0);
   }
 
   /**
