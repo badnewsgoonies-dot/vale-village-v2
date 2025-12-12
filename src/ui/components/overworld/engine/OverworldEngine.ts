@@ -682,12 +682,15 @@ export class OverworldEngine {
 
     // Sync player position based on current scene
     if (this.currentSceneType === 'overworld') {
-      // In scene mode, map tile-world Y to canvas Y for pseudo-3D positioning
+      // In scene mode, map tile-world coordinates to canvas coordinates
+      // Both X and Y must be scaled for consistent coordinate system with buildings
       let playerPosForRender = this.playerPos;
       if (this.entityLayer.isSceneMode() && this.mapData) {
+        const tileWorldWidth = this.mapData.width * this.config.tileSize;
         const tileWorldHeight = this.mapData.height * this.config.tileSize;
+        const canvasX = (this.playerPos.x / tileWorldWidth) * this.config.canvasWidth;
         const canvasY = (this.playerPos.y / tileWorldHeight) * this.config.canvasHeight;
-        playerPosForRender = { x: this.playerPos.x, y: canvasY };
+        playerPosForRender = { x: canvasX, y: canvasY };
       }
 
       this.entityLayer.setPlayerPosition(
