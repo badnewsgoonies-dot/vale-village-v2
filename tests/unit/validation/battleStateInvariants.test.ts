@@ -395,7 +395,7 @@ describe('BattleStateInvariants', () => {
       }
     });
 
-    it('should throw PHASE_EXECUTING_INCOMPLETE_QUEUE when executing with null actions', () => {
+    it('should throw PHASE_EXECUTING_INCOMPLETE_QUEUE when executing with null actions for alive units', () => {
       const playerUnit = createTestUnit({ id: 'player-1', currentHp: 50 });
       const enemyUnit = createTestUnit({ id: 'enemy-1', currentHp: 30 });
 
@@ -407,7 +407,7 @@ describe('BattleStateInvariants', () => {
         phase: 'executing',
         playerTeam: { units: [playerUnit], djinnTrackers: {} },
         enemies: [enemyUnit],
-        queuedActions: [null], // Incomplete queue
+        queuedActions: [null], // Incomplete queue for alive unit
         unitById,
       });
 
@@ -417,6 +417,31 @@ describe('BattleStateInvariants', () => {
       } catch (e) {
         expect((e as BattleStateInvariantError).invariant).toBe('PHASE_EXECUTING_INCOMPLETE_QUEUE');
       }
+    });
+
+    it('should allow null actions for KO\'d units in executing phase', () => {
+      const alivePlayer = createTestUnit({ id: 'player-1', currentHp: 50 });
+      const koPlayer = createTestUnit({ id: 'player-2', currentHp: 0 }); // KO'd
+      const enemyUnit = createTestUnit({ id: 'enemy-1', currentHp: 30 });
+
+      const unitById = new Map();
+      unitById.set('player-1', { unit: alivePlayer, isPlayer: true, index: 0 });
+      unitById.set('player-2', { unit: koPlayer, isPlayer: true, index: 1 });
+      unitById.set('enemy-1', { unit: enemyUnit, isPlayer: false, index: 0 });
+
+      const state = createValidBattleState({
+        phase: 'executing',
+        playerTeam: { units: [alivePlayer, koPlayer], djinnTrackers: {} },
+        enemies: [enemyUnit],
+        queuedActions: [
+          { unitId: 'player-1', abilityId: 'attack', targetIds: ['enemy-1'], manaCost: 0 },
+          null, // KO'd unit has null action - this should be allowed
+        ],
+        unitById,
+      });
+
+      // Should NOT throw - KO'd units are allowed to have null actions
+      expect(() => validateBattleState(state)).not.toThrow();
     });
 
     it('should throw PHASE_VICTORY_ENEMIES_ALIVE when victory but enemies have HP', () => {
