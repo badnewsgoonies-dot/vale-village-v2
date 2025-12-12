@@ -28,7 +28,7 @@ const VALE_VILLAGE_SCENE_BUILDINGS: SceneBuilding[] = [
     id: 'isaacs-house',
     spritePath: '/sprites/buildings/Vale/Vale_Isaacs_House.gif',
     x: 150,
-    y: 420,
+    y: 280, // Adjusted to be near road at Y=256
     width: 120,
     height: 100,
     triggerId: 'house-01-door',
@@ -37,7 +37,7 @@ const VALE_VILLAGE_SCENE_BUILDINGS: SceneBuilding[] = [
     id: 'inn',
     spritePath: '/sprites/buildings/Vale/Vale_Inn.gif',
     x: 650,
-    y: 450,
+    y: 300, // Adjusted to be near road
     width: 120,
     height: 100,
     triggerId: 'house-02-door',
@@ -46,7 +46,7 @@ const VALE_VILLAGE_SCENE_BUILDINGS: SceneBuilding[] = [
     id: 'kradens-house',
     spritePath: '/sprites/buildings/Vale/Vale_Kradens_House.gif',
     x: 380,
-    y: 240, // On hillside, further back
+    y: 200, // On hillside, further back (above road)
     width: 140,
     height: 120,
     triggerId: 'house-03-door',
@@ -55,7 +55,7 @@ const VALE_VILLAGE_SCENE_BUILDINGS: SceneBuilding[] = [
     id: 'weapon-shop',
     spritePath: '/sprites/buildings/Vale/Vale_WepArm_Shop.gif',
     x: 500,
-    y: 380,
+    y: 270, // Adjusted to be near road
     width: 100,
     height: 90,
     triggerId: 'shop-weapons',
