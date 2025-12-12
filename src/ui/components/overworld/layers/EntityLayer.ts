@@ -8,7 +8,7 @@
  * 2. Scene-based: Explicit screen positions for pseudo-3D depth illusion
  */
 
-import type { Layer, Camera, Entity, Direction, WorldPosition } from '../engine/types';
+import { clamp, type Layer, type Camera, type Entity, type Direction, type WorldPosition } from '../engine/types';
 import type { GameMap, NPC } from '../../../../data/schemas/mapSchema';
 import { loadSprite } from '../../../sprites/loader';
 
@@ -40,6 +40,8 @@ export class EntityLayer implements Layer {
   private tileSize: number = 32;
   private timeOfDay: number = 0.5;
   private elapsedTime: number = 0; // For animations
+  private mapHeightTiles: number = 0;
+  private worldHeightPx: number = 1;
 
   // Scene-based buildings (pseudo-3D layout)
   private sceneBuildings: SceneBuilding[] = [];
@@ -55,6 +57,7 @@ export class EntityLayer implements Layer {
 
   setTileSize(size: number): void {
     this.tileSize = size;
+    this.worldHeightPx = this.mapHeightTiles * this.tileSize;
   }
 
   setTimeOfDay(time: number): void {
@@ -151,6 +154,8 @@ export class EntityLayer implements Layer {
    * Populate entities from map data
    */
   setMapData(map: GameMap): void {
+    this.mapHeightTiles = map.height;
+    this.worldHeightPx = map.height * this.tileSize;
     this.entities = [];
 
     // Add buildings from wall/door tiles (skip if in scene mode)
@@ -450,6 +455,16 @@ export class EntityLayer implements Layer {
   }
 
   /**
+   * Golden Sun–style depth scaling.
+   * Lower on-screen entities (higher worldY) appear slightly larger.
+   */
+  private getPerspectiveScale(worldY: number): number {
+    const maxY = this.worldHeightPx || 1;
+    const depthNorm = clamp(worldY / maxY, 0, 1);
+    return 0.7 + depthNorm * 0.3;
+  }
+
+  /**
    * Update method (called each frame)
    */
   update(dt: number): void {
@@ -503,10 +518,11 @@ export class EntityLayer implements Layer {
       const screenPos = camera.worldToScreen(entity.x, entity.y);
 
       // Draw shadow first
-      this.drawShadow(ctx, screenPos, entity);
+      const perspectiveScale = this.getPerspectiveScale(entity.y);
+      this.drawShadow(ctx, screenPos, entity, perspectiveScale);
 
       // Draw entity
-      this.drawEntity(ctx, screenPos, entity);
+      this.drawEntity(ctx, screenPos, entity, perspectiveScale);
     }
 
     // Draw night window glow
@@ -632,22 +648,22 @@ export class EntityLayer implements Layer {
     ctx.restore();
   }
 
-  private drawShadow(ctx: CanvasRenderingContext2D, pos: { x: number; y: number }, entity: RenderableEntity): void {
+  private drawShadow(ctx: CanvasRenderingContext2D, pos: { x: number; y: number }, entity: RenderableEntity, scale: number): void {
     ctx.save();
     ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
     ctx.beginPath();
     ctx.ellipse(
       pos.x,
       pos.y + 2,
-      entity.shadowWidth / 2,
-      entity.shadowHeight / 2,
+      (entity.shadowWidth * scale) / 2,
+      (entity.shadowHeight * scale) / 2,
       0, 0, Math.PI * 2
     );
     ctx.fill();
     ctx.restore();
   }
 
-  private drawEntity(ctx: CanvasRenderingContext2D, pos: { x: number; y: number }, entity: RenderableEntity): void {
+  private drawEntity(ctx: CanvasRenderingContext2D, pos: { x: number; y: number }, entity: RenderableEntity, scale: number): void {
     const sprite = this.getSprite(entity.spriteId);
 
     // Calculate sway offset for trees
@@ -656,18 +672,22 @@ export class EntityLayer implements Layer {
       swayX = Math.sin(Date.now() * 0.001 + entity.animOffset) * entity.swayAmount;
     }
 
+    const scaledWidth = entity.width * scale;
+    const scaledHeight = entity.height * scale;
+    const scaledSwayX = swayX * scale;
+
     if (sprite && sprite.complete && sprite.naturalWidth > 0) {
       // Draw actual sprite
       ctx.drawImage(
         sprite,
-        pos.x - entity.width / 2 + swayX,
-        pos.y - entity.height,
-        entity.width,
-        entity.height
+        pos.x - scaledWidth / 2 + scaledSwayX,
+        pos.y - scaledHeight,
+        scaledWidth,
+        scaledHeight
       );
     } else {
       // Draw placeholder based on entity type
-      this.drawPlaceholder(ctx, pos, entity, swayX);
+      this.drawPlaceholder(ctx, pos, entity, scaledSwayX, scale);
     }
   }
 
@@ -675,38 +695,41 @@ export class EntityLayer implements Layer {
     ctx: CanvasRenderingContext2D,
     pos: { x: number; y: number },
     entity: RenderableEntity,
-    swayX: number
+    swayX: number,
+    scale: number
   ): void {
     ctx.save();
 
     const isNight = this.isNight();
-    const x = pos.x - entity.width / 2 + swayX;
-    const y = pos.y - entity.height;
+    const width = entity.width * scale;
+    const height = entity.height * scale;
+    const x = pos.x - width / 2 + swayX;
+    const y = pos.y - height;
 
     switch (entity.type) {
       case 'player':
         // Blue character placeholder
         ctx.fillStyle = isNight ? '#2a5a8a' : '#3498db';
-        ctx.fillRect(x, y, entity.width, entity.height);
+        ctx.fillRect(x, y, width, height);
 
         // Head
         ctx.fillStyle = isNight ? '#b8a090' : '#f5d5c8';
-        ctx.fillRect(x + 4, y + 2, entity.width - 8, 12);
+        ctx.fillRect(x + 4 * scale, y + 2 * scale, width - 8 * scale, 12 * scale);
         break;
 
       case 'npc':
         // Green/brown character placeholder
         ctx.fillStyle = isNight ? '#4a6a4a' : '#7a9a7a';
-        ctx.fillRect(x, y, entity.width, entity.height);
+        ctx.fillRect(x, y, width, height);
 
         // Head
         ctx.fillStyle = isNight ? '#a89080' : '#e5c5b8';
-        ctx.fillRect(x + 4, y + 2, entity.width - 8, 12);
+        ctx.fillRect(x + 4 * scale, y + 2 * scale, width - 8 * scale, 12 * scale);
         break;
 
       case 'building':
         // Building placeholder (tan/brown)
-        const buildingGradient = ctx.createLinearGradient(x, y, x, y + entity.height);
+        const buildingGradient = ctx.createLinearGradient(x, y, x, y + height);
         if (isNight) {
           buildingGradient.addColorStop(0, '#3a3530');
           buildingGradient.addColorStop(1, '#2a2520');
@@ -715,45 +738,45 @@ export class EntityLayer implements Layer {
           buildingGradient.addColorStop(1, '#b48a62');
         }
         ctx.fillStyle = buildingGradient;
-        ctx.fillRect(x, y, entity.width, entity.height);
+        ctx.fillRect(x, y, width, height);
 
         // Roof
         ctx.fillStyle = isNight ? '#4a3a3a' : '#8a5a4a';
         ctx.beginPath();
-        ctx.moveTo(x - 5, y + 10);
-        ctx.lineTo(x + entity.width / 2, y - 15);
-        ctx.lineTo(x + entity.width + 5, y + 10);
+        ctx.moveTo(x - 5 * scale, y + 10 * scale);
+        ctx.lineTo(x + width / 2, y - 15 * scale);
+        ctx.lineTo(x + width + 5 * scale, y + 10 * scale);
         ctx.closePath();
         ctx.fill();
 
         // Door
         ctx.fillStyle = isNight ? '#2a2520' : '#5a4a3a';
-        ctx.fillRect(x + entity.width / 2 - 8, y + entity.height - 25, 16, 25);
+        ctx.fillRect(x + width / 2 - 8 * scale, y + height - 25 * scale, 16 * scale, 25 * scale);
 
         // Window
         ctx.fillStyle = isNight ? '#4a5a6a' : '#8ac0e0';
-        ctx.fillRect(x + 8, y + 20, 12, 12);
-        if (entity.width > 50) {
-          ctx.fillRect(x + entity.width - 20, y + 20, 12, 12);
+        ctx.fillRect(x + 8 * scale, y + 20 * scale, 12 * scale, 12 * scale);
+        if (width > 50 * scale) {
+          ctx.fillRect(x + width - 20 * scale, y + 20 * scale, 12 * scale, 12 * scale);
         }
         break;
 
       case 'tree':
         // Tree trunk
         ctx.fillStyle = isNight ? '#3a2a20' : '#6a4a3a';
-        ctx.fillRect(x + entity.width / 2 - 4, y + entity.height * 0.4, 8, entity.height * 0.6);
+        ctx.fillRect(x + width / 2 - 4 * scale, y + height * 0.4, 8 * scale, height * 0.6);
 
         // Tree foliage (multiple circles)
         ctx.fillStyle = isNight ? '#1a3a2a' : '#2a6a3a';
-        const foliageY = y + entity.height * 0.4;
+        const foliageY = y + height * 0.4;
         ctx.beginPath();
-        ctx.arc(x + entity.width / 2 - 8, foliageY, entity.width * 0.3, 0, Math.PI * 2);
+        ctx.arc(x + width / 2 - 8 * scale, foliageY, width * 0.3, 0, Math.PI * 2);
         ctx.fill();
         ctx.beginPath();
-        ctx.arc(x + entity.width / 2 + 8, foliageY, entity.width * 0.3, 0, Math.PI * 2);
+        ctx.arc(x + width / 2 + 8 * scale, foliageY, width * 0.3, 0, Math.PI * 2);
         ctx.fill();
         ctx.beginPath();
-        ctx.arc(x + entity.width / 2, foliageY - 10, entity.width * 0.35, 0, Math.PI * 2);
+        ctx.arc(x + width / 2, foliageY - 10 * scale, width * 0.35, 0, Math.PI * 2);
         ctx.fill();
         break;
 
@@ -761,7 +784,7 @@ export class EntityLayer implements Layer {
         // Generic decoration (rock/bush)
         ctx.fillStyle = isNight ? '#3a4a3a' : '#5a7a5a';
         ctx.beginPath();
-        ctx.ellipse(x + entity.width / 2, y + entity.height / 2, entity.width / 2, entity.height / 3, 0, 0, Math.PI * 2);
+        ctx.ellipse(x + width / 2, y + height / 2, width / 2, height / 3, 0, 0, Math.PI * 2);
         ctx.fill();
         break;
     }
@@ -780,28 +803,31 @@ export class EntityLayer implements Layer {
       if (entity.type !== 'building') continue;
 
       const screenPos = camera.worldToScreen(entity.x, entity.y);
-      const x = screenPos.x - entity.width / 2;
-      const y = screenPos.y - entity.height;
+      const perspectiveScale = this.getPerspectiveScale(entity.y);
+      const width = entity.width * perspectiveScale;
+      const height = entity.height * perspectiveScale;
+      const x = screenPos.x - width / 2;
+      const y = screenPos.y - height;
 
       // Window glow effect
       const glowGradient = ctx.createRadialGradient(
-        x + 14, y + 26, 0,
-        x + 14, y + 26, 15
+        x + 14 * perspectiveScale, y + 26 * perspectiveScale, 0,
+        x + 14 * perspectiveScale, y + 26 * perspectiveScale, 15 * perspectiveScale
       );
       glowGradient.addColorStop(0, 'rgba(255, 200, 100, 0.4)');
       glowGradient.addColorStop(1, 'rgba(255, 200, 100, 0)');
       ctx.fillStyle = glowGradient;
-      ctx.fillRect(x, y + 14, 30, 24);
+      ctx.fillRect(x, y + 14 * perspectiveScale, 30 * perspectiveScale, 24 * perspectiveScale);
 
-      if (entity.width > 50) {
+      if (width > 50 * perspectiveScale) {
         const glowGradient2 = ctx.createRadialGradient(
-          x + entity.width - 14, y + 26, 0,
-          x + entity.width - 14, y + 26, 15
+          x + width - 14 * perspectiveScale, y + 26 * perspectiveScale, 0,
+          x + width - 14 * perspectiveScale, y + 26 * perspectiveScale, 15 * perspectiveScale
         );
         glowGradient2.addColorStop(0, 'rgba(255, 200, 100, 0.4)');
         glowGradient2.addColorStop(1, 'rgba(255, 200, 100, 0)');
         ctx.fillStyle = glowGradient2;
-        ctx.fillRect(x + entity.width - 30, y + 14, 30, 24);
+        ctx.fillRect(x + width - 30 * perspectiveScale, y + 14 * perspectiveScale, 30 * perspectiveScale, 24 * perspectiveScale);
       }
     }
 

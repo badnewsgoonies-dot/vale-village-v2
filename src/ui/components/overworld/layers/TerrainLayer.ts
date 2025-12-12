@@ -1,44 +1,63 @@
 /**
  * TerrainLayer
- * Renders ground bands, grass texture, paths, and water
+ * Renders ground tiles using sprite terrain with a lightweight
+ * Golden Sun–style pseudo‑3D perspective (depth scaling).
  */
 
 import type { Layer, Camera } from '../engine/types';
 import type { GameMap } from '../../../../data/schemas/mapSchema';
+import { clamp } from '../engine/types';
+import { loadSprite } from '../../../sprites/loader';
 
-interface TerrainBand {
-  y: number;
-  height: number;
-  hue: number;
-  saturation: number;
-  lightness: number;
-}
+type TileType = GameMap['tiles'][number][number]['type'];
+
+const DEFAULT_TERRAIN_SPRITES: Partial<Record<TileType, string>> = {
+  grass: '/sprites/scenery/outdoor/sm/Floating_Grass.gif',
+  path: '/sprites/scenery/outdoor/sm/tile_platform.gif',
+  water: '/sprites/scenery/outdoor/sm/Ice.gif',
+};
+
+const TERRAIN_TYPES: TileType[] = ['grass', 'path', 'water'];
 
 export class TerrainLayer implements Layer {
   zIndex = 2; // In front of background (ground layer)
 
-  private bands: TerrainBand[] = [];
   private mapData: GameMap | null = null;
   private timeOfDay: number = 0.5;
   private tileSize: number = 32;
 
-  constructor(startY: number = 300, canvasHeight: number = 640) {
-    this.initBands(startY, canvasHeight);
-  }
+  private canvasWidth: number = 960;
+  private canvasHeight: number = 640;
 
-  private initBands(startY: number, canvasHeight: number): void {
-    const bandHeight = (canvasHeight - startY) / 4;
+  private useSceneMode: boolean = false;
+  private sceneScaleX: number = 1;
+  private sceneScaleY: number = 1;
 
-    this.bands = [
-      { y: startY, height: bandHeight, hue: 120, saturation: 35, lightness: 45 },
-      { y: startY + bandHeight, height: bandHeight, hue: 115, saturation: 32, lightness: 40 },
-      { y: startY + bandHeight * 2, height: bandHeight, hue: 110, saturation: 28, lightness: 35 },
-      { y: startY + bandHeight * 3, height: bandHeight, hue: 105, saturation: 25, lightness: 30 },
-    ];
+  private spriteCache: Map<string, HTMLImageElement> = new Map();
+  private loadingSprites: Set<string> = new Set();
+
+  // startY kept for backward-compat (no longer used directly)
+  constructor(_startY: number = 300, canvasHeight: number = 640) {
+    this.canvasHeight = canvasHeight;
   }
 
   setMap(map: GameMap): void {
     this.mapData = map;
+    this.recomputeSceneScale();
+
+    // Preload any referenced terrain sprites
+    const ids = new Set<string>();
+    for (const row of map.tiles) {
+      for (const tile of row) {
+        if (!tile) continue;
+        if (!TERRAIN_TYPES.includes(tile.type)) continue;
+        const id = tile.spriteId || DEFAULT_TERRAIN_SPRITES[tile.type];
+        if (id) ids.add(id);
+      }
+    }
+    for (const id of ids) {
+      this.loadSpriteAsync(id);
+    }
   }
 
   setTimeOfDay(time: number): void {
@@ -47,87 +66,31 @@ export class TerrainLayer implements Layer {
 
   setTileSize(size: number): void {
     this.tileSize = size;
+    this.recomputeSceneScale();
+  }
+
+  setCanvasSize(width: number, height: number): void {
+    this.canvasWidth = width;
+    this.canvasHeight = height;
+    this.recomputeSceneScale();
+  }
+
+  setSceneMode(enabled: boolean): void {
+    this.useSceneMode = enabled;
+    this.recomputeSceneScale();
   }
 
   render(ctx: CanvasRenderingContext2D, camera: Camera): void {
-    // Draw terrain bands
-    this.drawBands(ctx);
+    if (!this.mapData) return;
 
-    // Draw grass texture
-    this.drawGrassTexture(ctx, camera);
-
-    // Draw paths from map data
-    if (this.mapData) {
-      this.drawPaths(ctx, camera);
-      this.drawWater(ctx, camera);
+    if (this.useSceneMode) {
+      this.renderSceneMode(ctx);
+    } else {
+      this.renderWorldMode(ctx, camera);
     }
   }
 
-  private drawBands(ctx: CanvasRenderingContext2D): void {
-    if (!this.bands.length) return;
-
-    const isNight = this.timeOfDay < 0.25 || this.timeOfDay > 0.80;
-    const lightMod = isNight ? 0.5 : 1;
-
-    for (const band of this.bands) {
-      const adjustedLightness = band.lightness * lightMod;
-      ctx.fillStyle = `hsl(${band.hue}, ${band.saturation}%, ${adjustedLightness}%)`;
-      ctx.fillRect(0, band.y, ctx.canvas.width, band.height + 1); // +1 to prevent gaps
-    }
-
-    // Add subtle gradient overlay for depth
-    const firstBandY = this.bands[0]?.y ?? 0;
-    const gradient = ctx.createLinearGradient(0, firstBandY, 0, ctx.canvas.height);
-    gradient.addColorStop(0, 'rgba(255, 255, 255, 0.08)');
-    gradient.addColorStop(0.5, 'rgba(0, 0, 0, 0)');
-    gradient.addColorStop(1, 'rgba(0, 0, 0, 0.15)');
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, firstBandY, ctx.canvas.width, ctx.canvas.height - firstBandY);
-  }
-
-  private drawGrassTexture(ctx: CanvasRenderingContext2D, camera: Camera): void {
-    if (!this.bands.length) return;
-    // Draw subtle grass blades across terrain
-    const offset = camera.getParallaxOffset(0.8);
-    const startY = this.bands[0]?.y ?? 0;
-
-    ctx.save();
-
-    const isNight = this.timeOfDay < 0.25 || this.timeOfDay > 0.80;
-    const grassColor = isNight ? 'rgba(30, 60, 30, 0.3)' : 'rgba(60, 100, 60, 0.3)';
-
-    // Use a deterministic pattern based on position
-    for (let screenX = 0; screenX < ctx.canvas.width; screenX += 8) {
-      const worldX = screenX - offset.x * 0.2;
-
-      for (let screenY = startY + 10; screenY < ctx.canvas.height; screenY += 12) {
-        // Pseudo-random based on position
-        const seed = Math.sin(worldX * 0.1 + screenY * 0.05) * 10000;
-        const variation = seed - Math.floor(seed);
-
-        if (variation > 0.6) {
-          const bladeHeight = 4 + variation * 6;
-          const lean = Math.sin(worldX * 0.02 + Date.now() * 0.0005) * 2;
-
-          ctx.strokeStyle = grassColor;
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.moveTo(screenX, screenY);
-          ctx.quadraticCurveTo(
-            screenX + lean,
-            screenY - bladeHeight / 2,
-            screenX + lean * 1.5,
-            screenY - bladeHeight
-          );
-          ctx.stroke();
-        }
-      }
-    }
-
-    ctx.restore();
-  }
-
-  private drawPaths(ctx: CanvasRenderingContext2D, camera: Camera): void {
+  private renderWorldMode(ctx: CanvasRenderingContext2D, camera: Camera): void {
     if (!this.mapData) return;
 
     const bounds = camera.getVisibleBounds();
@@ -135,8 +98,7 @@ export class TerrainLayer implements Layer {
     const endTileX = Math.min(this.mapData.width, Math.ceil(bounds.right / this.tileSize));
     const startTileY = Math.max(0, Math.floor(bounds.top / this.tileSize));
     const endTileY = Math.min(this.mapData.height, Math.ceil(bounds.bottom / this.tileSize));
-
-    const isNight = this.timeOfDay < 0.25 || this.timeOfDay > 0.80;
+    const worldHeightPx = this.mapData.height * this.tileSize;
 
     for (let tileY = startTileY; tileY < endTileY; tileY++) {
       const row = this.mapData.tiles[tileY];
@@ -144,101 +106,138 @@ export class TerrainLayer implements Layer {
 
       for (let tileX = startTileX; tileX < endTileX; tileX++) {
         const tile = row[tileX];
-        if (!tile) continue;
+        if (!tile || !TERRAIN_TYPES.includes(tile.type)) continue;
 
-        if (tile.type === 'path') {
-          const worldX = tileX * this.tileSize;
-          const worldY = tileY * this.tileSize;
-          const screenPos = camera.worldToScreen(worldX, worldY);
+        const spriteId = tile.spriteId || DEFAULT_TERRAIN_SPRITES[tile.type];
+        if (!spriteId) continue;
 
-          // Path base color
-          ctx.fillStyle = isNight ? '#3a3530' : '#c4a882';
-          ctx.fillRect(screenPos.x, screenPos.y, this.tileSize, this.tileSize);
+        const worldX = tileX * this.tileSize;
+        const worldY = tileY * this.tileSize;
+        const screenPos = camera.worldToScreen(worldX, worldY);
 
-          // Path texture (subtle stone pattern)
-          this.drawPathTexture(ctx, screenPos.x, screenPos.y, tileX + tileY * 100);
-        }
+        this.drawTile(
+          ctx,
+          screenPos.x,
+          screenPos.y,
+          this.tileSize,
+          this.tileSize,
+          spriteId,
+          worldY + this.tileSize,
+          worldHeightPx
+        );
       }
     }
   }
 
-  private drawPathTexture(ctx: CanvasRenderingContext2D, x: number, y: number, seed: number): void {
-    ctx.save();
-
-    // Subtle stone/dirt pattern
-    const stoneCount = 3 + (seed % 3);
-    for (let i = 0; i < stoneCount; i++) {
-      const stoneSeed = Math.sin(seed * (i + 1) * 0.1) * 10000;
-      const variation = stoneSeed - Math.floor(stoneSeed);
-
-      const stoneX = x + variation * 24 + 4;
-      const stoneY = y + ((stoneSeed * 7) % 24) + 4;
-      const stoneSize = 4 + (variation * 6);
-
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-      ctx.beginPath();
-      ctx.ellipse(stoneX, stoneY, stoneSize, stoneSize * 0.6, 0, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    ctx.restore();
-  }
-
-  private drawWater(ctx: CanvasRenderingContext2D, camera: Camera): void {
+  /**
+   * Scene mode stretches the tile grid to the canvas so small maps
+   * can still fill the pseudo‑3D scene (used for Vale Village).
+   */
+  private renderSceneMode(ctx: CanvasRenderingContext2D): void {
     if (!this.mapData) return;
+    const worldWidthPx = this.mapData.width * this.tileSize;
+    const worldHeightPx = this.mapData.height * this.tileSize;
 
-    const bounds = camera.getVisibleBounds();
-    const startTileX = Math.max(0, Math.floor(bounds.left / this.tileSize));
-    const endTileX = Math.min(this.mapData.width, Math.ceil(bounds.right / this.tileSize));
-    const startTileY = Math.max(0, Math.floor(bounds.top / this.tileSize));
-    const endTileY = Math.min(this.mapData.height, Math.ceil(bounds.bottom / this.tileSize));
+    const cellWidth = this.tileSize * this.sceneScaleX;
+    const cellHeight = this.tileSize * this.sceneScaleY;
 
-    const time = Date.now() * 0.001;
-    const isNight = this.timeOfDay < 0.25 || this.timeOfDay > 0.80;
-
-    for (let tileY = startTileY; tileY < endTileY; tileY++) {
+    for (let tileY = 0; tileY < this.mapData.height; tileY++) {
       const row = this.mapData.tiles[tileY];
       if (!row) continue;
 
-      for (let tileX = startTileX; tileX < endTileX; tileX++) {
+      for (let tileX = 0; tileX < this.mapData.width; tileX++) {
         const tile = row[tileX];
-        if (!tile) continue;
+        if (!tile || !TERRAIN_TYPES.includes(tile.type)) continue;
 
-        if (tile.type === 'water') {
-          const worldX = tileX * this.tileSize;
-          const worldY = tileY * this.tileSize;
-          const screenPos = camera.worldToScreen(worldX, worldY);
+        const spriteId = tile.spriteId || DEFAULT_TERRAIN_SPRITES[tile.type];
+        if (!spriteId) continue;
 
-          // Water base
-          const waterGradient = ctx.createLinearGradient(
-            screenPos.x, screenPos.y,
-            screenPos.x, screenPos.y + this.tileSize
-          );
+        const worldX = tileX * this.tileSize;
+        const worldY = tileY * this.tileSize;
 
-          if (isNight) {
-            waterGradient.addColorStop(0, '#1a2a3a');
-            waterGradient.addColorStop(1, '#0a1a2a');
-          } else {
-            waterGradient.addColorStop(0, '#4a8aaa');
-            waterGradient.addColorStop(1, '#3a7a9a');
-          }
+        const screenX = worldWidthPx > 0 ? (worldX / worldWidthPx) * this.canvasWidth : worldX;
+        const screenY = worldHeightPx > 0 ? (worldY / worldHeightPx) * this.canvasHeight : worldY;
 
-          ctx.fillStyle = waterGradient;
-          ctx.fillRect(screenPos.x, screenPos.y, this.tileSize, this.tileSize);
-
-          // Animated wave highlights
-          const waveOffset = Math.sin(time + tileX * 0.5) * 3;
-          ctx.strokeStyle = isNight ? 'rgba(100, 150, 200, 0.2)' : 'rgba(255, 255, 255, 0.3)';
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.moveTo(screenPos.x, screenPos.y + 10 + waveOffset);
-          ctx.quadraticCurveTo(
-            screenPos.x + this.tileSize / 2, screenPos.y + 8 + waveOffset,
-            screenPos.x + this.tileSize, screenPos.y + 10 + waveOffset
-          );
-          ctx.stroke();
-        }
+        this.drawTile(
+          ctx,
+          screenX,
+          screenY,
+          cellWidth,
+          cellHeight,
+          spriteId,
+          worldY + this.tileSize,
+          worldHeightPx
+        );
       }
     }
+  }
+
+  private drawTile(
+    ctx: CanvasRenderingContext2D,
+    screenX: number,
+    screenY: number,
+    cellWidth: number,
+    cellHeight: number,
+    spriteId: string,
+    worldYBottom: number,
+    worldHeightPx: number
+  ): void {
+    const sprite = this.getSprite(spriteId);
+
+    const depthNorm = worldHeightPx > 0 ? worldYBottom / worldHeightPx : 1;
+    const perspectiveScale = 0.7 + clamp(depthNorm, 0, 1) * 0.3;
+
+    const drawW = cellWidth * perspectiveScale;
+    const drawH = cellHeight * perspectiveScale;
+    const x = screenX + (cellWidth - drawW) / 2;
+    const y = screenY + cellHeight - drawH;
+
+    if (sprite && sprite.complete && sprite.naturalWidth > 0) {
+      ctx.drawImage(sprite, x, y, drawW, drawH);
+    } else {
+      // Placeholder fallback
+      ctx.save();
+      const isNight = this.timeOfDay < 0.25 || this.timeOfDay > 0.80;
+      ctx.fillStyle = isNight ? '#2a3a2a' : '#4a7a4a';
+      ctx.fillRect(x, y, drawW, drawH);
+      ctx.restore();
+    }
+
+    // Simple night tint for cohesion
+    if (this.timeOfDay < 0.25 || this.timeOfDay > 0.80) {
+      ctx.save();
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.18)';
+      ctx.fillRect(x, y, drawW, drawH);
+      ctx.restore();
+    }
+  }
+
+  private recomputeSceneScale(): void {
+    if (!this.useSceneMode || !this.mapData) {
+      this.sceneScaleX = 1;
+      this.sceneScaleY = 1;
+      return;
+    }
+    const worldWidthPx = this.mapData.width * this.tileSize;
+    const worldHeightPx = this.mapData.height * this.tileSize;
+    this.sceneScaleX = worldWidthPx > 0 ? this.canvasWidth / worldWidthPx : 1;
+    this.sceneScaleY = worldHeightPx > 0 ? this.canvasHeight / worldHeightPx : 1;
+  }
+
+  private async loadSpriteAsync(spriteId: string): Promise<void> {
+    if (this.spriteCache.has(spriteId) || this.loadingSprites.has(spriteId)) {
+      return;
+    }
+    this.loadingSprites.add(spriteId);
+    try {
+      const sprite = await loadSprite(spriteId);
+      this.spriteCache.set(spriteId, sprite);
+    } finally {
+      this.loadingSprites.delete(spriteId);
+    }
+  }
+
+  private getSprite(spriteId: string): HTMLImageElement | null {
+    return this.spriteCache.get(spriteId) || null;
   }
 }
