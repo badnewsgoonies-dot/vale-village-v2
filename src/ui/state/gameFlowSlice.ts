@@ -237,6 +237,17 @@ export const createGameFlowSlice: StateCreator<
     // TRANSITION TRIGGERS
     // ========================================
     if (trigger.type === 'transition') {
+      const data = trigger.data as { targetMap?: string; targetPos?: { x: number; y: number }; requiredFlags?: string[] };
+
+      // Note: requiredFlags checking should be done in overworldSlice.handleTriggerStep
+      // which has access to StorySlice. For now, teleport if target is valid.
+
+      // Teleport to target map
+      if (data.targetMap && data.targetPos) {
+        const { teleportPlayer } = get();
+        teleportPlayer(data.targetMap, data.targetPos);
+      }
+
       set({ lastTrigger: trigger });
       return;
     }

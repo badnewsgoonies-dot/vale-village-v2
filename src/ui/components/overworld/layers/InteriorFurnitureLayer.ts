@@ -23,6 +23,234 @@ interface InteriorConfig {
   roomHeight: number;
 }
 
+/**
+ * House-specific furniture layouts
+ * Each function receives roomWidth and roomHeight and returns a furniture array
+ */
+const HOUSE_FURNITURE_LAYOUTS: Record<number, (w: number, h: number) => FurnitureItem[]> = {
+  // House 1: Isaac's home - Cozy family dwelling
+  1: (w, h) => [
+    { id: 'bed-1', type: 'bed', x: 20, y: 30, width: 50, height: 80 },
+    { id: 'table-1', type: 'table', x: w - 80, y: 40, width: 60, height: 40 },
+    { id: 'chair-1', type: 'chair', x: w - 90, y: 60, width: 20, height: 30 },
+    { id: 'chair-2', type: 'chair', x: w - 50, y: 60, width: 20, height: 30 },
+    { id: 'bookshelf-1', type: 'bookshelf', x: w / 2 - 20, y: 20, width: 40, height: 70 },
+    { id: 'chest-1', type: 'chest', x: 90, y: 30, width: 40, height: 30 },
+    { id: 'rug-1', type: 'rug', x: w / 2 - 50, y: h / 2 - 20, width: 100, height: 60 },
+  ],
+
+  // House 2: Mystic's study - Lots of books and plants
+  2: (w, h) => [
+    { id: 'bookshelf-1', type: 'bookshelf', x: 20, y: 20, width: 40, height: 70 },
+    { id: 'bookshelf-2', type: 'bookshelf', x: w - 60, y: 20, width: 40, height: 70 },
+    { id: 'table-1', type: 'table', x: w / 2 - 30, y: h / 2 - 20, width: 60, height: 40 },
+    { id: 'chair-1', type: 'chair', x: w / 2 - 10, y: h / 2 - 50, width: 20, height: 30 },
+    { id: 'plant-1', type: 'plant', x: 80, y: 30, width: 25, height: 35 },
+    { id: 'plant-2', type: 'plant', x: w - 105, y: 30, width: 25, height: 35 },
+    { id: 'lamp-1', type: 'lamp', x: w / 2 + 40, y: h / 2 - 15, width: 20, height: 45 },
+    { id: 'rug-1', type: 'rug', x: w / 2 - 45, y: h / 2 - 25, width: 90, height: 70 },
+  ],
+
+  // House 3: Ranger's quarters - Minimal, chest focused
+  3: (w, h) => [
+    { id: 'bed-1', type: 'bed', x: w - 70, y: 30, width: 50, height: 80 },
+    { id: 'chest-1', type: 'chest', x: 20, y: 40, width: 40, height: 30 },
+    { id: 'chest-2', type: 'chest', x: 70, y: 40, width: 40, height: 30 },
+    { id: 'table-1', type: 'table', x: w / 2 - 30, y: h - 60, width: 60, height: 40 },
+    { id: 'chair-1', type: 'chair', x: w / 2 - 10, y: h - 90, width: 20, height: 30 },
+    { id: 'plant-1', type: 'plant', x: w / 2 - 60, y: 30, width: 25, height: 35 },
+  ],
+
+  // House 4: Simple dwelling
+  4: (w, h) => [
+    { id: 'bed-1', type: 'bed', x: 20, y: 40, width: 50, height: 80 },
+    { id: 'table-1', type: 'table', x: w / 2 - 30, y: h / 2 - 20, width: 60, height: 40 },
+    { id: 'chair-1', type: 'chair', x: w / 2 - 50, y: h / 2, width: 20, height: 30 },
+    { id: 'chair-2', type: 'chair', x: w / 2 + 30, y: h / 2, width: 20, height: 30 },
+    { id: 'fireplace-1', type: 'fireplace', x: w - 60, y: 20, width: 50, height: 70 },
+    { id: 'rug-1', type: 'rug', x: w / 2 - 50, y: h / 2 - 30, width: 100, height: 60 },
+  ],
+
+  // House 5: Blaze's workshop - Fireplace centered
+  5: (w, h) => [
+    { id: 'fireplace-1', type: 'fireplace', x: w / 2 - 25, y: 20, width: 50, height: 70 },
+    { id: 'table-1', type: 'table', x: 20, y: h / 2 - 20, width: 60, height: 40 },
+    { id: 'chair-1', type: 'chair', x: 90, y: h / 2, width: 20, height: 30 },
+    { id: 'chest-1', type: 'chest', x: w - 80, y: 40, width: 40, height: 30 },
+    { id: 'chest-2', type: 'chest', x: w - 80, y: 80, width: 40, height: 30 },
+    { id: 'bed-1', type: 'bed', x: w - 70, y: h - 100, width: 50, height: 80 },
+    { id: 'rug-1', type: 'rug', x: w / 2 - 40, y: h / 2 + 10, width: 80, height: 50 },
+  ],
+
+  // House 6: Scholar's home - Multiple bookshelves
+  6: (w, h) => [
+    { id: 'bookshelf-1', type: 'bookshelf', x: 20, y: 20, width: 40, height: 70 },
+    { id: 'bookshelf-2', type: 'bookshelf', x: 70, y: 20, width: 40, height: 70 },
+    { id: 'table-1', type: 'table', x: w / 2 - 30, y: h / 2 - 20, width: 60, height: 40 },
+    { id: 'chair-1', type: 'chair', x: w / 2 - 10, y: h / 2 - 50, width: 20, height: 30 },
+    { id: 'bed-1', type: 'bed', x: w - 70, y: 30, width: 50, height: 80 },
+    { id: 'lamp-1', type: 'lamp', x: w / 2 + 35, y: h / 2 - 15, width: 20, height: 45 },
+    { id: 'chest-1', type: 'chest', x: w / 2 - 20, y: h - 50, width: 40, height: 30 },
+  ],
+
+  // House 7: Elegant home - Lamps and rugs
+  7: (w, h) => [
+    { id: 'bed-1', type: 'bed', x: 20, y: 30, width: 50, height: 80 },
+    { id: 'table-1', type: 'table', x: w / 2 - 30, y: h / 2 - 20, width: 60, height: 40 },
+    { id: 'chair-1', type: 'chair', x: w / 2 - 50, y: h / 2, width: 20, height: 30 },
+    { id: 'chair-2', type: 'chair', x: w / 2 + 30, y: h / 2, width: 20, height: 30 },
+    { id: 'lamp-1', type: 'lamp', x: 90, y: 35, width: 20, height: 45 },
+    { id: 'lamp-2', type: 'lamp', x: w - 110, y: 35, width: 20, height: 45 },
+    { id: 'rug-1', type: 'rug', x: w / 2 - 50, y: h / 2 - 30, width: 100, height: 60 },
+    { id: 'plant-1', type: 'plant', x: w - 70, y: 30, width: 25, height: 35 },
+  ],
+
+  // House 8: Sentinel's barracks - Military style
+  8: (w, h) => [
+    { id: 'bed-1', type: 'bed', x: 20, y: 30, width: 50, height: 80 },
+    { id: 'bed-2', type: 'bed', x: w - 70, y: 30, width: 50, height: 80 },
+    { id: 'chest-1', type: 'chest', x: 20, y: h - 50, width: 40, height: 30 },
+    { id: 'chest-2', type: 'chest', x: w - 60, y: h - 50, width: 40, height: 30 },
+    { id: 'table-1', type: 'table', x: w / 2 - 30, y: h / 2 - 20, width: 60, height: 40 },
+    { id: 'chair-1', type: 'chair', x: w / 2 - 10, y: h / 2 - 50, width: 20, height: 30 },
+  ],
+
+  // House 9: Garden enthusiast - Many plants
+  9: (w, h) => [
+    { id: 'plant-1', type: 'plant', x: 20, y: 30, width: 25, height: 35 },
+    { id: 'plant-2', type: 'plant', x: 60, y: 30, width: 25, height: 35 },
+    { id: 'plant-3', type: 'plant', x: w - 85, y: 30, width: 25, height: 35 },
+    { id: 'plant-4', type: 'plant', x: w - 45, y: 30, width: 25, height: 35 },
+    { id: 'bed-1', type: 'bed', x: 20, y: h - 100, width: 50, height: 80 },
+    { id: 'table-1', type: 'table', x: w / 2 - 30, y: h / 2 - 20, width: 60, height: 40 },
+    { id: 'chair-1', type: 'chair', x: w / 2 - 10, y: h / 2 - 50, width: 20, height: 30 },
+    { id: 'rug-1', type: 'rug', x: w / 2 - 45, y: h / 2 - 25, width: 90, height: 70 },
+  ],
+
+  // House 10: Cozy cottage - Centered fireplace
+  10: (w, h) => [
+    { id: 'fireplace-1', type: 'fireplace', x: w - 60, y: 20, width: 50, height: 70 },
+    { id: 'bed-1', type: 'bed', x: 20, y: 30, width: 50, height: 80 },
+    { id: 'table-1', type: 'table', x: w / 2 - 30, y: h / 2 - 20, width: 60, height: 40 },
+    { id: 'chair-1', type: 'chair', x: w / 2 - 50, y: h / 2, width: 20, height: 30 },
+    { id: 'chair-2', type: 'chair', x: w / 2 + 30, y: h / 2, width: 20, height: 30 },
+    { id: 'rug-1', type: 'rug', x: w / 2 - 50, y: h / 2 - 30, width: 100, height: 60 },
+    { id: 'chest-1', type: 'chest', x: 90, y: 30, width: 40, height: 30 },
+  ],
+
+  // House 11: Karis' workspace - Tool chest and table
+  11: (w, h) => [
+    { id: 'table-1', type: 'table', x: 20, y: 40, width: 60, height: 40 },
+    { id: 'chair-1', type: 'chair', x: 30, y: 90, width: 20, height: 30 },
+    { id: 'chest-1', type: 'chest', x: 20, y: h - 50, width: 40, height: 30 },
+    { id: 'chest-2', type: 'chest', x: 70, y: h - 50, width: 40, height: 30 },
+    { id: 'bed-1', type: 'bed', x: w - 70, y: 30, width: 50, height: 80 },
+    { id: 'bookshelf-1', type: 'bookshelf', x: w / 2 - 20, y: 20, width: 40, height: 70 },
+    { id: 'lamp-1', type: 'lamp', x: 90, y: 45, width: 20, height: 45 },
+  ],
+
+  // House 12: Collector's home - Many chests
+  12: (w, h) => [
+    { id: 'chest-1', type: 'chest', x: 20, y: 30, width: 40, height: 30 },
+    { id: 'chest-2', type: 'chest', x: 70, y: 30, width: 40, height: 30 },
+    { id: 'chest-3', type: 'chest', x: 120, y: 30, width: 40, height: 30 },
+    { id: 'bed-1', type: 'bed', x: w - 70, y: 30, width: 50, height: 80 },
+    { id: 'table-1', type: 'table', x: w / 2 - 30, y: h - 60, width: 60, height: 40 },
+    { id: 'chair-1', type: 'chair', x: w / 2 - 10, y: h - 90, width: 20, height: 30 },
+    { id: 'rug-1', type: 'rug', x: 20, y: h / 2 - 20, width: 80, height: 50 },
+  ],
+
+  // House 13: Hermit's dwelling - Sparse
+  13: (w, h) => [
+    { id: 'bed-1', type: 'bed', x: 20, y: 30, width: 50, height: 80 },
+    { id: 'table-1', type: 'table', x: w - 80, y: 40, width: 60, height: 40 },
+    { id: 'chair-1', type: 'chair', x: w - 70, y: 90, width: 20, height: 30 },
+    { id: 'chest-1', type: 'chest', x: w / 2 - 20, y: h - 50, width: 40, height: 30 },
+    { id: 'plant-1', type: 'plant', x: 90, y: 35, width: 25, height: 35 },
+  ],
+
+  // House 14: Tyrell's inn - Two beds
+  14: (w, h) => [
+    { id: 'bed-1', type: 'bed', x: 20, y: 30, width: 50, height: 80 },
+    { id: 'bed-2', type: 'bed', x: 20, y: h - 100, width: 50, height: 80 },
+    { id: 'table-1', type: 'table', x: w / 2 - 30, y: h / 2 - 20, width: 60, height: 40 },
+    { id: 'chair-1', type: 'chair', x: w / 2 - 50, y: h / 2, width: 20, height: 30 },
+    { id: 'chair-2', type: 'chair', x: w / 2 + 30, y: h / 2, width: 20, height: 30 },
+    { id: 'chest-1', type: 'chest', x: w - 60, y: 40, width: 40, height: 30 },
+    { id: 'lamp-1', type: 'lamp', x: w - 65, y: h - 65, width: 20, height: 45 },
+  ],
+
+  // House 15: Stormcaller's sanctuary - Magical atmosphere
+  15: (w, h) => [
+    { id: 'bookshelf-1', type: 'bookshelf', x: 20, y: 20, width: 40, height: 70 },
+    { id: 'table-1', type: 'table', x: w / 2 - 30, y: h / 2 - 20, width: 60, height: 40 },
+    { id: 'chair-1', type: 'chair', x: w / 2 - 10, y: h / 2 - 50, width: 20, height: 30 },
+    { id: 'lamp-1', type: 'lamp', x: w / 2 - 60, y: h / 2 - 15, width: 20, height: 45 },
+    { id: 'lamp-2', type: 'lamp', x: w / 2 + 40, y: h / 2 - 15, width: 20, height: 45 },
+    { id: 'bed-1', type: 'bed', x: w - 70, y: 30, width: 50, height: 80 },
+    { id: 'rug-1', type: 'rug', x: w / 2 - 50, y: h / 2 - 30, width: 100, height: 60 },
+    { id: 'plant-1', type: 'plant', x: 80, y: 30, width: 25, height: 35 },
+  ],
+
+  // House 16: Artisan's studio
+  16: (w, h) => [
+    { id: 'table-1', type: 'table', x: 20, y: 40, width: 60, height: 40 },
+    { id: 'table-2', type: 'table', x: w - 80, y: 40, width: 60, height: 40 },
+    { id: 'chair-1', type: 'chair', x: 30, y: 90, width: 20, height: 30 },
+    { id: 'chair-2', type: 'chair', x: w - 70, y: 90, width: 20, height: 30 },
+    { id: 'bed-1', type: 'bed', x: w / 2 - 25, y: h - 100, width: 50, height: 80 },
+    { id: 'chest-1', type: 'chest', x: w / 2 - 20, y: 30, width: 40, height: 30 },
+    { id: 'lamp-1', type: 'lamp', x: 90, y: 45, width: 20, height: 45 },
+  ],
+
+  // House 17: Felix's quarters - Organized
+  17: (w, h) => [
+    { id: 'bed-1', type: 'bed', x: 20, y: 40, width: 50, height: 80 },
+    { id: 'bookshelf-1', type: 'bookshelf', x: w - 60, y: 20, width: 40, height: 70 },
+    { id: 'table-1', type: 'table', x: w / 2 - 30, y: h / 2 - 20, width: 60, height: 40 },
+    { id: 'chair-1', type: 'chair', x: w / 2 - 50, y: h / 2, width: 20, height: 30 },
+    { id: 'chair-2', type: 'chair', x: w / 2 + 30, y: h / 2, width: 20, height: 30 },
+    { id: 'chest-1', type: 'chest', x: 90, y: 40, width: 40, height: 30 },
+    { id: 'rug-1', type: 'rug', x: w / 2 - 50, y: h / 2 - 30, width: 100, height: 60 },
+  ],
+
+  // House 18: Merchant's storage
+  18: (w, h) => [
+    { id: 'chest-1', type: 'chest', x: 20, y: 30, width: 40, height: 30 },
+    { id: 'chest-2', type: 'chest', x: 20, y: 70, width: 40, height: 30 },
+    { id: 'chest-3', type: 'chest', x: w - 60, y: 30, width: 40, height: 30 },
+    { id: 'chest-4', type: 'chest', x: w - 60, y: 70, width: 40, height: 30 },
+    { id: 'table-1', type: 'table', x: w / 2 - 30, y: h / 2 - 20, width: 60, height: 40 },
+    { id: 'chair-1', type: 'chair', x: w / 2 - 10, y: h / 2 - 50, width: 20, height: 30 },
+    { id: 'bed-1', type: 'bed', x: w / 2 - 25, y: h - 100, width: 50, height: 80 },
+  ],
+
+  // House 19: Librarian's home
+  19: (w, h) => [
+    { id: 'bookshelf-1', type: 'bookshelf', x: 20, y: 20, width: 40, height: 70 },
+    { id: 'bookshelf-2', type: 'bookshelf', x: 70, y: 20, width: 40, height: 70 },
+    { id: 'bookshelf-3', type: 'bookshelf', x: w - 60, y: 20, width: 40, height: 70 },
+    { id: 'table-1', type: 'table', x: w / 2 - 30, y: h / 2 - 20, width: 60, height: 40 },
+    { id: 'chair-1', type: 'chair', x: w / 2 - 10, y: h / 2 - 50, width: 20, height: 30 },
+    { id: 'bed-1', type: 'bed', x: w / 2 - 25, y: h - 100, width: 50, height: 80 },
+    { id: 'lamp-1', type: 'lamp', x: w / 2 + 35, y: h / 2 - 15, width: 20, height: 45 },
+  ],
+
+  // House 20: Overseer's hall - Grand
+  20: (w, h) => [
+    { id: 'fireplace-1', type: 'fireplace', x: w / 2 - 25, y: 20, width: 50, height: 70 },
+    { id: 'table-1', type: 'table', x: w / 2 - 30, y: h / 2 - 20, width: 60, height: 40 },
+    { id: 'chair-1', type: 'chair', x: w / 2 - 50, y: h / 2, width: 20, height: 30 },
+    { id: 'chair-2', type: 'chair', x: w / 2 + 30, y: h / 2, width: 20, height: 30 },
+    { id: 'bed-1', type: 'bed', x: 20, y: h - 100, width: 50, height: 80 },
+    { id: 'bookshelf-1', type: 'bookshelf', x: 20, y: 20, width: 40, height: 70 },
+    { id: 'bookshelf-2', type: 'bookshelf', x: w - 60, y: 20, width: 40, height: 70 },
+    { id: 'rug-1', type: 'rug', x: w / 2 - 50, y: h / 2 - 30, width: 100, height: 60 },
+    { id: 'lamp-1', type: 'lamp', x: w / 2 - 60, y: h / 2 - 15, width: 20, height: 45 },
+    { id: 'lamp-2', type: 'lamp', x: w / 2 + 40, y: h / 2 - 15, width: 20, height: 45 },
+  ],
+};
+
 export class InteriorFurnitureLayer implements Layer {
   zIndex = 1;
 
@@ -69,6 +297,21 @@ export class InteriorFurnitureLayer implements Layer {
       // Rug (no shadow, flat)
       { id: 'rug-1', type: 'rug', x: roomWidth / 2 - 50, y: roomHeight / 2 - 30, width: 100, height: 60 },
     ];
+  }
+
+  /**
+   * Generate furniture layout for a specific house
+   */
+  generateHouseFurniture(houseNum: number): void {
+    const { roomWidth, roomHeight } = this.config;
+    const layout = HOUSE_FURNITURE_LAYOUTS[houseNum];
+
+    if (layout) {
+      this.furniture = layout(roomWidth, roomHeight);
+    } else {
+      // Fall back to default for houses beyond defined layouts
+      this.generateDefaultFurniture();
+    }
   }
 
   setPlayerPosition(pos: WorldPosition, facing: 'up' | 'down' | 'left' | 'right'): void {

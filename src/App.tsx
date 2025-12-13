@@ -5,7 +5,7 @@ import { shallow } from 'zustand/shallow';
 import { useGameStore, ScreenType, ModalType, GameStore } from './store/gameStore';
 
 import { TitleScreen } from './screens/TitleScreen';
-import { OverworldMapV4 } from './screens/OverworldMapV4';
+import { OverworldMap } from './screens/OverworldMap';
 import { QueueBattleView } from './screens/QueueBattleView';
 import { MainMenu } from './screens/MainMenu';
 import { CompendiumScreen } from './ui/components/CompendiumScreen';
@@ -256,7 +256,7 @@ const App: FunctionComponent = () => {
       case 'title':
         return <TitleScreen />;
       case 'overworld':
-        return <OverworldMapV4 />;
+        return <OverworldMap />;
       case 'battle':
         return <QueueBattleView />;
       case 'menu':

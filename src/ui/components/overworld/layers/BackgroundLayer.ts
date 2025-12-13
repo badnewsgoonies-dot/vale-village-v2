@@ -117,8 +117,7 @@ export class BackgroundLayer implements Layer {
       this.drawMountainRange(ctx, camera, range);
     }
 
-    // Draw distant trees/forest at base of mountains
-    this.drawDistantForest(ctx, camera);
+    // Distant forest removed - was causing ugly dark triangles in grass area
   }
 
   private drawMountainRange(
@@ -155,31 +154,4 @@ export class BackgroundLayer implements Layer {
     ctx.restore();
   }
 
-  private drawDistantForest(ctx: CanvasRenderingContext2D, camera: Camera): void {
-    const offset = camera.getParallaxOffset(0.4);
-    const forestY = this.baseY - 20;
-    const treeSpacing = 25;
-
-    ctx.save();
-
-    // Forest base color
-    const isNight = this.timeOfDay < 0.25 || this.timeOfDay > 0.80;
-    const treeColor = isNight ? '#1a2a1a' : '#2a4a2a';
-
-    for (let x = -50; x < ctx.canvas.width + 100; x += treeSpacing) {
-      const worldX = x + offset.x * 0.4;
-      const height = 15 + Math.sin(worldX * 0.1) * 8;
-
-      // Simple triangular tree silhouette
-      ctx.fillStyle = treeColor;
-      ctx.beginPath();
-      ctx.moveTo(worldX, forestY);
-      ctx.lineTo(worldX - 8, forestY + height);
-      ctx.lineTo(worldX + 8, forestY + height);
-      ctx.closePath();
-      ctx.fill();
-    }
-
-    ctx.restore();
-  }
 }

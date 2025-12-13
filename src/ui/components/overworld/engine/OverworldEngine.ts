@@ -153,11 +153,6 @@ export class OverworldEngine {
   // Animation time (seconds, for smooth animations)
   private time: number = 0;
 
-  // Minimap
-  private minimapCanvas: HTMLCanvasElement | null = null;
-  private minimapCtx: CanvasRenderingContext2D | null = null;
-  private readonly MINIMAP_SIZE = 150;
-
   constructor(canvas: HTMLCanvasElement, config: Partial<EngineConfig> = {}) {
     this.canvas = canvas;
     const ctx = canvas.getContext('2d');
@@ -193,6 +188,16 @@ export class OverworldEngine {
     // Initialize interior layers
     this.interiorFloorLayer = new InteriorFloorLayer();
     this.interiorFurnitureLayer = new InteriorFurnitureLayer();
+
+    // Sync room config between floor and furniture layers
+    const roomBounds = this.interiorFloorLayer.getRoomBounds();
+    this.interiorFurnitureLayer.setRoomConfig({
+      roomX: roomBounds.x,
+      roomY: roomBounds.y,
+      roomWidth: roomBounds.width,
+      roomHeight: roomBounds.height,
+    });
+
     this.interiorFurnitureLayer.generateDefaultFurniture();
 
     this.interiorLayers = [
@@ -221,9 +226,6 @@ export class OverworldEngine {
 
     // Initialize animated trees
     this.initializeTrees();
-
-    // Initialize minimap canvas
-    this.initializeMinimap();
   }
 
   // --- Lifecycle Methods ---
@@ -283,6 +285,13 @@ export class OverworldEngine {
     this.terrainLayer.setMap(map);
     this.entityLayer.setMapData(map);
     this.proximitySystem.setMapData(map);
+
+    // Update furniture layout for house interiors
+    const houseMatch = map.id.match(/^house-(\d+)-interior$/);
+    if (houseMatch?.[1]) {
+      const houseNum = parseInt(houseMatch[1], 10);
+      this.interiorFurnitureLayer.generateHouseFurniture(houseNum);
+    }
   }
 
   /**
@@ -341,12 +350,40 @@ export class OverworldEngine {
 
   /**
    * Set scene type (overworld vs interior) - instant switch
+   * Note: Will be rejected if a transition is in progress
    */
   setSceneType(type: 'overworld' | 'interior'): void {
+    // Guard: Don't switch scene type during active transition
+    if (this.sceneTransition.isTransitioning()) {
+      console.warn('Cannot setSceneType during active transition');
+      return;
+    }
+
     this._sceneType = type;
     this.currentSceneType = type;
     this.layers = type === 'overworld' ? this.overworldLayers : this.interiorLayers;
     this.sceneTransition.setScene(type);
+
+    // Configure camera and position for interior scenes
+    if (type === 'interior') {
+      const bounds = this.interiorFloorLayer.getRoomBounds();
+      if (!bounds) {
+        console.error('getRoomBounds returned null - cannot configure interior');
+        return;
+      }
+
+      // Set player at entrance if not already in interior
+      if (this.playerPos.x === 0 && this.playerPos.y === 0) {
+        this.playerPos = {
+          x: bounds.x + bounds.width / 2,
+          y: bounds.y + bounds.height - 40,
+        };
+      }
+
+      // Center camera on room
+      this.camera.setTarget(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+      this.camera.snapToTarget();
+    }
   }
 
   /**
@@ -375,10 +412,17 @@ export class OverworldEngine {
             x: bounds.x + bounds.width / 2,
             y: bounds.y + bounds.height - 40,
           };
+
+          // Center camera on room for interior scenes (no camera follow)
+          this.camera.setTarget(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+          this.camera.snapToTarget();
         } else if (type === 'overworld' && this.savedOverworldPos) {
           // Restore saved overworld position
           this.playerPos = { ...this.savedOverworldPos };
           this.savedOverworldPos = null;
+
+          // Resume camera following player
+          this.camera.setTarget(this.playerPos.x, this.playerPos.y);
         }
       },
       onComplete
@@ -516,38 +560,6 @@ export class OverworldEngine {
     }));
   }
 
-  /**
-   * Initialize minimap canvas element
-   */
-  private initializeMinimap(): void {
-    // Create minimap canvas
-    this.minimapCanvas = document.createElement('canvas');
-    this.minimapCanvas.width = this.MINIMAP_SIZE;
-    this.minimapCanvas.height = this.MINIMAP_SIZE;
-    this.minimapCanvas.style.cssText = `
-      position: absolute;
-      bottom: 16px;
-      right: 16px;
-      width: ${this.MINIMAP_SIZE}px;
-      height: ${this.MINIMAP_SIZE}px;
-      background: rgba(0, 0, 0, 0.8);
-      border: 3px solid #d4af37;
-      border-radius: 8px;
-      pointer-events: none;
-      z-index: 100;
-    `;
-
-    this.minimapCtx = this.minimapCanvas.getContext('2d');
-    if (this.minimapCtx) {
-      this.minimapCtx.imageSmoothingEnabled = false;
-    }
-
-    // Append to canvas parent
-    if (this.canvas.parentElement) {
-      this.canvas.parentElement.appendChild(this.minimapCanvas);
-    }
-  }
-
   // --- Weather Controls ---
 
   /**
@@ -650,7 +662,10 @@ export class OverworldEngine {
     if (!this.running) return;
 
     const now = performance.now();
-    const dt = now - this.lastFrameTime;
+    // Clamp dt to prevent physics explosions on lag spikes or tab-switch
+    // Max 100ms (10 FPS minimum), min 0ms (no negative time)
+    const rawDt = now - this.lastFrameTime;
+    const dt = Math.max(0, Math.min(rawDt, 100));
     this.lastFrameTime = now;
 
     this.update(dt);
@@ -678,9 +693,16 @@ export class OverworldEngine {
       this.updatePlayerMovement(dt);
     }
 
-    // Update camera to follow player
-    this.camera.setTarget(this.playerPos.x, this.playerPos.y);
-    this.camera.update(dt);
+    // Update camera - only follow player in overworld mode
+    if (this.currentSceneType === 'overworld') {
+      this.camera.setTarget(this.playerPos.x, this.playerPos.y);
+      this.camera.update(dt);
+    } else {
+      // Interior mode - keep camera centered on room
+      const bounds = this.interiorFloorLayer.getRoomBounds();
+      this.camera.setTarget(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+      this.camera.update(dt);
+    }
 
     // Sync player position based on current scene
     if (this.currentSceneType === 'overworld') {
@@ -858,6 +880,17 @@ export class OverworldEngine {
       dy /= len;
     }
 
+    // In scene mode, compensate for stretched aspect ratio
+    // World is 4032×240, canvas is 960×640
+    // Y movement appears ~11x faster on screen, so scale it down
+    if (this.entityLayer.isSceneMode()) {
+      const worldAspect = (this.mapData?.width ?? 84) * this.config.tileSize /
+                          ((this.mapData?.height ?? 5) * this.config.tileSize);
+      const canvasAspect = this.config.canvasWidth / this.config.canvasHeight;
+      const yScale = canvasAspect / worldAspect; // ~0.089
+      dy *= yScale;
+    }
+
     // Update facing direction
     if (dx !== 0 || dy !== 0) {
       if (Math.abs(dx) > Math.abs(dy)) {
@@ -952,12 +985,15 @@ export class OverworldEngine {
       this.renderPlaceholder();
     }
 
-    // Render proximity markers (overworld only)
+    // Render proximity markers (overworld only, skip in scene mode)
     if (this.currentSceneType === 'overworld') {
       // Render animated trees with sway
       this.renderTrees();
 
-      this.proximitySystem.render(this.ctx, this.camera);
+      // Skip tile-based proximity markers in scene mode (EntityLayer handles it)
+      if (!this.entityLayer.isSceneMode()) {
+        this.proximitySystem.render(this.ctx, this.camera);
+      }
 
       // Render particles
       this.renderParticles();
@@ -971,8 +1007,6 @@ export class OverworldEngine {
         this.ctx.globalAlpha = 1;
       }
 
-      // Render minimap
-      this.renderMinimap();
     }
 
     // Render scene transition overlay (on top of everything)
@@ -1188,96 +1222,6 @@ export class OverworldEngine {
     }
   }
 
-  /**
-   * Render minimap (150x150)
-   */
-  private renderMinimap(): void {
-    if (!this.minimapCtx || !this.minimapCanvas) return;
-
-    const ctx = this.minimapCtx;
-    const size = this.MINIMAP_SIZE;
-
-    // Clear minimap
-    ctx.fillStyle = '#1a1a1a';
-    ctx.fillRect(0, 0, size, size);
-
-    // Draw terrain bands
-    ctx.fillStyle = '#5a8aa8'; // Sky
-    ctx.fillRect(0, 0, size, 70);
-
-    ctx.fillStyle = '#7aa880'; // Upper ground
-    ctx.fillRect(0, 70, size, 25);
-
-    ctx.fillStyle = '#6a9870'; // Mid ground
-    ctx.fillRect(0, 95, size, 25);
-
-    ctx.fillStyle = '#5a8860'; // Lower ground
-    ctx.fillRect(0, 120, size, 20);
-
-    ctx.fillStyle = '#3070b0'; // River
-    ctx.fillRect(0, 140, size, 10);
-
-    // Draw trees as green dots
-    ctx.fillStyle = '#4a6840';
-    for (const tree of this.trees) {
-      const mx = (tree.x / this.config.canvasWidth) * size;
-      const my = (tree.y / this.config.canvasHeight) * size;
-      ctx.beginPath();
-      ctx.arc(mx, my, 2, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    // Draw buildings as brown rectangles from map data
-    if (this.mapData) {
-      ctx.fillStyle = '#8a6840';
-      for (let y = 0; y < this.mapData.height; y++) {
-        for (let x = 0; x < this.mapData.width; x++) {
-          const tile = this.mapData.tiles[y]?.[x];
-          if (tile?.type === 'wall') {
-            const mx =
-              ((x * this.config.tileSize) /
-                (this.mapData.width * this.config.tileSize)) *
-              size;
-            const my =
-              ((y * this.config.tileSize) /
-                (this.mapData.height * this.config.tileSize)) *
-              size;
-            ctx.fillRect(mx, my, 2, 2);
-          }
-        }
-      }
-    }
-
-    // Draw player as gold pulsing circle
-    const pulseSize = 3 + Math.sin(this.time * 2) * 0.5;
-    const playerMx = (this.playerPos.x / this.config.canvasWidth) * size;
-    const playerMy = (this.playerPos.y / this.config.canvasHeight) * size;
-
-    ctx.fillStyle = '#d4af37';
-    ctx.beginPath();
-    ctx.arc(playerMx, playerMy, pulseSize, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 1;
-    ctx.stroke();
-
-    // Draw NPCs as green dots
-    ctx.fillStyle = '#50d850';
-    for (const npc of this.animatedNPCs) {
-      const mx = (npc.x / this.config.canvasWidth) * size;
-      const my = (npc.y / this.config.canvasHeight) * size;
-      ctx.beginPath();
-      ctx.arc(mx, my, 2, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    // Border
-    ctx.strokeStyle = '#d4af37';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(0, 0, size, size);
-  }
-
   // --- Public Getters ---
 
   getPlayerPosition(): WorldPosition {
@@ -1298,5 +1242,9 @@ export class OverworldEngine {
 
   isRunning(): boolean {
     return this.running;
+  }
+
+  getCurrentSceneType(): SceneType {
+    return this.currentSceneType;
   }
 }
