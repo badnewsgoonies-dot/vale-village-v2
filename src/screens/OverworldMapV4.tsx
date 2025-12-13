@@ -39,10 +39,11 @@ const MAP_DATA = {
   ],
   tileSize: 48, // Good size for visibility
   sprites: {
-    grass: '/sprites/scenery/outdoor/sm/Floating_Grass.gif',
+    // grass: no longer tiled - use background image instead
     tree: '/sprites/scenery/plants/Tree1.gif',
     path: '/sprites/scenery/outdoor/sm/stone1.gif', // Use stone as path
   },
+  background: '/sprites/backgrounds/gs1/Overworld.gif', // Proper GS backdrop
 };
 
 // Buildings positioned on the map (separate from tile grid)
@@ -152,7 +153,15 @@ export const OverworldMapV4: FunctionComponent = () => {
     });
   }, []);
 
-  // Render static background layer (terrain tiles)
+  // Load background image
+  const [bgImage, setBgImage] = useState<HTMLImageElement | null>(null);
+  useEffect(() => {
+    const img = new Image();
+    img.onload = () => setBgImage(img);
+    img.src = MAP_DATA.background;
+  }, []);
+
+  // Render static background layer (backdrop + terrain overlays)
   useEffect(() => {
     if (!spritesLoaded || !bgCanvasRef.current) return;
 
@@ -162,18 +171,37 @@ export const OverworldMapV4: FunctionComponent = () => {
     // Clear canvas
     ctx.clearRect(0, 0, width, height);
 
-    // Grid-based rendering - auto-calculate positions
+    // Draw backdrop image (stretched to fill, maintaining aspect ratio at bottom)
+    if (bgImage) {
+      // Scale to fill width, position at bottom for ground-level feel
+      const scale = width / bgImage.width;
+      const scaledHeight = bgImage.height * scale;
+      // Draw it covering the canvas, cropped from top if needed
+      const yOffset = Math.max(0, height - scaledHeight);
+      ctx.drawImage(bgImage, 0, yOffset, width, scaledHeight);
+    } else {
+      // Fallback: gradient ground
+      const gradient = ctx.createLinearGradient(0, 0, 0, height);
+      gradient.addColorStop(0, '#87CEEB'); // Sky blue
+      gradient.addColorStop(0.3, '#90EE90'); // Light green
+      gradient.addColorStop(1, '#228B22'); // Forest green
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, width, height);
+    }
+
+    // Only draw path and tree tiles (not grass - that's the background now)
     MAP_DATA.tiles.forEach((row, r) => {
       row.forEach((tile, c) => {
-        const x = c * MAP_DATA.tileSize; // AUTO-CALC X
-        const y = r * MAP_DATA.tileSize; // AUTO-CALC Y
+        if (tile === 'grass') return; // Skip grass - backdrop handles it
+        const x = c * MAP_DATA.tileSize;
+        const y = r * MAP_DATA.tileSize;
         const sprite = loadedSprites[tile];
         if (sprite) {
           ctx.drawImage(sprite, x, y, MAP_DATA.tileSize, MAP_DATA.tileSize);
         }
       });
     });
-  }, [spritesLoaded, loadedSprites, width, height]);
+  }, [spritesLoaded, loadedSprites, bgImage, width, height]);
 
   // Render buildings layer
   useEffect(() => {

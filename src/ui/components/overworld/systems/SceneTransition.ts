@@ -50,13 +50,22 @@ export class SceneTransition {
 
     this.elapsedTime += dt;
 
+    // Guard against division by zero
+    const fadeDuration = Math.max(1, this.config.fadeDuration);
+
     if (this.state === 'fading-out') {
-      this.progress = Math.min(1, this.elapsedTime / this.config.fadeDuration);
+      this.progress = Math.min(1, this.elapsedTime / fadeDuration);
 
       if (this.progress >= 1) {
         // Fade out complete - switch scene
         this.currentScene = this.targetScene;
-        this.onSceneChange?.();
+
+        // Safely invoke callback (don't let exceptions lock state machine)
+        try {
+          this.onSceneChange?.();
+        } catch (e) {
+          console.error('SceneTransition onSceneChange callback failed:', e);
+        }
 
         // Start hold then fade in
         this.state = 'fading-in';
@@ -68,13 +77,20 @@ export class SceneTransition {
         // Still holding at black
         this.progress = 1;
       } else {
-        this.progress = Math.max(0, 1 - this.elapsedTime / this.config.fadeDuration);
+        this.progress = Math.max(0, 1 - this.elapsedTime / fadeDuration);
 
         if (this.progress <= 0) {
           // Transition complete
           this.state = 'idle';
           this.progress = 0;
-          this.onTransitionComplete?.();
+
+          // Safely invoke callback
+          try {
+            this.onTransitionComplete?.();
+          } catch (e) {
+            console.error('SceneTransition onTransitionComplete callback failed:', e);
+          }
+
           this.onSceneChange = null;
           this.onTransitionComplete = null;
         }

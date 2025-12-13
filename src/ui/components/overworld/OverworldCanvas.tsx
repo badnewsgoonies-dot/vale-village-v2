@@ -19,46 +19,151 @@ import type { Position } from '../../../core/models/overworld';
 import './OverworldCanvas.css';
 
 /**
- * Vale Village scene buildings - pseudo-3D layout with varied Y positions
- * Buildings at lower Y appear further back, creating depth illusion
- * Positions copied from mockup: /home/geni/Documents/vale-village/mockups/improved/living-vale-village.html
+ * Vale Village scene buildings - aligned in a single row
+ * All buildings at same Y (280) so player can walk past all in straight line
+ * Hold right arrow to walk past every house
  */
+const BUILDING_ROW_Y = 280;
 const VALE_VILLAGE_SCENE_BUILDINGS: SceneBuilding[] = [
+  {
+    id: 'battle-tower',
+    spritePath: '/sprites/buildings/Vale/Vale_Sanctum.gif',
+    x: 50, y: BUILDING_ROW_Y,
+    width: 100, height: 120,
+    triggerId: 'tower-entrance',
+  },
   {
     id: 'isaacs-house',
     spritePath: '/sprites/buildings/Vale/Vale_Isaacs_House.gif',
-    x: 150,
-    y: 280, // Adjusted to be near road at Y=256
-    width: 120,
-    height: 100,
+    x: 170, y: BUILDING_ROW_Y,
+    width: 120, height: 100,
     triggerId: 'house-01-door',
-  },
-  {
-    id: 'inn',
-    spritePath: '/sprites/buildings/Vale/Vale_Inn.gif',
-    x: 650,
-    y: 300, // Adjusted to be near road
-    width: 120,
-    height: 100,
-    triggerId: 'house-02-door',
   },
   {
     id: 'kradens-house',
     spritePath: '/sprites/buildings/Vale/Vale_Kradens_House.gif',
-    x: 380,
-    y: 200, // On hillside, further back (above road)
-    width: 140,
-    height: 120,
+    x: 310, y: BUILDING_ROW_Y,
+    width: 140, height: 120,
+    triggerId: 'house-02-door',
+  },
+  {
+    id: 'house-03',
+    spritePath: '/sprites/buildings/Vale/Vale_Building1.gif',
+    x: 470, y: BUILDING_ROW_Y,
+    width: 90, height: 80,
     triggerId: 'house-03-door',
+  },
+  {
+    id: 'house-04',
+    spritePath: '/sprites/buildings/Vale/Vale_Building2.gif',
+    x: 580, y: BUILDING_ROW_Y,
+    width: 90, height: 80,
+    triggerId: 'house-04-door',
   },
   {
     id: 'weapon-shop',
     spritePath: '/sprites/buildings/Vale/Vale_WepArm_Shop.gif',
-    x: 500,
-    y: 270, // Adjusted to be near road
-    width: 100,
-    height: 90,
+    x: 690, y: BUILDING_ROW_Y,
+    width: 100, height: 90,
     triggerId: 'shop-weapons',
+  },
+  {
+    id: 'inn',
+    spritePath: '/sprites/buildings/Vale/Vale_Inn.gif',
+    x: 810, y: BUILDING_ROW_Y,
+    width: 120, height: 100,
+    triggerId: 'house-06-door',
+  },
+  {
+    id: 'house-07',
+    spritePath: '/sprites/buildings/Vale/Vale_Building3.gif',
+    x: 950, y: BUILDING_ROW_Y,
+    width: 100, height: 90,
+    triggerId: 'house-07-door',
+  },
+  {
+    id: 'house-08',
+    spritePath: '/sprites/buildings/Vale/Vale_Building4.gif',
+    x: 1070, y: BUILDING_ROW_Y,
+    width: 90, height: 80,
+    triggerId: 'house-08-door',
+  },
+  {
+    id: 'house-09',
+    spritePath: '/sprites/buildings/Vale/Vale_Building5.gif',
+    x: 1180, y: BUILDING_ROW_Y,
+    width: 100, height: 90,
+    triggerId: 'house-09-door',
+  },
+  {
+    id: 'garets-house',
+    spritePath: '/sprites/buildings/Vale/Vale_Garets_House.gif',
+    x: 1300, y: BUILDING_ROW_Y,
+    width: 120, height: 100,
+    triggerId: 'house-10-door',
+  },
+  {
+    id: 'jennas-house',
+    spritePath: '/sprites/buildings/Vale/Vale_Jennas_House.gif',
+    x: 1440, y: BUILDING_ROW_Y,
+    width: 110, height: 95,
+    triggerId: 'house-11-door',
+  },
+  {
+    id: 'house-12',
+    spritePath: '/sprites/buildings/Vale/Vale_Building6.gif',
+    x: 1570, y: BUILDING_ROW_Y,
+    width: 95, height: 85,
+    triggerId: 'house-12-door',
+  },
+  {
+    id: 'house-13',
+    spritePath: '/sprites/buildings/Vale/Vale_Building7.gif',
+    x: 1685, y: BUILDING_ROW_Y,
+    width: 90, height: 80,
+    triggerId: 'house-13-door',
+  },
+  {
+    id: 'house-14',
+    spritePath: '/sprites/buildings/Vale/Vale_Building8.gif',
+    x: 1795, y: BUILDING_ROW_Y,
+    width: 100, height: 90,
+    triggerId: 'house-14-door',
+  },
+  {
+    id: 'house-15',
+    spritePath: '/sprites/buildings/Vale/Vale_Building1.gif',
+    x: 1915, y: BUILDING_ROW_Y,
+    width: 90, height: 80,
+    triggerId: 'house-15-door',
+  },
+  {
+    id: 'house-16',
+    spritePath: '/sprites/buildings/Vale/Vale_Building2.gif',
+    x: 2025, y: BUILDING_ROW_Y,
+    width: 90, height: 80,
+    triggerId: 'house-16-door',
+  },
+  {
+    id: 'house-17',
+    spritePath: '/sprites/buildings/Vale/Vale_Building3.gif',
+    x: 2135, y: BUILDING_ROW_Y,
+    width: 100, height: 90,
+    triggerId: 'house-17-door',
+  },
+  {
+    id: 'house-18',
+    spritePath: '/sprites/buildings/Vale/Vale_Building4.gif',
+    x: 2255, y: BUILDING_ROW_Y,
+    width: 90, height: 80,
+    triggerId: 'house-18-door',
+  },
+  {
+    id: 'house-19',
+    spritePath: '/sprites/buildings/Vale/Vale_Building5.gif',
+    x: 2365, y: BUILDING_ROW_Y,
+    width: 100, height: 90,
+    triggerId: 'house-19-door',
   },
 ];
 
@@ -146,6 +251,19 @@ export function OverworldCanvas({
     const mapData = MAPS[currentMapId];
     if (mapData) {
       engine.setMap(mapData);
+
+      // Detect interior maps (have '-interior' suffix) and switch scene type
+      const isInterior = currentMapId.includes('-interior');
+      const targetSceneType = isInterior ? 'interior' : 'overworld';
+
+      // Use smooth transition when switching between overworld and interior
+      const currentSceneType = engine.getCurrentSceneType();
+      if (currentSceneType !== targetSceneType) {
+        engine.transitionToScene(targetSceneType);
+      } else {
+        // Same scene type, just update instantly (e.g., different interior rooms)
+        engine.setSceneType(targetSceneType);
+      }
 
       // Set scene buildings for vale-village (pseudo-3D layout)
       if (currentMapId === 'vale-village') {
