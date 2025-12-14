@@ -304,7 +304,14 @@ export class InteriorFurnitureLayer implements Layer {
    */
   generateHouseFurniture(houseNum: number): void {
     const { roomWidth, roomHeight } = this.config;
-    const layout = HOUSE_FURNITURE_LAYOUTS[houseNum];
+
+    // Map houses 21-30 to reuse layouts 1-10 (BRICK 22: ship faster, expand later)
+    let layoutNum = houseNum;
+    if (houseNum > 20) {
+      layoutNum = ((houseNum - 21) % 10) + 1;
+    }
+
+    const layout = HOUSE_FURNITURE_LAYOUTS[layoutNum];
 
     if (layout) {
       this.furniture = layout(roomWidth, roomHeight);
