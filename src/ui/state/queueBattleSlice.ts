@@ -338,17 +338,18 @@ export const createQueueBattleSlice: StateCreator<
       towerEncounterId !== null &&
       encounterId === towerEncounterId;
 
-    if (isTowerBattle && (result.state.phase === 'victory' || result.state.phase === 'defeat')) {
-      get().handleTowerBattleCompleted({ battle: result.state, events: battleEvents });
-      return;
-    }
-
     // Sync Djinn trackers to team state (after round execution)
     if (result.state.playerTeam.djinnTrackers) {
       const { updateTeam: updateTeamState } = get();
       updateTeamState({
         djinnTrackers: result.state.playerTeam.djinnTrackers,
       });
+    }
+
+    // Tower battles are resolved by the UI (post-battle overlays + rewards flow).
+    // We intentionally avoid story progression, auto-heal, and auto-save here.
+    if (isTowerBattle && (result.state.phase === 'victory' || result.state.phase === 'defeat')) {
+      return;
     }
 
     if (result.state.phase === 'victory') {

@@ -17,20 +17,30 @@ type EquipmentResolution =
   | { type: 'fixed'; equipment: typeof EQUIPMENT[keyof typeof EQUIPMENT] }
   | { type: 'choice'; options: (typeof EQUIPMENT[keyof typeof EQUIPMENT])[] };
 
+export interface VictoryOptions {
+  /** Include encounter equipment rewards (fixed/choice). Defaults to true. */
+  includeEquipment?: boolean;
+  /** Reset equipped Djinn trackers to Set after victory. Defaults to true. */
+  resetDjinn?: boolean;
+}
+
 export function processVictory(
-  battle: BattleState
+  battle: BattleState,
+  options: VictoryOptions = {}
 ): { distribution: RewardDistribution; updatedTeam: Team } {
   const encounterId = getEncounterId(battle);
   if (!encounterId) {
     throw new Error('Cannot process victory without encounter ID');
   }
 
+  const includeEquipment = options.includeEquipment ?? true;
+  const resetDjinn = options.resetDjinn ?? true;
+
   const survivors = battle.playerTeam.units.filter(u => !isUnitKO(u));
   const partySize = battle.playerTeam.units.length;
   const rewards = calculateBattleRewards(encounterId, partySize, survivors.length);
 
   const distribution = distributeRewards(battle.playerTeam, rewards);
-  const equipmentResolution = resolveEquipmentReward(rewards.equipmentReward);
 
   // NOTE: Djinn rewards and unit recruitment are now handled via post-battle recruitment dialogues
   // The encounter.reward.djinn and encounter.reward.unlockUnit fields are kept for validation
@@ -38,32 +48,39 @@ export function processVictory(
 
   let updatedTeam = distribution.updatedTeam;
 
-  // Reset all Djinn to Set state after battle (like units heal to full)
-  const resetDjinnTrackers = { ...updatedTeam.djinnTrackers };
-  for (const djinnId in resetDjinnTrackers) {
-    const tracker = resetDjinnTrackers[djinnId];
-    if (tracker) {
-      resetDjinnTrackers[djinnId] = {
-        djinnId: tracker.djinnId,
-        state: 'Set',
-        lastActivatedTurn: tracker.lastActivatedTurn,
-      };
+  if (resetDjinn) {
+    // Reset all Djinn to Set state after battle (like units heal to full)
+    const resetDjinnTrackers = { ...updatedTeam.djinnTrackers };
+    for (const djinnId in resetDjinnTrackers) {
+      const tracker = resetDjinnTrackers[djinnId];
+      if (tracker) {
+        resetDjinnTrackers[djinnId] = {
+          djinnId: tracker.djinnId,
+          state: 'Set',
+          lastActivatedTurn: tracker.lastActivatedTurn,
+        };
+      }
     }
+    updatedTeam = {
+      ...updatedTeam,
+      djinnTrackers: resetDjinnTrackers,
+    };
   }
-  updatedTeam = {
-    ...updatedTeam,
-    djinnTrackers: resetDjinnTrackers,
-  };
 
   // NOTE: Unit recruitment is now handled via post-battle recruitment dialogues
   // The encounter.reward.unlockUnit field is kept for validation but not processed here
   // All recruitment is narrative-driven via dialogue effects (recruitUnit)
 
-  const resolvedDistribution: RewardDistribution = {
-    ...distribution,
-    fixedEquipment: equipmentResolution.type === 'fixed' ? equipmentResolution.equipment : undefined,
-    equipmentChoice: equipmentResolution.type === 'choice' ? equipmentResolution.options : undefined,
-  };
+  const resolvedDistribution: RewardDistribution = includeEquipment
+    ? (() => {
+        const equipmentResolution = resolveEquipmentReward(rewards.equipmentReward);
+        return {
+          ...distribution,
+          fixedEquipment: equipmentResolution.type === 'fixed' ? equipmentResolution.equipment : undefined,
+          equipmentChoice: equipmentResolution.type === 'choice' ? equipmentResolution.options : undefined,
+        };
+      })()
+    : distribution;
 
   return {
     distribution: resolvedDistribution,

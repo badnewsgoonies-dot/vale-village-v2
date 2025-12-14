@@ -51,10 +51,24 @@ const TeamSelectWrapper: FunctionComponent = () => {
 
 // Wrapper that reads rewards props from V1 store
 const RewardsWrapper: FunctionComponent = () => {
-  const { lastBattleRewards, team, lastBattleNewDjinnIds, claimRewards, selectEquipmentChoice, returnToOverworld, setBattle, towerStatus, setMode } = useStore((s) => ({
+  const {
+    lastBattleRewards,
+    team,
+    lastBattleNewDjinnIds,
+    lastBattleBonusEquipment,
+    lastBattleBonusRecruits,
+    claimRewards,
+    selectEquipmentChoice,
+    returnToOverworld,
+    setBattle,
+    towerStatus,
+    setMode,
+  } = useStore((s) => ({
     lastBattleRewards: s.lastBattleRewards,
     team: s.team,
     lastBattleNewDjinnIds: s.lastBattleNewDjinnIds,
+    lastBattleBonusEquipment: s.lastBattleBonusEquipment,
+    lastBattleBonusRecruits: s.lastBattleBonusRecruits,
     claimRewards: s.claimRewards,
     selectEquipmentChoice: s.selectEquipmentChoice,
     returnToOverworld: s.returnToOverworld,
@@ -91,6 +105,8 @@ const RewardsWrapper: FunctionComponent = () => {
       rewards={lastBattleRewards}
       team={team}
       newDjinnIds={lastBattleNewDjinnIds}
+      bonusEquipment={lastBattleBonusEquipment}
+      bonusRecruits={lastBattleBonusRecruits}
       onContinue={handleRewardsContinue}
       onSelectEquipment={selectEquipmentChoice}
     />

@@ -211,15 +211,6 @@ export function getDjinnAbilityMetadataForUnit(
 }
 
 export function getLockedDjinnAbilityMetadataForUnit(unit: Unit, team: Team): DjinnAbilityMetadata[] {
-  const lockedDjinnIds = team.equippedDjinn.filter((djinnId) => {
-    const tracker = team.djinnTrackers[djinnId];
-    return tracker?.state !== 'Set';
-  });
-
-  if (lockedDjinnIds.length === 0) {
-    return [];
-  }
-
-  const lockedSet = new Set(lockedDjinnIds);
-  return getDjinnAbilityMetadataForUnit(unit, team).filter((meta) => lockedSet.has(meta.djinnId));
+  const granted = new Set(getDjinnGrantedAbilitiesForUnit(unit, team));
+  return getDjinnAbilityMetadataForUnit(unit, team).filter((meta) => !granted.has(meta.abilityId));
 }
