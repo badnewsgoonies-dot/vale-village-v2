@@ -324,10 +324,21 @@ export class OverworldEngine {
   setPlayerPosition(pos: Position): void {
     const worldPos = tileToWorld(pos, this.config.tileSize);
 
-    // If this is the initial position or teleport, snap immediately
-    if (this.playerPos.x === 0 && this.playerPos.y === 0) {
+    const isInitial = this.playerPos.x === 0 && this.playerPos.y === 0;
+    const dx = worldPos.x - this.playerPos.x;
+    const dy = worldPos.y - this.playerPos.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    const teleportSnapDistance = this.config.tileSize * 2;
+    const shouldSnap = isInitial || dist > teleportSnapDistance;
+
+    // If this is the initial position or a teleport, snap immediately.
+    // Regular movement is owned by the engine (store sync is tile-based), so avoid per-tile snapping.
+    if (shouldSnap) {
       this.playerPos = { ...worldPos };
-      this.camera.setTarget(worldPos.x, worldPos.y);
+      const cameraTargetY = this.entityLayer.isSceneMode()
+        ? this.camera.viewportHeight / 2
+        : worldPos.y;
+      this.camera.setTarget(worldPos.x, cameraTargetY);
       this.camera.snapToTarget();
     }
     // Note: For smooth movement, the engine handles position updates internally
@@ -695,7 +706,12 @@ export class OverworldEngine {
 
     // Update camera - only follow player in overworld mode
     if (this.currentSceneType === 'overworld') {
-      this.camera.setTarget(this.playerPos.x, this.playerPos.y);
+      if (this.entityLayer.isSceneMode()) {
+        // Scene mode uses art-directed screen-space Y for buildings; keep camera vertical scroll locked.
+        this.camera.setTarget(this.playerPos.x, this.camera.viewportHeight / 2);
+      } else {
+        this.camera.setTarget(this.playerPos.x, this.playerPos.y);
+      }
       this.camera.update(dt);
     } else {
       // Interior mode - keep camera centered on room
@@ -706,19 +722,8 @@ export class OverworldEngine {
 
     // Sync player position based on current scene
     if (this.currentSceneType === 'overworld') {
-      // In scene mode, map tile-world coordinates to canvas coordinates
-      // Both X and Y must be scaled for consistent coordinate system with buildings
-      let playerPosForRender = this.playerPos;
-      if (this.entityLayer.isSceneMode() && this.mapData) {
-        const tileWorldWidth = this.mapData.width * this.config.tileSize;
-        const tileWorldHeight = this.mapData.height * this.config.tileSize;
-        const canvasX = (this.playerPos.x / tileWorldWidth) * this.config.canvasWidth;
-        const canvasY = (this.playerPos.y / tileWorldHeight) * this.config.canvasHeight;
-        playerPosForRender = { x: canvasX, y: canvasY };
-      }
-
       this.entityLayer.setPlayerPosition(
-        playerPosForRender,
+        this.playerPos,
         this.playerFacing,
         this._playerUnitId
       );
@@ -1045,7 +1050,7 @@ export class OverworldEngine {
       const startY = Math.floor(bounds.top / this.config.tileSize) * this.config.tileSize;
 
       for (let x = startX; x <= bounds.right; x += this.config.tileSize) {
-        const screenX = x - this.camera.x;
+        const screenX = x - this.camera.getRenderX();
         ctx.beginPath();
         ctx.moveTo(screenX, 0);
         ctx.lineTo(screenX, this.canvas.height);
@@ -1053,7 +1058,7 @@ export class OverworldEngine {
       }
 
       for (let y = startY; y <= bounds.bottom; y += this.config.tileSize) {
-        const screenY = y - this.camera.y;
+        const screenY = y - this.camera.getRenderY();
         ctx.beginPath();
         ctx.moveTo(0, screenY);
         ctx.lineTo(this.canvas.width, screenY);
@@ -1121,19 +1126,57 @@ export class OverworldEngine {
   private renderDebug(): void {
     const ctx = this.ctx;
 
+    const tile = worldToTile(this.playerPos, this.config.tileSize);
+    const isSceneMode = this.entityLayer.isSceneMode();
+    const cameraRenderX = this.camera.getRenderX();
+    const cameraRenderY = this.camera.getRenderY();
+
+    const worldWidthPx = this.mapData ? this.mapData.width * this.config.tileSize : null;
+    const worldHeightPx = this.mapData ? this.mapData.height * this.config.tileSize : null;
+
+    const lines: string[] = [
+      `Scene: ${this.currentSceneType}${isSceneMode ? ' (sceneMode)' : ''}`,
+      `Player W: (${this.playerPos.x.toFixed(1)}, ${this.playerPos.y.toFixed(1)})`,
+      `Tile: (${tile.x}, ${tile.y})  Facing: ${this.playerFacing}`,
+      `Camera W: (${this.camera.x.toFixed(2)}, ${this.camera.y.toFixed(2)})`,
+      `Camera R: (${cameraRenderX}, ${cameraRenderY})`,
+    ];
+
+    if (isSceneMode && worldHeightPx && worldHeightPx > 0) {
+      const playerSceneY = (this.playerPos.y / worldHeightPx) * this.config.canvasHeight;
+      const sceneScaleY = this.config.canvasHeight / worldHeightPx;
+      lines.push(`Player S: y=${playerSceneY.toFixed(1)}  scaleY=${sceneScaleY.toFixed(3)}`);
+
+      if (worldWidthPx && worldWidthPx > 0) {
+        const worldAspect = worldWidthPx / worldHeightPx;
+        const canvasAspect = this.config.canvasWidth / this.config.canvasHeight;
+        const inputYScale = canvasAspect / worldAspect;
+        lines.push(`Input yScale: ${inputYScale.toFixed(3)}`);
+      }
+    }
+
+    if (worldWidthPx && worldHeightPx) {
+      lines.push(`World: ${worldWidthPx}×${worldHeightPx}px  (tile=${this.config.tileSize})`);
+    }
+
+    const paddingX = 10;
+    const paddingY = 10;
+    const lineHeight = 16;
+    const boxWidth = 360;
+    const boxHeight = paddingY * 2 + lines.length * lineHeight;
+
     ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-    ctx.fillRect(10, 10, 200, 100);
+    ctx.fillRect(10, 10, boxWidth, boxHeight);
 
     ctx.fillStyle = '#fff';
     ctx.font = '12px monospace';
     ctx.textAlign = 'left';
 
-    const tile = worldToTile(this.playerPos, this.config.tileSize);
-
-    ctx.fillText(`Player: (${this.playerPos.x.toFixed(1)}, ${this.playerPos.y.toFixed(1)})`, 20, 30);
-    ctx.fillText(`Tile: (${tile.x}, ${tile.y})`, 20, 50);
-    ctx.fillText(`Facing: ${this.playerFacing}`, 20, 70);
-    ctx.fillText(`Camera: (${this.camera.x.toFixed(1)}, ${this.camera.y.toFixed(1)})`, 20, 90);
+    let y = 10 + paddingY + 12;
+    for (const line of lines) {
+      ctx.fillText(line, 10 + paddingX, y);
+      y += lineHeight;
+    }
   }
 
   /**

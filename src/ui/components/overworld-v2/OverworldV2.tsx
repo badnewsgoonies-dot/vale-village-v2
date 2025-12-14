@@ -7,6 +7,7 @@ import { useEffect, useRef, useCallback, useState } from 'preact/hooks';
 import { useStore } from '../../state/store';
 import { useGameStore } from '../../../store/gameStore';
 import { DJINN_INTRO_DIALOGUE } from '@/data/definitions/dialogues';
+import { isHouseUnlocked } from '../../../core/services/StoryService';
 import { OverworldEngineV2 } from './engine/OverworldEngineV2';
 import { SkyLayer } from './layers/SkyLayer';
 import { BackgroundLayer } from './layers/BackgroundLayer';
@@ -75,7 +76,8 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
   const enterTowerFromOverworld = useStore((s) => s.enterTowerFromOverworld);
   const mode = useStore((s) => s.mode);
   const startDialogueTree = useStore((s) => s.startDialogueTree);
-  const hasSeenDjinnIntro = useStore((s) => Boolean(s.story.flags.first_djinn_intro_completed));
+  const story = useStore((s) => s.story);
+  const hasSeenDjinnIntro = Boolean(story.flags.first_djinn_intro_completed);
 
   // gameStore subscriptions
   const startTransition = useGameStore((s) => s.startTransition);
@@ -86,8 +88,28 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
   // Avoid stale closures inside setInterval loops and global listeners.
   const modeRef = useRef(mode);
   modeRef.current = mode;
+  const storyRef = useRef(story);
+  storyRef.current = story;
   const activeModalRef = useRef(activeModal);
   activeModalRef.current = activeModal;
+
+  const getUnlockedBuildingIds = useCallback((): Set<string> => {
+    const unlocked = new Set<string>();
+    const storyState = storyRef.current;
+
+    for (const building of VILLAGE_BUILDINGS) {
+      if (building.kind === 'tower') {
+        unlocked.add(building.id);
+        continue;
+      }
+
+      if (isHouseUnlocked(storyState, building.id)) {
+        unlocked.add(building.id);
+      }
+    }
+
+    return unlocked;
+  }, []);
 
   const isGameplayInputLocked = (currentMode: string) =>
     currentMode === 'dialogue' ||
@@ -137,6 +159,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
   const createOverworldLayers = useCallback((): Layer[] => {
     const villageLayer = new VillageLayer();
     villageLayerRef.current = villageLayer;
+    villageLayer.setUnlockedHouses(getUnlockedBuildingIds());
 
     const playerLayer = new PlayerLayer({
       x: savedOverworldXRef.current,
@@ -155,7 +178,12 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
       villageLayer,
       playerLayer,
     ];
-  }, []);
+  }, [getUnlockedBuildingIds]);
+
+  // Keep house unlock visuals in sync with story flags (and ensure new VillageLayer instances inherit them).
+  useEffect(() => {
+    villageLayerRef.current?.setUnlockedHouses(getUnlockedBuildingIds());
+  }, [story, getUnlockedBuildingIds]);
 
   // Create interior layers
   const createInteriorLayers = useCallback((houseNum: number): Layer[] => {

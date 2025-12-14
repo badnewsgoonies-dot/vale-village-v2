@@ -55,6 +55,8 @@ export class EntityLayer implements Layer {
   private spriteCache: Map<string, HTMLImageElement> = new Map();
   private loadingSprites: Set<string> = new Set();
 
+  private warnedAboutSceneCoordMix: boolean = false;
+
   setTileSize(size: number): void {
     this.tileSize = size;
     this.worldHeightPx = this.mapHeightTiles * this.tileSize;
@@ -248,9 +250,9 @@ export class EntityLayer implements Layer {
     _tileY: number
   ): RenderableEntity {
     let spriteId = this.findBuildingSpriteId(map, bounds);
-    const worldX = bounds.x * this.tileSize;
-    const worldY = bounds.y * this.tileSize;
     const pixelWidth = bounds.width * this.tileSize;
+    const worldX = bounds.x * this.tileSize + pixelWidth / 2;
+    const worldY = bounds.y * this.tileSize;
     const pixelHeight = bounds.height * this.tileSize;
 
     // If no sprite specified, pick a Vale building based on position
@@ -404,6 +406,20 @@ export class EntityLayer implements Layer {
    * Update or create player entity
    */
   setPlayerPosition(pos: WorldPosition, facing: Direction, unitId: string): void {
+    if (
+      this.useSceneMode &&
+      !this.warnedAboutSceneCoordMix &&
+      this.worldHeightPx > 0 &&
+      pos.y > this.worldHeightPx + this.tileSize
+    ) {
+      this.warnedAboutSceneCoordMix = true;
+      console.warn('[EntityLayer] Possible scene-mode coordinate mixing: expected world Y but received a much larger value.', {
+        posY: pos.y,
+        worldHeightPx: this.worldHeightPx,
+        tileSize: this.tileSize,
+      });
+    }
+
     const spriteId = `player-${unitId}-${facing}`;
 
     // Load sprite async
@@ -458,9 +474,9 @@ export class EntityLayer implements Layer {
    * Golden Sun–style depth scaling.
    * Lower on-screen entities (higher worldY) appear slightly larger.
    */
-  private getPerspectiveScale(worldY: number): number {
-    const maxY = this.worldHeightPx || 1;
-    const depthNorm = clamp(worldY / maxY, 0, 1);
+  private getPerspectiveScale(worldY: number, maxY: number): number {
+    const safeMaxY = maxY || 1;
+    const depthNorm = clamp(worldY / safeMaxY, 0, 1);
     return 0.7 + depthNorm * 0.3;
   }
 
@@ -480,13 +496,15 @@ export class EntityLayer implements Layer {
     // In scene mode, separate buildings from player (different coord systems)
     // Player walks in front of buildings, so render buildings first, player last
     if (this.useSceneMode) {
+      const cameraRenderX = camera.getRenderX();
+
       // Sort buildings by Y (for depth within buildings)
       const buildingEntities = this.entities.filter(e => e.isSceneBuilding);
       buildingEntities.sort((a, b) => a.y - b.y);
 
       // Render buildings first
       for (const entity of buildingEntities) {
-        const screenX = entity.x - camera.x;
+        const screenX = entity.x - cameraRenderX;
         const screenY = entity.y;
         this.drawSceneBuildingShadow(ctx, screenX, screenY, entity.width);
         this.drawSceneBuildingSprite(ctx, screenX, screenY, entity);
@@ -498,8 +516,11 @@ export class EntityLayer implements Layer {
 
       // Render player last (always in front)
       if (this.playerEntity) {
-        const screenPos = camera.worldToScreen(this.playerEntity.x, this.playerEntity.y);
-        const perspectiveScale = this.getPerspectiveScale(this.playerEntity.y);
+        const screenY = this.worldHeightPx > 0
+          ? (this.playerEntity.y / this.worldHeightPx) * camera.viewportHeight
+          : this.playerEntity.y;
+        const screenPos = { x: this.playerEntity.x - cameraRenderX, y: screenY };
+        const perspectiveScale = this.getPerspectiveScale(screenY, camera.viewportHeight);
         this.drawShadow(ctx, screenPos, this.playerEntity, perspectiveScale);
         this.drawEntity(ctx, screenPos, this.playerEntity, perspectiveScale);
       }
@@ -525,7 +546,7 @@ export class EntityLayer implements Layer {
       // For scene buildings, apply camera X offset (horizontal scrolling)
       // Y stays as-is since scene coords are canvas-relative
       if (entity.isSceneBuilding) {
-        const screenX = entity.x - camera.x;  // Apply horizontal camera scroll
+        const screenX = entity.x - camera.getRenderX();  // Apply horizontal camera scroll
         const screenY = entity.y;              // Keep Y in canvas space
 
         // Draw ellipse shadow
@@ -552,7 +573,7 @@ export class EntityLayer implements Layer {
       const screenPos = camera.worldToScreen(entity.x, entity.y);
 
       // Draw shadow first
-      const perspectiveScale = this.getPerspectiveScale(entity.y);
+      const perspectiveScale = this.getPerspectiveScale(entity.y, this.worldHeightPx);
       this.drawShadow(ctx, screenPos, entity, perspectiveScale);
 
       // Draw entity
@@ -836,8 +857,11 @@ export class EntityLayer implements Layer {
     for (const entity of entities) {
       if (entity.type !== 'building') continue;
 
-      const screenPos = camera.worldToScreen(entity.x, entity.y);
-      const perspectiveScale = this.getPerspectiveScale(entity.y);
+      const screenPos = entity.isSceneBuilding
+        ? { x: entity.x - camera.getRenderX(), y: entity.y }
+        : camera.worldToScreen(entity.x, entity.y);
+      const maxY = this.useSceneMode ? camera.viewportHeight : this.worldHeightPx;
+      const perspectiveScale = this.getPerspectiveScale(entity.y, maxY);
       const width = entity.width * perspectiveScale;
       const height = entity.height * perspectiveScale;
       const x = screenPos.x - width / 2;

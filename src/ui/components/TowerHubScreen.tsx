@@ -12,6 +12,8 @@ import { TOWER_REWARDS } from '@/data/definitions/towerRewards';
 import { DIALOGUES } from '@/data/definitions/dialogues';
 import { calculateEffectiveStats } from '@/core/algorithms/stats';
 import { DJINN } from '@/data/definitions/djinn';
+import { EQUIPMENT } from '@/data/definitions/equipment';
+import { UNIT_DEFINITIONS } from '@/data/definitions/units';
 import { PartyManagementScreen } from './PartyManagementScreen';
 import { ShopEquipScreen } from './ShopEquipScreen';
 import { DjinnCollectionScreen } from './DjinnCollectionScreen';
@@ -79,7 +81,10 @@ export function TowerHubScreen(): JSX.Element {
   const currentFloor = getCurrentTowerFloor();
   const isRestFloor = currentFloor?.type === 'rest';
   const isCompleted = towerStatus === 'completed';
-  const upcomingReward = useMemo(() => getNextReward(towerRun), [towerRun]);
+  const upcomingReward = useMemo(
+    () => getNextReward(towerRun, towerRecord.highestFloorEver),
+    [towerRun, towerRecord.highestFloorEver]
+  );
   const partySummary = useMemo(() => buildPartySummary(team), [team]);
   const djinnStatus = useMemo(() => buildDjinnStatus(team), [team]);
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>(null);
@@ -114,9 +119,9 @@ export function TowerHubScreen(): JSX.Element {
         <section class="tower-card intro">
           <h1>Battle Tower</h1>
           <p>
-            Step into an optional gauntlet built on the queue battle engine. Use your current campaign roster, keep HP between fights,
-            and earn XP and gold to catch up when the main story gets tough. Beat your personal-best floor to unlock milestone rewards
-            like Djinn, recruits, and equipment.
+            Step into an optional gauntlet built on the queue battle engine. Use your current campaign party, keep HP and Djinn states
+            between fights, and earn XP + gold to catch up when the main story gets tough (encounter equipment drops are disabled). Beat
+            your personal-best floor to claim milestone rewards like Djinn, recruits, and equipment.
           </p>
           <div class="tower-actions">
             <button class="primary" onClick={handleStartRun}>
@@ -358,44 +363,35 @@ function renderFloor(floor: TowerFloor | null): JSX.Element {
 function describeRewardBundle(rewards: readonly TowerRewardEntry[]): string {
   return rewards
     .map((reward) => {
-      const ids = reward.ids.join(', ');
       switch (reward.type) {
         case 'equipment':
-          return `Equipment: ${ids}`;
+          return `Equipment: ${reward.ids.map((id) => EQUIPMENT[id]?.name ?? id).join(', ')}`;
         case 'djinn':
-          return `Djinn: ${ids}`;
+          return `Djinn: ${reward.ids.map((id) => DJINN[id]?.name ?? id).join(', ')}`;
         case 'recruit':
-          return `Recruit: ${ids}`;
+          return `Recruit: ${reward.ids.map((id) => UNIT_DEFINITIONS[id]?.name ?? id).join(', ')}`;
         default:
-          return ids;
+          return reward.ids.join(', ');
       }
     })
     .join(' · ');
 }
 
 function getNextReward(
-  run: TowerRunState | null
+  run: TowerRunState | null,
+  highestFloorEver: number
 ): { floorNumber: number; rewards: TowerRewardEntry[] } | null {
-  if (!run) {
-    return TOWER_REWARDS[0] ?? null;
-  }
+  const pivotFloor = (() => {
+    if (!run) return 1;
+    const currentEntry = run.history[run.floorIndex];
+    return (
+      currentEntry?.floorNumber ??
+      ((run.history[run.history.length - 1]?.floorNumber ?? 0) + (run.isCompleted ? 0 : 1))
+    );
+  })();
 
-  const rewardedFloors = new Set(
-    run.history
-      .filter((entry) => entry.rewardsGranted.length > 0)
-      .map((entry) => entry.floorNumber)
-  );
-
-  const currentEntry = run.history[run.floorIndex];
-  const pivotFloor =
-    currentEntry?.floorNumber ??
-    ((run.history[run.history.length - 1]?.floorNumber ?? 0) + (run.isCompleted ? 0 : 1));
-
-  return (
-    TOWER_REWARDS.find(
-      (reward) => !rewardedFloors.has(reward.floorNumber) && reward.floorNumber >= pivotFloor
-    ) ?? null
-  );
+  const minFloor = Math.max(pivotFloor, highestFloorEver + 1);
+  return TOWER_REWARDS.find((reward) => reward.floorNumber >= minFloor) ?? null;
 }
 
 function buildPartySummary(team: Store['team']) {

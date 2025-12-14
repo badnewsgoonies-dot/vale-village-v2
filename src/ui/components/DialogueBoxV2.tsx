@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'preact/hooks';
+import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import { createPortal } from 'preact/compat';
 import { useStore } from '../state/store';
 import { getCurrentNode, getAvailableChoices } from '@/core/services/DialogueService';
@@ -50,7 +50,7 @@ export function DialogueBoxV2() {
   // Typewriter effect state
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const typewriterInterval = useRef<NodeJS.Timeout | null>(null);
+  const typewriterInterval = useRef<number | null>(null);
   const currentTextRef = useRef('');
 
   // Typewriter effect
@@ -68,21 +68,22 @@ export function DialogueBoxV2() {
       setIsTyping(true);
 
       // Clear any existing interval
-      if (typewriterInterval.current) {
-        clearInterval(typewriterInterval.current);
+      if (typewriterInterval.current !== null) {
+        window.clearInterval(typewriterInterval.current);
+        typewriterInterval.current = null;
       }
 
       let index = 0;
       const typewriterSpeed = 50; // milliseconds per character
 
-      typewriterInterval.current = setInterval(() => {
+      typewriterInterval.current = window.setInterval(() => {
         if (index < currentNode.text.length) {
           setDisplayedText(currentNode.text.substring(0, index + 1));
           index++;
         } else {
           setIsTyping(false);
-          if (typewriterInterval.current) {
-            clearInterval(typewriterInterval.current);
+          if (typewriterInterval.current !== null) {
+            window.clearInterval(typewriterInterval.current);
             typewriterInterval.current = null;
           }
         }
@@ -90,31 +91,30 @@ export function DialogueBoxV2() {
     }
 
     return () => {
-      if (typewriterInterval.current) {
-        clearInterval(typewriterInterval.current);
+      if (typewriterInterval.current !== null) {
+        window.clearInterval(typewriterInterval.current);
         typewriterInterval.current = null;
       }
     };
   }, [currentNode?.text]);
 
-  const skipTypewriter = () => {
-    if (isTyping && currentNode?.text) {
-      if (typewriterInterval.current) {
-        clearInterval(typewriterInterval.current);
-        typewriterInterval.current = null;
-      }
-      setDisplayedText(currentNode.text);
-      setIsTyping(false);
+  const skipTypewriter = useCallback(() => {
+    if (!isTyping || !currentNode?.text) return;
+    if (typewriterInterval.current !== null) {
+      window.clearInterval(typewriterInterval.current);
+      typewriterInterval.current = null;
     }
-  };
+    setDisplayedText(currentNode.text);
+    setIsTyping(false);
+  }, [currentNode?.text, isTyping]);
 
-  const handleAdvance = () => {
+  const handleAdvance = useCallback(() => {
     if (isTyping) {
       skipTypewriter();
-    } else {
-      advanceCurrentDialogue();
+      return;
     }
-  };
+    advanceCurrentDialogue();
+  }, [advanceCurrentDialogue, isTyping, skipTypewriter]);
 
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
@@ -122,37 +122,48 @@ export function DialogueBoxV2() {
       if (!currentDialogueTree || !currentDialogueState) return;
 
       if (event.key === 'Escape') {
+        if (event.repeat) return;
         event.preventDefault();
         event.stopPropagation();
         endDialogue();
         return;
       }
 
-      // Space or Enter: skip typewriter if typing, otherwise advance
-      if (!hasChoices && (event.key === ' ' || event.key === 'Enter' || event.code === 'Space' || event.code === 'Enter')) {
+      const isSpaceOrEnter = event.key === ' ' || event.key === 'Enter' || event.code === 'Space' || event.code === 'Enter';
+
+      // Space/Enter: skip typewriter if typing (even when choices exist); otherwise advance when no choices.
+      if (isSpaceOrEnter) {
+        if (event.repeat) return;
         event.preventDefault();
         event.stopPropagation();
-
-        handleAdvance();
+        if (isTyping) {
+          skipTypewriter();
+        } else if (!hasChoices) {
+          handleAdvance();
+        }
         return;
       }
 
       // Number keys for choices
       const num = parseInt(event.key, 10);
       if (!Number.isNaN(num) && num >= 1 && num <= availableChoices.length) {
+        if (event.repeat) return;
         event.preventDefault();
         event.stopPropagation();
         const selected = availableChoices[num - 1];
-        if (selected) {
-          makeChoice(selected.id);
+        if (!selected) return;
+        if (isTyping) {
+          skipTypewriter();
+          return;
         }
+        makeChoice(selected.id);
       }
     };
 
     // Use capture phase to get events before other handlers
     window.addEventListener('keydown', handleKeyPress, true);
     return () => window.removeEventListener('keydown', handleKeyPress, true);
-  }, [currentDialogueTree, currentDialogueState, availableChoices, hasChoices, advanceCurrentDialogue, makeChoice, endDialogue, isTyping, handleAdvance]);
+  }, [currentDialogueTree, currentDialogueState, availableChoices, hasChoices, makeChoice, endDialogue, isTyping, handleAdvance, skipTypewriter]);
 
   if (!currentDialogueTree || !currentDialogueState) {
     return null;
