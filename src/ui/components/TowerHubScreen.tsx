@@ -9,6 +9,7 @@ import type { TowerRewardEntry } from '@/data/schemas/TowerRewardSchema';
 import type { TowerRunState } from '@/core/services/TowerService';
 import { DEFAULT_TOWER_CONFIG } from '@/core/config/towerConfig';
 import { TOWER_REWARDS } from '@/data/definitions/towerRewards';
+import { DIALOGUES } from '@/data/definitions/dialogues';
 import { calculateEffectiveStats } from '@/core/algorithms/stats';
 import { DJINN } from '@/data/definitions/djinn';
 import { PartyManagementScreen } from './PartyManagementScreen';
@@ -34,6 +35,7 @@ export function TowerHubScreen(): JSX.Element {
     towerEntryContext,
     team,
     mode,
+    startDialogueTree,
   } = useStore((state) => ({
     towerRun: state.towerRun,
     towerStatus: state.towerStatus,
@@ -47,7 +49,21 @@ export function TowerHubScreen(): JSX.Element {
     towerEntryContext: state.towerEntryContext,
     team: state.team,
     mode: state.mode,
+    startDialogueTree: state.startDialogueTree,
   }));
+
+  const handleExitTower = () => {
+    const context = towerEntryContext;
+    exitTowerMode();
+    startTransition(context?.type === 'overworld' ? 'overworld' : 'menu');
+  };
+
+  const handleTalkToGuide = () => {
+    const guide = DIALOGUES['tutorial:tower-guide'];
+    if (guide) {
+      startDialogueTree(guide);
+    }
+  };
 
   // Sync V1 store mode to V2 gameStore screen (for battle transitions from tower)
   useEffect(() => {
@@ -105,7 +121,10 @@ export function TowerHubScreen(): JSX.Element {
             <button class="primary" onClick={handleStartRun}>
               Start Tower Run
             </button>
-            <button onClick={exitTowerMode}>
+            <button class="ghost" onClick={handleTalkToGuide}>
+              Talk to Guide
+            </button>
+            <button onClick={handleExitTower}>
               {towerEntryContext?.type === 'overworld' ? 'Return to Vale' : 'Back to Menu'}
             </button>
           </div>
@@ -164,7 +183,10 @@ export function TowerHubScreen(): JSX.Element {
               <button class="primary" onClick={handleStartRun}>
                 Start New Run
               </button>
-              <button onClick={exitTowerMode}>
+              <button class="ghost" onClick={handleTalkToGuide}>
+                Talk to Guide
+              </button>
+              <button onClick={handleExitTower}>
                 {towerEntryContext?.type === 'overworld' ? 'Return to Vale' : 'Back to Menu'}
               </button>
             </div>
@@ -178,6 +200,9 @@ export function TowerHubScreen(): JSX.Element {
                 Take Rest
               </button>
               <button onClick={beginTowerFloorBattle}>Skip Rest</button>
+              <button class="ghost" onClick={handleTalkToGuide}>
+                Talk to Guide
+              </button>
               <button class="ghost" onClick={handleQuitRun}>
                 Quit Run
               </button>
@@ -210,7 +235,10 @@ export function TowerHubScreen(): JSX.Element {
               <button class="ghost" onClick={handleQuitRun}>
                 Quit Run
               </button>
-              <button onClick={exitTowerMode}>
+              <button class="ghost" onClick={handleTalkToGuide}>
+                Talk to Guide
+              </button>
+              <button onClick={handleExitTower}>
                 {towerEntryContext?.type === 'overworld' ? 'Return to Vale' : 'Back to Menu'}
               </button>
             </div>

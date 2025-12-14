@@ -116,7 +116,7 @@ export class VillageLayer implements Layer {
 
   render(ctx: CanvasRenderingContext2D, camera: Camera): void {
     for (const building of this.buildings) {
-      const { x: screenX, y: screenY } = camera.worldToScreen(building.x, building.y);
+      const { x: screenX, y: screenY } = camera.worldToScreenSnapped(building.x, building.y);
 
       // Cull off-screen buildings
       const isVisible = camera.isVisible(
@@ -264,4 +264,3 @@ export class VillageLayer implements Layer {
     ctx.restore();
   }
 }
-

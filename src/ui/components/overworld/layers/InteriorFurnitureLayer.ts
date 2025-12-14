@@ -23,6 +23,9 @@ interface InteriorConfig {
   roomHeight: number;
 }
 
+type CollisionRect = { x: number; y: number; width: number; height: number };
+type Collider = { halfWidth: number; halfHeight: number };
+
 /**
  * House-specific furniture layouts
  * Each function receives roomWidth and roomHeight and returns a furniture array
@@ -257,6 +260,7 @@ export class InteriorFurnitureLayer implements Layer {
   private furniture: FurnitureItem[] = [];
   private playerPos: WorldPosition = { x: 0, y: 0 };
   private playerFacing: 'up' | 'down' | 'left' | 'right' = 'down';
+  private renderPlayer: boolean = true;
 
   private config: InteriorConfig = {
     roomX: 320,
@@ -267,6 +271,53 @@ export class InteriorFurnitureLayer implements Layer {
 
   setRoomConfig(config: InteriorConfig): void {
     this.config = config;
+  }
+
+  /**
+   * Control whether this layer renders the (placeholder) player sprite.
+   * OverworldV2 provides its own PlayerLayer, so it disables this to avoid double-rendering.
+   */
+  setRenderPlayer(renderPlayer: boolean): void {
+    this.renderPlayer = renderPlayer;
+  }
+
+  /**
+   * Collision helper for top-down movement:
+   * Treats non-rug furniture as solid "footprints" and blocks the player's feet collider.
+   */
+  isBlocked(worldX: number, worldY: number, collider: Collider = { halfWidth: 10, halfHeight: 7 }): boolean {
+    const playerRect: CollisionRect = {
+      x: worldX - collider.halfWidth,
+      y: worldY - collider.halfHeight,
+      width: collider.halfWidth * 2,
+      height: collider.halfHeight * 2,
+    };
+
+    for (const rect of this.getObstacleRectsWorld()) {
+      if (rectsIntersect(playerRect, rect)) return true;
+    }
+    return false;
+  }
+
+  private getObstacleRectsWorld(): CollisionRect[] {
+    const { roomX, roomY } = this.config;
+    const rects: CollisionRect[] = [];
+
+    for (const item of this.furniture) {
+      if (item.type === 'rug') continue;
+
+      const local = getFurnitureFootprint(item);
+      if (!local) continue;
+
+      rects.push({
+        x: roomX + local.x,
+        y: roomY + local.y,
+        width: local.width,
+        height: local.height,
+      });
+    }
+
+    return rects;
   }
 
   /**
@@ -341,7 +392,9 @@ export class InteriorFurnitureLayer implements Layer {
     }
 
     // Add player
-    renderables.push({ item: 'player', y: this.playerPos.y });
+    if (this.renderPlayer) {
+      renderables.push({ item: 'player', y: this.playerPos.y });
+    }
 
     // Sort by Y (bottom of item)
     renderables.sort((a, b) => a.y - b.y);
@@ -350,9 +403,9 @@ export class InteriorFurnitureLayer implements Layer {
     for (const { item } of renderables) {
       if (item === 'player') {
         this.drawPlayer(ctx, roomX, roomY);
-      } else {
-        this.drawFurniture(ctx, item, roomX, roomY);
+        continue;
       }
+      this.drawFurniture(ctx, item, roomX, roomY);
     }
 
     // Draw exit door marker at bottom center
@@ -575,4 +628,42 @@ export class InteriorFurnitureLayer implements Layer {
     ctx.textAlign = 'center';
     ctx.fillText('EXIT', exitX, exitY + 4);
   }
+}
+
+function rectsIntersect(a: CollisionRect, b: CollisionRect): boolean {
+  return a.x < b.x + b.width && a.x + a.width > b.x && a.y < b.y + b.height && a.y + a.height > b.y;
+}
+
+function getFurnitureFootprint(item: FurnitureItem): CollisionRect | null {
+  // Rugs are decorative and intentionally non-blocking.
+  if (item.type === 'rug') return null;
+
+  const insetX = Math.max(2, Math.round(item.width * 0.08));
+
+  // Use type-specific heuristics so the player can still "approach" objects from the front
+  // without clipping through their visible base.
+  const params: Record<FurnitureItem['type'], { top: number; height: number }> = {
+    table: { top: 0.45, height: 0.55 },
+    chair: { top: 0.35, height: 0.65 },
+    bed: { top: 0.30, height: 0.70 },
+    bookshelf: { top: 0.65, height: 0.35 },
+    chest: { top: 0.50, height: 0.50 },
+    fireplace: { top: 0.60, height: 0.40 },
+    plant: { top: 0.45, height: 0.55 },
+    lamp: { top: 0.50, height: 0.50 },
+    rug: { top: 0.0, height: 0.0 },
+  };
+
+  const p = params[item.type] ?? { top: 0.55, height: 0.45 };
+  const y = item.y + item.height * p.top;
+  const maxH = item.y + item.height - y;
+  const h = Math.max(2, Math.min(item.height * p.height, maxH));
+
+  const width = Math.max(4, item.width - insetX * 2);
+  return {
+    x: item.x + insetX,
+    y,
+    width,
+    height: h,
+  };
 }

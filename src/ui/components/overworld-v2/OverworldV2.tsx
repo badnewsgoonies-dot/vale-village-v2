@@ -5,6 +5,8 @@
 
 import { useEffect, useRef, useCallback, useState } from 'preact/hooks';
 import { useStore } from '../../state/store';
+import { useGameStore } from '../../../store/gameStore';
+import { DJINN_INTRO_DIALOGUE } from '@/data/definitions/dialogues';
 import { OverworldEngineV2 } from './engine/OverworldEngineV2';
 import { SkyLayer } from './layers/SkyLayer';
 import { BackgroundLayer } from './layers/BackgroundLayer';
@@ -55,7 +57,6 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
   const interiorFloorRef = useRef<InteriorFloorLayer | null>(null);
   const interiorFurnitureRef = useRef<InteriorFurnitureLayer | null>(null);
   const keysRef = useRef<Set<string>>(new Set());
-  const lastUpdateRef = useRef<number>(0);
 
   // Track scene state
   const sceneTypeRef = useRef<SceneType>('overworld');
@@ -64,6 +65,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
 
   // Transition state
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const isTransitioningRef = useRef(false);
   const transitionAlphaRef = useRef<number>(0);
   const transitionTargetRef = useRef<SceneType | null>(null);
 
@@ -71,6 +73,32 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
   const currentMapId = useStore((s: OverworldSlice) => s.currentMapId);
   const teleportPlayer = useStore((s: OverworldSlice) => s.teleportPlayer);
   const enterTowerFromOverworld = useStore((s) => s.enterTowerFromOverworld);
+  const mode = useStore((s) => s.mode);
+  const startDialogueTree = useStore((s) => s.startDialogueTree);
+  const hasSeenDjinnIntro = useStore((s) => Boolean(s.story.flags.first_djinn_intro_completed));
+
+  // gameStore subscriptions
+  const startTransition = useGameStore((s) => s.startTransition);
+  const openModal = useGameStore((s) => s.openModal);
+  const closeModal = useGameStore((s) => s.closeModal);
+  const activeModal = useGameStore((s) => s.flow.modal);
+
+  // Avoid stale closures inside setInterval loops and global listeners.
+  const modeRef = useRef(mode);
+  modeRef.current = mode;
+  const activeModalRef = useRef(activeModal);
+  activeModalRef.current = activeModal;
+
+  const isGameplayInputLocked = (currentMode: string) =>
+    currentMode === 'dialogue' ||
+    currentMode === 'team-select' ||
+    currentMode === 'battle' ||
+    currentMode === 'shop' ||
+    currentMode === 'rewards' ||
+    currentMode === 'compendium' ||
+    currentMode === 'tower';
+
+  const djinnIntroStartedRef = useRef(false);
 
   // Detect scene type from map ID
   const getSceneTypeFromMapId = useCallback((mapId: string): SceneType => {
@@ -85,11 +113,21 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
 
   // Handle keyboard input
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    // Don't steal input while a modal is open (pause/settings/etc) or when not in overworld mode.
+    if (activeModalRef.current !== null) return;
+    if (isGameplayInputLocked(modeRef.current)) return;
+
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      openModal('pause');
+      return;
+    }
+
     if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'w', 'a', 's', 'd', ' ', 'Enter'].includes(e.key)) {
       e.preventDefault();
       keysRef.current.add(e.key);
     }
-  }, []);
+  }, [openModal]);
 
   const handleKeyUp = useCallback((e: KeyboardEvent) => {
     keysRef.current.delete(e.key);
@@ -126,6 +164,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
     interiorFloorRef.current = floorLayer;
 
     const furnitureLayer = new InteriorFurnitureLayer();
+    furnitureLayer.setRenderPlayer(false);
     furnitureLayer.setRoomConfig({
       roomX: INTERIOR_ROOM_X,
       roomY: INTERIOR_ROOM_Y,
@@ -149,8 +188,9 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
 
   // Switch scene type with fade transition
   const transitionToScene = useCallback((targetScene: SceneType, houseNum: number = 1) => {
-    if (isTransitioning) return;
+    if (isTransitioningRef.current) return;
 
+    isTransitioningRef.current = true;
     setIsTransitioning(true);
     transitionTargetRef.current = targetScene;
     currentHouseNumRef.current = houseNum;
@@ -192,6 +232,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
       if (transitionAlphaRef.current <= 0) {
         transitionAlphaRef.current = 0;
         transitionTargetRef.current = null;
+        isTransitioningRef.current = false;
         setIsTransitioning(false);
       } else {
         requestAnimationFrame(fadeIn);
@@ -199,12 +240,19 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
     };
 
     requestAnimationFrame(fadeOut);
-  }, [isTransitioning, createOverworldLayers, createInteriorLayers]);
+  }, [createOverworldLayers, createInteriorLayers]);
 
   // Handle entering a building
   const enterBuilding = useCallback((buildingId: string) => {
     const building = VILLAGE_BUILDINGS.find(b => b.id === buildingId);
     if (!building) return;
+
+    // Tutorial beat: intercept House 1 entry to introduce Djinn (mirrors V1 flow).
+    if (building.id === 'house-01' && !hasSeenDjinnIntro && !djinnIntroStartedRef.current) {
+      djinnIntroStartedRef.current = true;
+      startDialogueTree(DJINN_INTRO_DIALOGUE);
+      return;
+    }
 
     // Save current X position for return
     const playerPos = playerLayerRef.current?.getPosition();
@@ -231,7 +279,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
     if (building.interiorMapId) {
       teleportPlayer(building.interiorMapId, { x: 5, y: 7 });
     }
-  }, [transitionToScene, getHouseNumberFromMapId, teleportPlayer, enterTowerFromOverworld]);
+  }, [transitionToScene, getHouseNumberFromMapId, teleportPlayer, enterTowerFromOverworld, hasSeenDjinnIntro, startDialogueTree]);
 
   // Handle exiting interior
   const exitInterior = useCallback(() => {
@@ -284,17 +332,18 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
 
-    // Movement update loop
-    lastUpdateRef.current = performance.now();
-    const movementLoop = () => {
-      const now = performance.now();
-      const dt = (now - lastUpdateRef.current) / 1000;
-      lastUpdateRef.current = now;
+    engine.onUpdate((dtMs, eng) => {
+      const dt = dtMs / 1000;
 
       const player = playerLayerRef.current;
       const village = villageLayerRef.current;
-      const eng = engineRef.current;
-      if (!player || !eng || isTransitioning) return;
+      if (!player || isTransitioningRef.current) return;
+
+      // Freeze player control when not actively in overworld mode or while a modal is open.
+      if (isGameplayInputLocked(modeRef.current) || activeModalRef.current !== null) {
+        player.setPlayerState({ isMoving: false });
+        return;
+      }
 
       const keys = keysRef.current;
       const isOverworld = sceneTypeRef.current === 'overworld';
@@ -326,69 +375,92 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
       const isMoving = dx !== 0 || dy !== 0;
       player.setPlayerState({ isMoving });
 
-      if (isMoving) {
-        // Normalize diagonal movement
-        const len = Math.sqrt(dx * dx + dy * dy);
-        dx /= len;
-        dy /= len;
+      if (!isMoving) return;
 
-        const pos = player.getPosition();
-        const speed = isOverworld ? PLAYER_SPEED : INTERIOR_PLAYER_SPEED;
+      // Normalize diagonal movement
+      const len = Math.sqrt(dx * dx + dy * dy);
+      dx /= len;
+      dy /= len;
 
-        let newX: number;
-        let newY: number;
+      const pos = player.getPosition();
+      const speed = isOverworld ? PLAYER_SPEED : INTERIOR_PLAYER_SPEED;
 
-        if (isOverworld) {
-          // Overworld bounds
-          newX = clamp(pos.x + dx * speed * dt, 0, VILLAGE_WORLD_WIDTH - 50);
-          newY = clamp(pos.y + dy * speed * dt, PLAYER_Y_MIN, PLAYER_Y_MAX);
-        } else {
-          // Interior bounds
-          newX = clamp(
-            pos.x + dx * speed * dt,
-            INTERIOR_ROOM_X + 20,
-            INTERIOR_ROOM_X + INTERIOR_ROOM_WIDTH - 20
-          );
-          newY = clamp(
-            pos.y + dy * speed * dt,
-            INTERIOR_ROOM_Y + 20,
-            INTERIOR_ROOM_Y + INTERIOR_ROOM_HEIGHT + 10  // Allow slight overshoot for exit
-          );
+      let newX: number;
+      let newY: number;
+
+      if (isOverworld) {
+        // Overworld bounds
+        newX = clamp(pos.x + dx * speed * dt, 0, VILLAGE_WORLD_WIDTH - 50);
+        newY = clamp(pos.y + dy * speed * dt, PLAYER_Y_MIN, PLAYER_Y_MAX);
+      } else {
+        // Interior bounds
+        newX = clamp(
+          pos.x + dx * speed * dt,
+          INTERIOR_ROOM_X + 20,
+          INTERIOR_ROOM_X + INTERIOR_ROOM_WIDTH - 20
+        );
+        newY = clamp(
+          pos.y + dy * speed * dt,
+          INTERIOR_ROOM_Y + 20,
+          INTERIOR_ROOM_Y + INTERIOR_ROOM_HEIGHT + 10  // Allow slight overshoot for exit
+        );
+      }
+
+      if (!isOverworld) {
+        // Interior collision against furniture footprints (slide along obstacles).
+        const furniture = interiorFurnitureRef.current;
+        const collider = { halfWidth: 10, halfHeight: 7 };
+
+        let finalX = pos.x;
+        let finalY = pos.y;
+
+        if (!furniture?.isBlocked(newX, pos.y, collider)) {
+          finalX = newX;
+        }
+        if (!furniture?.isBlocked(finalX, newY, collider)) {
+          finalY = newY;
         }
 
-        player.setPlayerState({ x: newX, y: newY });
-
-        // Update facing direction
-        if (dx > 0) {
-          player.setPlayerState({ facing: 'right' });
-        } else if (dx < 0) {
-          player.setPlayerState({ facing: 'left' });
-        } else if (dy < 0) {
-          player.setPlayerState({ facing: 'up' });
-        } else if (dy > 0) {
-          player.setPlayerState({ facing: 'down' });
-        }
-
-        if (isOverworld) {
-          // Update camera target
-          eng.getCamera().setTarget(newX, newY);
-          // Update village layer for door proximity
-          village?.setPlayerPosition(newX, newY);
+        // If blocked in both axes, cancel movement to avoid jitter (but still allow facing updates).
+        if (finalX === pos.x && finalY === pos.y) {
+          player.setPlayerState({ isMoving: false });
+          newX = pos.x;
+          newY = pos.y;
         } else {
-          // Update interior furniture layer with player position
-          const furniture = interiorFurnitureRef.current;
-          const state = player.getPlayerState();
-          furniture?.setPlayerPosition({ x: newX, y: newY }, state.facing);
-
-          // Check for exit trigger
-          if (isInExitZone() && dy > 0) {
-            exitInterior();
-          }
+          newX = finalX;
+          newY = finalY;
         }
       }
-    };
 
-    const movementInterval = setInterval(movementLoop, 16);
+      player.setPlayerState({ x: newX, y: newY });
+
+      // Update facing direction
+      if (dx > 0) {
+        player.setPlayerState({ facing: 'right' });
+      } else if (dx < 0) {
+        player.setPlayerState({ facing: 'left' });
+      } else if (dy < 0) {
+        player.setPlayerState({ facing: 'up' });
+      } else if (dy > 0) {
+        player.setPlayerState({ facing: 'down' });
+      }
+
+      if (isOverworld) {
+        // Update camera target
+        eng.getCamera().setTarget(newX, newY);
+        // Update village layer for door proximity
+        village?.setPlayerPosition(newX, newY);
+      } else {
+        // Update interior furniture layer with player position
+        const state = player.getPlayerState();
+        interiorFurnitureRef.current?.setPlayerPosition({ x: newX, y: newY }, state.facing);
+
+        // Check for exit trigger
+        if (isInExitZone() && dy > 0) {
+          exitInterior();
+        }
+      }
+    });
 
     // Render transition overlay
     const renderOverlay = () => {
@@ -412,9 +484,25 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
       interiorFurnitureRef.current = null;
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
-      clearInterval(movementInterval);
     };
-  }, [width, height, handleKeyDown, handleKeyUp, createOverworldLayers, enterBuilding, exitInterior, isInExitZone, isTransitioning]);
+  }, [width, height, handleKeyDown, handleKeyUp, createOverworldLayers, enterBuilding, exitInterior, isInExitZone]);
+
+  // Sync V1 store mode to V2 gameStore screens.
+  // (Overworld V2 doesn't use tile triggers yet, but dialogue/battle effects still depend on mode transitions.)
+  useEffect(() => {
+    if (mode === 'team-select') {
+      startTransition('team-select');
+    } else if (mode === 'battle') {
+      startTransition('battle');
+    } else if (mode === 'shop') {
+      startTransition('shop');
+    } else if (mode === 'rewards') {
+      startTransition('rewards');
+    } else if (mode === 'overworld') {
+      // When returning to overworld (e.g., dialogue ends), ensure no stale modal is left open.
+      closeModal();
+    }
+  }, [mode, startTransition, closeModal]);
 
   // React to map changes from store (e.g., from save/load)
   useEffect(() => {
@@ -427,7 +515,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
 
   const sceneName = sceneTypeRef.current === 'interior'
     ? `House ${currentHouseNumRef.current} Interior`
-    : 'Vale Village (V2)';
+    : 'Vale Village';
 
   return (
     <div class="overworld-shell">

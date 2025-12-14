@@ -29,13 +29,16 @@ export interface BattleRewards {
   /** Total Gold earned */
   readonly totalGold: number;
 
-  /** XP per surviving unit (split equally) */
+  /** XP per party member (split equally) */
   readonly xpPerUnit: number;
 
-  /** Number of surviving party members */
+  /** Number of party members (XP split count) */
+  readonly partySize: number;
+
+  /** Number of surviving party members at battle end (informational only) */
   readonly survivorCount: number;
 
-  /** True if all party members survived (triggers 1.5× XP bonus) */
+  /** True if all party members survived (informational only) */
   readonly allSurvived: boolean;
 
   /** Number of enemies defeated */

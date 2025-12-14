@@ -51,9 +51,10 @@ const TeamSelectWrapper: FunctionComponent = () => {
 
 // Wrapper that reads rewards props from V1 store
 const RewardsWrapper: FunctionComponent = () => {
-  const { lastBattleRewards, team, claimRewards, selectEquipmentChoice, returnToOverworld, setBattle, towerStatus, setMode } = useStore((s) => ({
+  const { lastBattleRewards, team, lastBattleNewDjinnIds, claimRewards, selectEquipmentChoice, returnToOverworld, setBattle, towerStatus, setMode } = useStore((s) => ({
     lastBattleRewards: s.lastBattleRewards,
     team: s.team,
+    lastBattleNewDjinnIds: s.lastBattleNewDjinnIds,
     claimRewards: s.claimRewards,
     selectEquipmentChoice: s.selectEquipmentChoice,
     returnToOverworld: s.returnToOverworld,
@@ -89,6 +90,7 @@ const RewardsWrapper: FunctionComponent = () => {
     <RewardsScreen
       rewards={lastBattleRewards}
       team={team}
+      newDjinnIds={lastBattleNewDjinnIds}
       onContinue={handleRewardsContinue}
       onSelectEquipment={selectEquipmentChoice}
     />
@@ -117,7 +119,7 @@ const ShopWrapper: FunctionComponent = () => {
 };
 
 import { PauseMenu } from './modals/PauseMenu';
-import { DialogueBoxV2 } from './ui/components/DialogueBoxV2';
+import { DialogueChatOverlay } from './ui/components/DialogueChatOverlay';
 import { InventoryModal } from './modals/InventoryModal';
 import { SettingsModal } from './modals/SettingsModal';
 import { SaveMenu } from './ui/components/SaveMenu';
@@ -363,8 +365,8 @@ const App: FunctionComponent = () => {
     <div className={`app-root${isTransitioning ? ' app-root--transitioning' : ''}`}>
       {renderScreen()}
       {renderModal()}
-      {/* DialogueBoxV2 always rendered - uses portal and self-manages visibility */}
-      <DialogueBoxV2 />
+      {/* DialogueChatOverlay always rendered - uses portal and self-manages visibility */}
+      <DialogueChatOverlay />
       <ToolboxHelpers
         title="Toolbox"
         actions={toolboxActions}

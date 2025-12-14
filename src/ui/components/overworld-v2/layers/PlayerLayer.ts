@@ -104,7 +104,7 @@ export class PlayerLayer implements Layer {
 
   render(ctx: CanvasRenderingContext2D, camera: Camera): void {
     const { x: worldX, y: worldY, facing, unitId } = this.playerState;
-    const { x: screenX, y: screenY } = camera.worldToScreen(worldX, worldY);
+    const { x: screenX, y: screenY } = camera.worldToScreenSnapped(worldX, worldY);
 
     // Shadow on the ground (ellipse below feet)
     ctx.save();

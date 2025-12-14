@@ -14,6 +14,7 @@ import { useEffect, useMemo } from 'preact/hooks';
 import type { RewardDistribution } from '../../core/models/Rewards';
 import type { Team } from '../../core/models/Team';
 import type { Equipment } from '../../data/schemas/EquipmentSchema';
+import type { Ability } from '../../data/schemas/AbilitySchema';
 import { BattleUnitSprite } from './BattleUnitSprite';
 import { SimpleSprite } from '../sprites/SimpleSprite';
 import { getPortraitSprite } from '../sprites/mappings';
@@ -21,6 +22,8 @@ import { EquipmentIcon } from './EquipmentIcon';
 import { EquipmentChoicePicker } from './EquipmentChoicePicker';
 import './RewardsScreen.css';
 import { DJINN } from '../../data/definitions/djinn';
+import { ABILITIES } from '../../data/definitions/abilities';
+import { DJINN_ABILITIES } from '../../data/definitions/djinnAbilities';
 
 /** Sparkle effect component for victory celebration */
 function VictorySparkles(): JSX.Element {
@@ -36,11 +39,20 @@ function VictorySparkles(): JSX.Element {
 interface RewardsScreenProps {
   rewards: RewardDistribution;
   team: Team;
+  newDjinnIds?: readonly string[];
   onContinue: () => void;
   onSelectEquipment: (equipment: Equipment) => void;
 }
 
-export function RewardsScreen({ rewards, team, onContinue, onSelectEquipment }: RewardsScreenProps): JSX.Element {
+function isDefined<T>(value: T | undefined | null): value is T {
+  return value !== undefined && value !== null;
+}
+
+function resolveAbility(abilityId: string): Ability | null {
+  return ABILITIES[abilityId] ?? DJINN_ABILITIES[abilityId] ?? null;
+}
+
+export function RewardsScreen({ rewards, team, newDjinnIds, onContinue, onSelectEquipment }: RewardsScreenProps): JSX.Element {
   // Get surviving party members for the victory display
   const partyMembers = useMemo(() => {
     return team.units.filter(u => u.currentHp > 0).slice(0, 4);
@@ -73,8 +85,10 @@ export function RewardsScreen({ rewards, team, onContinue, onSelectEquipment }: 
     : rewards.fixedEquipment
       ? [rewards.fixedEquipment]
       : [];
-  const latestDjinnId = team.collectedDjinn[team.collectedDjinn.length - 1];
-  const latestDjinn = latestDjinnId ? DJINN[latestDjinnId] : null;
+  const newlyCollectedDjinn = useMemo(
+    () => (newDjinnIds ?? []).map((djinnId) => DJINN[djinnId]).filter(isDefined),
+    [newDjinnIds]
+  );
 
   // Keyboard handler
   useEffect(() => {
@@ -144,8 +158,8 @@ export function RewardsScreen({ rewards, team, onContinue, onSelectEquipment }: 
             <div class="reward-details">
               <div class="reward-label">Experience</div>
               <div class="reward-value highlight">+{rewards.rewards.totalXp} XP</div>
-              {rewards.rewards.survivorCount > 0 && (
-                <div class="reward-subtext">Split among {rewards.rewards.survivorCount} survivors</div>
+              {team.units.length > 0 && (
+                <div class="reward-subtext">Split among {team.units.length} party members</div>
               )}
             </div>
           </div>
@@ -201,13 +215,18 @@ export function RewardsScreen({ rewards, team, onContinue, onSelectEquipment }: 
         )}
 
         {/* Djinn Acquisition Notification */}
-        {rewards.recruitedUnit && latestDjinn && (
-          <section class="djinn-panel" role="alert" aria-label={`Djinn ${latestDjinn.name} acquired`}>
+        {newlyCollectedDjinn.length > 0 && (
+          <section class="djinn-panel" role="alert" aria-label="Djinn acquired">
             <h2>DJINN ACQUIRED</h2>
             <div class="djinn-acquisition">
-              <div class="djinn-name">{latestDjinn.name}</div>
-              <div class="djinn-element">{latestDjinn.element}</div>
-              <div class="djinn-message">has been added to your collection!</div>
+              {newlyCollectedDjinn.map((djinn) => (
+                <div key={djinn.id} class="djinn-acquired-row">
+                  <div class="djinn-name">{djinn.name}</div>
+                  <div class="djinn-element">{djinn.element}</div>
+                </div>
+              ))}
+              <div class="djinn-message">Added to your collection.</div>
+              <div class="djinn-hint">Tip: Pause (Esc) → Djinn Collection (D) to equip.</div>
             </div>
           </section>
         )}
@@ -229,11 +248,35 @@ export function RewardsScreen({ rewards, team, onContinue, onSelectEquipment }: 
                     {levelUp.statGains.atk > 0 && <span>+{levelUp.statGains.atk} ATK</span>}
                     {levelUp.statGains.def > 0 && <span>+{levelUp.statGains.def} DEF</span>}
                     {levelUp.statGains.mag > 0 && <span>+{levelUp.statGains.mag} MAG</span>}
-                    {levelUp.statGains.spd > 0 && <span>+{levelUp.statGains.spd} SPD</span>}
+                  {levelUp.statGains.spd > 0 && <span>+{levelUp.statGains.spd} SPD</span>}
                   </div>
                   {levelUp.unlockedAbilities.length > 0 && (
                     <div class="level-up-abilities">
-                      Unlocked: {levelUp.unlockedAbilities.join(', ')}
+                      <div class="level-up-abilities-title">Unlocked</div>
+                      <div class="level-up-ability-list" role="list">
+                        {levelUp.unlockedAbilities.map((abilityId) => {
+                          const ability = resolveAbility(abilityId);
+                          const label = ability?.name ?? abilityId;
+                          const meta: string[] = [];
+                          if (ability?.type) meta.push(ability.type);
+                          if (ability?.element) meta.push(ability.element);
+                          const manaCost = ability?.manaCost ?? 0;
+                          if (manaCost > 0) meta.push(`${manaCost} Mana`);
+
+                          return (
+                            <div key={abilityId} class="level-up-ability-item" role="listitem">
+                              <div class="level-up-ability-name">{label}</div>
+                              {meta.length > 0 && (
+                                <div class="level-up-ability-meta">{meta.join(' • ')}</div>
+                              )}
+                              {ability?.description && (
+                                <div class="level-up-ability-desc">{ability.description}</div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <div class="level-up-abilities-hint">Use in battle: Actions → PSYNERGY</div>
                     </div>
                   )}
                 </div>

@@ -13,6 +13,11 @@ export class RoadLayer implements Layer {
   private patternCanvas: HTMLCanvasElement | null = null;
   private pattern: CanvasPattern | null = null;
 
+  /** Cache for the static road base (without scrolling texture) */
+  private roadBaseCache: HTMLCanvasElement | null = null;
+  /** Dirty flag for road base - only needs to be rendered once */
+  private roadBaseDirty: boolean = true;
+
   constructor() {
     if (typeof document === 'undefined') return;
 
@@ -44,15 +49,16 @@ export class RoadLayer implements Layer {
   render(ctx: CanvasRenderingContext2D, camera: Camera): void {
     const roadHeight = ROAD_Y_BOTTOM - ROAD_Y_TOP;
 
-    // Base band
-    ctx.fillStyle = '#141414';
-    ctx.fillRect(0, ROAD_Y_TOP, ctx.canvas.width, roadHeight);
+    // Cache the static road base on first render
+    if (this.roadBaseDirty || !this.roadBaseCache) {
+      this.renderRoadBaseToCache(ctx.canvas.width, roadHeight);
+      this.roadBaseDirty = false;
+    }
 
-    // Bevel lines
-    ctx.fillStyle = 'rgba(255,255,255,0.06)';
-    ctx.fillRect(0, ROAD_Y_TOP, ctx.canvas.width, 1);
-    ctx.fillStyle = 'rgba(0,0,0,0.35)';
-    ctx.fillRect(0, ROAD_Y_BOTTOM - 1, ctx.canvas.width, 1);
+    // Draw cached base
+    if (this.roadBaseCache) {
+      ctx.drawImage(this.roadBaseCache, 0, ROAD_Y_TOP);
+    }
 
     // Texture pattern (scrolls with camera)
     if (!this.pattern && this.patternCanvas) {
@@ -61,11 +67,34 @@ export class RoadLayer implements Layer {
     if (this.pattern && this.patternCanvas) {
       ctx.save();
       ctx.globalAlpha = 0.35;
-      ctx.translate(-(camera.x % this.patternCanvas.width), ROAD_Y_TOP);
+      const snappedCameraX = Math.round(camera.x);
+      ctx.translate(-(snappedCameraX % this.patternCanvas.width), ROAD_Y_TOP);
       ctx.fillStyle = this.pattern;
       ctx.fillRect(0, 0, ctx.canvas.width + this.patternCanvas.width, roadHeight);
       ctx.restore();
     }
   }
-}
 
+  /** Pre-render the static road base (band + bevel lines) to offscreen canvas */
+  private renderRoadBaseToCache(width: number, height: number): void {
+    if (!this.roadBaseCache) {
+      this.roadBaseCache = document.createElement('canvas');
+    }
+
+    this.roadBaseCache.width = width;
+    this.roadBaseCache.height = height;
+
+    const ctx = this.roadBaseCache.getContext('2d');
+    if (!ctx) return;
+
+    // Base band
+    ctx.fillStyle = '#141414';
+    ctx.fillRect(0, 0, width, height);
+
+    // Bevel lines
+    ctx.fillStyle = 'rgba(255,255,255,0.06)';
+    ctx.fillRect(0, 0, width, 1);
+    ctx.fillStyle = 'rgba(0,0,0,0.35)';
+    ctx.fillRect(0, height - 1, width, 1);
+  }
+}

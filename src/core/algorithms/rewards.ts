@@ -8,18 +8,19 @@ import type { Unit } from '../models/Unit';
 import type { Team } from '../models/Team';
 import type { BattleRewards, LevelUpEvent, RewardDistribution, StatGains } from '../models/Rewards';
 import { addXp } from './xp';
-import { isUnitKO } from '../models/Unit';
 import { ENCOUNTERS } from '../../data/definitions/encounters';
 
 /**
  * Calculate total rewards from a predetermined encounter
  *
  * @param encounterId - Encounter identifier
- * @param survivorCount - Number of surviving party members
+ * @param partySize - Number of party members (XP split count)
+ * @param survivorCount - Number of surviving party members at battle end
  * @returns Predetermined battle rewards
  */
 export function calculateBattleRewards(
   encounterId: string,
+  partySize: number,
   survivorCount: number
 ): BattleRewards {
   const encounter = ENCOUNTERS[encounterId];
@@ -27,13 +28,14 @@ export function calculateBattleRewards(
     throw new Error(`Encounter ${encounterId} not found`);
   }
 
-  const allSurvived = survivorCount === 4;
-  const xpPerUnit = survivorCount > 0 ? Math.floor(encounter.reward.xp / survivorCount) : 0;
+  const allSurvived = partySize > 0 && survivorCount === partySize;
+  const xpPerUnit = partySize > 0 ? Math.floor(encounter.reward.xp / partySize) : 0;
 
   return {
     totalXp: encounter.reward.xp,
     totalGold: encounter.reward.gold,
     xpPerUnit,
+    partySize,
     survivorCount,
     allSurvived,
     enemiesDefeated: encounter.enemies.length,
@@ -90,14 +92,8 @@ export function distributeRewards(
   const levelUps: LevelUpEvent[] = [];
   const updatedUnits: Unit[] = [];
 
-  // Distribute XP to surviving units
+  // Distribute XP equally to the active party (even if KO'd at battle end).
   for (const unit of team.units) {
-    // Skip KO'd units
-    if (isUnitKO(unit)) {
-      updatedUnits.push(unit);
-      continue;
-    }
-
     // Skip max level units (level 20 cap)
     if (unit.level >= 20) {
       updatedUnits.push(unit);
