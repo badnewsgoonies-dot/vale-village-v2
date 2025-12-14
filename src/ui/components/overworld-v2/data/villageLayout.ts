@@ -1,6 +1,6 @@
 import { BUILDING_GROUND_Y, VIEWPORT_WIDTH } from './constants';
 
-export type BuildingKind = 'house' | 'tower';
+export type BuildingKind = 'house' | 'tower' | 'shop';
 
 export interface VillageBuilding {
   id: string;
@@ -17,6 +17,8 @@ export interface VillageBuilding {
   doorOffsetY?: number;
   /** Optional interior map id (wired in Phase 4). */
   interiorMapId?: string;
+  /** Optional shop id (for shop buildings). */
+  shopId?: string;
 }
 
 const SPRITE_SIZE: Record<string, { width: number; height: number }> = {
@@ -57,6 +59,9 @@ const HOUSE_SPRITES: string[] = [
 const TOWER_SPRITE_PATH = '/sprites/buildings/Vale/Vale_Sanctum.gif';
 const TOWER_SIZE = SPRITE_SIZE[TOWER_SPRITE_PATH] ?? { width: 100, height: 120 };
 
+const ARMORY_SPRITE_PATH = '/sprites/buildings/Vale/Vale_WepArm_Shop.gif';
+const ARMORY_SIZE = SPRITE_SIZE[ARMORY_SPRITE_PATH] ?? { width: 100, height: 90 };
+
 export const BATTLE_TOWER: VillageBuilding = {
   id: 'battle-tower',
   kind: 'tower',
@@ -69,6 +74,19 @@ export const BATTLE_TOWER: VillageBuilding = {
   doorOffsetY: 0,
 };
 
+export const VALE_ARMORY: VillageBuilding = {
+  id: 'shop-vale-armory',
+  kind: 'shop',
+  x: 240,
+  y: BUILDING_GROUND_Y,
+  width: ARMORY_SIZE.width,
+  height: ARMORY_SIZE.height,
+  spritePath: ARMORY_SPRITE_PATH,
+  doorOffsetX: 0,
+  doorOffsetY: 0,
+  shopId: 'vale-armory',
+};
+
 export const HOUSES: VillageBuilding[] = Array.from({ length: 30 }, (_, i) => {
   const houseNumber = i + 1;
   const spritePath = HOUSE_SPRITES[i % HOUSE_SPRITES.length]!;
@@ -77,7 +95,7 @@ export const HOUSES: VillageBuilding[] = Array.from({ length: 30 }, (_, i) => {
   return {
     id: `house-${String(houseNumber).padStart(2, '0')}`,
     kind: 'house',
-    x: 240 + i * 120,
+    x: 360 + i * 120,
     y: BUILDING_GROUND_Y,
     width: size.width,
     height: size.height,
@@ -90,6 +108,7 @@ export const HOUSES: VillageBuilding[] = Array.from({ length: 30 }, (_, i) => {
 
 export const VILLAGE_BUILDINGS: VillageBuilding[] = [
   BATTLE_TOWER,
+  VALE_ARMORY,
   ...HOUSES,
 ];
 

@@ -141,6 +141,14 @@ function generatePlaceholder(id: string, width: number, height: number): React.R
   );
 }
 
+function deriveNameFromPath(path: string): string {
+  const filename = path.split('/').pop() ?? path;
+  return filename
+    .replace(/\.(gif|png)$/i, '')
+    .replace(/[_\-]+/g, ' ')
+    .trim();
+}
+
 /**
  * Find sprite entry using flexible lookup
  */
@@ -148,7 +156,20 @@ function findSprite(id: string): { entry: SpriteEntry | null; method: string } {
   // Method 1: Direct path (starts with /)
   if (id.startsWith('/')) {
     const entry = getSpriteByPath(id);
-    return { entry, method: 'path' };
+    if (entry) {
+      return { entry, method: 'path' };
+    }
+    // Path exists in /public but isn't listed in the generated catalog yet (e.g., new assets).
+    // Allow direct loads and rely on <img onError> for fallback.
+    return {
+      entry: {
+        name: deriveNameFromPath(id),
+        path: id,
+        category: 'path',
+        subcategory: null,
+      },
+      method: 'path-direct',
+    };
   }
   
   // Method 2: Catalog lookup (flexible ID matching)
@@ -346,4 +367,3 @@ export function SimpleSprite({
     </div>
   );
 }
-

@@ -2501,21 +2501,27 @@ export const BANDIT_CAPTAIN: Enemy = {
 // VS1: Garet (War Mage) - Level 2
 const warMageDef = UNIT_DEFINITIONS['war-mage'];
 if (!warMageDef) throw new Error('war-mage unit definition not found');
-export const GARET_ENEMY = unitDefinitionToEnemy(
-  warMageDef,
-  2, // Level 2 for VS1
-  60, // Base XP
-  19, // Base Gold
-  {
-    id: 'garet-enemy',
-    stats: {
-      // HP reduced from 3x to 1.5x for winnable House 1 (~6 hits instead of 13)
-      hp: 142, // Math.floor((80 + 15) * 1.5) = 142 (hardcoded to avoid float issues)
-      // ATK reduced from +4 to +2 for fairer damage output
-      atk: 14, // 10 + 2 + 2 = 14 (hardcoded)
+export const GARET_ENEMY: Enemy = {
+  ...unitDefinitionToEnemy(
+    warMageDef,
+    2, // Level 2 for VS1
+    60, // Base XP
+    19, // Base Gold
+    {
+      id: 'garet-enemy',
+      stats: {
+        // VS1 tutorial fight tuning:
+        // - Player starts with 1 mana circle, so they can only basic attack (plus Djinn stat bonuses).
+        // - Enemies ignore mana costs, so we keep this fight physical-only (see abilities override below).
+        // Goal: winnable with basic attacks, but not trivial.
+        hp: 135,
+        atk: 12,
+      },
     }
-  }
-);
+  ),
+  // VS1 tutorial: restrict to basic attack only so the first fight is beatable.
+  abilities: [{ ...STRIKE, unlockLevel: 1 }],
+};
 
 // Sentinel - Level 3 (example for future encounters)
 const sentinelDef = UNIT_DEFINITIONS['sentinel'];

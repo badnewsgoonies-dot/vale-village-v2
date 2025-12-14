@@ -30,7 +30,7 @@ export class VillageLayer implements Layer {
   private glowTime: number = 0;
 
   /** Set of unlocked house IDs (house-01 always unlocked, others based on story) */
-  private unlockedHouses: Set<string> = new Set(['house-01', 'battle-tower']);
+  private unlockedHouses: Set<string> = new Set(['house-01', 'battle-tower', 'shop-vale-armory']);
 
   constructor(buildings: VillageBuilding[] = VILLAGE_BUILDINGS) {
     this.buildings = [...buildings].sort((a, b) => a.x - b.x);
@@ -53,6 +53,7 @@ export class VillageLayer implements Layer {
     // Always ensure house-01 and battle-tower are unlocked
     this.unlockedHouses.add('house-01');
     this.unlockedHouses.add('battle-tower');
+    this.unlockedHouses.add('shop-vale-armory');
   }
 
   /** Check if a building is unlocked */
@@ -190,6 +191,8 @@ export class VillageLayer implements Layer {
       glowColor = `rgba(100, 100, 100, ${pulse * 0.7})`; // Gray for locked
     } else if (building.kind === 'tower') {
       glowColor = `rgba(100, 180, 255, ${pulse})`; // Blue for tower
+    } else if (building.kind === 'shop') {
+      glowColor = `rgba(140, 255, 170, ${pulse})`; // Green for shop
     } else {
       glowColor = `rgba(255, 220, 100, ${pulse})`; // Yellow/gold for houses
     }
@@ -238,6 +241,9 @@ export class VillageLayer implements Layer {
     } else if (building.kind === 'tower') {
       promptText = 'ENTER TOWER';
       textColor = '#88CCFF'; // Blue for tower
+    } else if (building.kind === 'shop') {
+      promptText = 'SHOP';
+      textColor = '#9AFFB6'; // Green for shop
     } else {
       promptText = 'PRESS SPACE';
       textColor = '#FFDD66'; // Yellow/gold for houses

@@ -74,6 +74,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
   const currentMapId = useStore((s: OverworldSlice) => s.currentMapId);
   const teleportPlayer = useStore((s: OverworldSlice) => s.teleportPlayer);
   const enterTowerFromOverworld = useStore((s) => s.enterTowerFromOverworld);
+  const handleTrigger = useStore((s) => s.handleTrigger);
   const mode = useStore((s) => s.mode);
   const startDialogueTree = useStore((s) => s.startDialogueTree);
   const story = useStore((s) => s.story);
@@ -98,7 +99,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
     const storyState = storyRef.current;
 
     for (const building of VILLAGE_BUILDINGS) {
-      if (building.kind === 'tower') {
+      if (building.kind === 'tower' || building.kind === 'shop') {
         unlocked.add(building.id);
         continue;
       }
@@ -297,6 +298,16 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
       return;
     }
 
+    if (building.kind === 'shop') {
+      handleTrigger({
+        id: 'overworld-shop',
+        type: 'shop',
+        position: { x: 0, y: 0 },
+        data: { shopId: building.shopId ?? 'vale-armory' },
+      });
+      return;
+    }
+
     // Get house number (e.g., "house-05" -> 5)
     const houseNum = getHouseNumberFromMapId(building.id);
 
@@ -307,7 +318,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
     if (building.interiorMapId) {
       teleportPlayer(building.interiorMapId, { x: 5, y: 7 });
     }
-  }, [transitionToScene, getHouseNumberFromMapId, teleportPlayer, enterTowerFromOverworld, hasSeenDjinnIntro, startDialogueTree]);
+  }, [transitionToScene, getHouseNumberFromMapId, teleportPlayer, enterTowerFromOverworld, handleTrigger, hasSeenDjinnIntro, startDialogueTree]);
 
   // Handle exiting interior
   const exitInterior = useCallback(() => {
