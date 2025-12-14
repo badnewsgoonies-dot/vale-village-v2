@@ -14,6 +14,14 @@
   min-height: 100vh;
 }
 
+/* Location banner fade animation */
+@keyframes bannerFadeInOut {
+  0% { opacity: 0; transform: translateY(-10px); }
+  15% { opacity: 1; transform: translateY(0); }
+  85% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-10px); }
+}
+
 /* Location banner */
 .location-banner {
   display: flex;
@@ -27,6 +35,7 @@
   padding: 0.4rem 0.75rem;
   color: #e7f4f1;
   backdrop-filter: blur(8px);
+  animation: bannerFadeInOut 4s ease-in-out forwards;
 }
 
 .location-title {

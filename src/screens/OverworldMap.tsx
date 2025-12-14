@@ -13,4 +13,7 @@
 // export { OverworldMap } from '../ui/components/OverworldMap';
 
 // Advanced 3D canvas-based renderer with smooth movement
-export { OverworldCanvas as OverworldMap } from '../ui/components/overworld/OverworldCanvas';
+export { OverworldV2 as OverworldMap } from '../ui/components/overworld-v2/OverworldV2';
+
+// Legacy canvas renderer (backup - uncomment to revert)
+// export { OverworldCanvas as OverworldMap } from '../ui/components/overworld/OverworldCanvas';
