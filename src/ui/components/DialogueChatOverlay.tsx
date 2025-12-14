@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { createPortal } from 'preact/compat';
 import { useStore } from '../state/store';
 import { getAvailableChoices, getCurrentNode } from '@/core/services/DialogueService';
@@ -9,8 +9,16 @@ import { warnIfPlaceholderSprite } from '../sprites/utils/warnIfPlaceholderSprit
 import './DialogueChatOverlay.css';
 
 function isPlayerSpeaker(speaker: string | undefined): boolean {
-  return (speaker ?? '').toLowerCase() === 'isaac';
+  const normalized = (speaker ?? '').toLowerCase().trim();
+  return normalized === 'isaac' || normalized === 'adept';
 }
+
+type TranscriptMessage = {
+  id: string;
+  speaker: string;
+  text: string;
+  isPlayer: boolean;
+};
 
 export function DialogueChatOverlay() {
   const {
@@ -43,15 +51,42 @@ export function DialogueChatOverlay() {
     return map;
   }, [currentDialogueTree]);
 
-  const historyNodes = useMemo(() => {
+  const transcriptHistory = useMemo<TranscriptMessage[]>(() => {
     if (!currentDialogueTree || !currentDialogueState) return [];
-    const nodes: DialogueNode[] = [];
-    for (const nodeId of currentDialogueState.history) {
+    const history = currentDialogueState.history;
+    if (history.length <= 1) return [];
+
+    const playerSpeaker = team?.units?.[0]?.name || 'Isaac';
+
+    const messages: TranscriptMessage[] = [];
+    for (let index = 0; index + 1 < history.length; index++) {
+      const nodeId = history[index];
+      const nextNodeId = history[index + 1];
+      if (nodeId === undefined || nextNodeId === undefined) continue;
+
       const node = nodeById.get(nodeId);
-      if (node) nodes.push(node);
+      if (!node) continue;
+
+      messages.push({
+        id: `node:${nodeId}`,
+        speaker: node.speaker ?? '...',
+        text: node.text ?? '',
+        isPlayer: isPlayerSpeaker(node.speaker),
+      });
+
+      const chosenChoice = node.choices?.find((choice) => choice.nextNodeId === nextNodeId);
+      if (chosenChoice) {
+        messages.push({
+          id: `choice:${nodeId}:${chosenChoice.id}`,
+          speaker: playerSpeaker,
+          text: chosenChoice.text,
+          isPlayer: true,
+        });
+      }
     }
-    return nodes;
-  }, [currentDialogueTree, currentDialogueState, nodeById]);
+
+    return messages;
+  }, [currentDialogueTree, currentDialogueState, nodeById, team?.units]);
 
   const currentNode =
     currentDialogueTree && currentDialogueState
@@ -74,20 +109,22 @@ export function DialogueChatOverlay() {
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const typewriterInterval = useRef<number | null>(null);
-  const currentNodeIdRef = useRef<string | null>(null);
+  const currentNodeKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
+    const treeId = currentDialogueState?.treeId ?? null;
     const nodeId = currentDialogueState?.currentNodeId ?? null;
     const text = currentNode?.text ?? '';
+    const nodeKey = treeId && nodeId ? `${treeId}:${nodeId}` : null;
     if (!nodeId || !text) {
-      currentNodeIdRef.current = nodeId;
+      currentNodeKeyRef.current = nodeKey;
       setDisplayedText('');
       setIsTyping(false);
       return;
     }
 
-    if (currentNodeIdRef.current === nodeId) return;
-    currentNodeIdRef.current = nodeId;
+    if (currentNodeKeyRef.current === nodeKey) return;
+    currentNodeKeyRef.current = nodeKey;
 
     setDisplayedText('');
     setIsTyping(true);
@@ -117,9 +154,9 @@ export function DialogueChatOverlay() {
         typewriterInterval.current = null;
       }
     };
-  }, [currentDialogueState?.currentNodeId, currentNode?.text]);
+  }, [currentDialogueState?.treeId, currentDialogueState?.currentNodeId, currentNode?.text]);
 
-  const skipTypewriter = () => {
+  const skipTypewriter = useCallback(() => {
     if (!isTyping || !currentNode?.text) return;
     if (typewriterInterval.current !== null) {
       window.clearInterval(typewriterInterval.current);
@@ -127,15 +164,15 @@ export function DialogueChatOverlay() {
     }
     setDisplayedText(currentNode.text);
     setIsTyping(false);
-  };
+  }, [currentNode?.text, isTyping]);
 
-  const handleAdvance = () => {
+  const handleAdvance = useCallback(() => {
     if (isTyping) {
       skipTypewriter();
       return;
     }
     advanceCurrentDialogue();
-  };
+  }, [advanceCurrentDialogue, isTyping, skipTypewriter]);
 
   // Keep the chat scrolled to the latest message.
   const historyRef = useRef<HTMLDivElement | null>(null);
@@ -150,25 +187,38 @@ export function DialogueChatOverlay() {
       if (!currentDialogueTree || !currentDialogueState) return;
 
       if (event.key === 'Escape') {
+        if (event.repeat) return;
         event.preventDefault();
         event.stopPropagation();
         endDialogue();
         return;
       }
 
-      // Space or Enter: skip typewriter if typing, otherwise advance (only if no choices).
-      if (!hasChoices && (event.key === ' ' || event.key === 'Enter' || event.code === 'Space' || event.code === 'Enter')) {
+      const isSpaceOrEnter = event.key === ' ' || event.key === 'Enter' || event.code === 'Space' || event.code === 'Enter';
+
+      // Space/Enter: skip typewriter if typing (even when choices exist); otherwise advance when no choices.
+      if (isSpaceOrEnter) {
+        if (event.repeat) return;
         event.preventDefault();
         event.stopPropagation();
-        handleAdvance();
+        if (isTyping) {
+          skipTypewriter();
+        } else if (!hasChoices) {
+          handleAdvance();
+        }
         return;
       }
 
       // Number keys for choices.
       const num = Number.parseInt(event.key, 10);
       if (!Number.isNaN(num) && num >= 1 && num <= availableChoices.length) {
+        if (event.repeat) return;
         event.preventDefault();
         event.stopPropagation();
+        if (isTyping) {
+          skipTypewriter();
+          return;
+        }
         const selected = availableChoices[num - 1];
         if (selected) makeChoice(selected.id);
       }
@@ -182,16 +232,17 @@ export function DialogueChatOverlay() {
     availableChoices,
     hasChoices,
     makeChoice,
-    advanceCurrentDialogue,
     endDialogue,
     isTyping,
+    handleAdvance,
+    skipTypewriter,
   ]);
 
   if (!currentDialogueTree || !currentDialogueState || !currentNode) {
     return null;
   }
 
-  const pastNodes = historyNodes.slice(0, Math.max(0, historyNodes.length - 1));
+  const currentSpeaker = currentNode.speaker ?? '...';
 
   const content = (
     <div
@@ -215,27 +266,49 @@ export function DialogueChatOverlay() {
         </div>
 
         <div class="dialogue-chat-history" ref={historyRef}>
-          {pastNodes.map((node) => (
-            <ChatMessage key={node.id} node={node} text={node.text} />
+          {transcriptHistory.map((message) => (
+            <ChatMessage
+              key={message.id}
+              speaker={message.speaker}
+              text={message.text}
+              isPlayer={message.isPlayer}
+            />
           ))}
-          <ChatMessage key={currentNode.id} node={currentNode} text={displayedText} isTyping={isTyping} />
+          <ChatMessage
+            key={`node:${currentNode.id}`}
+            speaker={currentSpeaker}
+            text={displayedText}
+            isPlayer={isPlayerSpeaker(currentNode.speaker)}
+            isTyping={isTyping}
+          />
         </div>
 
         <div class="dialogue-chat-footer">
           {hasChoices ? (
-            <div class="dialogue-chat-choices">
-              {availableChoices.map((choice, idx) => (
-                <button
-                  key={choice.id}
-                  type="button"
-                  class="dialogue-chat-choice"
-                  onClick={() => makeChoice(choice.id)}
-                >
-                  <span class="dialogue-chat-choice-index">{idx + 1}</span>
-                  <span class="dialogue-chat-choice-text">{choice.text}</span>
-                </button>
-              ))}
-            </div>
+            <>
+              {isTyping && (
+                <div class="dialogue-chat-hint is-typing">
+                  <button type="button" class="dialogue-chat-next" onClick={() => skipTypewriter()}>
+                    Skip
+                  </button>
+                  <span class="dialogue-chat-hotkey">Space/Enter: Skip</span>
+                </div>
+              )}
+              <div class="dialogue-chat-choices">
+                {availableChoices.map((choice, idx) => (
+                  <button
+                    key={choice.id}
+                    type="button"
+                    class="dialogue-chat-choice"
+                    onClick={() => makeChoice(choice.id)}
+                    disabled={isTyping}
+                  >
+                    <span class="dialogue-chat-choice-index">{idx + 1}</span>
+                    <span class="dialogue-chat-choice-text">{choice.text}</span>
+                  </button>
+                ))}
+              </div>
+            </>
           ) : (
             <div class={`dialogue-chat-hint ${isTyping ? 'is-typing' : ''}`}>
               <button
@@ -261,18 +334,18 @@ export function DialogueChatOverlay() {
 }
 
 function ChatMessage({
-  node,
   text,
   isTyping = false,
+  speaker,
+  isPlayer,
 }: {
-  node: DialogueNode;
+  speaker: string;
   text: string;
+  isPlayer: boolean;
   isTyping?: boolean;
 }) {
-  const speaker = node.speaker ?? '...';
   const portraitId = getPortraitSprite(speaker);
   warnIfPlaceholderSprite('DialogueChatOverlay', portraitId);
-  const isPlayer = isPlayerSpeaker(node.speaker);
 
   return (
     <div class={`dialogue-chat-message ${isPlayer ? 'is-player' : 'is-npc'}`}>
@@ -289,4 +362,3 @@ function ChatMessage({
     </div>
   );
 }
-

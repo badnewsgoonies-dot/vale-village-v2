@@ -66,6 +66,18 @@ export class Camera {
     if (Math.abs(this.y - this.targetY) < 0.01) this.y = this.targetY;
   }
 
+  /**
+   * Render-snapped camera position (integer pixels) to avoid subpixel jitter.
+   * Keeps internal `x/y` as floats for smooth following.
+   */
+  getRenderX(): number {
+    return Math.round(this.x);
+  }
+
+  getRenderY(): number {
+    return Math.round(this.y);
+  }
+
   worldToScreen(worldX: number, worldY: number): { x: number; y: number } {
     return { x: worldX - this.x, y: worldY - this.y };
   }

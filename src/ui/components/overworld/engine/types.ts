@@ -79,6 +79,8 @@ export interface Camera {
   y: number;
   viewportWidth: number;
   viewportHeight: number;
+  getRenderX(): number;
+  getRenderY(): number;
   worldToScreen(worldX: number, worldY: number): { x: number; y: number };
   screenToWorld(screenX: number, screenY: number): { x: number; y: number };
   getParallaxOffset(factor: number): { x: number; y: number };

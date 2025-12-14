@@ -308,7 +308,7 @@ const App: FunctionComponent = () => {
         return <InventoryModal onClose={closeModal} />;
       case 'settings':
         return <SettingsModal onClose={closeModal} />;
-      // 'dialogue' case removed - DialogueBoxV2 is always rendered and self-manages visibility
+      // 'dialogue' case removed - dialogue is rendered via DialogueChatOverlay (portal) and self-manages visibility
       case 'save':
         return <SaveMenu onClose={closeModal} />;
       case 'help':

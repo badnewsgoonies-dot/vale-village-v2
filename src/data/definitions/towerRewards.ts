@@ -41,13 +41,13 @@ export const TOWER_REWARDS: readonly TowerReward[] = [
     rewards: [
       {
         type: 'equipment',
-        ids: ['trident-neptune'],
-        notes: 'Tower-exclusive legendary weapon',
+        ids: ['tower-champions-ring'],
+        notes: "Tower milestone accessory: Champion's Ring",
       },
       {
         type: 'djinn',
-        ids: ['tsunami'],
-        notes: 'Tower-exclusive Mercury Djinn',
+        ids: ['chill'],
+        notes: 'Mercury Djinn reward (tier 3)',
       },
     ],
   },
@@ -56,20 +56,19 @@ export const TOWER_REWARDS: readonly TowerReward[] = [
     rewards: [
       {
         type: 'equipment',
-        ids: ['zeus-thunderbolt'],
-        notes: 'Tower-exclusive ultimate artifact',
+        ids: ['tower-masters-medallion'],
+        notes: "Tower milestone accessory: Master's Medallion",
       },
       {
         type: 'recruit',
-        ids: ['tower-legend'],
-        notes: 'Tower-exclusive legendary recruit',
+        ids: ['felix'],
+        notes: 'High-tier recruit reward',
       },
       {
         type: 'djinn',
-        ids: ['celestial'],
+        ids: ['tempest'],
         notes: 'Tower-exclusive Jupiter Djinn',
       },
     ],
   },
 ] as const;
-

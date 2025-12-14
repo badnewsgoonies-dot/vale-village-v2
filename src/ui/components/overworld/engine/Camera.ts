@@ -83,12 +83,26 @@ export class Camera {
   }
 
   /**
+   * Render-snapped camera position (integer pixels) to avoid subpixel jitter.
+   * Keeps internal `x/y` as floats for smooth following.
+   */
+  getRenderX(): number {
+    return Math.round(this.x);
+  }
+
+  getRenderY(): number {
+    return Math.round(this.y);
+  }
+
+  /**
    * Convert world coordinates to screen coordinates
    */
   worldToScreen(worldX: number, worldY: number): { x: number; y: number } {
+    const renderX = this.getRenderX();
+    const renderY = this.getRenderY();
     return {
-      x: worldX - this.x,
-      y: worldY - this.y,
+      x: worldX - renderX,
+      y: worldY - renderY,
     };
   }
 
@@ -96,9 +110,11 @@ export class Camera {
    * Convert screen coordinates to world coordinates
    */
   screenToWorld(screenX: number, screenY: number): { x: number; y: number } {
+    const renderX = this.getRenderX();
+    const renderY = this.getRenderY();
     return {
-      x: screenX + this.x,
-      y: screenY + this.y,
+      x: screenX + renderX,
+      y: screenY + renderY,
     };
   }
 
@@ -107,9 +123,11 @@ export class Camera {
    * @param factor - 0 = fixed, 1 = moves with camera, values in between create parallax
    */
   getParallaxOffset(factor: number): { x: number; y: number } {
+    const renderX = this.getRenderX();
+    const renderY = this.getRenderY();
     return {
-      x: -this.x * factor,
-      y: -this.y * factor,
+      x: -renderX * factor,
+      y: -renderY * factor,
     };
   }
 
@@ -130,11 +148,13 @@ export class Camera {
    * Get the visible world bounds
    */
   getVisibleBounds(): { left: number; top: number; right: number; bottom: number } {
+    const renderX = this.getRenderX();
+    const renderY = this.getRenderY();
     return {
-      left: this.x,
-      top: this.y,
-      right: this.x + this.viewportWidth,
-      bottom: this.y + this.viewportHeight,
+      left: renderX,
+      top: renderY,
+      right: renderX + this.viewportWidth,
+      bottom: renderY + this.viewportHeight,
     };
   }
 }

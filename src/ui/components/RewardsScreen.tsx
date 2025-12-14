@@ -64,6 +64,12 @@ export function RewardsScreen({
   onContinue,
   onSelectEquipment,
 }: RewardsScreenProps): JSX.Element {
+  const partySize = rewards.rewards.partySize;
+  const xpTotal = rewards.rewards.totalXp;
+  const xpPerUnit = rewards.rewards.xpPerUnit;
+  const xpRemainder = partySize > 0 ? xpTotal - xpPerUnit * partySize : 0;
+  const koUnitsStillGainXp = partySize > 0 && rewards.rewards.survivorCount !== partySize;
+
   // Get surviving party members for the victory display
   const partyMembers = useMemo(() => {
     return team.units.filter(u => u.currentHp > 0).slice(0, 4);
@@ -166,13 +172,23 @@ export function RewardsScreen({
         {/* Rewards Grid (XP + Money) */}
         <div class="rewards-grid">
           {/* XP Gained */}
-          <div class="reward-card" role="article" aria-label={`${rewards.rewards.totalXp} experience points gained`}>
+          <div
+            class="reward-card"
+            role="article"
+            aria-label={`${xpPerUnit} experience points gained per party member`}
+          >
             <div class="reward-icon" aria-hidden="true">XP</div>
             <div class="reward-details">
               <div class="reward-label">Experience</div>
-              <div class="reward-value highlight">+{rewards.rewards.totalXp} XP</div>
-              {team.units.length > 0 && (
-                <div class="reward-subtext">Split among {team.units.length} party members</div>
+              <div class="reward-value highlight">
+                +{xpPerUnit} XP{partySize > 1 ? ' each' : ''}
+              </div>
+              {partySize > 1 && (
+                <div class="reward-subtext">
+                  Total +{xpTotal} XP · split among {partySize}
+                  {xpRemainder > 0 ? ' (rounded down)' : ''}
+                  {koUnitsStillGainXp ? " · KO'd members still gain XP" : ''}
+                </div>
               )}
             </div>
           </div>
