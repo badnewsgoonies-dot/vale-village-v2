@@ -442,6 +442,13 @@
   align-items: center;
 }
 
+.djinn-acquired-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 12px;
+}
+
 .djinn-name {
   font-size: clamp(1.1rem, 1.8vw, 1.3rem);
   font-weight: bold;
@@ -459,6 +466,12 @@
   color: #fff;
   font-style: italic;
   margin-top: 0.25rem;
+}
+
+.djinn-hint {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.75);
+  margin-top: 6px;
 }
 
 /* ===== LEVEL UP NOTIFICATION ===== */
@@ -570,10 +583,57 @@
 }
 
 .rewards-container .level-up-abilities {
+  margin-top: 8px;
+  width: 100%;
+  max-width: 280px;
+  text-align: left;
+}
+
+.rewards-container .level-up-abilities-title {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.85);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.rewards-container .level-up-ability-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rewards-container .level-up-ability-item {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  padding: 6px 8px;
+}
+
+.rewards-container .level-up-ability-name {
+  font-size: 12px;
+  color: #fff;
+  font-weight: 700;
+}
+
+.rewards-container .level-up-ability-meta {
   font-size: 10px;
-  color: rgba(255, 255, 255, 0.8);
-  font-style: italic;
+  color: rgba(255, 255, 255, 0.75);
+  margin-top: 2px;
+}
+
+.rewards-container .level-up-ability-desc {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.85);
   margin-top: 4px;
+  line-height: 1.25;
+}
+
+.rewards-container .level-up-abilities-hint {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.7);
+  font-style: italic;
+  margin-top: 8px;
 }
 
 /* ===== CONTINUE BUTTON ===== */
@@ -648,4 +708,3 @@
     flex-direction: column;
   }
 }
-

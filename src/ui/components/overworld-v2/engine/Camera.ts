@@ -70,6 +70,14 @@ export class Camera {
     return { x: worldX - this.x, y: worldY - this.y };
   }
 
+  /**
+   * Pixel-snapped world→screen transform.
+   * Prefer this for pixel-art sprites to avoid subpixel shimmer.
+   */
+  worldToScreenSnapped(worldX: number, worldY: number): { x: number; y: number } {
+    return { x: Math.round(worldX - this.x), y: Math.round(worldY - this.y) };
+  }
+
   screenToWorld(screenX: number, screenY: number): { x: number; y: number } {
     return { x: screenX + this.x, y: screenY + this.y };
   }
@@ -103,4 +111,3 @@ export class Camera {
     };
   }
 }
-

@@ -46,6 +46,11 @@ export class SkyLayer implements Layer {
   private cloudOffset: number = 0;
   private skyHeight: number = 256; // Height of sky area (4/10 of 640px)
 
+  /** Cached sky gradient colors */
+  private cachedColors: SkyColors = { top: '#5090c0', bottom: '#90c8e8' };
+  /** Dirty flag - true when time of day changes require gradient recalculation */
+  private skyDirty: boolean = true;
+
   constructor() {
     this.initClouds();
   }
@@ -65,7 +70,11 @@ export class SkyLayer implements Layer {
   }
 
   setTimeOfDay(time: number): void {
-    this.timeOfDay = time % 1;
+    const newTime = time % 1;
+    if (newTime !== this.timeOfDay) {
+      this.timeOfDay = newTime;
+      this.skyDirty = true; // Mark gradient for recalculation
+    }
   }
 
   update(dtMs: number): void {
@@ -83,13 +92,16 @@ export class SkyLayer implements Layer {
   render(ctx: CanvasRenderingContext2D, _camera: Camera): void {
     const width = ctx.canvas.width;
 
-    // Get interpolated sky colors
-    const colors = this.getSkyColors();
+    // Only recalculate sky colors when time of day changes
+    if (this.skyDirty) {
+      this.cachedColors = this.getSkyColors();
+      this.skyDirty = false;
+    }
 
-    // Draw sky gradient
+    // Draw sky gradient using cached colors
     const gradient = ctx.createLinearGradient(0, 0, 0, this.skyHeight);
-    gradient.addColorStop(0, colors.top);
-    gradient.addColorStop(1, colors.bottom);
+    gradient.addColorStop(0, this.cachedColors.top);
+    gradient.addColorStop(1, this.cachedColors.bottom);
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, width, this.skyHeight);
 

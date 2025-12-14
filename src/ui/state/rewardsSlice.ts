@@ -17,6 +17,7 @@ export interface RewardsSlice {
   lastBattleRewards: RewardDistribution | null;
   showRewards: boolean;
   lastBattleEncounterId: string | null; // Store encounterId for post-battle dialogue
+  lastBattleNewDjinnIds: readonly string[];
 
   processVictory: (battle: BattleState) => void;
   claimRewards: () => void;
@@ -33,6 +34,7 @@ export const createRewardsSlice: StateCreator<
   lastBattleRewards: null,
   showRewards: false,
   lastBattleEncounterId: null,
+  lastBattleNewDjinnIds: [],
 
   processVictory: (battle) => {
     const result = rewardsServiceProcessVictory(battle);
@@ -40,8 +42,25 @@ export const createRewardsSlice: StateCreator<
     // Capture encounterId before clearing battle state
     const encounterId = battle.encounterId || battle.meta?.encounterId || null;
 
-    const { setTeam } = get();
-    setTeam(result.updatedTeam);
+    const { team, setTeam, updateTeam, updateTeamUnits } = get();
+    const newDjinnIds =
+      team?.collectedDjinn.filter(
+        (djinnId) => !battle.playerTeam.collectedDjinn.includes(djinnId)
+      ) ?? [];
+    // IMPORTANT: Do not overwrite the whole team object here.
+    // Story progression may have granted Djinn / recruits on encounter completion,
+    // and `result.updatedTeam` is derived from the battle snapshot.
+    if (team) {
+      updateTeamUnits(result.updatedTeam.units);
+      updateTeam({
+        djinnTrackers: result.updatedTeam.djinnTrackers,
+        currentTurn: result.updatedTeam.currentTurn,
+        activationsThisTurn: result.updatedTeam.activationsThisTurn,
+        djinnStates: result.updatedTeam.djinnStates,
+      });
+    } else {
+      setTeam(result.updatedTeam);
+    }
 
     // NOTE: Unit recruitment is now handled via post-battle recruitment dialogues
     // All recruitment is narrative-driven via dialogue effects (recruitUnit)
@@ -49,6 +68,7 @@ export const createRewardsSlice: StateCreator<
     set({
       lastBattleRewards: result.distribution,
       lastBattleEncounterId: encounterId, // Store for post-battle dialogue
+      lastBattleNewDjinnIds: newDjinnIds,
       mode: 'rewards', // Set mode instead of showRewards
       showRewards: true,
     });
@@ -75,7 +95,7 @@ export const createRewardsSlice: StateCreator<
 
     // Clear rewards but keep encounterId until handleRewardsContinue uses it
     // Don't clear lastBattleEncounterId here - handleRewardsContinue needs it
-    set({ lastBattleRewards: null, showRewards: false });
+    set({ lastBattleRewards: null, showRewards: false, lastBattleNewDjinnIds: [] });
     // Don't set mode here - let handleRewardsContinue handle mode transition
     // (it needs to check for recruitment dialogue first)
   },

@@ -92,7 +92,7 @@ test.describe('Game Flow Smoke Tests', () => {
     await page.keyboard.press('ArrowDown'); // Compendium -> Battle Tower
 
     // Verify Battle Tower is selected
-    const battleTowerOption = page.locator('.main-menu-option').filter({ hasText: 'Battle Tower' });
+    const battleTowerOption = page.locator('.main-menu-option').filter({ hasText: /Battle Tower/i });
     await expect(battleTowerOption).toHaveClass(/selected/);
 
     // Press Enter to start
@@ -101,12 +101,8 @@ test.describe('Game Flow Smoke Tests', () => {
     // Should navigate away from main menu to team-select screen
     await expect(page.locator('.main-menu')).not.toBeVisible({ timeout: 5000 });
 
-    // Team select screen shows either the team selection UI or "No battle pending" (if no roster)
-    // Since we haven't started a New Game, we may see the fallback message
-    const teamSelectUI = page.locator('.prebattle-v2-overlay');
-    const fallbackMessage = page.getByText('No battle pending');
-    // Either the team select UI or the fallback should be visible
-    await expect(teamSelectUI.or(fallbackMessage)).toBeVisible({ timeout: 5000 });
+    // Tower now routes to the tower hub. Verify we land there.
+    await expect(page.locator('.tower-hub')).toBeVisible({ timeout: 5000 });
   });
 
   test('should return to title screen with Escape from menu', async ({ page }) => {
@@ -156,6 +152,9 @@ test.describe('Visual Regression', () => {
     await page.goto('/');
     await expect(page.locator('.title-screen')).toBeVisible();
 
+    // Hide floating debug widgets to keep snapshots stable.
+    await page.addStyleTag({ content: '.toolbox-root{display:none !important;}' });
+
     // Take screenshot for visual comparison
     await expect(page).toHaveScreenshot('title-screen.png', {
       maxDiffPixels: 100,
@@ -166,6 +165,9 @@ test.describe('Visual Regression', () => {
     await page.goto('/');
     await page.keyboard.press('Enter');
     await expect(page.locator('.main-menu')).toBeVisible();
+
+    // Hide floating debug widgets to keep snapshots stable.
+    await page.addStyleTag({ content: '.toolbox-root{display:none !important;}' });
 
     await expect(page).toHaveScreenshot('main-menu.png', {
       maxDiffPixels: 100,

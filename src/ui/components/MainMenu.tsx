@@ -3,12 +3,13 @@
  * Menu screen with New Game, Continue, Compendium options
  */
 
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import { useGameStore } from '../../store/gameStore';
 import { useStore } from '../../ui/state/store';
 import { ADEPT } from '../../data/definitions/units';
 import { createUnit } from '../../core/models/Unit';
 import { createTeam } from '../../core/models/Team';
+import { collectDjinn, equipDjinn } from '../../core/services/DjinnService';
 import './MainMenu.css';
 
 // Character sprites flanking the menu
@@ -51,7 +52,12 @@ export function MainMenu() {
 
   // Ensure selectedIndex is within bounds
   const safeSelectedIndex = Math.min(selectedIndex, enabledOptions.length - 1);
-  const currentOption = enabledOptions[safeSelectedIndex] || enabledOptions[0];
+
+  // Avoid stale key-handler closures by reading the latest selection from refs.
+  const enabledOptionsRef = useRef(enabledOptions);
+  enabledOptionsRef.current = enabledOptions;
+  const selectedIndexRef = useRef(selectedIndex);
+  selectedIndexRef.current = selectedIndex;
 
   useEffect(() => {
     // Reset selected index when enabled options change
@@ -68,12 +74,16 @@ export function MainMenu() {
 
         if (event.key === 'ArrowUp') {
           setSelectedIndex((prev) => {
-            const newIndex = prev > 0 ? prev - 1 : enabledOptions.length - 1;
+            const options = enabledOptionsRef.current;
+            const newIndex = prev > 0 ? prev - 1 : Math.max(0, options.length - 1);
+            selectedIndexRef.current = newIndex;
             return newIndex;
           });
         } else {
           setSelectedIndex((prev) => {
-            const newIndex = prev < enabledOptions.length - 1 ? prev + 1 : 0;
+            const options = enabledOptionsRef.current;
+            const newIndex = prev < options.length - 1 ? prev + 1 : 0;
+            selectedIndexRef.current = newIndex;
             return newIndex;
           });
         }
@@ -83,8 +93,11 @@ export function MainMenu() {
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault();
         event.stopPropagation();
-        if (currentOption) {
-          handleSelectOption(currentOption.id);
+        const options = enabledOptionsRef.current;
+        const index = Math.min(selectedIndexRef.current, Math.max(0, options.length - 1));
+        const selected = options[index] || options[0];
+        if (selected) {
+          handleSelectOption(selected.id);
         }
         return;
       }
@@ -99,15 +112,25 @@ export function MainMenu() {
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [currentOption, enabledOptions.length, startTransition]);
+  }, [startTransition]);
+
+  const createStarterTeamWithFlint = () => {
+    const isaac = createUnit(ADEPT, 1, 0);
+    addUnitToRoster(isaac);
+
+    let starterTeam = createTeam([isaac]);
+    const collectResult = collectDjinn(starterTeam, 'flint');
+    if (collectResult.ok) {
+      const equipResult = equipDjinn(collectResult.value, 'flint');
+      starterTeam = equipResult.ok ? equipResult.value : collectResult.value;
+    }
+
+    setTeam(starterTeam);
+  };
 
   const handleSelectOption = (optionId: string) => {
     if (optionId === 'new-game') {
-      // Initialize starting team with Isaac (the adept unit)
-      const isaac = createUnit(ADEPT, 1, 0);
-      addUnitToRoster(isaac);
-      const starterTeam = createTeam([isaac]);
-      setTeam(starterTeam);
+      createStarterTeamWithFlint();
       startTransition('overworld'); // Start new game -> go to overworld
     } else if (optionId === 'continue') {
       if (hasSaveFile) {
@@ -120,10 +143,7 @@ export function MainMenu() {
       // Initialize team if none exists (for Battle Tower quick access)
       const store = useStore.getState();
       if (!store.team || store.team.units.length === 0) {
-        const isaac = createUnit(ADEPT, 1, 0);
-        addUnitToRoster(isaac);
-        const starterTeam = createTeam([isaac]);
-        setTeam(starterTeam);
+        createStarterTeamWithFlint();
       }
       // Enter the actual tower system with proper progression
       openTowerFromMainMenu();

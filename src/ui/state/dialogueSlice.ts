@@ -17,6 +17,7 @@ import { collectDjinn, equipDjinn } from '@/core/services/DjinnService';
 export interface DialogueSlice {
   currentDialogueTree: DialogueTree | null;
   currentDialogueState: DialogueState | null;
+  dialogueReturnMode: GameFlowSlice['mode'] | null;
   startDialogueTree: (tree: DialogueTree) => void;
   makeChoice: (choiceId: string) => void;
   advanceCurrentDialogue: () => void;
@@ -27,12 +28,18 @@ export const createDialogueSlice: StateCreator<DialogueSlice & GameFlowSlice & S
   ({
   currentDialogueTree: null,
   currentDialogueState: null,
+  dialogueReturnMode: null,
 
   startDialogueTree: (tree) => {
+    const mode = get().mode;
+    const existingReturnMode = get().dialogueReturnMode;
+    const dialogueReturnMode =
+      mode === 'dialogue' ? existingReturnMode ?? 'overworld' : mode;
     const state = startDialogue(tree);
     set({
       currentDialogueTree: tree,
       currentDialogueState: state,
+      dialogueReturnMode,
       mode: 'dialogue',
     });
   },
@@ -106,11 +113,42 @@ export const createDialogueSlice: StateCreator<DialogueSlice & GameFlowSlice & S
 
   endDialogue: () => {
     const prevMode = get().mode;
+    const activeTreeId = get().currentDialogueTree?.id;
+    const returnMode = get().dialogueReturnMode ?? 'overworld';
+
+    // Treat the Djinn intro tutorial as "seen" even if the player closes it early,
+    // so they don't get stuck in a loop or re-trigger it every session.
+    if (activeTreeId === 'tutorial:djinn-intro') {
+      const store = get();
+      if (typeof store.setStoryFlag === 'function' && store.story.flags.first_djinn_intro_completed !== true) {
+        store.setStoryFlag('first_djinn_intro_completed', true);
+      }
+
+      // Ensure the player keeps the promised starting Djinn even if they close early.
+      const team = store.team;
+      if (team) {
+        let updatedTeam = team;
+        const collectResult = collectDjinn(updatedTeam, 'flint');
+        if (collectResult.ok) {
+          updatedTeam = collectResult.value;
+        }
+        const equipResult = equipDjinn(updatedTeam, 'flint');
+        if (equipResult.ok) {
+          updatedTeam = equipResult.value;
+        }
+        if (updatedTeam !== team) {
+          store.setTeam(updatedTeam);
+        }
+      }
+    }
+
+    const nextMode = prevMode === 'dialogue' ? returnMode : prevMode;
     set({
       currentDialogueTree: null,
       currentDialogueState: null,
-      // Race guard: don't overwrite 'battle' or 'team-select' mode (set by effects)
-      mode: prevMode === 'battle' || prevMode === 'team-select' ? prevMode : 'overworld',
+      dialogueReturnMode: null,
+      // Race guard: if effects already changed mode, preserve that mode.
+      mode: nextMode,
     });
   },
 } as DialogueSlice & GameFlowSlice & StorySlice & SaveSlice & TeamSlice);

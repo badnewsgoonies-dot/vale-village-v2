@@ -66,38 +66,38 @@ function createTestBattleState(overrides: Partial<BattleState> = {}): BattleStat
 
 describe('RewardsService', () => {
   describe('calculateBattleRewards', () => {
-    it('should distribute XP equally among survivors', () => {
+    it('should distribute XP equally among party members', () => {
       // house-01 has 100 XP base (assuming this encounter exists)
-      const rewards = calculateBattleRewards('house-01', 2);
+      const rewards = calculateBattleRewards('house-01', 2, 2);
 
-      expect(rewards.survivorCount).toBe(2);
+      expect(rewards.partySize).toBe(2);
       expect(rewards.xpPerUnit).toBe(Math.floor(rewards.totalXp / 2));
     });
 
-    it('should give all XP to single survivor', () => {
-      const rewards = calculateBattleRewards('house-01', 1);
+    it('should give all XP to a single party member', () => {
+      const rewards = calculateBattleRewards('house-01', 1, 1);
 
-      expect(rewards.survivorCount).toBe(1);
+      expect(rewards.partySize).toBe(1);
       expect(rewards.xpPerUnit).toBe(rewards.totalXp);
     });
 
-    it('should handle no survivors (edge case)', () => {
-      const rewards = calculateBattleRewards('house-01', 0);
+    it('should handle empty party (edge case)', () => {
+      const rewards = calculateBattleRewards('house-01', 0, 0);
 
-      expect(rewards.survivorCount).toBe(0);
+      expect(rewards.partySize).toBe(0);
       expect(rewards.xpPerUnit).toBe(0);
     });
 
     it('should mark allSurvived correctly', () => {
-      const rewardsPartial = calculateBattleRewards('house-01', 2);
+      const rewardsPartial = calculateBattleRewards('house-01', 4, 2);
       expect(rewardsPartial.allSurvived).toBe(false);
 
-      const rewardsFull = calculateBattleRewards('house-01', 4);
+      const rewardsFull = calculateBattleRewards('house-01', 4, 4);
       expect(rewardsFull.allSurvived).toBe(true);
     });
 
     it('should throw for invalid encounter', () => {
-      expect(() => calculateBattleRewards('invalid-encounter-id', 2)).toThrow();
+      expect(() => calculateBattleRewards('invalid-encounter-id', 2, 2)).toThrow();
     });
   });
 
@@ -151,7 +151,7 @@ describe('RewardsService', () => {
   });
 
   describe('distributeRewards', () => {
-    it('should not give XP to KO units', () => {
+    it('should give XP to KO units (party-wide XP split)', () => {
       const team = createTestTeam([
         { currentHp: 50, xp: 0 }, // Alive
         { currentHp: 0, xp: 0 },  // KO'd
@@ -161,6 +161,7 @@ describe('RewardsService', () => {
         totalXp: 100,
         totalGold: 50,
         xpPerUnit: 50,
+        partySize: 2,
         survivorCount: 1,
         allSurvived: false,
         enemiesDefeated: 3,
@@ -171,8 +172,8 @@ describe('RewardsService', () => {
 
       // First unit should have gained XP
       expect(result.updatedTeam.units[0]?.xp).toBeGreaterThan(0);
-      // KO'd unit should have same XP (0)
-      expect(result.updatedTeam.units[1]?.xp).toBe(0);
+      // KO'd unit should also gain XP
+      expect(result.updatedTeam.units[1]?.xp).toBeGreaterThan(0);
     });
 
     it('should not give XP to max level units', () => {
@@ -185,8 +186,9 @@ describe('RewardsService', () => {
         totalXp: 100,
         totalGold: 50,
         xpPerUnit: 50,
+        partySize: 2,
         survivorCount: 2,
-        allSurvived: false,
+        allSurvived: true,
         enemiesDefeated: 3,
         equipmentReward: { type: 'none' as const },
       };
@@ -206,8 +208,9 @@ describe('RewardsService', () => {
         totalXp: 100,
         totalGold: 75,
         xpPerUnit: 100,
+        partySize: 1,
         survivorCount: 1,
-        allSurvived: false,
+        allSurvived: true,
         enemiesDefeated: 3,
         equipmentReward: { type: 'none' as const },
       };
@@ -288,8 +291,9 @@ describe('RewardsService', () => {
         totalXp: 100,
         totalGold: 50,
         xpPerUnit: 50,
+        partySize: 2,
         survivorCount: 2,
-        allSurvived: false,
+        allSurvived: true,
         enemiesDefeated: 3,
         equipmentReward: { type: 'none' as const },
       };
@@ -300,7 +304,7 @@ describe('RewardsService', () => {
       expect(result.levelUps).toHaveLength(0);
     });
 
-    it('should handle team of all KO units', () => {
+    it('should handle team of all KO units (victory edge case)', () => {
       const team = createTestTeam([
         { currentHp: 0 },
         { currentHp: 0 },
@@ -309,7 +313,8 @@ describe('RewardsService', () => {
       const rewards = {
         totalXp: 100,
         totalGold: 50,
-        xpPerUnit: 0,
+        xpPerUnit: 50,
+        partySize: 2,
         survivorCount: 0,
         allSurvived: false,
         enemiesDefeated: 3,
@@ -319,8 +324,8 @@ describe('RewardsService', () => {
       const result = distributeRewards(team, rewards);
 
       // No XP should be distributed
-      expect(result.updatedTeam.units[0]?.xp).toBe(0);
-      expect(result.updatedTeam.units[1]?.xp).toBe(0);
+      expect(result.updatedTeam.units[0]?.xp).toBeGreaterThan(0);
+      expect(result.updatedTeam.units[1]?.xp).toBeGreaterThan(0);
     });
 
     it('should track level-up events with stat gains', () => {
@@ -338,8 +343,9 @@ describe('RewardsService', () => {
         totalXp: 100,
         totalGold: 50,
         xpPerUnit: 100, // Should trigger level up
+        partySize: 1,
         survivorCount: 1,
-        allSurvived: false,
+        allSurvived: true,
         enemiesDefeated: 3,
         equipmentReward: { type: 'none' as const },
       };
@@ -359,7 +365,7 @@ describe('RewardsService', () => {
 
   describe('Currency Scaling', () => {
     it('should include gold from encounter rewards', () => {
-      const rewards = calculateBattleRewards('house-01', 2);
+      const rewards = calculateBattleRewards('house-01', 2, 2);
 
       // Gold should be defined and non-negative
       expect(rewards.totalGold).toBeGreaterThanOrEqual(0);
@@ -372,8 +378,9 @@ describe('RewardsService', () => {
         totalXp: 100,
         totalGold: 123,
         xpPerUnit: 100,
+        partySize: 1,
         survivorCount: 1,
-        allSurvived: false,
+        allSurvived: true,
         enemiesDefeated: 3,
         equipmentReward: { type: 'none' as const },
       };

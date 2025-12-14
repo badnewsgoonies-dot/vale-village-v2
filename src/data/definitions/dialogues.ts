@@ -107,6 +107,62 @@ export const DJINN_INTRO_DIALOGUE: DialogueTree = {
   ],
 };
 
+export const TOWER_GUIDE_DIALOGUE: DialogueTree = {
+  id: 'tutorial:tower-guide',
+  name: 'Battle Tower Guide',
+  startNodeId: 'intro',
+  nodes: [
+    {
+      id: 'intro',
+      speaker: 'Tower Guide',
+      portrait: 'elder',
+      text: 'Welcome to the Battle Tower. If the journey feels unclear, I can explain rewards, abilities, and Djinn.',
+      nextNodeId: 'rewards',
+    },
+    {
+      id: 'rewards',
+      speaker: 'Tower Guide',
+      portrait: 'elder',
+      text: 'After every victory you earn XP and Gold. XP is split evenly across your active party, even if someone was knocked out.',
+      nextNodeId: 'abilities',
+    },
+    {
+      id: 'abilities',
+      speaker: 'Tower Guide',
+      portrait: 'elder',
+      text: 'When a unit levels up, they unlock new abilities. You will see the names and details on the Rewards screen.',
+      nextNodeId: 'ability-use',
+    },
+    {
+      id: 'ability-use',
+      speaker: 'Tower Guide',
+      portrait: 'elder',
+      text: 'To use abilities in battle: open Actions → PSYNERGY, then pick the ability and a target.',
+      nextNodeId: 'djinn',
+    },
+    {
+      id: 'djinn',
+      speaker: 'Tower Guide',
+      portrait: 'elder',
+      text: 'Djinn are shared across the whole team. Equip up to three from Pause (Esc) → Djinn Collection (D). They grant bonuses and special Djinn abilities.',
+      nextNodeId: 'tower-rules',
+    },
+    {
+      id: 'tower-rules',
+      speaker: 'Tower Guide',
+      portrait: 'elder',
+      text: "This tower is a practice gauntlet. You can swap loadouts on rest floors, and milestone rewards carry back when you leave. (Run gold is for the tower run only.)",
+      nextNodeId: 'outro',
+    },
+    {
+      id: 'outro',
+      speaker: 'Tower Guide',
+      portrait: 'elder',
+      text: 'If you want the Tower to act as a true catch-up path (campaign XP/gold), tell me and I will tune it.',
+    },
+  ],
+};
+
 export const SHOPKEEPER_DIALOGUE: DialogueTree = {
   id: 'shopkeeper-weapons',
   name: 'Weapon Shop Owner',
@@ -1747,6 +1803,7 @@ export const DIALOGUES: Record<string, DialogueTree> = {
   [VS1_SCENE_POST]: VS1_POST_SCENE,
   // Tutorials
   'tutorial:djinn-intro': DJINN_INTRO_DIALOGUE,
+  'tutorial:tower-guide': TOWER_GUIDE_DIALOGUE,
   // Post-battle celebrations
   ...POST_BATTLE_DIALOGUES,
   // Shopkeeper personalities

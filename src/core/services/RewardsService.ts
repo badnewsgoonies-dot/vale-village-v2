@@ -26,7 +26,8 @@ export function processVictory(
   }
 
   const survivors = battle.playerTeam.units.filter(u => !isUnitKO(u));
-  const rewards = calculateBattleRewards(encounterId, survivors.length);
+  const partySize = battle.playerTeam.units.length;
+  const rewards = calculateBattleRewards(encounterId, partySize, survivors.length);
 
   const distribution = distributeRewards(battle.playerTeam, rewards);
   const equipmentResolution = resolveEquipmentReward(rewards.equipmentReward);
