@@ -10,6 +10,7 @@ import type { Unit } from '../models/Unit';
 import { setFlag, hasFlag } from '../models/story';
 import { collectDjinn } from './DjinnService';
 import { createUnit } from '../models/Unit';
+import { getXpForLevel } from '../algorithms/xp';
 import { STORY_FLAG_TO_DJINN, STORY_FLAG_TO_UNIT } from '../../data/definitions/storyFlags';
 import { UNIT_DEFINITIONS } from '../../data/definitions/units';
 
@@ -253,8 +254,8 @@ export function processStoryFlagForUnit(
   }
 
   // Create unit at current party level (level 1 for Houses 2-3)
-  const recruitedUnit = createUnit(unitDef, currentLevel, 0);
+  const xp = getXpForLevel(currentLevel);
+  const recruitedUnit = createUnit(unitDef, currentLevel, xp);
 
   return { story: updatedStory, recruitedUnit };
 }
-

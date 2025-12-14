@@ -4,7 +4,7 @@ import type { Ability } from '../../data/schemas/AbilitySchema';
 import type { Unit } from '../../core/models/Unit';
 import { canAffordAction, getAbilityManaCost } from '../../core/algorithms/mana';
 import { DJINN_ABILITIES } from '../../data/definitions/djinnAbilities';
-import { getLockedDjinnAbilityMetadataForUnit } from '../../core/algorithms/djinnAbilities';
+import { getDjinnAbilityMetadataForUnit, getLockedDjinnAbilityMetadataForUnit } from '../../core/algorithms/djinnAbilities';
 import { getSetDjinnIds } from '../../core/algorithms/djinn';
 import { useStore } from '../state/store';
 import { DJINN } from '../../data/definitions/djinn';
@@ -193,6 +193,7 @@ function AbilityGrid({
   lockedAbilityIds,
   currentUnit,
   onSelect,
+  onPreview,
 }: {
   abilities: readonly Ability[];
   selectedAbilityId: string | null;
@@ -200,6 +201,7 @@ function AbilityGrid({
   lockedAbilityIds: readonly string[];
   currentUnit: Unit;
   onSelect: (id: string, ability: Ability) => void;
+  onPreview?: (ability: Ability) => void;
 }) {
   // Find current unit's queued action to account for refund when swapping
   const currentQueuedAction = battle.queuedActions[battle.currentQueueIndex];
@@ -239,8 +241,15 @@ function AbilityGrid({
         return (
           <button
             key={ability.id}
-            onClick={() => canAfford && !isLocked && onSelect(ability.id, ability)}
-            disabled={!canAfford || isLocked}
+            data-testid={`battle-ability-${ability.id}`}
+            onMouseEnter={() => onPreview?.(ability)}
+            onFocus={() => onPreview?.(ability)}
+            onClick={() => {
+              onPreview?.(ability);
+              if (canAfford && !isLocked) {
+                onSelect(ability.id, ability);
+              }
+            }}
             style={{
               textAlign: 'left',
               background: isSelected
@@ -378,6 +387,7 @@ export function BattleActionMenu({
   const queueDjinnActivation = useStore((s) => s.queueDjinnActivation);
   const setSummonScreenOpen = useStore((s) => s.setSummonScreenOpen);
   const [selectedDjinnIds, setSelectedDjinnIds] = useState<string[]>([]);
+  const [previewAbility, setPreviewAbility] = useState<Ability | null>(null);
 
   // All hooks must be called before any conditional returns
   const lockedAbilityIds = useMemo(
@@ -385,6 +395,10 @@ export function BattleActionMenu({
     [currentUnit, battle.playerTeam]
   );
   const setDjinnIds = useMemo(() => getSetDjinnIds(battle.playerTeam), [battle.playerTeam]);
+  const djinnAbilityMeta = useMemo(
+    () => (currentUnit ? getDjinnAbilityMetadataForUnit(currentUnit, battle.playerTeam) : []),
+    [currentUnit, battle.playerTeam]
+  );
 
   if (!currentUnit) {
     return (
@@ -429,6 +443,23 @@ export function BattleActionMenu({
   };
 
   if (mode === 'abilities') {
+    const focusedAbility = previewAbility;
+    const focusedManaCost = focusedAbility ? getAbilityManaCost(focusedAbility.id, focusedAbility) : 0;
+    const focusedCanAfford = focusedAbility ? canAffordAction(battle.remainingMana, focusedManaCost) : true;
+    const focusedIsLocked = focusedAbility ? lockedAbilityIds.includes(focusedAbility.id) : false;
+    const focusedDjinnMeta = focusedAbility
+      ? djinnAbilityMeta.find((meta) => meta.abilityId === focusedAbility.id)
+      : undefined;
+    const focusedDjinn = focusedDjinnMeta ? DJINN[focusedDjinnMeta.djinnId] : undefined;
+    const focusedDjinnState = focusedDjinnMeta
+      ? battle.playerTeam.djinnTrackers[focusedDjinnMeta.djinnId]?.state
+      : undefined;
+    const requiredDjinnState = focusedDjinnMeta
+      ? focusedDjinnMeta.compatibility === 'counter'
+        ? 'Standby'
+        : 'Set'
+      : undefined;
+
     return (
       <div
         style={{
@@ -462,6 +493,62 @@ export function BattleActionMenu({
           </button>
         </div>
 
+        <div
+          style={{
+            marginBottom: 10,
+            padding: '8px 10px',
+            background: 'rgba(0,0,0,0.55)',
+            border: '1px solid rgba(255,255,255,0.12)',
+            borderRadius: 6,
+          }}
+        >
+          {!focusedAbility ? (
+            <div style={{ color: '#aaa', fontSize: '0.8rem' }}>Hover an ability to see details.</div>
+          ) : (
+            <>
+              <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, alignItems: 'baseline' }}>
+                <div style={{ color: '#f6e8b1', fontWeight: 800, fontSize: '0.95rem' }}>
+                  {focusedAbility.name}
+                </div>
+                <div style={{ color: '#ffd700', fontWeight: 800, fontSize: '0.8rem' }}>
+                  {focusedManaCost} Mana
+                </div>
+              </div>
+              <div style={{ color: '#aaa', fontSize: '0.75rem', marginTop: 2 }}>
+                {[
+                  (focusedAbility as Record<string, unknown>).element as string | undefined,
+                  (focusedAbility as Record<string, unknown>).type as string | undefined,
+                  (focusedAbility as Record<string, unknown>).targets as string | undefined,
+                ]
+                  .filter(Boolean)
+                  .join(' • ')}
+              </div>
+              {focusedAbility.description && (
+                <div style={{ color: '#ddd', fontSize: '0.8rem', marginTop: 6, lineHeight: 1.2 }}>
+                  {focusedAbility.description}
+                </div>
+              )}
+              {focusedDjinn && (
+                <div style={{ color: '#ce93d8', fontSize: '0.75rem', marginTop: 6 }}>
+                  Djinn: {focusedDjinn.name} ({focusedDjinn.element}, {focusedDjinnMeta?.compatibility}) • State:{' '}
+                  {focusedDjinnState ?? 'Unknown'}
+                  {requiredDjinnState ? ` (requires ${requiredDjinnState})` : ''}
+                </div>
+              )}
+              {(!focusedCanAfford || focusedIsLocked) && (
+                <div style={{ color: '#ffb3b3', fontSize: '0.75rem', marginTop: 6 }}>
+                  {!focusedCanAfford ? `Need ${focusedManaCost} mana (you have ${battle.remainingMana}). ` : null}
+                  {focusedIsLocked && requiredDjinnState
+                    ? `Requires Djinn to be ${requiredDjinnState}.`
+                    : focusedIsLocked
+                      ? 'Unavailable right now.'
+                      : null}
+                </div>
+              )}
+            </>
+          )}
+        </div>
+
         {/* Unit abilities section */}
         {regularAbilities.length > 0 && (
           <>
@@ -475,6 +562,7 @@ export function BattleActionMenu({
               lockedAbilityIds={lockedAbilityIds}
               currentUnit={currentUnit}
               onSelect={onSelectAbility}
+              onPreview={setPreviewAbility}
             />
           </>
         )}
@@ -520,6 +608,7 @@ export function BattleActionMenu({
               lockedAbilityIds={lockedAbilityIds}
               currentUnit={currentUnit}
               onSelect={onSelectAbility}
+              onPreview={setPreviewAbility}
             />
           </div>
         )}
@@ -650,6 +739,7 @@ export function BattleActionMenu({
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <button
           onClick={onSelectAttack}
+          data-testid="battle-action-attack"
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -680,6 +770,7 @@ export function BattleActionMenu({
 
         <button
           onClick={() => onModeChange('abilities')}
+          data-testid="battle-action-psynergy"
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -713,6 +804,7 @@ export function BattleActionMenu({
             onModeChange('summon');
           }}
           disabled={setDjinnIds.length === 0}
+          data-testid="battle-action-summon"
           style={{
             display: 'flex',
             alignItems: 'center',

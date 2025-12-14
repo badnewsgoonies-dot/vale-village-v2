@@ -13,6 +13,7 @@ import { UNIT_DEFINITIONS } from '@/data/definitions/units';
 import { isPreBattleDialogueTree } from '@/data/definitions/preBattleDialogues';
 import { createUnit } from '@/core/models/Unit';
 import { collectDjinn, equipDjinn } from '@/core/services/DjinnService';
+import { getXpForLevel } from '@/core/algorithms/xp';
 
 export interface DialogueSlice {
   currentDialogueTree: DialogueTree | null;
@@ -268,7 +269,8 @@ function applyDialogueEvents(
             ),
           );
 
-          const newUnit = createUnit(unitDef, avgLevel, 0);
+          const xp = getXpForLevel(avgLevel);
+          const newUnit = createUnit(unitDef, avgLevel, xp);
           store.addUnitToRoster(newUnit);
           if (store.setRecruitmentFlag) {
             store.setRecruitmentFlag(unitId, true);

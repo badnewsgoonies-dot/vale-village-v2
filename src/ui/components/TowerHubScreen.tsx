@@ -114,8 +114,9 @@ export function TowerHubScreen(): JSX.Element {
         <section class="tower-card intro">
           <h1>Battle Tower</h1>
           <p>
-            Step into an infinite gauntlet built on the queue battle engine. Assemble any four heroes, keep their HP between fights,
-            and chase your highest floor on this save-independent sandbox.
+            Step into an optional gauntlet built on the queue battle engine. Use your current campaign roster, keep HP between fights,
+            and earn XP and gold to catch up when the main story gets tough. Beat your personal-best floor to unlock milestone rewards
+            like Djinn, recruits, and equipment.
           </p>
           <div class="tower-actions">
             <button class="primary" onClick={handleStartRun}>

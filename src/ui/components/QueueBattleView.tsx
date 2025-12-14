@@ -376,6 +376,7 @@ export function QueueBattleView() {
   const battle = useStore((s) => s.battle);
   const events = useStore((s) => s.events);
   const dequeue = useStore((s) => s.dequeueEvent);
+  const setBattle = useStore((s) => s.setBattle);
   const queueUnitAction = useStore((s) => s.queueUnitAction);
   const clearUnitAction = useStore((s) => s.clearUnitAction);
   const executeQueuedRound = useStore((s) => s.executeQueuedRound);
@@ -392,6 +393,9 @@ export function QueueBattleView() {
   const towerStatus = useStore((s) => s.towerStatus);
   const activeTowerEncounterId = useStore((s) => s.activeTowerEncounterId);
   const getCurrentTowerFloor = useStore((s) => s.getCurrentTowerFloor);
+  const handleTowerBattleCompleted = useStore((s) => s.handleTowerBattleCompleted);
+  const storyFlags = useStore((s) => s.story.flags);
+  const setStoryFlag = useStore((s) => s.setStoryFlag);
   const critCounters = useStore((s) => s.critCounters);
   const critThresholds = useStore((s) => s.critThresholds);
   const critFlash = useStore((s) => s.critFlash);
@@ -418,6 +422,11 @@ export function QueueBattleView() {
   // Selection State
   const [selectedAbilityId, setSelectedAbilityId] = useState<string | null | undefined>(undefined);
   const [menuMode, setMenuMode] = useState<ActionMenuMode>('root');
+
+  // Tower battle tutorial (Floor 1)
+  const [tutorialOpenedPsynergy, setTutorialOpenedPsynergy] = useState(false);
+  const [tutorialQueuedAction, setTutorialQueuedAction] = useState(false);
+  const [tutorialExecutedRound, setTutorialExecutedRound] = useState(false);
 
   // Post-battle State
   const [showCutscene, setShowCutscene] = useState(false);
@@ -499,6 +508,7 @@ export function QueueBattleView() {
 
     if (!showCutscene && !showVictoryOverlay && mode !== 'rewards' && !lastBattleRewards) {
       processVictory(battle);
+      setScreen('rewards');
     }
   }, [
     battle,
@@ -506,6 +516,7 @@ export function QueueBattleView() {
     mode,
     lastBattleRewards,
     processVictory,
+    setScreen,
     towerStatus,
     activeTowerEncounterId,
     showCutscene,
@@ -683,6 +694,12 @@ export function QueueBattleView() {
   const battleType = towerStatus === 'in-run' ? 'tower' : 'story';
   const locationName = battle?.meta?.encounterId || battle?.encounterId || 'Story Battle';
 
+  const towerTutorialFlagKey = 'tutorial:tower-battle-controls';
+  const showTowerBattleTutorial =
+    battleType === 'tower' &&
+    Boolean(currentFloor?.tags?.includes('tutorial')) &&
+    storyFlags[towerTutorialFlagKey] !== true;
+
   // Determine battle background: tower floor > encounter > default
   const backgroundUrl = useMemo(() => {
     // For tower battles, use floor-based background rotation
@@ -714,9 +731,64 @@ export function QueueBattleView() {
     }
   }
 
+  // --- Tower Battle Tutorial ---
+  useEffect(() => {
+    if (!showTowerBattleTutorial) return;
+    setTutorialOpenedPsynergy(false);
+    setTutorialQueuedAction(false);
+    setTutorialExecutedRound(false);
+  }, [showTowerBattleTutorial, battle?.meta?.encounterId, battle?.encounterId]);
+
+  useEffect(() => {
+    if (!showTowerBattleTutorial) return;
+    if (menuMode === 'abilities') {
+      setTutorialOpenedPsynergy(true);
+    }
+  }, [showTowerBattleTutorial, menuMode]);
+
+  useEffect(() => {
+    if (!showTowerBattleTutorial || !battle) return;
+    if (battle.queuedActions.some((action) => action !== null)) {
+      setTutorialQueuedAction(true);
+    }
+  }, [showTowerBattleTutorial, battle]);
+
+  useEffect(() => {
+    if (!showTowerBattleTutorial) return;
+    if (uiPhase === 'executing') {
+      setTutorialExecutedRound(true);
+    }
+  }, [showTowerBattleTutorial, uiPhase]);
+
+  useEffect(() => {
+    if (!showTowerBattleTutorial) return;
+    if (tutorialOpenedPsynergy && tutorialQueuedAction && tutorialExecutedRound) {
+      setStoryFlag(towerTutorialFlagKey, true);
+    }
+  }, [
+    showTowerBattleTutorial,
+    tutorialOpenedPsynergy,
+    tutorialQueuedAction,
+    tutorialExecutedRound,
+    setStoryFlag,
+    towerTutorialFlagKey,
+  ]);
+
+  const skipTowerBattleTutorial = () => {
+    setStoryFlag(towerTutorialFlagKey, true);
+  };
+
   // --- HANDLERS ---
 
   const handleDefeatResolution = () => {
+    const isTowerBattle = towerStatus === 'in-run' && !!activeTowerEncounterId;
+    if (isTowerBattle && battle) {
+      handleTowerBattleCompleted({ battle, events });
+      setBattle(null, 0);
+      setScreen('tower');
+      return;
+    }
+
     const encounterId = battle ? getEncounterId(battle) : null;
 
     if (encounterId === VS1_ENCOUNTER_ID) {
@@ -734,14 +806,24 @@ export function QueueBattleView() {
   const handleVictoryOverlayComplete = () => {
     setShowVictoryOverlay(false);
 
-    const isTowerBattle = towerStatus === 'in-run' && !!activeTowerEncounterId;
-    if (isTowerBattle) return;
     if (battleOutcome !== 'victory') return;
+
+    const isTowerBattle = towerStatus === 'in-run' && !!activeTowerEncounterId;
+    if (isTowerBattle && battle) {
+      handleTowerBattleCompleted({ battle, events });
+      setScreen('rewards');
+      return;
+    }
 
     if (battle && !lastBattleRewards) {
       processVictory(battle);
-    } else if (lastBattleRewards) {
+      setScreen('rewards');
+      return;
+    }
+
+    if (lastBattleRewards) {
       setMode('rewards');
+      setScreen('rewards');
     }
   };
 
@@ -983,6 +1065,72 @@ export function QueueBattleView() {
         }}
       >
         <ToolboxHelpers title="Battle" position="top-right" actions={toolboxActions} />
+        {showTowerBattleTutorial && (
+          <div
+            data-testid="battle-tutorial"
+            style={{
+              position: 'absolute',
+              top: 10,
+              left: 10,
+              width: 300,
+              background: 'rgba(0,0,0,0.55)',
+              border: '1px solid rgba(255,255,255,0.16)',
+              borderRadius: 8,
+              padding: '10px 12px',
+              zIndex: 120,
+              backdropFilter: 'blur(6px)',
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+              <div style={{ color: '#FFD87F', fontWeight: 800, letterSpacing: 0.5 }}>
+                Tower Battle Tutorial
+              </div>
+              <button
+                onClick={skipTowerBattleTutorial}
+                style={{
+                  background: 'rgba(0,0,0,0.35)',
+                  color: '#eaeaea',
+                  border: '1px solid rgba(255,255,255,0.18)',
+                  borderRadius: 6,
+                  padding: '4px 8px',
+                  cursor: 'pointer',
+                  fontSize: 12,
+                }}
+              >
+                Skip
+              </button>
+            </div>
+
+            <div style={{ color: '#cfcfcf', fontSize: 12, marginBottom: 10 }}>
+              Queue actions for your party, then execute the round.
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6, fontSize: 12 }}>
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                <span style={{ width: 16, textAlign: 'center', color: tutorialOpenedPsynergy ? '#7FFFD4' : '#999' }}>
+                  {tutorialOpenedPsynergy ? '✓' : '□'}
+                </span>
+                <span>Open <span style={{ fontWeight: 800 }}>PSYNERGY</span> to view abilities</span>
+              </div>
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                <span style={{ width: 16, textAlign: 'center', color: tutorialQueuedAction ? '#7FFFD4' : '#999' }}>
+                  {tutorialQueuedAction ? '✓' : '□'}
+                </span>
+                <span>Queue an action (<span style={{ fontWeight: 800 }}>ATTACK</span> → click an enemy)</span>
+              </div>
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                <span style={{ width: 16, textAlign: 'center', color: tutorialExecutedRound ? '#7FFFD4' : '#999' }}>
+                  {tutorialExecutedRound ? '✓' : '□'}
+                </span>
+                <span>Press <span style={{ fontWeight: 800 }}>Execute Round</span></span>
+              </div>
+            </div>
+
+            <div style={{ marginTop: 10, color: '#aaa', fontSize: 11 }}>
+              Tip: Attacks generate +1 mana. Spend mana on PSYNERGY.
+            </div>
+          </div>
+        )}
         {showBattleTips && (
           <div style={{
             position: 'absolute',
@@ -1137,6 +1285,7 @@ export function QueueBattleView() {
               return (
                 <div
                   key={enemy.id}
+                  data-testid={`battle-enemy-${enemy.id}`}
                   onClick={() => isTargetCandidate && handleTargetSelect(enemy.id)}
                   style={{
                     position: 'relative',
@@ -1561,6 +1710,7 @@ export function QueueBattleView() {
           <button
             onClick={handleExecute}
             disabled={!canExecute}
+            data-testid="battle-execute-round"
             style={{
               padding: '10px 14px',
               background: canExecute ? '#FFD54A' : 'rgba(255,255,255,0.08)',

@@ -13,6 +13,7 @@ import { JSX } from 'preact';
 import { useEffect, useMemo } from 'preact/hooks';
 import type { RewardDistribution } from '../../core/models/Rewards';
 import type { Team } from '../../core/models/Team';
+import type { Unit } from '../../core/models/Unit';
 import type { Equipment } from '../../data/schemas/EquipmentSchema';
 import type { Ability } from '../../data/schemas/AbilitySchema';
 import { BattleUnitSprite } from './BattleUnitSprite';
@@ -40,6 +41,8 @@ interface RewardsScreenProps {
   rewards: RewardDistribution;
   team: Team;
   newDjinnIds?: readonly string[];
+  bonusEquipment?: readonly Equipment[];
+  bonusRecruits?: readonly Unit[];
   onContinue: () => void;
   onSelectEquipment: (equipment: Equipment) => void;
 }
@@ -52,7 +55,15 @@ function resolveAbility(abilityId: string): Ability | null {
   return ABILITIES[abilityId] ?? DJINN_ABILITIES[abilityId] ?? null;
 }
 
-export function RewardsScreen({ rewards, team, newDjinnIds, onContinue, onSelectEquipment }: RewardsScreenProps): JSX.Element {
+export function RewardsScreen({
+  rewards,
+  team,
+  newDjinnIds,
+  bonusEquipment,
+  bonusRecruits,
+  onContinue,
+  onSelectEquipment,
+}: RewardsScreenProps): JSX.Element {
   // Get surviving party members for the victory display
   const partyMembers = useMemo(() => {
     return team.units.filter(u => u.currentHp > 0).slice(0, 4);
@@ -85,6 +96,8 @@ export function RewardsScreen({ rewards, team, newDjinnIds, onContinue, onSelect
     : rewards.fixedEquipment
       ? [rewards.fixedEquipment]
       : [];
+  const towerBonusEquipment = bonusEquipment ?? [];
+  const towerBonusRecruits = bonusRecruits ?? [];
   const newlyCollectedDjinn = useMemo(
     () => (newDjinnIds ?? []).map((djinnId) => DJINN[djinnId]).filter(isDefined),
     [newDjinnIds]
@@ -190,6 +203,38 @@ export function RewardsScreen({ rewards, team, newDjinnIds, onContinue, onSelect
                   <EquipmentIcon equipment={item} size="small" className="item-icon" />
                   <div class="item-name">{item.name}</div>
                   <div class="item-quantity">x1</div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {towerBonusEquipment.length > 0 && (
+          <section class="items-panel" aria-label="Battle Tower milestone equipment">
+            <h2>TOWER MILESTONE REWARDS</h2>
+            <div class="items-grid">
+              {towerBonusEquipment.map((item) => (
+                <div key={item.id} class="item-card">
+                  <EquipmentIcon equipment={item} size="small" className="item-icon" />
+                  <div class="item-name">{item.name}</div>
+                  <div class="item-quantity">x1</div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {towerBonusRecruits.length > 0 && (
+          <section class="items-panel" aria-label="Battle Tower milestone recruits">
+            <h2>TOWER RECRUITS</h2>
+            <div class="items-grid">
+              {towerBonusRecruits.map((unit) => (
+                <div key={unit.id} class="item-card">
+                  <div class="item-icon">
+                    <BattleUnitSprite unitId={unit.id} state="idle" size="small" />
+                  </div>
+                  <div class="item-name">{unit.name}</div>
+                  <div class="item-quantity">Lv {unit.level}</div>
                 </div>
               ))}
             </div>

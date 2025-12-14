@@ -7,19 +7,23 @@ import type { StateCreator } from 'zustand';
 import type { BattleState } from '../../core/models/BattleState';
 import type { RewardDistribution } from '../../core/models/Rewards';
 import { processVictory as rewardsServiceProcessVictory } from '../../core/services/RewardsService';
+import type { VictoryOptions } from '../../core/services/RewardsService';
 import type { InventorySlice } from './inventorySlice';
 import type { BattleSlice } from './battleSlice';
 import type { TeamSlice } from './teamSlice';
 import type { GameFlowSlice } from './gameFlowSlice';
 import type { Equipment } from '../../data/schemas/EquipmentSchema';
+import type { Unit } from '../../core/models/Unit';
 
 export interface RewardsSlice {
   lastBattleRewards: RewardDistribution | null;
   showRewards: boolean;
   lastBattleEncounterId: string | null; // Store encounterId for post-battle dialogue
   lastBattleNewDjinnIds: readonly string[];
+  lastBattleBonusEquipment: readonly Equipment[];
+  lastBattleBonusRecruits: readonly Unit[];
 
-  processVictory: (battle: BattleState) => void;
+  processVictory: (battle: BattleState, options?: VictoryOptions & { preserveBonusRewards?: boolean }) => void;
   claimRewards: () => void;
   setShowRewards: (visible: boolean) => void;
   selectEquipmentChoice: (equipment: Equipment) => void;
@@ -35,12 +39,18 @@ export const createRewardsSlice: StateCreator<
   showRewards: false,
   lastBattleEncounterId: null,
   lastBattleNewDjinnIds: [],
+  lastBattleBonusEquipment: [],
+  lastBattleBonusRecruits: [],
 
-  processVictory: (battle) => {
-    const result = rewardsServiceProcessVictory(battle);
+  processVictory: (battle, options) => {
+    const result = rewardsServiceProcessVictory(battle, {
+      includeEquipment: options?.includeEquipment,
+      resetDjinn: options?.resetDjinn,
+    });
     
     // Capture encounterId before clearing battle state
     const encounterId = battle.encounterId || battle.meta?.encounterId || null;
+    const preserveBonusRewards = options?.preserveBonusRewards ?? false;
 
     const { team, setTeam, updateTeam, updateTeamUnits } = get();
     const newDjinnIds =
@@ -69,6 +79,12 @@ export const createRewardsSlice: StateCreator<
       lastBattleRewards: result.distribution,
       lastBattleEncounterId: encounterId, // Store for post-battle dialogue
       lastBattleNewDjinnIds: newDjinnIds,
+      ...(preserveBonusRewards
+        ? {}
+        : {
+            lastBattleBonusEquipment: [],
+            lastBattleBonusRecruits: [],
+          }),
       mode: 'rewards', // Set mode instead of showRewards
       showRewards: true,
     });
@@ -95,7 +111,13 @@ export const createRewardsSlice: StateCreator<
 
     // Clear rewards but keep encounterId until handleRewardsContinue uses it
     // Don't clear lastBattleEncounterId here - handleRewardsContinue needs it
-    set({ lastBattleRewards: null, showRewards: false, lastBattleNewDjinnIds: [] });
+    set({
+      lastBattleRewards: null,
+      showRewards: false,
+      lastBattleNewDjinnIds: [],
+      lastBattleBonusEquipment: [],
+      lastBattleBonusRecruits: [],
+    });
     // Don't set mode here - let handleRewardsContinue handle mode transition
     // (it needs to check for recruitment dialogue first)
   },

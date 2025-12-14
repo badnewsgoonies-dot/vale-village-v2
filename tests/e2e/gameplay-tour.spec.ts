@@ -208,4 +208,62 @@ test('Gameplay tour (screens + overworld)', async ({ page }) => {
   // A second shot a few seconds later helps catch sprite/camera jitter and overlays.
   await page.waitForTimeout(4_000);
   await shot(page, '16-battle-late.png');
+
+  // --- Play the battle to completion (basic attacks) ---
+  const rewardsScreen = page.locator('.rewards-screen');
+  const tutorialSkip = page.locator('[data-testid="battle-tutorial"] button').filter({ hasText: /^Skip$/i });
+  if (await tutorialSkip.isVisible({ timeout: 1_000 }).catch(() => false)) {
+    await tutorialSkip.click();
+    await page.waitForTimeout(300);
+  }
+
+  const executeButton = page.locator('[data-testid="battle-execute-round"]');
+  const attackButton = page.locator('[data-testid="battle-action-attack"]');
+  const firstEnemy = page.locator('[data-testid^="battle-enemy-"]').first();
+
+  for (let round = 0; round < 20; round++) {
+    if (await rewardsScreen.isVisible({ timeout: 300 }).catch(() => false)) break;
+
+    // Queue actions until the execute button switches to "Execute Round".
+    for (let i = 0; i < 8; i++) {
+      const label = (await executeButton.innerText()).trim();
+      if (/^Execute Round$/i.test(label)) break;
+      if (/Executing/i.test(label)) {
+        await page.waitForTimeout(250);
+        continue;
+      }
+
+      await attackButton.click();
+      await firstEnemy.click();
+      await page.waitForTimeout(120);
+    }
+
+    if (await rewardsScreen.isVisible({ timeout: 300 }).catch(() => false)) break;
+
+    // Execute the round if ready.
+    if (/^Execute Round$/i.test((await executeButton.innerText()).trim())) {
+      await executeButton.click();
+    }
+
+    // Wait until either rewards screen appears or battle returns to planning.
+    await Promise.race([
+      rewardsScreen.waitFor({ state: 'visible', timeout: 25_000 }),
+      page.waitForFunction(() => {
+        const btn = document.querySelector('[data-testid=\"battle-execute-round\"]');
+        if (!btn) return false;
+        const text = btn.textContent ?? '';
+        return !text.includes('Executing');
+      }, { timeout: 25_000 }),
+    ]);
+  }
+
+  await expect(rewardsScreen).toBeVisible({ timeout: 30_000 });
+  await page.waitForTimeout(900);
+  await shot(page, '17-rewards.png');
+
+  // Continue back to Tower Hub
+  await page.keyboard.press('Enter');
+  await expect(page.locator('.tower-hub')).toBeVisible({ timeout: 20_000 });
+  await page.waitForTimeout(800);
+  await shot(page, '18-tower-after-rewards.png');
 });
