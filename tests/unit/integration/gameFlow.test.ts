@@ -9,6 +9,9 @@ import { UNIT_DEFINITIONS } from '../../../src/data/definitions/units';
 import { ENEMIES, GARET_ENEMY } from '../../../src/data/definitions/enemies';
 import { createUnit, calculateMaxHp } from '../../../src/core/models/Unit';
 import { createTeam } from '../../../src/core/models/Team';
+import { startBattle } from '../../../src/core/services/BattleService';
+import { executeRound, queueAction } from '../../../src/core/services/QueueBattleService';
+import { enemyToUnit } from '../../../src/core/utils/enemyToUnit';
 import type { Team } from '../../../src/core/models/Team';
 import type { Unit } from '../../../src/core/models/Unit';
 import { makePRNG } from '../../../src/core/random/prng';
@@ -100,14 +103,17 @@ describe('Integration: VS1 Balance Check', () => {
     expect(garetEnemy.id).toBe('garet-enemy');
 
     // War Mage base HP: 80, growth: 15, level 2 = 80 + 15 = 95
-    // New multiplier: 1.5x = 142.5, rounds to ~143
-    expect(garetEnemy.stats.hp).toBeLessThanOrEqual(150);
-    expect(garetEnemy.stats.hp).toBeGreaterThanOrEqual(140);
+    // VS1 tutorial tuning: boosted, but still beatable with basic attacks.
+    expect(garetEnemy.stats.hp).toBeLessThanOrEqual(140);
+    expect(garetEnemy.stats.hp).toBeGreaterThanOrEqual(130);
 
     // War Mage base ATK: 10, growth: 2, level 2 = 10 + 2 = 12
-    // New bonus: +2 = 14
-    expect(garetEnemy.stats.atk).toBeLessThanOrEqual(15);
-    expect(garetEnemy.stats.atk).toBeGreaterThanOrEqual(13);
+    // VS1 tutorial tuning: keep damage reasonable.
+    expect(garetEnemy.stats.atk).toBeLessThanOrEqual(13);
+    expect(garetEnemy.stats.atk).toBeGreaterThanOrEqual(11);
+
+    // VS1 tutorial: enemy should not have high-damage mana abilities (players start at 1 mana).
+    expect(garetEnemy.abilities.map(a => a.id)).toEqual(['strike']);
   });
 
   it('should allow player to deal meaningful damage to Garet', () => {
@@ -129,6 +135,38 @@ describe('Integration: VS1 Balance Check', () => {
     // Allow some margin for rough damage calculation
     expect(turnsToKill).toBeLessThanOrEqual(20); // Reasonable upper bound
     expect(turnsToKill).toBeGreaterThanOrEqual(3); // Not too easy
+  });
+
+  it('should be winnable for a new-game Adept using only basic attacks', () => {
+    const adeptDef = UNIT_DEFINITIONS['adept'];
+    expect(adeptDef).toBeDefined();
+
+    const playerUnit = createUnit(adeptDef!, 1, 0);
+    const team = createTestTeam([playerUnit]);
+    const enemyUnit = enemyToUnit(GARET_ENEMY);
+
+    const rng = makePRNG(1337);
+    const battleStart = startBattle(team, [enemyUnit], rng);
+    expect(battleStart.ok).toBe(true);
+    if (!battleStart.ok) return;
+
+    let state = battleStart.value;
+    const maxRounds = 20;
+    for (let round = 0; round < maxRounds && state.status === 'ongoing'; round++) {
+      const targetId = state.enemies.find(e => e.currentHp > 0)?.id;
+      expect(targetId).toBeDefined();
+      if (!targetId) break;
+
+      const queued = queueAction(state, playerUnit.id, null, [targetId]);
+      expect(queued.ok).toBe(true);
+      if (!queued.ok) return;
+
+      const result = executeRound(queued.value, rng);
+      state = result.state;
+    }
+
+    expect(state.status).toBe('PLAYER_VICTORY');
+    expect(state.playerTeam.units[0]?.currentHp ?? 0).toBeGreaterThan(0);
   });
 });
 
