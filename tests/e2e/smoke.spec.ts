@@ -86,10 +86,13 @@ test.describe('Game Flow Smoke Tests', () => {
     await expect(page.locator('.main-menu')).toBeVisible();
 
     // Navigate to Battle Tower option
-    // Menu order: New Game (selected), Continue (disabled/skipped), Compendium, Battle Tower
-    // Enabled options: New Game(0), Compendium(1), Battle Tower(2)
-    await page.keyboard.press('ArrowDown'); // New Game -> Compendium (skips disabled Continue)
-    await page.keyboard.press('ArrowDown'); // Compendium -> Battle Tower
+    // Menu order: New Game, Continue (disabled), Shop, Compendium, Settings, How to Play, Battle Tower
+    // Enabled options: New Game(0), Shop(1), Compendium(2), Settings(3), How to Play(4), Battle Tower(5)
+    await page.keyboard.press('ArrowDown'); // New Game -> Shop
+    await page.keyboard.press('ArrowDown'); // Shop -> Compendium
+    await page.keyboard.press('ArrowDown'); // Compendium -> Settings
+    await page.keyboard.press('ArrowDown'); // Settings -> How to Play
+    await page.keyboard.press('ArrowDown'); // How to Play -> Battle Tower
 
     // Verify Battle Tower is selected
     const battleTowerOption = page.locator('.main-menu-option').filter({ hasText: /Battle Tower/i });
