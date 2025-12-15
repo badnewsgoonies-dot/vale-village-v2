@@ -18,10 +18,12 @@ import { ToolboxHelpers } from './ui/components/debug/ToolboxHelpers';
 
 // Wrapper that reads team-select props from V1 store
 const TeamSelectWrapper: FunctionComponent = () => {
-  const { pendingBattleEncounterId, confirmBattleTeam, returnToOverworld } = useStore((s) => ({
+  const { pendingBattleEncounterId, confirmBattleTeam, setPendingBattle, setMode, towerEntryContext } = useStore((s) => ({
     pendingBattleEncounterId: s.pendingBattleEncounterId,
     confirmBattleTeam: s.confirmBattleTeam,
-    returnToOverworld: s.returnToOverworld,
+    setPendingBattle: s.setPendingBattle,
+    setMode: s.setMode,
+    towerEntryContext: s.towerEntryContext,
   }));
   const startTransition = useGameStore((s) => s.startTransition);
 
@@ -31,8 +33,13 @@ const TeamSelectWrapper: FunctionComponent = () => {
   };
 
   const handleCancel = () => {
-    returnToOverworld();
-    startTransition('menu');
+    setPendingBattle(null);
+    if (towerEntryContext) {
+      setMode('tower');
+      startTransition('tower');
+    } else {
+      startTransition('overworld');
+    }
   };
 
   if (!pendingBattleEncounterId) {
@@ -115,15 +122,17 @@ const RewardsWrapper: FunctionComponent = () => {
 
 // Wrapper that reads shop props from V1 store
 const ShopWrapper: FunctionComponent = () => {
-  const { currentShopId, returnToOverworld } = useStore((s) => ({
+  const { currentShopId, shopEntryContext, exitShop } = useStore((s) => ({
     currentShopId: s.currentShopId,
-    returnToOverworld: s.returnToOverworld,
+    shopEntryContext: s.shopEntryContext,
+    exitShop: s.exitShop,
   }));
   const startTransition = useGameStore((s) => s.startTransition);
 
   const handleClose = () => {
-    returnToOverworld();
-    startTransition('overworld');
+    const entryContext = shopEntryContext;
+    exitShop();
+    startTransition(entryContext === 'menu' ? 'menu' : 'overworld');
   };
 
   if (!currentShopId) {
@@ -197,7 +206,7 @@ const App: FunctionComponent = () => {
   // Sync V1 store mode to V2 gameStore screen
   useStoreSync();
 
-  const { screen, modal, isTransitioning, setScreen, startTransition, openModal, closeModal } = useGameStore(
+  const { screen, modal, isTransitioning, setScreen, startTransition, openModal, closeModal, closeCompendium } = useGameStore(
     (state: GameStore) => ({
       screen: state.flow.screen,
       modal: state.flow.modal,
@@ -206,6 +215,7 @@ const App: FunctionComponent = () => {
       startTransition: state.startTransition,
       openModal: state.openModal,
       closeModal: state.closeModal,
+      closeCompendium: state.closeCompendium,
     }),
     shallow
   );
@@ -280,7 +290,7 @@ const App: FunctionComponent = () => {
       case 'menu':
         return <MainMenu />;
       case 'compendium':
-        return <CompendiumScreen onClose={() => startTransition('menu')} />;
+        return <CompendiumScreen onClose={closeCompendium} />;
       case 'team-select':
         return <TeamSelectWrapper />;
       case 'rewards':

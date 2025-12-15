@@ -9,6 +9,8 @@ export interface FlowState {
     screen: ScreenType;
     modal: ModalType | null;
     isTransitioning: boolean;
+    compendiumReturnTo: { screen: ScreenType; modal: ModalType | null } | null;
+    shopEntryContext: 'menu' | 'overworld' | null;
 }
 
 export type BattlePhase = 'idle' | 'playerTurn' | 'enemyTurn' | 'victory' | 'defeat';
@@ -82,10 +84,15 @@ export interface PlayerData {
 
 export interface GameSlice {
     flow: FlowState;
+    shopEntryContext: FlowState['shopEntryContext'];
     setScreen: (screen: ScreenType) => void;
     startTransition: (screen: ScreenType) => void;
     openModal: (modal: ModalType) => void;
     closeModal: () => void;
+    openCompendium: () => void;
+    closeCompendium: () => void;
+    openShopFromMainMenu: () => void;
+    exitShop: () => void;
     setTransitioning: (isTransitioning: boolean) => void;
     resetFlow: () => void;
 }
@@ -132,6 +139,8 @@ const initialFlowState: FlowState = {
     screen: 'title',
     modal: null,
     isTransitioning: false,
+    compendiumReturnTo: null,
+    shopEntryContext: null,
 };
 
 const initialPlayerData: PlayerData = {
@@ -148,8 +157,9 @@ const initialPlayerData: PlayerData = {
 /** Counter to track transition requests and cancel stale ones */
 let transitionId = 0;
 
-const createGameSlice = (set: GameStoreSetState, _get: GameStoreGetState): GameSlice => ({
+const createGameSlice = (set: GameStoreSetState, get: GameStoreGetState): GameSlice => ({
     flow: initialFlowState,
+    shopEntryContext: initialFlowState.shopEntryContext,
     setScreen: (screen) =>
         set((state) => {
             state.flow.screen = screen;
@@ -195,6 +205,45 @@ const createGameSlice = (set: GameStoreSetState, _get: GameStoreGetState): GameS
         set((state) => {
             state.flow.modal = null;
         }),
+    openCompendium: () => {
+        set((state) => {
+            state.flow.compendiumReturnTo = {
+                screen: state.flow.screen,
+                modal: state.flow.modal,
+            };
+            state.flow.modal = null;
+        });
+
+        get().setScreen('compendium');
+    },
+    closeCompendium: () => {
+        set((state) => {
+            const returnTo = state.flow.compendiumReturnTo;
+            state.flow.compendiumReturnTo = null;
+            state.flow.screen = returnTo?.screen ?? 'menu';
+            state.flow.modal = returnTo?.modal ?? null;
+        });
+    },
+    openShopFromMainMenu: () => {
+        set((state) => {
+            state.shopEntryContext = 'menu';
+            state.flow.shopEntryContext = 'menu';
+            state.flow.modal = null;
+        });
+
+        get().startTransition('shop');
+    },
+    exitShop: () => {
+        const entryContext = get().shopEntryContext ?? get().flow.shopEntryContext;
+
+        set((state) => {
+            state.shopEntryContext = null;
+            state.flow.shopEntryContext = null;
+            state.flow.modal = null;
+        });
+
+        get().startTransition(entryContext === 'menu' ? 'menu' : 'overworld');
+    },
     setTransitioning: (isTransitioning) =>
         set((state) => {
             state.flow.isTransitioning = isTransitioning;
@@ -202,6 +251,7 @@ const createGameSlice = (set: GameStoreSetState, _get: GameStoreGetState): GameS
     resetFlow: () =>
         set((state) => {
             state.flow = { ...initialFlowState };
+            state.shopEntryContext = initialFlowState.shopEntryContext;
         }),
 });
 
@@ -335,10 +385,15 @@ export const useGameStore = createWithEqualityFn<GameStore>()(
  */
 const extractGameSlice = (state: GameStore): GameSlice => ({
     flow: state.flow,
+    shopEntryContext: state.shopEntryContext,
     setScreen: state.setScreen,
     startTransition: state.startTransition,
     openModal: state.openModal,
     closeModal: state.closeModal,
+    openCompendium: state.openCompendium,
+    closeCompendium: state.closeCompendium,
+    openShopFromMainMenu: state.openShopFromMainMenu,
+    exitShop: state.exitShop,
     setTransitioning: state.setTransitioning,
     resetFlow: state.resetFlow,
 });

@@ -37,12 +37,15 @@ export interface GameFlowSlice {
   lastTrigger: MapTrigger | null;
   currentEncounter: Encounter | null;
   currentShopId: string | null;
+  shopEntryContext: 'menu' | 'overworld' | null;
   preBattlePosition: { mapId: string; position: { x: number; y: number } } | null;
   currentBattleConfig: BattleConfig | null;
   pendingBattleEncounterId: string | null;
   setMode: (mode: GameFlowSlice['mode']) => void;
   setPendingBattle: (encounterId: string | null) => void;
   handleTrigger: (trigger: MapTrigger | null, skipPreBattleDialogue?: boolean) => void;
+  openShopFromMainMenu: () => void;
+  exitShop: () => void;
   confirmBattleTeam: () => void;
   updateBattleConfigSlot: (slotIndex: number, unitId: string | null) => void;
   updateBattleSlotEquipment: (slotIndex: number, equipmentSlot: EquipmentSlot, equipment: Equipment | null) => void;
@@ -115,6 +118,7 @@ export const createGameFlowSlice: StateCreator<
     lastTrigger: null,
     currentEncounter: null,
     currentShopId: null,
+    shopEntryContext: null,
     preBattlePosition: null,
     currentBattleConfig: null,
     pendingBattleEncounterId: null,
@@ -216,6 +220,7 @@ export const createGameFlowSlice: StateCreator<
       set({
         lastTrigger: trigger,
         currentShopId: shopId,
+        shopEntryContext: 'overworld',
         mode: 'shop',
       });
       return;
@@ -254,6 +259,29 @@ export const createGameFlowSlice: StateCreator<
 
     // Default: just track trigger
     set({ lastTrigger: trigger });
+  },
+  openShopFromMainMenu: () => {
+    const shopId = 'vale-armory';
+    set({
+      shopEntryContext: 'menu',
+      currentShopId: shopId,
+      lastTrigger: {
+        id: 'main-menu-shop',
+        type: 'shop',
+        position: { x: 0, y: 0 },
+        data: { shopId },
+      },
+      mode: 'shop',
+    });
+  },
+  exitShop: () => {
+    const entryContext = get().shopEntryContext;
+    set({
+      shopEntryContext: null,
+      currentShopId: null,
+      lastTrigger: null,
+      mode: entryContext === 'menu' ? 'main-menu' : 'overworld',
+    });
   },
   resetLastTrigger: () => set({ lastTrigger: null }),
 

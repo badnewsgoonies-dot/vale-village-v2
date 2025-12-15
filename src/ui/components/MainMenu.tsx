@@ -26,10 +26,13 @@ const MENU_CHARACTERS = {
 
 export function MainMenu() {
   const startTransition = useGameStore((s) => s.startTransition);
+  const openCompendium = useGameStore((s) => s.openCompendium);
   const openModal = useGameStore((s) => s.openModal);
+  const activeModal = useGameStore((s) => s.flow.modal);
   const setTeam = useStore((s) => s.setTeam);
   const addUnitToRoster = useStore((s) => s.addUnitToRoster);
   const openTowerFromMainMenu = useStore((s) => s.openTowerFromMainMenu);
+  const openShopFromMainMenu = useStore((s) => s.openShopFromMainMenu);
   const hasSaveSlot = useStore((s) => s.hasSaveSlot);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [hasSaveFile, setHasSaveFile] = useState(false);
@@ -44,7 +47,10 @@ export function MainMenu() {
   const menuOptions = [
     { id: 'new-game', label: 'New Game', enabled: true },
     { id: 'continue', label: 'Continue', enabled: hasSaveFile },
+    { id: 'shop', label: 'Shop', enabled: true },
     { id: 'compendium', label: 'Compendium', enabled: true },
+    { id: 'settings', label: 'Settings', enabled: true },
+    { id: 'how-to-play', label: 'How to Play', enabled: true },
     { id: 'battle-tower', label: 'Battle Tower (Beta)', enabled: true },
   ];
 
@@ -58,6 +64,8 @@ export function MainMenu() {
   enabledOptionsRef.current = enabledOptions;
   const selectedIndexRef = useRef(selectedIndex);
   selectedIndexRef.current = selectedIndex;
+  const activeModalRef = useRef(activeModal);
+  activeModalRef.current = activeModal;
 
   useEffect(() => {
     // Reset selected index when enabled options change
@@ -68,6 +76,9 @@ export function MainMenu() {
 
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
+      // Don't steal input while a modal is open.
+      if (activeModalRef.current !== null) return;
+
       if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
         event.preventDefault();
         event.stopPropagation();
@@ -137,8 +148,15 @@ export function MainMenu() {
         // Open save menu modal to let user choose which slot to load
         openModal('save');
       }
+    } else if (optionId === 'shop') {
+      openShopFromMainMenu();
+      startTransition('shop');
     } else if (optionId === 'compendium') {
-      startTransition('compendium');
+      openCompendium();
+    } else if (optionId === 'settings') {
+      openModal('settings');
+    } else if (optionId === 'how-to-play') {
+      openModal('help');
     } else if (optionId === 'battle-tower') {
       // Initialize team if none exists (for Battle Tower quick access)
       const store = useStore.getState();

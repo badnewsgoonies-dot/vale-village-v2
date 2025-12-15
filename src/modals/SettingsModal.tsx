@@ -1,4 +1,5 @@
 import { FunctionComponent } from 'preact';
+import { useEffect } from 'preact/hooks';
 import { useSettings } from '../ui/hooks/useSettings';
 import './modals.css';
 
@@ -8,6 +9,20 @@ interface SettingsModalProps {
 
 export const SettingsModal: FunctionComponent<SettingsModalProps> = ({ onClose }) => {
   const { settings, updateSettings, resetSettings } = useSettings();
+
+  useEffect(() => {
+    if (!onClose) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      event.preventDefault();
+      event.stopPropagation();
+      onClose();
+    };
+
+    window.addEventListener('keydown', handleKeyDown, true);
+    return () => window.removeEventListener('keydown', handleKeyDown, true);
+  }, [onClose]);
 
   return (
     <div class="modal-overlay" onClick={onClose}>
