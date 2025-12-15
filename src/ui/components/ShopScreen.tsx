@@ -4,7 +4,7 @@
  */
 
 import { JSX } from 'preact';
-import { useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import { useStore } from '../state/store';
 import { SHOPS } from '../../data/definitions/shops';
 import { EQUIPMENT } from '../../data/definitions/equipment';
@@ -38,6 +38,18 @@ export function ShopScreen({ shopId, onClose }: ShopScreenProps): JSX.Element {
   const storyFlags = useStore((s) => s.story.flags);
 
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      event.preventDefault();
+      event.stopPropagation();
+      onClose();
+    };
+
+    window.addEventListener('keydown', handleKeyDown, true);
+    return () => window.removeEventListener('keydown', handleKeyDown, true);
+  }, [onClose]);
 
   const shop = SHOPS[shopId];
   if (!shop) {

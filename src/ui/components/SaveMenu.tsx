@@ -69,6 +69,18 @@ export function SaveMenu({ onClose }: SaveMenuProps) {
     refreshSlots();
   }, []);
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      event.preventDefault();
+      event.stopPropagation();
+      onClose();
+    };
+
+    window.addEventListener('keydown', handleKeyDown, true);
+    return () => window.removeEventListener('keydown', handleKeyDown, true);
+  }, [onClose]);
+
   const handleSlotClick = (slotIndex: number) => {
     if (action === 'save') {
       handleSave(slotIndex);

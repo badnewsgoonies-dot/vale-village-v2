@@ -26,5 +26,4 @@ export const PLAYER_MOVE_SPEED = 160;
 
 /** Y band where player can walk (on/around the road). */
 export const PLAYER_Y_MIN = ROAD_Y_TOP - 10;  // Can step slightly above road to enter doors
-export const PLAYER_Y_MAX = ROAD_Y_BOTTOM + 10;
-
+export const PLAYER_Y_MAX = ROAD_Y_BOTTOM - 10; // Stay above road bottom

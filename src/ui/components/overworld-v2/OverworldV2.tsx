@@ -9,6 +9,7 @@ import { useGameStore } from '../../../store/gameStore';
 import { DJINN_INTRO_DIALOGUE } from '@/data/definitions/dialogues';
 import { isHouseUnlocked } from '../../../core/services/StoryService';
 import { OverworldEngineV2 } from './engine/OverworldEngineV2';
+import { clampPlayerXToWorldBounds } from './engine/playerBounds';
 import { SkyLayer } from './layers/SkyLayer';
 import { BackgroundLayer } from './layers/BackgroundLayer';
 import { RoadLayer } from './layers/RoadLayer';
@@ -16,7 +17,7 @@ import { VillageLayer } from './layers/VillageLayer';
 import { PlayerLayer } from './layers/PlayerLayer';
 import { InteriorFloorLayer } from '../overworld/layers/InteriorFloorLayer';
 import { InteriorFurnitureLayer } from '../overworld/layers/InteriorFurnitureLayer';
-import { VIEWPORT_HEIGHT, VIEWPORT_WIDTH, ROAD_Y_TOP, ROAD_Y_BOTTOM } from './data/constants';
+import { VIEWPORT_HEIGHT, VIEWPORT_WIDTH, PLAYER_Y_MIN, PLAYER_Y_MAX } from './data/constants';
 import { VILLAGE_WORLD_WIDTH, VILLAGE_BUILDINGS } from './data/villageLayout';
 import { clamp } from './engine/math';
 import type { OverworldSlice } from '../../state/overworldSlice';
@@ -25,10 +26,6 @@ import '../overworld/OverworldCanvas.css';
 
 /** Movement speed in world pixels per second */
 const PLAYER_SPEED = 160;
-
-/** Y-axis movement band (player can step slightly above road to enter doors) */
-const PLAYER_Y_MIN = ROAD_Y_TOP - 10;  // Can step up to doors
-const PLAYER_Y_MAX = ROAD_Y_BOTTOM - 10; // Stay above road bottom
 
 /** Interior room configuration */
 const INTERIOR_ROOM_WIDTH = 320;
@@ -352,6 +349,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
       viewportWidth: width,
       viewportHeight: height,
       worldWidth: VILLAGE_WORLD_WIDTH,
+      worldHeight: height,
     });
 
     // Start with overworld layers
@@ -429,7 +427,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
 
       if (isOverworld) {
         // Overworld bounds
-        newX = clamp(pos.x + dx * speed * dt, 0, VILLAGE_WORLD_WIDTH - 50);
+        newX = clampPlayerXToWorldBounds(pos.x + dx * speed * dt, VILLAGE_WORLD_WIDTH);
         newY = clamp(pos.y + dy * speed * dt, PLAYER_Y_MIN, PLAYER_Y_MAX);
       } else {
         // Interior bounds

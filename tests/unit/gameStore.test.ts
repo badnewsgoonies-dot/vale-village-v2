@@ -3,7 +3,7 @@
  * Tests screen navigation, modals, and battle state
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { useGameStore } from '../../src/store/gameStore';
 
 describe('GameStore', () => {
@@ -14,13 +14,15 @@ describe('GameStore', () => {
         screen: 'title',
         modal: null,
         isTransitioning: false,
+        compendiumReturnTo: null,
+        shopEntryContext: null,
       },
       battleSession: null,
       playerData: {
         team: [],
         inventory: { items: [], capacity: 32 },
         currency: 0,
-        storyFlags: new Set(),
+        storyFlags: [],
         saves: [],
       },
     });
@@ -54,6 +56,93 @@ describe('GameStore', () => {
 
       const state = useGameStore.getState();
       expect(state.flow.screen).toBe('battle');
+    });
+  });
+
+  describe('Compendium Navigation', () => {
+    afterEach(() => {
+      vi.runOnlyPendingTimers();
+      vi.useRealTimers();
+    });
+
+    it('openCompendium() saves screen+modal to compendiumReturnTo', () => {
+      vi.useFakeTimers();
+      const { setScreen, openModal, openCompendium } = useGameStore.getState();
+      setScreen('overworld');
+      openModal('pause');
+
+      openCompendium();
+      expect(useGameStore.getState().flow.compendiumReturnTo).toEqual({ screen: 'overworld', modal: 'pause' });
+      expect(useGameStore.getState().flow.modal).toBeNull();
+
+      vi.advanceTimersByTime(350);
+      expect(useGameStore.getState().flow.screen).toBe('compendium');
+    });
+
+    it('closeCompendium() restores previous screen and reopens modal if needed', () => {
+      vi.useFakeTimers();
+      const { setScreen, openModal, openCompendium, closeCompendium } = useGameStore.getState();
+      setScreen('overworld');
+      openModal('pause');
+      openCompendium();
+      vi.advanceTimersByTime(350);
+      expect(useGameStore.getState().flow.screen).toBe('compendium');
+
+      closeCompendium();
+      expect(useGameStore.getState().flow.compendiumReturnTo).toBeNull();
+      expect(useGameStore.getState().flow.screen).toBe('overworld');
+      expect(useGameStore.getState().flow.modal).toBe('pause');
+    });
+  });
+
+  describe('Shop Navigation', () => {
+    afterEach(() => {
+      vi.runOnlyPendingTimers();
+      vi.useRealTimers();
+    });
+
+    it("openShopFromMainMenu() sets shopEntryContext='menu'", () => {
+      vi.useFakeTimers();
+      const { setScreen, openShopFromMainMenu } = useGameStore.getState();
+      setScreen('menu');
+
+      openShopFromMainMenu();
+      expect(useGameStore.getState().flow.shopEntryContext).toBe('menu');
+      expect(useGameStore.getState().flow.modal).toBeNull();
+
+      vi.advanceTimersByTime(350);
+      expect(useGameStore.getState().flow.screen).toBe('shop');
+    });
+
+    it("exitShop() returns to menu when shopEntryContext='menu'", () => {
+      vi.useFakeTimers();
+      const { setScreen, openShopFromMainMenu, exitShop } = useGameStore.getState();
+      setScreen('menu');
+      openShopFromMainMenu();
+      vi.advanceTimersByTime(350);
+      expect(useGameStore.getState().flow.screen).toBe('shop');
+
+      exitShop();
+      expect(useGameStore.getState().flow.shopEntryContext).toBeNull();
+      vi.advanceTimersByTime(350);
+      expect(useGameStore.getState().flow.screen).toBe('menu');
+    });
+
+    it("exitShop() returns to overworld when shopEntryContext!='menu'", () => {
+      vi.useFakeTimers();
+      useGameStore.setState({
+        flow: {
+          screen: 'shop',
+          modal: null,
+          isTransitioning: false,
+          compendiumReturnTo: null,
+          shopEntryContext: 'overworld',
+        },
+      });
+
+      useGameStore.getState().exitShop();
+      vi.advanceTimersByTime(350);
+      expect(useGameStore.getState().flow.screen).toBe('overworld');
     });
   });
 

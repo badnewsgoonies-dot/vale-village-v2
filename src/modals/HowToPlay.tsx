@@ -1,4 +1,5 @@
 import { FunctionComponent } from 'preact';
+import { useEffect } from 'preact/hooks';
 import './modals.css';
 
 interface HowToPlayProps {
@@ -6,6 +7,18 @@ interface HowToPlayProps {
 }
 
 export const HowToPlay: FunctionComponent<HowToPlayProps> = ({ onClose }) => {
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      event.preventDefault();
+      event.stopPropagation();
+      onClose();
+    };
+
+    window.addEventListener('keydown', handleKeyDown, true);
+    return () => window.removeEventListener('keydown', handleKeyDown, true);
+  }, [onClose]);
+
   return (
     <div class="modal-overlay" onClick={onClose}>
       <div class="modal modal--help" onClick={(e) => e.stopPropagation()}>
