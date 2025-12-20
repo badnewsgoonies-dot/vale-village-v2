@@ -1,7 +1,8 @@
 import { createWithEqualityFn } from 'zustand/traditional';
 import { immer } from 'zustand/middleware/immer';
+import type { Equipment } from '../core/models/Equipment';
 
-export type ScreenType = 'title' | 'overworld' | 'battle' | 'menu' | 'team-select' | 'shop' | 'compendium' | 'rewards' | 'team-management' | 'djinn-collection' | 'tower' | 'credits' | 'epilogue';
+export type ScreenType = 'title' | 'intro' | 'overworld' | 'battle' | 'menu' | 'team-select' | 'shop' | 'compendium' | 'rewards' | 'team-management' | 'djinn-collection' | 'tower' | 'credits' | 'epilogue';
 
 export type ModalType = 'inventory' | 'settings' | 'dialogue' | 'pause' | 'team-management' | 'djinn-collection' | 'save' | 'help';
 
@@ -32,6 +33,8 @@ export interface InventoryItem {
     id: string;
     name: string;
     quantity: number;
+    slot?: Equipment['slot'];
+    statBonus?: Partial<Equipment['statBonus']>;
 }
 
 export interface InventoryState {

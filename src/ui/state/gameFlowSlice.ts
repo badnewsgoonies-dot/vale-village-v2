@@ -33,7 +33,11 @@ export interface GameFlowSlice {
     | 'shop'
     | 'team-select'
     | 'compendium'
-    | 'tower';
+    | 'tower'
+    | 'team-management'
+    | 'djinn-collection'
+    | 'credits'
+    | 'epilogue';
   lastTrigger: MapTrigger | null;
   currentEncounter: Encounter | null;
   currentShopId: string | null;

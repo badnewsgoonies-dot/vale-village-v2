@@ -1,5 +1,5 @@
 import { FunctionComponent, JSX } from 'preact';
-import { useState, useEffect } from 'preact/hooks';
+import { useState, useEffect, useMemo } from 'preact/hooks';
 import { shallow } from 'zustand/shallow';
 
 import { useGameStore, ScreenType, ModalType, GameStore } from './store/gameStore';
@@ -13,7 +13,9 @@ import { PreBattleTeamSelectScreenV2 } from './ui/components/PreBattleTeamSelect
 import { RewardsScreen } from './ui/components/RewardsScreen';
 import { ShopScreen } from './ui/components/ShopScreen';
 import { TowerHubScreen } from './ui/components/TowerHubScreen';
+import { IntroScreen } from './ui/components/IntroScreen';
 import { useStore, store } from './ui/state/store';
+import type { GameFlowSlice } from './ui/state/gameFlowSlice';
 import { ToolboxHelpers } from './ui/components/debug/ToolboxHelpers';
 
 // Wrapper that reads team-select props from V1 store
@@ -151,6 +153,8 @@ import { SaveMenu } from './ui/components/SaveMenu';
 import { HowToPlay } from './modals/HowToPlay';
 import { PartyManagementScreen } from './ui/components/PartyManagementScreen';
 import { DjinnCollectionScreen } from './ui/components/DjinnCollectionScreen';
+import { CreditsScreen } from './ui/components/CreditsScreen';
+import { EpilogueScreen } from './ui/components/EpilogueScreen';
 
 import './index.css';
 
@@ -158,15 +162,152 @@ import './index.css';
 // This ensures tower battles return to tower hub correctly
 function useStoreSync() {
   const mode = useStore((s) => s.mode);
+  const setMode = useStore((s) => s.setMode);
   const towerStatus = useStore((s) => s.towerStatus);
-  const setScreen = useGameStore((s) => s.setScreen);
+  const currentScreen: ScreenType = useGameStore((s) => s.flow.screen);
+  const activeModal = useGameStore((s) => s.flow.modal);
+  const startTransition = useGameStore((s) => s.startTransition);
+  const openModal = useGameStore((s) => s.openModal);
+  const closeModal = useGameStore((s) => s.closeModal);
 
   useEffect(() => {
-    // Only sync tower mode - other modes are handled by their respective components
-    if (mode === 'tower' && (towerStatus === 'in-run' || towerStatus === 'completed' || towerStatus === 'idle')) {
-      setScreen('tower');
+    switch (mode) {
+      case 'tower':
+        if (
+          (towerStatus === 'in-run' || towerStatus === 'completed' || towerStatus === 'idle') &&
+          currentScreen !== 'tower'
+        ) {
+          startTransition('tower');
+        }
+        break;
+      case 'team-select':
+        if (currentScreen !== 'team-select') {
+          startTransition('team-select');
+        }
+        break;
+      case 'battle':
+        if (currentScreen !== 'battle') {
+          startTransition('battle');
+        }
+        break;
+      case 'rewards':
+        if (currentScreen !== 'rewards') {
+          startTransition('rewards');
+        }
+        break;
+      case 'shop':
+        if (currentScreen !== 'shop') {
+          startTransition('shop');
+        }
+        break;
+      case 'compendium':
+        if (currentScreen !== 'compendium') {
+          startTransition('compendium');
+        }
+        break;
+      case 'team-management':
+        if (currentScreen !== 'team-management') {
+          startTransition('team-management');
+        }
+        if (activeModal) {
+          closeModal();
+        }
+        break;
+      case 'djinn-collection':
+        if (currentScreen !== 'djinn-collection') {
+          startTransition('djinn-collection');
+        }
+        if (activeModal) {
+          closeModal();
+        }
+        break;
+      case 'credits':
+        if (currentScreen !== 'credits') {
+          startTransition('credits');
+        }
+        if (activeModal) {
+          closeModal();
+        }
+        break;
+      case 'epilogue':
+        if (currentScreen !== 'epilogue') {
+          startTransition('epilogue');
+        }
+        if (activeModal) {
+          closeModal();
+        }
+        break;
+      case 'overworld':
+        if (currentScreen !== 'overworld') {
+          startTransition('overworld');
+        }
+        if (activeModal) {
+          closeModal();
+        }
+        break;
+      case 'intro':
+        if (currentScreen !== 'intro') {
+          startTransition('intro');
+        }
+        if (activeModal) {
+          closeModal();
+        }
+        break;
+      case 'main-menu':
+        if (currentScreen !== 'menu') {
+          startTransition('menu');
+        }
+        if (activeModal) {
+          closeModal();
+        }
+        break;
+      case 'title-screen':
+        if (currentScreen !== 'title') {
+          startTransition('title');
+        }
+        if (activeModal) {
+          closeModal();
+        }
+        break;
+      case 'dialogue':
+        if (activeModal !== 'dialogue') {
+          openModal('dialogue');
+        }
+        break;
+      default:
+        break;
     }
-  }, [mode, towerStatus, setScreen]);
+  }, [mode, towerStatus, currentScreen, activeModal, startTransition, openModal, closeModal]);
+
+  // Keep the legacy V1 store's mode aligned when navigation is driven by the new gameStore.
+  useEffect(() => {
+    const screenToMode: Partial<Record<ScreenType, GameFlowSlice['mode']>> = {
+      title: 'title-screen',
+      menu: 'main-menu',
+      intro: 'intro',
+      overworld: 'overworld',
+      battle: 'battle',
+      rewards: 'rewards',
+      shop: 'shop',
+      'team-select': 'team-select',
+      compendium: 'compendium',
+      tower: 'tower',
+      'team-management': 'team-management',
+      'djinn-collection': 'djinn-collection',
+      credits: 'credits',
+      epilogue: 'epilogue',
+    };
+
+    const desiredMode = screenToMode[currentScreen];
+    if (desiredMode && desiredMode !== mode) {
+      setMode(desiredMode);
+      return;
+    }
+
+    if (activeModal === 'dialogue' && mode !== 'dialogue') {
+      setMode('dialogue');
+    }
+  }, [activeModal, currentScreen, mode, setMode]);
 }
 
 type DevOverlayProps = {
@@ -206,6 +347,12 @@ const App: FunctionComponent = () => {
   // Sync V1 store mode to V2 gameStore screen
   useStoreSync();
 
+  const { showCredits, setShowCredits, mode, setMode } = useStore((s) => ({
+    showCredits: s.showCredits,
+    setShowCredits: s.setShowCredits,
+    mode: s.mode,
+    setMode: s.setMode,
+  }));
   const { screen, modal, isTransitioning, setScreen, startTransition, openModal, closeModal, closeCompendium } = useGameStore(
     (state: GameStore) => ({
       screen: state.flow.screen,
@@ -230,6 +377,41 @@ const App: FunctionComponent = () => {
   };
 
   const [isDevMode, setIsDevMode] = useState<boolean>(false);
+  const modeMapping = useMemo<Partial<Record<ScreenType, GameFlowSlice['mode']>>>(() => ({
+    title: 'title-screen',
+    intro: 'intro',
+    overworld: 'overworld',
+    battle: 'battle',
+    menu: 'main-menu',
+    compendium: 'compendium',
+    'team-select': 'team-select',
+    rewards: 'rewards',
+    shop: 'shop',
+    tower: 'tower',
+    'team-management': 'team-management',
+    'djinn-collection': 'djinn-collection',
+    credits: 'credits',
+    epilogue: 'epilogue',
+  }), []);
+
+  useEffect(() => {
+    if (!showCredits) {
+      return;
+    }
+    setShowCredits(false);
+    startTransition('credits');
+  }, [showCredits, setShowCredits, startTransition]);
+
+  useEffect(() => {
+    const mappedMode = modeMapping[screen];
+    if (!mappedMode) {
+      return;
+    }
+
+    if (mappedMode !== mode) {
+      setMode(mappedMode);
+    }
+  }, [screen, mode, setMode, modeMapping]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent): void => {
@@ -284,6 +466,8 @@ const App: FunctionComponent = () => {
     switch (screen) {
       case 'title':
         return <TitleScreen />;
+      case 'intro':
+        return <IntroScreen />;
       case 'overworld':
         return <OverworldMap />;
       case 'battle':
@@ -311,6 +495,10 @@ const App: FunctionComponent = () => {
         return <DjinnCollectionScreen onClose={() => startTransition('overworld')} />;
       case 'tower':
         return <TowerHubScreen />;
+      case 'credits':
+        return <CreditsScreen onExit={() => startTransition('epilogue')} />;
+      case 'epilogue':
+        return <EpilogueScreen onComplete={() => startTransition('title')} />;
       default:
         return <TitleScreen />;
     }
