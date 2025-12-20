@@ -49,10 +49,15 @@ export function calculateTurnOrder(
   for (let i = 0; i < turnNumber; i++) {
     tieRng.next(); // Advance for determinism
   }
+  // Precompute deterministic tie values per unit to keep sort comparator pure
+  const tieValues = new Map<string, number>();
+  for (const unit of [...aliveUnits].sort((a, b) => a.id.localeCompare(b.id))) {
+    tieValues.set(unit.id, tieRng.next());
+  }
 
   // Sort priority units: priority desc → effective SPD desc → stable tiebreak (ID sort then RNG)
   // Stable ID sort ensures deterministic tiebreaker order
-  // Deterministic comparator: higher SPD → player before enemy → lexicographic unitId
+  // Deterministic comparator: higher SPD → player before enemy → RNG tiebreaker
   const sortedPriority = [...priorityUnits]
     .sort((a, b) => a.id.localeCompare(b.id)) // Stable sort by ID first
     .sort((a, b) => {
@@ -71,7 +76,7 @@ export function calculateTurnOrder(
         }
 
         // Both same side: stable tiebreaker using deterministic RNG
-        return tieRng.next() - 0.5;
+        return (tieValues.get(a.id) ?? 0) - (tieValues.get(b.id) ?? 0);
       }
       return spdDiff;
     });
@@ -95,7 +100,7 @@ export function calculateTurnOrder(
         }
 
         // Both same side: stable tiebreaker using deterministic RNG
-        return tieRng.next() - 0.5;
+        return (tieValues.get(a.id) ?? 0) - (tieValues.get(b.id) ?? 0);
       }
       return spdDiff;
     });
@@ -104,4 +109,3 @@ export function calculateTurnOrder(
   const allOrdered = [...sortedPriority, ...sortedRegular];
   return allOrdered.map(u => u.id);
 }
-
