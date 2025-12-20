@@ -749,6 +749,7 @@ function resolveValidTargets(
 
   let targetSide: TargetSide = 'enemy'; // Default to enemy targeting
   let targetMode: TargetMode = 'single'; // Default to single-target
+  const isPlayerAction = state.playerTeam.units.some(u => u.id === action.unitId);
 
   if (actor && action.abilityId) {
     // First try to find ability in actor's abilities array
@@ -776,8 +777,23 @@ function resolveValidTargets(
         targetMode = 'single';
       }
     } else {
-      // Ability not found anywhere - this is unexpected, but we can try to infer from ability type
-      // This is a defensive fallback to prevent heals/buffs from targeting enemies
+      // Ability not found anywhere - fall back to the action's original target side
+      // This prevents ally/heal actions from flipping to enemy targeting.
+      const allyIds = new Set(
+        (isPlayerAction ? state.playerTeam.units : state.enemies).map(u => u.id)
+      );
+      const enemyIds = new Set(
+        (isPlayerAction ? state.enemies : state.playerTeam.units).map(u => u.id)
+      );
+
+      if (action.targetIds.some(id => allyIds.has(id))) {
+        targetSide = 'ally';
+      } else if (action.targetIds.some(id => enemyIds.has(id))) {
+        targetSide = 'enemy';
+      } else {
+        targetSide = 'ally';
+      }
+
       console.warn(`[QueueBattle] Ability ${action.abilityId} not found for actor ${actor.id}`);
     }
   } else if (action.abilityId === null) {
@@ -787,8 +803,6 @@ function resolveValidTargets(
   }
 
   // Retarget based on ability's intended target side, NOT action side
-  const isPlayerAction = state.playerTeam.units.some(u => u.id === action.unitId);
-
   if (targetSide === 'ally') {
     // Ability targets allies - retarget to actor's allies
     const allies = isPlayerAction

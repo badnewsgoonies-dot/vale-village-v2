@@ -48,7 +48,7 @@ export const createBattleSlice: StateCreator<
     set({ battle, rngSeed: seed, turnNumber: 0, events: [] }),
 
   startTurnTick: () => {
-    const { battle, rngSeed, turnNumber, events } = get();
+    const { battle, rngSeed, turnNumber } = get();
     if (!battle) return;
 
     // Stable per-turn stream for status effects
@@ -57,11 +57,11 @@ export const createBattleSlice: StateCreator<
     // Call service to process status effects
     const result = battleServiceStartTurnTick(battle, rng);
 
-    set({ battle: result.updatedState, events: [...events, ...result.events] });
+    set((state) => ({ battle: result.updatedState, events: [...state.events, ...result.events] }));
   },
 
   perform: (casterId, abilityId, targetIds) => {
-    const { battle, rngSeed, turnNumber, events } = get();
+    const { battle, rngSeed, turnNumber } = get();
     if (!battle) return;
 
     // Separate substream for actions
@@ -99,7 +99,7 @@ export const createBattleSlice: StateCreator<
         });
       }
 
-      set({ battle: result.value.state, events: [...events, ...newEvents] });
+      set((state) => ({ battle: result.value.state, events: [...state.events, ...newEvents] }));
     } else {
       // Battle continues - advance to next turn
       const rngEndTurn = makePRNG(createRNGStream(rngSeed, turnNumber, RNG_STREAMS.END_TURN));
@@ -108,7 +108,11 @@ export const createBattleSlice: StateCreator<
         console.error('endTurn failed:', endResult.error);
         return;
       }
-      set({ battle: endResult.value, events: [...events, ...newEvents], turnNumber: turnNumber + 1 });
+      set((state) => ({
+        battle: endResult.value,
+        events: [...state.events, ...newEvents],
+        turnNumber: turnNumber + 1,
+      }));
     }
   },
 
@@ -126,7 +130,7 @@ export const createBattleSlice: StateCreator<
   },
 
   performAIAction: () => {
-    const { battle, rngSeed, turnNumber, events } = get();
+    const { battle, rngSeed, turnNumber } = get();
     if (!battle) return;
 
     const allUnits = [...battle.playerTeam.units, ...battle.enemies];
@@ -177,7 +181,7 @@ export const createBattleSlice: StateCreator<
           });
         }
 
-        set({ battle: result.value.state, events: [...events, ...newEvents] });
+        set((state) => ({ battle: result.value.state, events: [...state.events, ...newEvents] }));
 
         // Notify story slice of encounter completion
         if (encounterId) {
@@ -194,7 +198,11 @@ export const createBattleSlice: StateCreator<
           console.error('AI endTurn failed:', endResult.error);
           return;
         }
-        set({ battle: endResult.value, events: [...events, ...newEvents], turnNumber: turnNumber + 1 });
+        set((state) => ({
+          battle: endResult.value,
+          events: [...state.events, ...newEvents],
+          turnNumber: turnNumber + 1,
+        }));
       }
     } catch (error) {
       console.error('AI decision failed:', error);
