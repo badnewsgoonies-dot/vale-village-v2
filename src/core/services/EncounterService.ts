@@ -109,7 +109,21 @@ export function getChapter1Encounters(): readonly string[] {
  */
 export function isBossEncounter(encounterId: string): boolean {
   const encounter = loadEncounter(encounterId);
-  return encounter?.id.includes('boss') ?? false;
+  if (encounter) {
+    return encounter.difficulty === 'boss';
+  }
+
+  const normalized = encounterId.toLowerCase();
+  if (normalized.includes('miniboss') || normalized.includes('mini_boss')) {
+    return false;
+  }
+
+  return (
+    normalized.endsWith('_boss') ||
+    normalized === 'boss' ||
+    normalized.startsWith('boss:') ||
+    normalized.includes(':boss')
+  );
 }
 
 /**
@@ -158,4 +172,3 @@ export function processRandomEncounter(
 
   return selectRandomEncounter(mapEncounterPool, rng);
 }
-
