@@ -718,7 +718,7 @@ export function executeAbility(
 
 /**
  * End turn and advance to next actor
- * Processes status effects and recalculates turn order if needed
+ * Recalculates turn order if needed
  * PERFORMANCE: Uses unitById index for O(1) lookup
  */
 export function endTurn(
@@ -728,7 +728,6 @@ export function endTurn(
   const transaction = new BattleTransaction();
   transaction.begin(state);
   let workingState = state;
-  // Process status effects for current actor
   const currentActorId = workingState.turnOrder[workingState.currentActorIndex];
   if (!currentActorId) {
     // No current actor, just advance
@@ -739,38 +738,6 @@ export function endTurn(
     const updated = updateBattleState(workingState, { currentActorIndex: nextIndex });
     transaction.commit();
     return Ok(updated);
-  }
-
-  const currentActorEntry = workingState.unitById.get(currentActorId);
-  const currentActor = currentActorEntry?.unit;
-
-  if (currentActor) {
-    const statusResult = processStatusEffectTick(currentActor, rng);
-
-    // Update actor in the appropriate array (player or enemy)
-    const isPlayer = currentActorEntry!.isPlayer;
-
-    if (isPlayer) {
-      const updatedPlayerUnits = workingState.playerTeam.units.map(u =>
-        u.id === currentActorId ? statusResult.updatedUnit : u
-      );
-      workingState = updateBattleState(workingState, {
-        playerTeam: { ...workingState.playerTeam, units: updatedPlayerUnits },
-        log: statusResult.messages.length > 0
-          ? [...workingState.log, ...statusResult.messages]
-          : workingState.log,
-      });
-    } else {
-      const updatedEnemies = workingState.enemies.map(u =>
-        u.id === currentActorId ? statusResult.updatedUnit : u
-      );
-      workingState = updateBattleState(workingState, {
-        enemies: updatedEnemies,
-        log: statusResult.messages.length > 0
-          ? [...workingState.log, ...statusResult.messages]
-          : workingState.log,
-      });
-    }
   }
 
   // Advance to next actor
