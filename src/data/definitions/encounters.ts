@@ -115,7 +115,7 @@ export const HOUSE_04: Encounter = {
  * HOUSE 5
  * - Recruit: Blaze (Mars, Balanced Warrior)
  * - First recruitable Mars unit (shares equipment with Garet)
- * - Reward: Blaze is the upgrade – no equipment drop per blueprint
+ * - Equipment: iron-sword
  * - Second Healer: Gale Priest (Jupiter healer + debuff)
  */
 export const HOUSE_05: Encounter = {
@@ -182,7 +182,8 @@ export const HOUSE_07: Encounter = {
 /**
  * HOUSE 8
  * - Reward: Fizz Djinn (Mercury T1) + Sentinel recruit (Venus Support Buffer)
- * - Milestone: Complete T1 Djinn set (4 elements) with no equipment drop
+ * - Milestone: Complete T1 Djinn set (4 elements)
+ * - Equipment: steel-armor
  * - Tide Enchanter (Mercury buffer + healer) creates counter-element test
  */
 export const HOUSE_08: Encounter = {
@@ -221,7 +222,7 @@ export const HOUSE_09: Encounter = {
 
 /**
  * HOUSE 10
- * - No equipment/djinn rewards (progression house)
+ * - Equipment: silver-circlet
  * - Phase-change Flame Elemental (buffs then debuffs)
  */
 export const HOUSE_10: Encounter = {
