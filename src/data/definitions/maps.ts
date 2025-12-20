@@ -7,11 +7,11 @@ const createTile = (type: TileType, walkableOverride?: boolean): { type: TileTyp
   walkable: typeof walkableOverride === 'boolean' ? walkableOverride : type !== 'wall' && type !== 'water',
 });
 
-const VALLE_VILLAGE_WIDTH = 84;
+const VALLE_VILLAGE_WIDTH = 132;
 const VALLE_VILLAGE_HEIGHT = 5;
 // Single horizontal road row; houses and any building entrances sit one tile above this
 const ROAD_ROW = 2;
-const HOUSE_COUNT = 20;
+const HOUSE_COUNT = 30;
 const HOUSE_WIDTH = 11;
 const HOUSE_HEIGHT = 9;
 const HOUSE_CENTER_X = Math.floor(HOUSE_WIDTH / 2);
@@ -79,7 +79,7 @@ const createNPC = (id: string, x: number, y: number, spriteId = 'npc-default'): 
   spriteId,
 });
 
-const TOWER_ENTRANCE_COLUMN = 76;
+const TOWER_ENTRANCE_COLUMN = 127;
 
 const buildValeVillageNPCs = (): GameMap['npcs'] => [
   createNPC('tower-attendant', TOWER_ENTRANCE_COLUMN, ROAD_ROW),
@@ -163,6 +163,16 @@ const HOUSE_ENEMY_SPRITES = [
   '/sprites/overworld/protagonists/Kraden.gif',     // House 18
   '/sprites/overworld/protagonists/Garet.gif',      // House 19
   '/sprites/overworld/protagonists/Ivan.gif',       // House 20 - Overseer
+  '/sprites/overworld/protagonists/Mia.gif',        // House 21
+  '/sprites/overworld/protagonists/Isaac.gif',      // House 22
+  '/sprites/overworld/protagonists/Felix.gif',      // House 23
+  '/sprites/overworld/protagonists/Jenna.gif',      // House 24
+  '/sprites/overworld/protagonists/Sheba.gif',      // House 25
+  '/sprites/overworld/protagonists/Piers.gif',      // House 26
+  '/sprites/overworld/protagonists/Kraden.gif',     // House 27
+  '/sprites/overworld/protagonists/Garet.gif',      // House 28
+  '/sprites/overworld/protagonists/Ivan.gif',       // House 29
+  '/sprites/overworld/protagonists/Mia.gif',        // House 30
 ];
 
 const createHouseInterior = (

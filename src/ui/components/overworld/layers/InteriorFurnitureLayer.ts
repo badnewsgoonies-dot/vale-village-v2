@@ -252,6 +252,103 @@ const HOUSE_FURNITURE_LAYOUTS: Record<number, (w: number, h: number) => Furnitur
     { id: 'lamp-1', type: 'lamp', x: w / 2 - 60, y: h / 2 - 15, width: 20, height: 45 },
     { id: 'lamp-2', type: 'lamp', x: w / 2 + 40, y: h / 2 - 15, width: 20, height: 45 },
   ],
+  // House 21: Carpenter's nook
+  21: (w, h) => [
+    { id: 'table-1', type: 'table', x: 20, y: h / 2 - 20, width: 70, height: 45 },
+    { id: 'chair-1', type: 'chair', x: 95, y: h / 2 - 5, width: 20, height: 30 },
+    { id: 'chest-1', type: 'chest', x: w - 70, y: 35, width: 40, height: 30 },
+    { id: 'chest-2', type: 'chest', x: w - 70, y: 75, width: 40, height: 30 },
+    { id: 'bed-1', type: 'bed', x: 20, y: 30, width: 50, height: 80 },
+    { id: 'rug-1', type: 'rug', x: w / 2 - 55, y: h / 2 + 10, width: 110, height: 55 },
+  ],
+  // House 22: Herbalist's den
+  22: (w, h) => [
+    { id: 'plant-1', type: 'plant', x: 20, y: 30, width: 25, height: 35 },
+    { id: 'plant-2', type: 'plant', x: 60, y: 30, width: 25, height: 35 },
+    { id: 'plant-3', type: 'plant', x: w - 50, y: 30, width: 25, height: 35 },
+    { id: 'bookshelf-1', type: 'bookshelf', x: w - 60, y: 20, width: 40, height: 70 },
+    { id: 'table-1', type: 'table', x: w / 2 - 30, y: h / 2 - 20, width: 60, height: 40 },
+    { id: 'chair-1', type: 'chair', x: w / 2 - 10, y: h / 2 - 50, width: 20, height: 30 },
+    { id: 'bed-1', type: 'bed', x: 20, y: h - 100, width: 50, height: 80 },
+  ],
+  // House 23: Guard dormitory
+  23: (w, h) => [
+    { id: 'bed-1', type: 'bed', x: 20, y: 30, width: 50, height: 80 },
+    { id: 'bed-2', type: 'bed', x: w - 70, y: 30, width: 50, height: 80 },
+    { id: 'chest-1', type: 'chest', x: 20, y: h - 50, width: 40, height: 30 },
+    { id: 'chest-2', type: 'chest', x: w - 60, y: h - 50, width: 40, height: 30 },
+    { id: 'table-1', type: 'table', x: w / 2 - 30, y: h / 2 - 10, width: 60, height: 40 },
+    { id: 'chair-1', type: 'chair', x: w / 2 - 10, y: h / 2 - 40, width: 20, height: 30 },
+  ],
+  // House 24: Cook's hearth
+  24: (w, h) => [
+    { id: 'fireplace-1', type: 'fireplace', x: 20, y: 20, width: 50, height: 70 },
+    { id: 'table-1', type: 'table', x: w / 2 - 35, y: h / 2 - 10, width: 70, height: 45 },
+    { id: 'chair-1', type: 'chair', x: w / 2 - 60, y: h / 2 + 10, width: 20, height: 30 },
+    { id: 'chair-2', type: 'chair', x: w / 2 + 40, y: h / 2 + 10, width: 20, height: 30 },
+    { id: 'chest-1', type: 'chest', x: w - 70, y: 40, width: 40, height: 30 },
+    { id: 'bed-1', type: 'bed', x: w - 70, y: h - 100, width: 50, height: 80 },
+    { id: 'rug-1', type: 'rug', x: w / 2 - 60, y: h / 2 + 25, width: 120, height: 55 },
+  ],
+  // House 25: Traveler's lodge
+  25: (w, h) => [
+    { id: 'bed-1', type: 'bed', x: 20, y: 30, width: 50, height: 80 },
+    { id: 'bed-2', type: 'bed', x: 80, y: 30, width: 50, height: 80 },
+    { id: 'chest-1', type: 'chest', x: w - 70, y: 40, width: 40, height: 30 },
+    { id: 'lamp-1', type: 'lamp', x: w - 40, y: 35, width: 20, height: 45 },
+    { id: 'table-1', type: 'table', x: w / 2 - 30, y: h / 2 - 15, width: 60, height: 40 },
+    { id: 'rug-1', type: 'rug', x: w / 2 - 50, y: h / 2 + 15, width: 100, height: 55 },
+  ],
+  // House 26: Archivist's study
+  26: (w, h) => [
+    { id: 'bookshelf-1', type: 'bookshelf', x: 20, y: 20, width: 40, height: 70 },
+    { id: 'bookshelf-2', type: 'bookshelf', x: 70, y: 20, width: 40, height: 70 },
+    { id: 'bookshelf-3', type: 'bookshelf', x: w - 60, y: 20, width: 40, height: 70 },
+    { id: 'table-1', type: 'table', x: w / 2 - 30, y: h / 2 - 10, width: 60, height: 40 },
+    { id: 'chair-1', type: 'chair', x: w / 2 - 10, y: h / 2 - 40, width: 20, height: 30 },
+    { id: 'lamp-1', type: 'lamp', x: w / 2 + 35, y: h / 2 - 5, width: 20, height: 45 },
+    { id: 'bed-1', type: 'bed', x: 20, y: h - 100, width: 50, height: 80 },
+  ],
+  // House 27: Miner's den
+  27: (w, h) => [
+    { id: 'chest-1', type: 'chest', x: 20, y: 35, width: 40, height: 30 },
+    { id: 'chest-2', type: 'chest', x: 20, y: 75, width: 40, height: 30 },
+    { id: 'chest-3', type: 'chest', x: w - 60, y: 35, width: 40, height: 30 },
+    { id: 'table-1', type: 'table', x: w / 2 - 30, y: h / 2 - 10, width: 60, height: 40 },
+    { id: 'chair-1', type: 'chair', x: w / 2 - 10, y: h / 2 - 40, width: 20, height: 30 },
+    { id: 'bed-1', type: 'bed', x: w - 70, y: h - 100, width: 50, height: 80 },
+    { id: 'rug-1', type: 'rug', x: w / 2 - 45, y: h / 2 + 20, width: 90, height: 55 },
+  ],
+  // House 28: Seamstress's corner
+  28: (w, h) => [
+    { id: 'table-1', type: 'table', x: 20, y: h / 2 - 15, width: 70, height: 40 },
+    { id: 'chair-1', type: 'chair', x: 95, y: h / 2 + 5, width: 20, height: 30 },
+    { id: 'chest-1', type: 'chest', x: w - 70, y: 40, width: 40, height: 30 },
+    { id: 'plant-1', type: 'plant', x: w - 40, y: 30, width: 25, height: 35 },
+    { id: 'bed-1', type: 'bed', x: 20, y: 30, width: 50, height: 80 },
+    { id: 'rug-1', type: 'rug', x: w / 2 - 55, y: h / 2 + 15, width: 110, height: 55 },
+  ],
+  // House 29: Musician's loft
+  29: (w, h) => [
+    { id: 'chair-1', type: 'chair', x: 30, y: h / 2, width: 20, height: 30 },
+    { id: 'chair-2', type: 'chair', x: 60, y: h / 2, width: 20, height: 30 },
+    { id: 'table-1', type: 'table', x: w / 2 - 30, y: h / 2 - 10, width: 60, height: 40 },
+    { id: 'bookshelf-1', type: 'bookshelf', x: w - 60, y: 20, width: 40, height: 70 },
+    { id: 'lamp-1', type: 'lamp', x: w / 2 + 35, y: h / 2 - 5, width: 20, height: 45 },
+    { id: 'bed-1', type: 'bed', x: 20, y: h - 100, width: 50, height: 80 },
+    { id: 'rug-1', type: 'rug', x: w / 2 - 50, y: h / 2 + 20, width: 100, height: 55 },
+  ],
+  // House 30: Council chamber
+  30: (w, h) => [
+    { id: 'fireplace-1', type: 'fireplace', x: w / 2 - 25, y: 20, width: 50, height: 70 },
+    { id: 'table-1', type: 'table', x: w / 2 - 40, y: h / 2 - 10, width: 80, height: 45 },
+    { id: 'chair-1', type: 'chair', x: w / 2 - 70, y: h / 2 + 10, width: 20, height: 30 },
+    { id: 'chair-2', type: 'chair', x: w / 2 + 50, y: h / 2 + 10, width: 20, height: 30 },
+    { id: 'bookshelf-1', type: 'bookshelf', x: 20, y: 20, width: 40, height: 70 },
+    { id: 'bookshelf-2', type: 'bookshelf', x: w - 60, y: 20, width: 40, height: 70 },
+    { id: 'plant-1', type: 'plant', x: 80, y: 30, width: 25, height: 35 },
+    { id: 'rug-1', type: 'rug', x: w / 2 - 60, y: h / 2 + 25, width: 120, height: 60 },
+  ],
 };
 
 export class InteriorFurnitureLayer implements Layer {
@@ -355,14 +452,7 @@ export class InteriorFurnitureLayer implements Layer {
    */
   generateHouseFurniture(houseNum: number): void {
     const { roomWidth, roomHeight } = this.config;
-
-    // Map houses 21-30 to reuse layouts 1-10 (BRICK 22: ship faster, expand later)
-    let layoutNum = houseNum;
-    if (houseNum > 20) {
-      layoutNum = ((houseNum - 21) % 10) + 1;
-    }
-
-    const layout = HOUSE_FURNITURE_LAYOUTS[layoutNum];
+    const layout = HOUSE_FURNITURE_LAYOUTS[houseNum];
 
     if (layout) {
       this.furniture = layout(roomWidth, roomHeight);

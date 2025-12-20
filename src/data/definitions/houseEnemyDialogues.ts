@@ -31,14 +31,21 @@ const ENEMY_PHASES: EnemyPhase[] = [
     threat: () => 'Steel and discipline decide this fight—not your sentiment.',
   },
   {
-    range: [16, 19],
+    range: [16, 20],
     speaker: 'Arcane Enforcer',
     portrait: 'enemy-commander',
     intro: (houseNum) => `Few make it to House ${houseNum}. Your persistence is almost admirable.`,
     threat: () => 'Kneel and live as a prisoner, or stand and fall as an example.',
   },
   {
-    range: [20, 20],
+    range: [21, 29],
+    speaker: 'Cinder Marshal',
+    portrait: 'enemy-warlord',
+    intro: (houseNum) => `House ${houseNum} is protected by the inner guard. You should have turned back.`,
+    threat: () => 'I will grind your resolve to embers and scatter it on this road.',
+  },
+  {
+    range: [30, 30],
     speaker: 'Vale Overseer',
     portrait: 'enemy-warlord',
     intro: () => 'The final house is my throne, and you are wildly outmatched.',
@@ -84,7 +91,7 @@ const createEnemyDialogue = (houseNum: number): DialogueTree => {
   };
 };
 
-export const HOUSE_ENEMY_DIALOGUES: Record<string, DialogueTree> = Array.from({ length: 20 }, (_, index) => index + 1)
+export const HOUSE_ENEMY_DIALOGUES: Record<string, DialogueTree> = Array.from({ length: 30 }, (_, index) => index + 1)
   .map(createEnemyDialogue)
   .reduce<Record<string, DialogueTree>>((map, dialogue) => {
     map[dialogue.id] = dialogue;
