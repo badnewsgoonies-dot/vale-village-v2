@@ -99,7 +99,7 @@ export const createOverworldSlice: StateCreator<OverworldSlice> = (set, get) => 
 
     teleportPlayer: (mapId, position) => {
       if (!MAPS[mapId]) return;
-      set({ currentMapId: mapId, playerPosition: position, facing: 'down' });
+      set({ currentMapId: mapId, playerPosition: position, facing: 'down', currentTrigger: null });
     },
 
     clearTrigger: () => set({ currentTrigger: null }),
