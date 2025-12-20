@@ -188,7 +188,7 @@ export const createBattleSlice: StateCreator<
         }
       } else {
         // Battle continues - advance to next turn
-        const rngEndTurn = makePRNG(rngSeed + turnNumber * 1_000_000);
+        const rngEndTurn = makePRNG(createRNGStream(rngSeed, turnNumber, RNG_STREAMS.END_TURN));
         const endResult = endTurn(result.value.state, rngEndTurn);
         if (!endResult.ok) {
           console.error('AI endTurn failed:', endResult.error);
