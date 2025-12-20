@@ -36,8 +36,8 @@ export class TerrainLayer implements Layer {
   private canvasHeight: number = 640;
 
   private useSceneMode: boolean = false;
-  private sceneScaleX: number = 1;
-  private sceneScaleY: number = 1;
+
+  private readonly SCENE_GRASS_START_Y = 256;
 
   private spriteCache: Map<string, HTMLImageElement> = new Map();
   private loadingSprites: Set<string> = new Set();
@@ -49,7 +49,6 @@ export class TerrainLayer implements Layer {
 
   setMap(map: GameMap): void {
     this.mapData = map;
-    this.recomputeSceneScale();
 
     // Preload any referenced terrain sprites
     const ids = new Set<string>();
@@ -72,25 +71,22 @@ export class TerrainLayer implements Layer {
 
   setTileSize(size: number): void {
     this.tileSize = size;
-    this.recomputeSceneScale();
   }
 
   setCanvasSize(width: number, height: number): void {
     this.canvasWidth = width;
     this.canvasHeight = height;
-    this.recomputeSceneScale();
   }
 
   setSceneMode(enabled: boolean): void {
     this.useSceneMode = enabled;
-    this.recomputeSceneScale();
   }
 
   render(ctx: CanvasRenderingContext2D, camera: Camera): void {
     if (!this.mapData) return;
 
     if (this.useSceneMode) {
-      this.renderSceneMode(ctx);
+      this.renderSceneMode(ctx, camera);
     } else {
       this.renderWorldMode(ctx, camera);
     }
@@ -143,52 +139,10 @@ export class TerrainLayer implements Layer {
    * Scene mode stretches the tile grid to the canvas so small maps
    * can still fill the pseudo‑3D scene (used for Vale Village).
    */
-  private renderSceneMode(ctx: CanvasRenderingContext2D): void {
+  private renderSceneMode(ctx: CanvasRenderingContext2D, camera: Camera): void {
     if (!this.mapData) return;
-    const worldWidthPx = this.mapData.width * this.tileSize;
-    const worldHeightPx = this.mapData.height * this.tileSize;
-
-    // Fill lower area with grass color (from 38% down to bottom)
-    // This covers the gap between mountains and where tile rendering starts
-    const grassStartY = this.canvasHeight * 0.38;
-    ctx.fillStyle = SOLID_COLOR_TILES.grass || '#4a8a4a';
-    ctx.fillRect(0, grassStartY, this.canvasWidth, this.canvasHeight - grassStartY);
-
-    const cellWidth = this.tileSize * this.sceneScaleX;
-    const cellHeight = this.tileSize * this.sceneScaleY;
-
-    for (let tileY = 0; tileY < this.mapData.height; tileY++) {
-      const row = this.mapData.tiles[tileY];
-      if (!row) continue;
-
-      for (let tileX = 0; tileX < this.mapData.width; tileX++) {
-        const tile = row[tileX];
-        if (!tile || !TERRAIN_TYPES.includes(tile.type)) continue;
-
-        // Skip path tiles entirely in scene mode (they create ugly fence appearance)
-        if (tile.type === 'path') continue;
-
-        const spriteId = tile.spriteId || DEFAULT_TERRAIN_SPRITES[tile.type];
-        const solidColor = SOLID_COLOR_TILES[tile.type];
-
-        const worldX = tileX * this.tileSize;
-        const worldY = tileY * this.tileSize;
-
-        const screenX = worldWidthPx > 0 ? (worldX / worldWidthPx) * this.canvasWidth : worldX;
-        const screenY = worldHeightPx > 0 ? (worldY / worldHeightPx) * this.canvasHeight : worldY;
-
-        // Skip tiles in upper portion - only render below 48% (behind buildings)
-        if (solidColor && screenY < this.canvasHeight * 0.48) {
-          continue;
-        }
-
-        if (solidColor) {
-          this.drawSolidTile(ctx, screenX, screenY, cellWidth, cellHeight, solidColor, worldY + this.tileSize, worldHeightPx);
-        } else if (spriteId) {
-          this.drawTile(ctx, screenX, screenY, cellWidth, cellHeight, spriteId, worldY + this.tileSize, worldHeightPx);
-        }
-      }
-    }
+    this.drawSceneGround(ctx, camera);
+    this.renderWorldMode(ctx, camera);
   }
 
   private drawTile(
@@ -275,16 +229,24 @@ export class TerrainLayer implements Layer {
     return `rgb(${nr}, ${ng}, ${nb})`;
   }
 
-  private recomputeSceneScale(): void {
-    if (!this.useSceneMode || !this.mapData) {
-      this.sceneScaleX = 1;
-      this.sceneScaleY = 1;
-      return;
+  private drawSceneGround(ctx: CanvasRenderingContext2D, camera: Camera): void {
+    const visible = camera.getVisibleBounds();
+    const grassTop = this.SCENE_GRASS_START_Y;
+    const screenTop = camera.worldToScreen(visible.left, grassTop).y;
+    const screenBottom = camera.worldToScreen(visible.left, visible.bottom).y;
+
+    const y = Math.min(this.canvasHeight, Math.max(0, screenTop));
+    const height = Math.max(0, screenBottom - y);
+
+    ctx.save();
+    ctx.fillStyle = SOLID_COLOR_TILES.grass || '#4a8a4a';
+    ctx.fillRect(0, y, this.canvasWidth, height);
+
+    if (this.timeOfDay < 0.25 || this.timeOfDay > 0.80) {
+      ctx.fillStyle = 'rgba(0, 0, 30, 0.2)';
+      ctx.fillRect(0, y, this.canvasWidth, height);
     }
-    const worldWidthPx = this.mapData.width * this.tileSize;
-    const worldHeightPx = this.mapData.height * this.tileSize;
-    this.sceneScaleX = worldWidthPx > 0 ? this.canvasWidth / worldWidthPx : 1;
-    this.sceneScaleY = worldHeightPx > 0 ? this.canvasHeight / worldHeightPx : 1;
+    ctx.restore();
   }
 
   private async loadSpriteAsync(spriteId: string): Promise<void> {
