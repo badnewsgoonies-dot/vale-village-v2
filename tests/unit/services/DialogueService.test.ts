@@ -63,6 +63,15 @@ function createTestDialogueState(treeId: string, nodeId: string): DialogueState 
   };
 }
 
+function createTestDialogueContext() {
+  return {
+    flags: {},
+    inventory: { items: [] },
+    gold: 0,
+    level: 1,
+  };
+}
+
 describe('DialogueService', () => {
   describe('startDialogue', () => {
     it('should initialize dialogue state at start node', () => {
@@ -141,7 +150,7 @@ describe('DialogueService', () => {
       const tree = createTestDialogueTree();
       const state = createTestDialogueState('test-dialogue', 'choice-node');
 
-      const newState = selectChoice(tree, state, 'choice-a');
+      const newState = selectChoice(tree, state, 'choice-a', createTestDialogueContext());
 
       expect(newState.currentNodeId).toBe('end-a');
       expect(newState.history).toContain('end-a');
@@ -151,7 +160,7 @@ describe('DialogueService', () => {
       const tree = createTestDialogueTree();
       const state = createTestDialogueState('test-dialogue', 'choice-node');
 
-      const newState = selectChoice(tree, state, 'choice-b');
+      const newState = selectChoice(tree, state, 'choice-b', createTestDialogueContext());
 
       expect(newState.currentNodeId).toBe('end-b');
       expect(newState.history).toContain('end-b');
@@ -161,10 +170,42 @@ describe('DialogueService', () => {
       const tree = createTestDialogueTree();
       const state = createTestDialogueState('test-dialogue', 'choice-node');
 
-      const newState = selectChoice(tree, state, 'invalid-choice');
+      const newState = selectChoice(tree, state, 'invalid-choice', createTestDialogueContext());
 
       // Should stay at same node if choice is invalid
       expect(newState.currentNodeId).toBe('choice-node');
+    });
+
+    it('should reject a locked choice when condition is unmet', () => {
+      const tree: DialogueTree = {
+        id: 'conditional-choice',
+        nodes: [
+          {
+            id: 'choice-node',
+            speaker: 'NPC',
+            text: 'Choose...',
+            choices: [
+              { id: 'always', text: 'Always', nextNodeId: 'end' },
+              {
+                id: 'locked',
+                text: 'Locked',
+                nextNodeId: 'end',
+                condition: { type: 'flag', key: 'hasKey', value: true },
+              },
+            ],
+          },
+          { id: 'end', speaker: 'NPC', text: 'Done.' },
+        ],
+        startNodeId: 'choice-node',
+      };
+
+      const state = createTestDialogueState('conditional-choice', 'choice-node');
+      const context = createTestDialogueContext();
+
+      const newState = selectChoice(tree, state, 'locked', context);
+
+      expect(newState.currentNodeId).toBe('choice-node');
+      expect(newState.history).toEqual(['choice-node']);
     });
   });
 
@@ -266,7 +307,7 @@ describe('DialogueService', () => {
       expect(state.currentNodeId).toBe('choice-node');
 
       // Make a choice
-      state = selectChoice(tree, state, 'choice-a');
+      state = selectChoice(tree, state, 'choice-a', createTestDialogueContext());
       expect(state.currentNodeId).toBe('end-a');
 
       // Try to advance (should end)
@@ -304,10 +345,10 @@ describe('DialogueService', () => {
       let state = startDialogue(tree);
       expect(state.history).toContain('choice-1');
 
-      state = selectChoice(tree, state, 'c1-a');
+      state = selectChoice(tree, state, 'c1-a', createTestDialogueContext());
       expect(state.history).toContain('choice-2');
 
-      state = selectChoice(tree, state, 'c2-b');
+      state = selectChoice(tree, state, 'c2-b', createTestDialogueContext());
       expect(state.history).toContain('end');
       expect(state.currentNodeId).toBe('end');
     });
