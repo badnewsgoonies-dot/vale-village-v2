@@ -9,7 +9,7 @@ import type { RewardDistribution } from '../../core/models/Rewards';
 import { processVictory as rewardsServiceProcessVictory } from '../../core/services/RewardsService';
 import type { VictoryOptions } from '../../core/services/RewardsService';
 import type { InventorySlice } from './inventorySlice';
-import type { BattleSlice } from './battleSlice';
+import type { QueueBattleSlice } from './queueBattleSlice';
 import type { TeamSlice } from './teamSlice';
 import type { GameFlowSlice } from './gameFlowSlice';
 import type { Equipment } from '../../data/schemas/EquipmentSchema';
@@ -30,7 +30,7 @@ export interface RewardsSlice {
 }
 
 export const createRewardsSlice: StateCreator<
-  RewardsSlice & InventorySlice & BattleSlice & TeamSlice & GameFlowSlice,
+  RewardsSlice & InventorySlice & QueueBattleSlice & TeamSlice & GameFlowSlice,
   [['zustand/devtools', never]],
   [],
   RewardsSlice

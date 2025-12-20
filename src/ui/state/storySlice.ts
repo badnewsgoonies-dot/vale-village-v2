@@ -8,7 +8,7 @@ import type { BattleEvent } from '../../core/services/types';
 import type { StoryState } from '../../core/models/story';
 import { createStoryState, setFlag } from '../../core/models/story';
 import { processEncounterCompletion, advanceChapter, encounterIdToFlagKey, processStoryFlagForDjinn, processStoryFlagForUnit } from '../../core/services/StoryService';
-import type { BattleSlice } from './battleSlice';
+import type { QueueBattleSlice } from './queueBattleSlice';
 import type { TeamSlice } from './teamSlice';
 import type { SaveSlice } from './saveSlice';
 
@@ -23,7 +23,7 @@ export interface StorySlice {
 }
 
 export const createStorySlice: StateCreator<
-  StorySlice & BattleSlice & TeamSlice & SaveSlice,
+  StorySlice & QueueBattleSlice & TeamSlice & SaveSlice,
   [['zustand/devtools', never]],
   [],
   StorySlice
@@ -116,4 +116,3 @@ export const createStorySlice: StateCreator<
     _set({ story: st });
   },
 });
-
