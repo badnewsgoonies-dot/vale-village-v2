@@ -5,7 +5,7 @@
  *
  * Supports two building modes:
  * 1. Tile-based: Auto-generated from wall tiles in map data
- * 2. Scene-based: Explicit screen positions for pseudo-3D depth illusion
+ * 2. Scene-based: Explicit world positions for curated layouts
  */
 
 import { clamp, type Layer, type Camera, type Entity, type Direction, type WorldPosition } from '../engine/types';
@@ -29,7 +29,6 @@ interface RenderableEntity extends Entity {
   sprite: HTMLImageElement | null;
   shadowWidth: number;
   shadowHeight: number;
-  isSceneBuilding?: boolean; // True for scene-based buildings (absolute positioning)
 }
 
 export class EntityLayer implements Layer {
@@ -49,13 +48,11 @@ export class EntityLayer implements Layer {
 
   // Player proximity state for door glow and ENTER prompt
   private nearbyBuildingId: string | null = null;
-  private readonly PROXIMITY_THRESHOLD = 80;
+  private readonly PROXIMITY_THRESHOLD = 70;
 
   // Sprite cache
   private spriteCache: Map<string, HTMLImageElement> = new Map();
   private loadingSprites: Set<string> = new Set();
-
-  private warnedAboutSceneCoordMix: boolean = false;
 
   setTileSize(size: number): void {
     this.tileSize = size;
@@ -109,21 +106,22 @@ export class EntityLayer implements Layer {
 
   /**
    * Update nearby building for door glow and ENTER prompt
-   * Note: Buildings use canvas Y coords, player uses world Y coords
-   * For a row of buildings, we just check X proximity (player walks in front)
+   * Uses world-space distance to the building's door position.
    */
   updatePlayerProximity(playerPos: WorldPosition): void {
     this.nearbyBuildingId = null;
+    let closestDistanceSq = this.PROXIMITY_THRESHOLD * this.PROXIMITY_THRESHOLD;
 
     for (const building of this.sceneBuildings) {
-      // Calculate X distance to building center (both in world/scene X coords)
-      const buildingCenterX = building.x + building.width / 2;
-      const dx = Math.abs(playerPos.x - buildingCenterX);
+      const doorX = building.x + building.width / 2 + (building.doorOffsetX ?? 0);
+      const doorY = building.y + building.height + (building.doorOffsetY ?? 0);
+      const dx = playerPos.x - doorX;
+      const dy = playerPos.y - doorY;
+      const distanceSq = dx * dx + dy * dy;
 
-      // Player is "in front" of building if within X range
-      if (dx < this.PROXIMITY_THRESHOLD) {
+      if (distanceSq <= closestDistanceSq) {
+        closestDistanceSq = distanceSq;
         this.nearbyBuildingId = building.id;
-        break;
       }
     }
   }
@@ -148,7 +146,6 @@ export class EntityLayer implements Layer {
       sprite: null,
       shadowWidth: building.width * 0.6,
       shadowHeight: 10,
-      isSceneBuilding: true,
     };
   }
 
@@ -406,20 +403,6 @@ export class EntityLayer implements Layer {
    * Update or create player entity
    */
   setPlayerPosition(pos: WorldPosition, facing: Direction, unitId: string): void {
-    if (
-      this.useSceneMode &&
-      !this.warnedAboutSceneCoordMix &&
-      this.worldHeightPx > 0 &&
-      pos.y > this.worldHeightPx + this.tileSize
-    ) {
-      this.warnedAboutSceneCoordMix = true;
-      console.warn('[EntityLayer] Possible scene-mode coordinate mixing: expected world Y but received a much larger value.', {
-        posY: pos.y,
-        worldHeightPx: this.worldHeightPx,
-        tileSize: this.tileSize,
-      });
-    }
-
     const spriteId = `player-${unitId}-${facing}`;
 
     // Load sprite async
@@ -493,46 +476,7 @@ export class EntityLayer implements Layer {
   }
 
   render(ctx: CanvasRenderingContext2D, camera: Camera): void {
-    // In scene mode, separate buildings from player (different coord systems)
-    // Player walks in front of buildings, so render buildings first, player last
-    if (this.useSceneMode) {
-      const cameraRenderX = camera.getRenderX();
-
-      // Sort buildings by Y (for depth within buildings)
-      const buildingEntities = this.entities.filter(e => e.isSceneBuilding);
-      buildingEntities.sort((a, b) => a.y - b.y);
-
-      // Render buildings first
-      for (const entity of buildingEntities) {
-        const screenX = entity.x - cameraRenderX;
-        const screenY = entity.y;
-        this.drawSceneBuildingShadow(ctx, screenX, screenY, entity.width);
-        this.drawSceneBuildingSprite(ctx, screenX, screenY, entity);
-        if (entity.id === this.nearbyBuildingId) {
-          this.drawDoorGlow(ctx, screenX, screenY, entity);
-          this.drawEnterPrompt(ctx, screenX, screenY, entity);
-        }
-      }
-
-      // Render player last (always in front)
-      if (this.playerEntity) {
-        const screenY = this.worldHeightPx > 0
-          ? (this.playerEntity.y / this.worldHeightPx) * camera.viewportHeight
-          : this.playerEntity.y;
-        const screenPos = { x: this.playerEntity.x - cameraRenderX, y: screenY };
-        const perspectiveScale = this.getPerspectiveScale(screenY, camera.viewportHeight);
-        this.drawShadow(ctx, screenPos, this.playerEntity, perspectiveScale);
-        this.drawEntity(ctx, screenPos, this.playerEntity, perspectiveScale);
-      }
-
-      // Draw window glow at night
-      if (this.isNight()) {
-        this.drawWindowGlow(ctx, camera, buildingEntities);
-      }
-      return;
-    }
-
-    // Non-scene mode: combine all entities for Y-sorting
+    // Combine all entities for Y-sorting
     const allEntities = [...this.entities];
     if (this.playerEntity) {
       allEntities.push(this.playerEntity);
@@ -543,27 +487,6 @@ export class EntityLayer implements Layer {
 
     // Render each entity
     for (const entity of allEntities) {
-      // For scene buildings, apply camera X offset (horizontal scrolling)
-      // Y stays as-is since scene coords are canvas-relative
-      if (entity.isSceneBuilding) {
-        const screenX = entity.x - camera.getRenderX();  // Apply horizontal camera scroll
-        const screenY = entity.y;              // Keep Y in canvas space
-
-        // Draw ellipse shadow
-        this.drawSceneBuildingShadow(ctx, screenX, screenY, entity.width);
-
-        // Draw building sprite
-        this.drawSceneBuildingSprite(ctx, screenX, screenY, entity);
-
-        // Draw door glow if player is near this building
-        if (entity.id === this.nearbyBuildingId) {
-          this.drawDoorGlow(ctx, screenX, screenY, entity);
-          this.drawEnterPrompt(ctx, screenX, screenY, entity);
-        }
-
-        continue;
-      }
-
       // Regular camera-transformed entities
       // Skip if not visible
       if (!camera.isVisible(entity.x - entity.width / 2, entity.y - entity.height, entity.width, entity.height)) {
@@ -578,78 +501,17 @@ export class EntityLayer implements Layer {
 
       // Draw entity
       this.drawEntity(ctx, screenPos, entity, perspectiveScale);
+
+      if (entity.type === 'building' && entity.id === this.nearbyBuildingId) {
+        this.drawDoorGlow(ctx, screenPos.x, screenPos.y, entity);
+        this.drawEnterPrompt(ctx, screenPos.x, screenPos.y, entity);
+      }
     }
 
     // Draw night window glow
     if (this.isNight()) {
       this.drawWindowGlow(ctx, camera, allEntities);
     }
-  }
-
-  private drawSceneBuildingShadow(ctx: CanvasRenderingContext2D, centerX: number, bottomY: number, width: number): void {
-    ctx.save();
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-    ctx.beginPath();
-    ctx.ellipse(centerX, bottomY + 5, width * 0.6 / 2, 10, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-  }
-
-  private drawSceneBuildingSprite(
-    ctx: CanvasRenderingContext2D,
-    centerX: number,
-    bottomY: number,
-    entity: RenderableEntity
-  ): void {
-    const sprite = this.getSprite(entity.spriteId);
-    const x = centerX - entity.width / 2;
-    const y = bottomY - entity.height;
-
-    if (sprite && sprite.complete && sprite.naturalWidth > 0) {
-      ctx.drawImage(sprite, x, y, entity.width, entity.height);
-    } else {
-      // Placeholder
-      this.drawBuildingPlaceholder(ctx, x, y, entity.width, entity.height);
-    }
-  }
-
-  private drawBuildingPlaceholder(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number): void {
-    ctx.save();
-    const isNight = this.isNight();
-
-    // Building body
-    const gradient = ctx.createLinearGradient(x, y, x, y + h);
-    if (isNight) {
-      gradient.addColorStop(0, '#3a3530');
-      gradient.addColorStop(1, '#2a2520');
-    } else {
-      gradient.addColorStop(0, '#d4a872');
-      gradient.addColorStop(1, '#b48a62');
-    }
-    ctx.fillStyle = gradient;
-    ctx.fillRect(x, y, w, h);
-
-    // Roof
-    ctx.fillStyle = isNight ? '#4a3a3a' : '#8a5a4a';
-    ctx.beginPath();
-    ctx.moveTo(x - 5, y + 10);
-    ctx.lineTo(x + w / 2, y - 15);
-    ctx.lineTo(x + w + 5, y + 10);
-    ctx.closePath();
-    ctx.fill();
-
-    // Door
-    ctx.fillStyle = isNight ? '#2a2520' : '#5a4a3a';
-    ctx.fillRect(x + w / 2 - 8, y + h - 25, 16, 25);
-
-    // Window
-    ctx.fillStyle = isNight ? '#4a5a6a' : '#8ac0e0';
-    ctx.fillRect(x + 8, y + 20, 12, 12);
-    if (w > 50) {
-      ctx.fillRect(x + w - 20, y + 20, 12, 12);
-    }
-
-    ctx.restore();
   }
 
   private drawDoorGlow(
@@ -857,11 +719,8 @@ export class EntityLayer implements Layer {
     for (const entity of entities) {
       if (entity.type !== 'building') continue;
 
-      const screenPos = entity.isSceneBuilding
-        ? { x: entity.x - camera.getRenderX(), y: entity.y }
-        : camera.worldToScreen(entity.x, entity.y);
-      const maxY = this.useSceneMode ? camera.viewportHeight : this.worldHeightPx;
-      const perspectiveScale = this.getPerspectiveScale(entity.y, maxY);
+      const screenPos = camera.worldToScreen(entity.x, entity.y);
+      const perspectiveScale = this.getPerspectiveScale(entity.y, this.worldHeightPx);
       const width = entity.width * perspectiveScale;
       const height = entity.height * perspectiveScale;
       const x = screenPos.x - width / 2;

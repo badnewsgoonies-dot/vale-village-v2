@@ -8,9 +8,9 @@ const createTile = (type: TileType, walkableOverride?: boolean): { type: TileTyp
 });
 
 const VALLE_VILLAGE_WIDTH = 84;
-const VALLE_VILLAGE_HEIGHT = 5;
+const VALLE_VILLAGE_HEIGHT = 20;
 // Single horizontal road row; houses and any building entrances sit one tile above this
-const ROAD_ROW = 2;
+const ROAD_ROW = 13;
 const HOUSE_COUNT = 20;
 const HOUSE_WIDTH = 11;
 const HOUSE_HEIGHT = 9;
