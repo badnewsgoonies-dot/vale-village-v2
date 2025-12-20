@@ -44,7 +44,7 @@ function formatPlaytime(seconds?: number): string {
 }
 
 export function SaveMenu({ onClose }: SaveMenuProps) {
-  const { saveGameSlot, loadGameSlot, deleteSaveSlot, getSaveSlotMetadata: getMetadata } = useStore();
+  const { saveGameSlot, loadGameSlot, deleteSaveSlot, getSaveSlotMetadata: getMetadata, setMode } = useStore();
   const startTransition = useGameStore((s) => s.startTransition);
   const [slots, setSlots] = useState<SaveSlotMetadata[]>([
     { exists: false },
@@ -115,6 +115,7 @@ export function SaveMenu({ onClose }: SaveMenuProps) {
     setError(null);
     try {
       loadGameSlot(slotIndex);
+      setMode('overworld');
       // Navigate to overworld after successful load
       startTransition('overworld');
       onClose();

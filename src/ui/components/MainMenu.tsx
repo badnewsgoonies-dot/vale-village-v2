@@ -29,11 +29,13 @@ export function MainMenu() {
   const openCompendium = useGameStore((s) => s.openCompendium);
   const openModal = useGameStore((s) => s.openModal);
   const activeModal = useGameStore((s) => s.flow.modal);
+  const openCompendiumFlow = useStore((s) => s.openCompendium);
   const setTeam = useStore((s) => s.setTeam);
   const addUnitToRoster = useStore((s) => s.addUnitToRoster);
   const openTowerFromMainMenu = useStore((s) => s.openTowerFromMainMenu);
   const openShopFromMainMenu = useStore((s) => s.openShopFromMainMenu);
   const hasSaveSlot = useStore((s) => s.hasSaveSlot);
+  const setMode = useStore((s) => s.setMode);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [hasSaveFile, setHasSaveFile] = useState(false);
 
@@ -43,6 +45,10 @@ export function MainMenu() {
     const hasAnySave = hasSaveSlot(0) || hasSaveSlot(1) || hasSaveSlot(2);
     setHasSaveFile(hasAnySave);
   }, [hasSaveSlot]);
+
+  useEffect(() => {
+    setMode('main-menu');
+  }, [setMode]);
 
   const menuOptions = [
     { id: 'new-game', label: 'New Game', enabled: true },
@@ -142,6 +148,7 @@ export function MainMenu() {
   const handleSelectOption = (optionId: string) => {
     if (optionId === 'new-game') {
       createStarterTeamWithFlint();
+      setMode('overworld');
       startTransition('overworld'); // Start new game -> go to overworld
     } else if (optionId === 'continue') {
       if (hasSaveFile) {
@@ -152,6 +159,7 @@ export function MainMenu() {
       openShopFromMainMenu();
       startTransition('shop');
     } else if (optionId === 'compendium') {
+      openCompendiumFlow();
       openCompendium();
     } else if (optionId === 'settings') {
       openModal('settings');

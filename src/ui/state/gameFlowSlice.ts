@@ -41,11 +41,14 @@ export interface GameFlowSlice {
   preBattlePosition: { mapId: string; position: { x: number; y: number } } | null;
   currentBattleConfig: BattleConfig | null;
   pendingBattleEncounterId: string | null;
+  compendiumReturnMode: GameFlowSlice['mode'] | null;
   setMode: (mode: GameFlowSlice['mode']) => void;
   setPendingBattle: (encounterId: string | null) => void;
   handleTrigger: (trigger: MapTrigger | null, skipPreBattleDialogue?: boolean) => void;
   openShopFromMainMenu: () => void;
   exitShop: () => void;
+  openCompendium: () => void;
+  closeCompendium: () => void;
   confirmBattleTeam: () => void;
   updateBattleConfigSlot: (slotIndex: number, unitId: string | null) => void;
   updateBattleSlotEquipment: (slotIndex: number, equipmentSlot: EquipmentSlot, equipment: Equipment | null) => void;
@@ -122,6 +125,7 @@ export const createGameFlowSlice: StateCreator<
     preBattlePosition: null,
     currentBattleConfig: null,
     pendingBattleEncounterId: null,
+    compendiumReturnMode: null,
     setMode: (mode) => set({ mode }),
     setPendingBattle: (encounterId) => {
     // When setting a pending battle, automatically transition to team-select mode
@@ -281,6 +285,22 @@ export const createGameFlowSlice: StateCreator<
       currentShopId: null,
       lastTrigger: null,
       mode: entryContext === 'menu' ? 'main-menu' : 'overworld',
+    });
+  },
+  openCompendium: () => {
+    const mode = get().mode;
+    const existingReturnMode = get().compendiumReturnMode;
+    const returnMode = mode === 'compendium' ? existingReturnMode ?? 'main-menu' : mode;
+    set({
+      compendiumReturnMode: returnMode,
+      mode: 'compendium',
+    });
+  },
+  closeCompendium: () => {
+    const returnMode = get().compendiumReturnMode ?? 'main-menu';
+    set({
+      compendiumReturnMode: null,
+      mode: returnMode,
     });
   },
   resetLastTrigger: () => set({ lastTrigger: null }),
