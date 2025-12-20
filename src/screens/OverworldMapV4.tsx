@@ -81,8 +81,8 @@ export const OverworldMapV4: FunctionComponent = () => {
   const buildingCanvasRef = useRef<HTMLCanvasElement>(null);
   const entityCanvasRef = useRef<HTMLCanvasElement>(null);
   const [spritesLoaded, setSpritesLoaded] = useState(false);
-  const [loadedSprites, setLoadedSprites] = useState<Record<string, HTMLImageElement>>({});
-  const [buildingSprites, setBuildingSprites] = useState<Record<string, HTMLImageElement>>({});
+  const [loadedSprites, setLoadedSprites] = useState<Record<string, CanvasImageSource>>({});
+  const [buildingSprites, setBuildingSprites] = useState<Record<string, CanvasImageSource>>({});
   const playerRef = useRef(PLAYER_START);
 
   const width = (MAP_DATA.tiles[0]?.length ?? 0) * MAP_DATA.tileSize;
@@ -90,7 +90,7 @@ export const OverworldMapV4: FunctionComponent = () => {
 
   // Load tile sprites
   useEffect(() => {
-    const sprites: Record<string, HTMLImageElement> = {};
+    const sprites: Record<string, CanvasImageSource> = {};
     const promises = Object.entries(MAP_DATA.sprites).map(([key, path]) => {
       return new Promise<void>((resolve) => {
         const img = new Image();
@@ -107,7 +107,7 @@ export const OverworldMapV4: FunctionComponent = () => {
           const ctx = canvas.getContext('2d')!;
           ctx.fillStyle = key === 'grass' ? '#4a4' : key === 'tree' ? '#282' : key === 'path' ? '#864' : '#666';
           ctx.fillRect(0, 0, MAP_DATA.tileSize, MAP_DATA.tileSize);
-          sprites[key] = canvas as any;
+          sprites[key] = canvas;
           resolve();
         };
         img.src = path;
@@ -122,7 +122,7 @@ export const OverworldMapV4: FunctionComponent = () => {
 
   // Load building sprites
   useEffect(() => {
-    const sprites: Record<string, HTMLImageElement> = {};
+    const sprites: Record<string, CanvasImageSource> = {};
     const promises = BUILDINGS.map((building) => {
       return new Promise<void>((resolve) => {
         const img = new Image();
@@ -141,7 +141,7 @@ export const OverworldMapV4: FunctionComponent = () => {
           ctx.fillRect(0, 0, canvas.width, canvas.height);
           ctx.strokeStyle = '#fff';
           ctx.strokeRect(0, 0, canvas.width, canvas.height);
-          sprites[building.id] = canvas as any;
+          sprites[building.id] = canvas;
           resolve();
         };
         img.src = building.spritePath;
