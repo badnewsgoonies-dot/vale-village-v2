@@ -240,6 +240,8 @@ export const createBattleSlice: StateCreator<
 
     for (let i = 0; i < N; i++) {
       const r = baseRng.clone();
+      // Advance the base RNG so each sample uses a different deterministic state.
+      baseRng.next();
       const result = performAction(battle, casterId, abilityId, targets, r);
       if (!result.ok) {
         continue; // Skip failed previews
