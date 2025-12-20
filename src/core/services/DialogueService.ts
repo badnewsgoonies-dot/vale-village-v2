@@ -53,12 +53,20 @@ export function getAvailableChoices(node: DialogueNode, context: DialogueContext
   });
 }
 
-export function selectChoice(tree: DialogueTree, state: DialogueState, choiceId: string): DialogueState {
+export function selectChoice(
+  tree: DialogueTree,
+  state: DialogueState,
+  choiceId: string,
+  context?: DialogueContext,
+): DialogueState {
   const currentNode = getCurrentNode(tree, state);
   if (!currentNode) return state;
 
   const choice = currentNode.choices?.find(c => c.id === choiceId);
   if (!choice) return state;
+  if (choice.condition && (!context || !evaluateCondition(choice.condition, context))) {
+    return state;
+  }
 
   return {
     ...state,
