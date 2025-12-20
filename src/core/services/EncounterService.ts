@@ -6,11 +6,73 @@
 import type { Encounter } from '../../data/schemas/EncounterSchema';
 import type { BattleState } from '../models/BattleState';
 import type { Team } from '../models/Team';
+import type { Stats } from '../models/types';
+import type { Unit } from '../models/Unit';
 import type { PRNG } from '../random/prng';
 import { ENEMIES } from '../../data/definitions/enemies';
 import { ENCOUNTERS } from '../../data/definitions/encounters';
 import { enemyToUnit } from '../utils/enemyToUnit';
 import { startBattle } from './BattleService';
+
+type EncounterDifficulty = Encounter['difficulty'];
+
+function getEncounterEnemyStatMultiplier(difficulty: EncounterDifficulty): number {
+  switch (difficulty) {
+    case 'easy':
+      return 0.9;
+    case 'hard':
+      return 1.1;
+    case 'boss':
+      return 1.2;
+    case 'medium':
+    default:
+      return 1.0;
+  }
+}
+
+function mapEncounterDifficultyToBattleTier(
+  difficulty: EncounterDifficulty
+): NonNullable<NonNullable<BattleState['meta']>['difficulty']> {
+  switch (difficulty) {
+    case 'boss':
+      return 'boss';
+    case 'hard':
+      return 'elite';
+    case 'easy':
+    case 'medium':
+    default:
+      return 'normal';
+  }
+}
+
+function scaleStats(stats: Stats, multiplier: number): Stats {
+  const scale = (value: number): number => Math.max(1, Math.round(value * multiplier));
+
+  return {
+    hp: scale(stats.hp),
+    pp: scale(stats.pp),
+    atk: scale(stats.atk),
+    def: scale(stats.def),
+    mag: scale(stats.mag),
+    spd: scale(stats.spd),
+  };
+}
+
+function scaleEnemyUnitForEncounter(unit: Unit, difficulty: EncounterDifficulty): Unit {
+  const multiplier = getEncounterEnemyStatMultiplier(difficulty);
+  if (multiplier === 1.0) {
+    return unit;
+  }
+
+  const scaledBaseStats = scaleStats(unit.baseStats, multiplier);
+  const maxHp = scaledBaseStats.hp + (unit.level - 1) * unit.growthRates.hp;
+
+  return {
+    ...unit,
+    baseStats: scaledBaseStats,
+    currentHp: maxHp,
+  };
+}
 
 /**
  * Load an encounter by ID
@@ -53,8 +115,10 @@ export function createBattleFromEncounter(
     return null;
   }
 
+  const scaledEnemyUnits = enemyUnits.map((unit) => scaleEnemyUnitForEncounter(unit, encounter.difficulty));
+
   // Create battle state with encounter metadata
-  const battleResult = startBattle(playerTeam, enemyUnits, rng);
+  const battleResult = startBattle(playerTeam, scaledEnemyUnits, rng);
 
   if (!battleResult.ok) {
     console.error(`Failed to start battle: ${battleResult.error}`);
@@ -67,7 +131,7 @@ export function createBattleFromEncounter(
     encounterId: encounter.id, // Legacy field
     meta: {
       encounterId: encounter.id,
-      difficulty: encounter.difficulty === 'boss' ? 'boss' : 'normal',
+      difficulty: mapEncounterDifficultyToBattleTier(encounter.difficulty),
     },
     isBossBattle: encounter.difficulty === 'boss',
     leaderSpriteId: encounter.leaderSpriteId,
@@ -158,4 +222,3 @@ export function processRandomEncounter(
 
   return selectRandomEncounter(mapEncounterPool, rng);
 }
-
