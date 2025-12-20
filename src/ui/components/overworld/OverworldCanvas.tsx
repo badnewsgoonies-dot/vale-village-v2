@@ -62,8 +62,8 @@ const buildHouseBuilding = (houseNum: number): SceneBuilding => {
   return {
     id: profile.id ?? `house-${houseId}`,
     spritePath: profile.spritePath,
-    x: centerX - profile.width / 2,
-    y: BUILDING_GROUND_Y - profile.height,
+    x: centerX,
+    y: BUILDING_GROUND_Y,
     width: profile.width,
     height: profile.height,
     triggerId: `house-${houseId}-door`,
@@ -79,8 +79,8 @@ const VALE_VILLAGE_SCENE_BUILDINGS: SceneBuilding[] = [
   {
     id: 'battle-tower',
     spritePath: '/sprites/buildings/Vale/Vale_Sanctum.gif',
-    x: toWorldCenterX(TOWER_TILE_X) - 50,
-    y: BUILDING_GROUND_Y - 120,
+    x: toWorldCenterX(TOWER_TILE_X),
+    y: BUILDING_GROUND_Y,
     width: 100,
     height: 120,
     triggerId: 'tower-entrance',
@@ -88,8 +88,8 @@ const VALE_VILLAGE_SCENE_BUILDINGS: SceneBuilding[] = [
   {
     id: 'weapon-shop',
     spritePath: '/sprites/buildings/Vale/Vale_WepArm_Shop.gif',
-    x: toWorldCenterX(WEAPON_SHOP_TILE_X) - 50,
-    y: BUILDING_GROUND_Y - 90,
+    x: toWorldCenterX(WEAPON_SHOP_TILE_X),
+    y: BUILDING_GROUND_Y,
     width: 100,
     height: 90,
     triggerId: 'shop-weapons',

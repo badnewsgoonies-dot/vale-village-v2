@@ -16,8 +16,8 @@ import { loadSprite } from '../../../sprites/loader';
 export interface SceneBuilding {
   id: string;
   spritePath: string;
-  x: number;
-  y: number;
+  x: number; // World X (bottom-center)
+  y: number; // World Y (ground line / bottom)
   width: number;
   height: number;
   triggerId?: string;
@@ -110,8 +110,8 @@ export class EntityLayer implements Layer {
     let closestDistanceSq = this.PROXIMITY_THRESHOLD * this.PROXIMITY_THRESHOLD;
 
     for (const building of this.sceneBuildings) {
-      const doorX = building.x + building.width / 2 + (building.doorOffsetX ?? 0);
-      const doorY = building.y + building.height + (building.doorOffsetY ?? 0);
+      const doorX = building.x + (building.doorOffsetX ?? 0);
+      const doorY = building.y + (building.doorOffsetY ?? 0);
       const dx = playerPos.x - doorX;
       const dy = playerPos.y - doorY;
       const distanceSq = dx * dx + dy * dy;
@@ -135,8 +135,8 @@ export class EntityLayer implements Layer {
     return {
       type: 'building',
       id: building.id,
-      x: building.x + building.width / 2, // Center X for rendering
-      y: building.y + building.height, // Bottom Y for Y-sorting
+      x: building.x,
+      y: building.y,
       width: building.width,
       height: building.height,
       spriteId: building.spritePath,
