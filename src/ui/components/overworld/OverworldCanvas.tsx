@@ -19,152 +19,82 @@ import type { Position } from '../../../core/models/overworld';
 import './OverworldCanvas.css';
 
 /**
- * Vale Village scene buildings - aligned in a single row
- * All buildings at same Y (280) so player can walk past all in straight line
- * Hold right arrow to walk past every house
+ * Vale Village scene buildings - aligned to the world ground line
+ * Buildings anchor at Y=420 so doors sit on the road band.
  */
-const BUILDING_ROW_Y = 280;
+const BUILDING_GROUND_Y = 420;
+const TILE_SIZE = 32;
+const HOUSE_START_TILE_X = 7;
+const HOUSE_TILE_SPACING = 4;
+const HOUSE_COUNT = 30;
+
+type HouseProfile = { id?: string; spritePath: string; width: number; height: number };
+
+const DEFAULT_HOUSE_PROFILES: HouseProfile[] = [
+  { spritePath: '/sprites/buildings/Vale/Vale_Building1.gif', width: 90, height: 80 },
+  { spritePath: '/sprites/buildings/Vale/Vale_Building2.gif', width: 90, height: 80 },
+  { spritePath: '/sprites/buildings/Vale/Vale_Building3.gif', width: 100, height: 90 },
+  { spritePath: '/sprites/buildings/Vale/Vale_Building4.gif', width: 90, height: 80 },
+  { spritePath: '/sprites/buildings/Vale/Vale_Building5.gif', width: 100, height: 90 },
+  { spritePath: '/sprites/buildings/Vale/Vale_Building6.gif', width: 95, height: 85 },
+  { spritePath: '/sprites/buildings/Vale/Vale_Building7.gif', width: 90, height: 80 },
+  { spritePath: '/sprites/buildings/Vale/Vale_Building8.gif', width: 100, height: 90 },
+];
+
+const SPECIAL_HOUSE_PROFILES: Record<number, HouseProfile> = {
+  1: { id: 'isaacs-house', spritePath: '/sprites/buildings/Vale/Vale_Isaacs_House.gif', width: 120, height: 100 },
+  2: { id: 'kradens-house', spritePath: '/sprites/buildings/Vale/Vale_Kradens_House.gif', width: 140, height: 120 },
+  6: { id: 'inn', spritePath: '/sprites/buildings/Vale/Vale_Inn.gif', width: 120, height: 100 },
+  10: { id: 'garets-house', spritePath: '/sprites/buildings/Vale/Vale_Garets_House.gif', width: 120, height: 100 },
+  11: { id: 'jennas-house', spritePath: '/sprites/buildings/Vale/Vale_Jennas_House.gif', width: 110, height: 95 },
+};
+
+const toWorldCenterX = (tileX: number): number => tileX * TILE_SIZE + TILE_SIZE / 2;
+
+const buildHouseBuilding = (houseNum: number): SceneBuilding => {
+  const houseId = String(houseNum).padStart(2, '0');
+  const tileX = HOUSE_START_TILE_X + (houseNum - 1) * HOUSE_TILE_SPACING;
+  const centerX = toWorldCenterX(tileX);
+  const profile = SPECIAL_HOUSE_PROFILES[houseNum]
+    ?? DEFAULT_HOUSE_PROFILES[(houseNum - 1) % DEFAULT_HOUSE_PROFILES.length]
+    ?? DEFAULT_HOUSE_PROFILES[0]!;
+
+  return {
+    id: profile.id ?? `house-${houseId}`,
+    spritePath: profile.spritePath,
+    x: centerX,
+    y: BUILDING_GROUND_Y,
+    width: profile.width,
+    height: profile.height,
+    triggerId: `house-${houseId}-door`,
+  };
+};
+
+const HOUSE_BUILDINGS: SceneBuilding[] = Array.from({ length: HOUSE_COUNT }, (_, index) => buildHouseBuilding(index + 1));
+
+const TOWER_TILE_X = 134;
+const WEAPON_SHOP_TILE_X = 2;
+
 const VALE_VILLAGE_SCENE_BUILDINGS: SceneBuilding[] = [
   {
     id: 'battle-tower',
     spritePath: '/sprites/buildings/Vale/Vale_Sanctum.gif',
-    x: 50, y: BUILDING_ROW_Y,
-    width: 100, height: 120,
+    x: toWorldCenterX(TOWER_TILE_X),
+    y: BUILDING_GROUND_Y,
+    width: 100,
+    height: 120,
     triggerId: 'tower-entrance',
-  },
-  {
-    id: 'isaacs-house',
-    spritePath: '/sprites/buildings/Vale/Vale_Isaacs_House.gif',
-    x: 170, y: BUILDING_ROW_Y,
-    width: 120, height: 100,
-    triggerId: 'house-01-door',
-  },
-  {
-    id: 'kradens-house',
-    spritePath: '/sprites/buildings/Vale/Vale_Kradens_House.gif',
-    x: 310, y: BUILDING_ROW_Y,
-    width: 140, height: 120,
-    triggerId: 'house-02-door',
-  },
-  {
-    id: 'house-03',
-    spritePath: '/sprites/buildings/Vale/Vale_Building1.gif',
-    x: 470, y: BUILDING_ROW_Y,
-    width: 90, height: 80,
-    triggerId: 'house-03-door',
-  },
-  {
-    id: 'house-04',
-    spritePath: '/sprites/buildings/Vale/Vale_Building2.gif',
-    x: 580, y: BUILDING_ROW_Y,
-    width: 90, height: 80,
-    triggerId: 'house-04-door',
   },
   {
     id: 'weapon-shop',
     spritePath: '/sprites/buildings/Vale/Vale_WepArm_Shop.gif',
-    x: 690, y: BUILDING_ROW_Y,
-    width: 100, height: 90,
+    x: toWorldCenterX(WEAPON_SHOP_TILE_X),
+    y: BUILDING_GROUND_Y,
+    width: 100,
+    height: 90,
     triggerId: 'shop-weapons',
   },
-  {
-    id: 'inn',
-    spritePath: '/sprites/buildings/Vale/Vale_Inn.gif',
-    x: 810, y: BUILDING_ROW_Y,
-    width: 120, height: 100,
-    triggerId: 'house-06-door',
-  },
-  {
-    id: 'house-07',
-    spritePath: '/sprites/buildings/Vale/Vale_Building3.gif',
-    x: 950, y: BUILDING_ROW_Y,
-    width: 100, height: 90,
-    triggerId: 'house-07-door',
-  },
-  {
-    id: 'house-08',
-    spritePath: '/sprites/buildings/Vale/Vale_Building4.gif',
-    x: 1070, y: BUILDING_ROW_Y,
-    width: 90, height: 80,
-    triggerId: 'house-08-door',
-  },
-  {
-    id: 'house-09',
-    spritePath: '/sprites/buildings/Vale/Vale_Building5.gif',
-    x: 1180, y: BUILDING_ROW_Y,
-    width: 100, height: 90,
-    triggerId: 'house-09-door',
-  },
-  {
-    id: 'garets-house',
-    spritePath: '/sprites/buildings/Vale/Vale_Garets_House.gif',
-    x: 1300, y: BUILDING_ROW_Y,
-    width: 120, height: 100,
-    triggerId: 'house-10-door',
-  },
-  {
-    id: 'jennas-house',
-    spritePath: '/sprites/buildings/Vale/Vale_Jennas_House.gif',
-    x: 1440, y: BUILDING_ROW_Y,
-    width: 110, height: 95,
-    triggerId: 'house-11-door',
-  },
-  {
-    id: 'house-12',
-    spritePath: '/sprites/buildings/Vale/Vale_Building6.gif',
-    x: 1570, y: BUILDING_ROW_Y,
-    width: 95, height: 85,
-    triggerId: 'house-12-door',
-  },
-  {
-    id: 'house-13',
-    spritePath: '/sprites/buildings/Vale/Vale_Building7.gif',
-    x: 1685, y: BUILDING_ROW_Y,
-    width: 90, height: 80,
-    triggerId: 'house-13-door',
-  },
-  {
-    id: 'house-14',
-    spritePath: '/sprites/buildings/Vale/Vale_Building8.gif',
-    x: 1795, y: BUILDING_ROW_Y,
-    width: 100, height: 90,
-    triggerId: 'house-14-door',
-  },
-  {
-    id: 'house-15',
-    spritePath: '/sprites/buildings/Vale/Vale_Building1.gif',
-    x: 1915, y: BUILDING_ROW_Y,
-    width: 90, height: 80,
-    triggerId: 'house-15-door',
-  },
-  {
-    id: 'house-16',
-    spritePath: '/sprites/buildings/Vale/Vale_Building2.gif',
-    x: 2025, y: BUILDING_ROW_Y,
-    width: 90, height: 80,
-    triggerId: 'house-16-door',
-  },
-  {
-    id: 'house-17',
-    spritePath: '/sprites/buildings/Vale/Vale_Building3.gif',
-    x: 2135, y: BUILDING_ROW_Y,
-    width: 100, height: 90,
-    triggerId: 'house-17-door',
-  },
-  {
-    id: 'house-18',
-    spritePath: '/sprites/buildings/Vale/Vale_Building4.gif',
-    x: 2255, y: BUILDING_ROW_Y,
-    width: 90, height: 80,
-    triggerId: 'house-18-door',
-  },
-  {
-    id: 'house-19',
-    spritePath: '/sprites/buildings/Vale/Vale_Building5.gif',
-    x: 2365, y: BUILDING_ROW_Y,
-    width: 100, height: 90,
-    triggerId: 'house-19-door',
-  },
+  ...HOUSE_BUILDINGS,
 ];
 
 interface OverworldCanvasProps {
