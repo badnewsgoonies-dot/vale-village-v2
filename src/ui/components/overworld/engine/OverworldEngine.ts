@@ -76,6 +76,11 @@ interface Particle {
 /** Weather types */
 type WeatherType = 'clear' | 'rain' | 'snow';
 
+const ROAD_Y_TOP = 420;
+const ROAD_Y_BOTTOM = 480;
+const PLAYER_ROAD_MIN_Y = ROAD_Y_TOP - 10;
+const PLAYER_ROAD_MAX_Y = ROAD_Y_BOTTOM;
+
 export class OverworldEngine {
   private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
@@ -326,7 +331,10 @@ export class OverworldEngine {
    * Converts to world coordinates for smooth movement
    */
   setPlayerPosition(pos: Position): void {
-    const worldPos = tileToWorld(pos, this.config.tileSize);
+    let worldPos = tileToWorld(pos, this.config.tileSize);
+    if (this.currentSceneType === 'overworld' && this.entityLayer.isSceneMode()) {
+      worldPos = { ...worldPos, y: (ROAD_Y_TOP + ROAD_Y_BOTTOM) / 2 };
+    }
 
     const isInitial = this.playerPos.x === 0 && this.playerPos.y === 0;
     const dx = worldPos.x - this.playerPos.x;
@@ -889,17 +897,6 @@ export class OverworldEngine {
       dy /= len;
     }
 
-    // In scene mode, compensate for stretched aspect ratio
-    // World is 4032×240, canvas is 960×640
-    // Y movement appears ~11x faster on screen, so scale it down
-    if (this.entityLayer.isSceneMode()) {
-      const worldAspect = (this.mapData?.width ?? 84) * this.config.tileSize /
-                          ((this.mapData?.height ?? 5) * this.config.tileSize);
-      const canvasAspect = this.config.canvasWidth / this.config.canvasHeight;
-      const yScale = canvasAspect / worldAspect; // ~0.089
-      dy *= yScale;
-    }
-
     // Update facing direction
     if (dx !== 0 || dy !== 0) {
       if (Math.abs(dx) > Math.abs(dy)) {
@@ -935,6 +932,13 @@ export class OverworldEngine {
       if (distToExit < 40 && this.input.down && !this.sceneTransition.isTransitioning()) {
         this.exitBuilding();
       }
+    } else if (this.entityLayer.isSceneMode()) {
+      const worldWidth = this.mapData
+        ? this.mapData.width * this.config.tileSize
+        : this.config.canvasWidth;
+      const halfTile = this.config.tileSize / 2;
+      this.playerPos.x = clamp(newX, halfTile, worldWidth - halfTile);
+      this.playerPos.y = clamp(newY, PLAYER_ROAD_MIN_Y, PLAYER_ROAD_MAX_Y);
     } else {
       // Overworld: check tile collision
       const newTile = worldToTile({ x: newX, y: newY }, this.config.tileSize);
@@ -1145,19 +1149,6 @@ export class OverworldEngine {
       `Camera W: (${this.camera.x.toFixed(2)}, ${this.camera.y.toFixed(2)})`,
       `Camera R: (${cameraRenderX}, ${cameraRenderY})`,
     ];
-
-    if (isSceneMode && worldHeightPx && worldHeightPx > 0) {
-      const playerSceneY = (this.playerPos.y / worldHeightPx) * this.config.canvasHeight;
-      const sceneScaleY = this.config.canvasHeight / worldHeightPx;
-      lines.push(`Player S: y=${playerSceneY.toFixed(1)}  scaleY=${sceneScaleY.toFixed(3)}`);
-
-      if (worldWidthPx && worldWidthPx > 0) {
-        const worldAspect = worldWidthPx / worldHeightPx;
-        const canvasAspect = this.config.canvasWidth / this.config.canvasHeight;
-        const inputYScale = canvasAspect / worldAspect;
-        lines.push(`Input yScale: ${inputYScale.toFixed(3)}`);
-      }
-    }
 
     if (worldWidthPx && worldHeightPx) {
       lines.push(`World: ${worldWidthPx}×${worldHeightPx}px  (tile=${this.config.tileSize})`);

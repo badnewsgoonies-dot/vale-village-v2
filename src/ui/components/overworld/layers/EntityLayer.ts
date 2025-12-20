@@ -12,12 +12,12 @@ import { clamp, type Layer, type Camera, type Entity, type Direction, type World
 import type { GameMap, NPC } from '../../../../data/schemas/mapSchema';
 import { loadSprite } from '../../../sprites/loader';
 
-/** Scene building definition for pseudo-3D layout */
+/** Scene building definition (world pixels, bottom-center anchored). */
 export interface SceneBuilding {
   id: string;
   spritePath: string;
-  x: number;
-  y: number;
+  x: number; // Center X in world pixels
+  y: number; // Ground line Y in world pixels
   width: number;
   height: number;
   triggerId?: string;
@@ -55,7 +55,6 @@ export class EntityLayer implements Layer {
   private spriteCache: Map<string, HTMLImageElement> = new Map();
   private loadingSprites: Set<string> = new Set();
 
-  private warnedAboutSceneCoordMix: boolean = false;
 
   setTileSize(size: number): void {
     this.tileSize = size;
@@ -108,16 +107,15 @@ export class EntityLayer implements Layer {
   }
 
   /**
-   * Update nearby building for door glow and ENTER prompt
-   * Note: Buildings use canvas Y coords, player uses world Y coords
-   * For a row of buildings, we just check X proximity (player walks in front)
+   * Update nearby building for door glow and ENTER prompt.
+   * For a row of buildings, we just check X proximity (player walks in front).
    */
   updatePlayerProximity(playerPos: WorldPosition): void {
     this.nearbyBuildingId = null;
 
     for (const building of this.sceneBuildings) {
       // Calculate X distance to building center (both in world/scene X coords)
-      const buildingCenterX = building.x + building.width / 2;
+      const buildingCenterX = building.x;
       const dx = Math.abs(playerPos.x - buildingCenterX);
 
       // Player is "in front" of building if within X range
@@ -140,8 +138,8 @@ export class EntityLayer implements Layer {
     return {
       type: 'building',
       id: building.id,
-      x: building.x + building.width / 2, // Center X for rendering
-      y: building.y + building.height, // Bottom Y for Y-sorting
+      x: building.x,
+      y: building.y,
       width: building.width,
       height: building.height,
       spriteId: building.spritePath,
@@ -406,20 +404,6 @@ export class EntityLayer implements Layer {
    * Update or create player entity
    */
   setPlayerPosition(pos: WorldPosition, facing: Direction, unitId: string): void {
-    if (
-      this.useSceneMode &&
-      !this.warnedAboutSceneCoordMix &&
-      this.worldHeightPx > 0 &&
-      pos.y > this.worldHeightPx + this.tileSize
-    ) {
-      this.warnedAboutSceneCoordMix = true;
-      console.warn('[EntityLayer] Possible scene-mode coordinate mixing: expected world Y but received a much larger value.', {
-        posY: pos.y,
-        worldHeightPx: this.worldHeightPx,
-        tileSize: this.tileSize,
-      });
-    }
-
     const spriteId = `player-${unitId}-${facing}`;
 
     // Load sprite async
@@ -493,34 +477,30 @@ export class EntityLayer implements Layer {
   }
 
   render(ctx: CanvasRenderingContext2D, camera: Camera): void {
-    // In scene mode, separate buildings from player (different coord systems)
-    // Player walks in front of buildings, so render buildings first, player last
+    // In scene mode, keep everything in world coords and render buildings first.
     if (this.useSceneMode) {
-      const cameraRenderX = camera.getRenderX();
-
       // Sort buildings by Y (for depth within buildings)
       const buildingEntities = this.entities.filter(e => e.isSceneBuilding);
       buildingEntities.sort((a, b) => a.y - b.y);
 
       // Render buildings first
       for (const entity of buildingEntities) {
-        const screenX = entity.x - cameraRenderX;
-        const screenY = entity.y;
-        this.drawSceneBuildingShadow(ctx, screenX, screenY, entity.width);
-        this.drawSceneBuildingSprite(ctx, screenX, screenY, entity);
+        if (!camera.isVisible(entity.x - entity.width / 2, entity.y - entity.height, entity.width, entity.height)) {
+          continue;
+        }
+        const screenPos = camera.worldToScreen(entity.x, entity.y);
+        this.drawSceneBuildingShadow(ctx, screenPos.x, screenPos.y, entity.width);
+        this.drawSceneBuildingSprite(ctx, screenPos.x, screenPos.y, entity);
         if (entity.id === this.nearbyBuildingId) {
-          this.drawDoorGlow(ctx, screenX, screenY, entity);
-          this.drawEnterPrompt(ctx, screenX, screenY, entity);
+          this.drawDoorGlow(ctx, screenPos.x, screenPos.y, entity);
+          this.drawEnterPrompt(ctx, screenPos.x, screenPos.y, entity);
         }
       }
 
       // Render player last (always in front)
       if (this.playerEntity) {
-        const screenY = this.worldHeightPx > 0
-          ? (this.playerEntity.y / this.worldHeightPx) * camera.viewportHeight
-          : this.playerEntity.y;
-        const screenPos = { x: this.playerEntity.x - cameraRenderX, y: screenY };
-        const perspectiveScale = this.getPerspectiveScale(screenY, camera.viewportHeight);
+        const screenPos = camera.worldToScreen(this.playerEntity.x, this.playerEntity.y);
+        const perspectiveScale = this.getPerspectiveScale(screenPos.y, camera.viewportHeight);
         this.drawShadow(ctx, screenPos, this.playerEntity, perspectiveScale);
         this.drawEntity(ctx, screenPos, this.playerEntity, perspectiveScale);
       }
@@ -543,22 +523,20 @@ export class EntityLayer implements Layer {
 
     // Render each entity
     for (const entity of allEntities) {
-      // For scene buildings, apply camera X offset (horizontal scrolling)
-      // Y stays as-is since scene coords are canvas-relative
+      // For scene buildings, use world coords like everything else.
       if (entity.isSceneBuilding) {
-        const screenX = entity.x - camera.getRenderX();  // Apply horizontal camera scroll
-        const screenY = entity.y;              // Keep Y in canvas space
+        const screenPos = camera.worldToScreen(entity.x, entity.y);
 
         // Draw ellipse shadow
-        this.drawSceneBuildingShadow(ctx, screenX, screenY, entity.width);
+        this.drawSceneBuildingShadow(ctx, screenPos.x, screenPos.y, entity.width);
 
         // Draw building sprite
-        this.drawSceneBuildingSprite(ctx, screenX, screenY, entity);
+        this.drawSceneBuildingSprite(ctx, screenPos.x, screenPos.y, entity);
 
         // Draw door glow if player is near this building
         if (entity.id === this.nearbyBuildingId) {
-          this.drawDoorGlow(ctx, screenX, screenY, entity);
-          this.drawEnterPrompt(ctx, screenX, screenY, entity);
+          this.drawDoorGlow(ctx, screenPos.x, screenPos.y, entity);
+          this.drawEnterPrompt(ctx, screenPos.x, screenPos.y, entity);
         }
 
         continue;
