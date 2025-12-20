@@ -100,6 +100,14 @@ export const createBattleSlice: StateCreator<
       }
 
       set({ battle: result.value.state, events: [...events, ...newEvents] });
+
+      // Notify story slice of encounter completion
+      if (encounterId) {
+        const { onBattleEvents } = get();
+        if (onBattleEvents) {
+          onBattleEvents(newEvents);
+        }
+      }
     } else {
       // Battle continues - advance to next turn
       const rngEndTurn = makePRNG(createRNGStream(rngSeed, turnNumber, RNG_STREAMS.END_TURN));
