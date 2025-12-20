@@ -6,6 +6,7 @@ import {
   advanceDialogue,
 } from '@/core/services/DialogueService';
 import type { GameFlowSlice } from './gameFlowSlice';
+import type { InventorySlice } from './inventorySlice';
 import type { StorySlice } from './storySlice';
 import type { SaveSlice } from './saveSlice';
 import type { TeamSlice } from './teamSlice';
@@ -25,7 +26,9 @@ export interface DialogueSlice {
   endDialogue: () => void;
 }
 
-export const createDialogueSlice: StateCreator<DialogueSlice & GameFlowSlice & StorySlice & SaveSlice & TeamSlice> = (set, get) =>
+export const createDialogueSlice: StateCreator<
+  DialogueSlice & GameFlowSlice & StorySlice & SaveSlice & TeamSlice & InventorySlice
+> = (set, get) =>
   ({
   currentDialogueTree: null,
   currentDialogueState: null,
@@ -101,7 +104,15 @@ export const createDialogueSlice: StateCreator<DialogueSlice & GameFlowSlice & S
       return;
     }
 
-    const newState = advanceDialogue(latestTree, latestState);
+    const store = get();
+    const newState = advanceDialogue(latestTree, latestState, {
+      flags: (store.story.flags || {}) as Record<string, boolean>,
+      inventory: {
+        items: store.equipment.map((item) => item.id),
+      },
+      gold: store.gold,
+      level: store.team?.units?.[0]?.level || 1,
+    });
 
     if (newState) {
       // Advance to the next node
@@ -152,7 +163,7 @@ export const createDialogueSlice: StateCreator<DialogueSlice & GameFlowSlice & S
       mode: nextMode,
     });
   },
-} as DialogueSlice & GameFlowSlice & StorySlice & SaveSlice & TeamSlice);
+} as DialogueSlice & GameFlowSlice & StorySlice & SaveSlice & TeamSlice & InventorySlice);
 
 /**
  * Dialogue effect events derived from typed DialogueEffects.

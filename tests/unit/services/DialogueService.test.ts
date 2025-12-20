@@ -134,6 +134,75 @@ describe('DialogueService', () => {
 
       expect(newState).toBeNull();
     });
+
+    it('should advance when choices exist but none are available and node has nextNodeId', () => {
+      const tree: DialogueTree = {
+        id: 'locked-choices-with-fallback',
+        nodes: [
+          {
+            id: 'locked',
+            speaker: 'NPC',
+            text: 'You cannot pick any of these.',
+            nextNodeId: 'fallback',
+            choices: [
+              {
+                id: 'locked-choice',
+                text: 'Locked',
+                nextNodeId: 'end',
+                condition: { type: 'flag', key: 'unlocked', value: true },
+              },
+            ],
+          },
+          { id: 'fallback', speaker: 'NPC', text: 'Fallback.' },
+          { id: 'end', speaker: 'NPC', text: 'End.' },
+        ],
+        startNodeId: 'locked',
+      };
+
+      const state = startDialogue(tree);
+      const newState = advanceDialogue(tree, state, {
+        flags: { unlocked: false },
+        inventory: { items: [] },
+        gold: 0,
+        level: 1,
+      });
+
+      expect(newState).not.toBeNull();
+      expect(newState?.currentNodeId).toBe('fallback');
+    });
+
+    it('should return null when choices exist but none are available and no nextNodeId', () => {
+      const tree: DialogueTree = {
+        id: 'locked-choices-terminal',
+        nodes: [
+          {
+            id: 'locked',
+            speaker: 'NPC',
+            text: 'Stuck choices.',
+            choices: [
+              {
+                id: 'locked-choice',
+                text: 'Locked',
+                nextNodeId: 'end',
+                condition: { type: 'flag', key: 'unlocked', value: true },
+              },
+            ],
+          },
+          { id: 'end', speaker: 'NPC', text: 'End.' },
+        ],
+        startNodeId: 'locked',
+      };
+
+      const state = startDialogue(tree);
+      const newState = advanceDialogue(tree, state, {
+        flags: { unlocked: false },
+        inventory: { items: [] },
+        gold: 0,
+        level: 1,
+      });
+
+      expect(newState).toBeNull();
+    });
   });
 
   describe('selectChoice', () => {
