@@ -115,6 +115,8 @@ export class OverworldEngine {
   private savedOverworldPos: WorldPosition | null = null; // Saved when entering interior
   private _playerUnitId: string = 'adept';
   private playerSpeed: number;
+  private readonly ROAD_Y_TOP = 420;
+  private readonly ROAD_Y_BOTTOM = 480;
 
   // Input state for continuous movement
   private input: InputState = {
@@ -916,6 +918,19 @@ export class OverworldEngine {
         this.exitBuilding();
       }
     } else {
+      if (this.entityLayer.isSceneMode()) {
+        if (this.mapData) {
+          const worldWidth = this.mapData.width * this.config.tileSize;
+          const halfTile = this.config.tileSize / 2;
+          this.playerPos.x = clamp(newX, halfTile, worldWidth - halfTile);
+          this.playerPos.y = clamp(newY, this.ROAD_Y_TOP, this.ROAD_Y_BOTTOM);
+        } else {
+          this.playerPos.x = newX;
+          this.playerPos.y = clamp(newY, this.ROAD_Y_TOP, this.ROAD_Y_BOTTOM);
+        }
+        return;
+      }
+
       // Overworld: check tile collision
       const newTile = worldToTile({ x: newX, y: newY }, this.config.tileSize);
       const canMove = this.checkCollision(newTile);
