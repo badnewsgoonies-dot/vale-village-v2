@@ -4,6 +4,7 @@ import {
   startDialogue,
   selectChoice,
   advanceDialogue,
+  type DialogueContext,
 } from '@/core/services/DialogueService';
 import type { GameFlowSlice } from './gameFlowSlice';
 import type { InventorySlice } from './inventorySlice';
@@ -120,7 +121,16 @@ export const createDialogueSlice: StateCreator<
       return;
     }
 
-    const newState = advanceDialogue(latestTree, latestState);
+    const store = get();
+    const dialogueContext: DialogueContext = {
+      flags: (store.story.flags || {}) as Record<string, boolean>,
+      inventory: {
+        items: store.equipment.map((item) => item.id),
+      },
+      gold: store.gold,
+      level: store.team?.units?.[0]?.level || 1,
+    };
+    const newState = advanceDialogue(latestTree, latestState, dialogueContext);
 
     if (newState) {
       // Advance to the next node

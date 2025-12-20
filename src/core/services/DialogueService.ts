@@ -19,7 +19,7 @@ export function getCurrentNode(tree: DialogueTree, state: DialogueState): Dialog
   return tree.nodes.find(node => node.id === state.currentNodeId);
 }
 
-type DialogueContext = {
+export type DialogueContext = {
   flags: Record<string, boolean>;
   inventory: { items: string[] };
   gold: number;
@@ -76,10 +76,21 @@ export function selectChoice(
   };
 }
 
-export function advanceDialogue(tree: DialogueTree, state: DialogueState): DialogueState | null {
+export function advanceDialogue(
+  tree: DialogueTree,
+  state: DialogueState,
+  context?: DialogueContext,
+): DialogueState | null {
   const currentNode = getCurrentNode(tree, state);
   if (!currentNode) return null;
-  if (currentNode.choices && currentNode.choices.length > 0) return null;
+
+  if (currentNode.choices && currentNode.choices.length > 0) {
+    if (!context) return null;
+
+    const availableChoices = getAvailableChoices(currentNode, context);
+    if (availableChoices.length > 0) return null;
+  }
+
   if (currentNode.nextNodeId) {
     return {
       ...state,
@@ -92,8 +103,19 @@ export function advanceDialogue(tree: DialogueTree, state: DialogueState): Dialo
   return null;
 }
 
-export function isDialogueComplete(tree: DialogueTree, state: DialogueState): boolean {
+export function isDialogueComplete(
+  tree: DialogueTree,
+  state: DialogueState,
+  context?: DialogueContext,
+): boolean {
   const currentNode = getCurrentNode(tree, state);
   if (!currentNode) return true;
-  return !currentNode.choices && !currentNode.nextNodeId;
+
+  if (currentNode.choices && currentNode.choices.length > 0) {
+    if (!context) return false;
+    const availableChoices = getAvailableChoices(currentNode, context);
+    if (availableChoices.length > 0) return false;
+  }
+
+  return !currentNode.nextNodeId;
 }

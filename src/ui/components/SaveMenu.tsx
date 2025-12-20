@@ -95,7 +95,7 @@ export function SaveMenu({ onClose }: SaveMenuProps) {
     setIsLoading(true);
     setError(null);
     try {
-      saveGameSlot(slotIndex);
+      await saveGameSlot(slotIndex);
       refreshSlots();
       setAction(null);
       setSelectedSlot(null);
@@ -114,7 +114,7 @@ export function SaveMenu({ onClose }: SaveMenuProps) {
     setIsLoading(true);
     setError(null);
     try {
-      loadGameSlot(slotIndex);
+      await loadGameSlot(slotIndex);
       setMode('overworld');
       // Navigate to overworld after successful load
       startTransition('overworld');
