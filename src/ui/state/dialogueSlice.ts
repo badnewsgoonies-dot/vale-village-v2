@@ -6,6 +6,7 @@ import {
   advanceDialogue,
 } from '@/core/services/DialogueService';
 import type { GameFlowSlice } from './gameFlowSlice';
+import type { InventorySlice } from './inventorySlice';
 import type { StorySlice } from './storySlice';
 import type { SaveSlice } from './saveSlice';
 import type { TeamSlice } from './teamSlice';
@@ -25,7 +26,12 @@ export interface DialogueSlice {
   endDialogue: () => void;
 }
 
-export const createDialogueSlice: StateCreator<DialogueSlice & GameFlowSlice & StorySlice & SaveSlice & TeamSlice> = (set, get) =>
+export const createDialogueSlice: StateCreator<
+  DialogueSlice & GameFlowSlice & StorySlice & SaveSlice & TeamSlice & InventorySlice,
+  [],
+  [],
+  DialogueSlice
+> = (set, get) =>
   ({
   currentDialogueTree: null,
   currentDialogueState: null,
@@ -49,11 +55,24 @@ export const createDialogueSlice: StateCreator<DialogueSlice & GameFlowSlice & S
     const { currentDialogueTree, currentDialogueState } = get();
     if (!currentDialogueTree || !currentDialogueState) return;
 
+    const { story, gold, equipment, team } = get();
+    const context = {
+      flags: (story.flags || {}) as Record<string, boolean>,
+      inventory: {
+        items: equipment.map((item) => item.id),
+      },
+      gold,
+      level: team?.units?.[0]?.level || 1,
+    };
+
     const currentNode = currentDialogueTree.nodes.find((n) => n.id === currentDialogueState.currentNodeId);
     const choice = currentNode?.choices?.find((c) => c.id === choiceId);
     const choiceEffects = choice?.effects;
 
-    const newState = selectChoice(currentDialogueTree, currentDialogueState, choiceId);
+    const newState = selectChoice(currentDialogueTree, currentDialogueState, choiceId, context);
+    if (newState === currentDialogueState) {
+      return;
+    }
     set({ currentDialogueState: newState });
 
     if (choiceEffects && Object.keys(choiceEffects).length > 0) {
@@ -152,7 +171,7 @@ export const createDialogueSlice: StateCreator<DialogueSlice & GameFlowSlice & S
       mode: nextMode,
     });
   },
-} as DialogueSlice & GameFlowSlice & StorySlice & SaveSlice & TeamSlice);
+} as DialogueSlice);
 
 /**
  * Dialogue effect events derived from typed DialogueEffects.
