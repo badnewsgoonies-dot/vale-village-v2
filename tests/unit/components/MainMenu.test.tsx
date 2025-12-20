@@ -21,7 +21,9 @@ const storeState = {
   addUnitToRoster: vi.fn(),
   openTowerFromMainMenu: vi.fn(),
   openShopFromMainMenu,
+  openCompendium: vi.fn(),
   hasSaveSlot: vi.fn(() => false),
+  setMode: vi.fn(),
 };
 
 const useStoreMock: any = vi.fn((selector) => (selector ? selector(storeState) : storeState));
@@ -47,4 +49,3 @@ describe('MainMenu', () => {
     expect(startTransition).toHaveBeenCalledWith('shop');
   });
 });
-

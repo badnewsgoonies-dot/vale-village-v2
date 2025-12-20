@@ -5,6 +5,7 @@
 
 import { useEffect } from 'preact/hooks';
 import { useGameStore } from '../../store/gameStore';
+import { useStore } from '../state/store';
 import './TitleScreen.css';
 
 // Character sprites for the title screen parade
@@ -17,6 +18,11 @@ const TITLE_CHARACTERS = [
 
 export function TitleScreen() {
   const startTransition = useGameStore((s) => s.startTransition);
+  const setMode = useStore((s) => s.setMode);
+
+  useEffect(() => {
+    setMode('title-screen');
+  }, [setMode]);
 
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {

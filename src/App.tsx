@@ -219,6 +219,7 @@ const App: FunctionComponent = () => {
     }),
     shallow
   );
+  const closeCompendiumFlow = useStore((state) => state.closeCompendium);
 
   const setModal = (m: ModalType | null) => {
     if (m === null) {
@@ -290,7 +291,14 @@ const App: FunctionComponent = () => {
       case 'menu':
         return <MainMenu />;
       case 'compendium':
-        return <CompendiumScreen onClose={closeCompendium} />;
+        return (
+          <CompendiumScreen
+            onClose={() => {
+              closeCompendiumFlow();
+              closeCompendium();
+            }}
+          />
+        );
       case 'team-select':
         return <TeamSelectWrapper />;
       case 'rewards':
