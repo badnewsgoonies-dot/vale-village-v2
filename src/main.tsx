@@ -13,25 +13,57 @@ if (!rootElement) {
   );
 }
 
-// Validate game data at startup
-const validationResult = validateGameData();
-if (!validationResult.valid) {
-  console.error(formatValidationResult(validationResult));
-  if (import.meta.env.DEV) {
-    // In development, show detailed error
-    rootElement.innerHTML = `
-      <div style="padding: 20px; font-family: monospace; background: #1a1a2e; color: #ff6b6b; min-height: 100vh;">
-        <h1>Game Data Validation Failed</h1>
-        <pre style="white-space: pre-wrap;">${formatValidationResult(validationResult)}</pre>
+function Bootstrap() {
+  try {
+    const validationResult = validateGameData();
+    if (!validationResult.valid) {
+      const details = formatValidationResult(validationResult);
+      console.error(details);
+
+      if (import.meta.env.DEV) {
+        return (
+          <div
+            style={{
+              padding: '20px',
+              fontFamily: 'monospace',
+              background: '#1a1a2e',
+              color: '#ff6b6b',
+              minHeight: '100vh',
+              whiteSpace: 'pre-wrap',
+            }}
+          >
+            <h1>Game Data Validation Failed</h1>
+            <pre>{details}</pre>
+          </div>
+        );
+      }
+    }
+
+    return <App />;
+  } catch (error) {
+    console.error(error);
+    const message = error instanceof Error ? error.message : String(error);
+    return (
+      <div
+        style={{
+          padding: '20px',
+          fontFamily: 'monospace',
+          background: '#1a1a2e',
+          color: '#ff6b6b',
+          minHeight: '100vh',
+          whiteSpace: 'pre-wrap',
+        }}
+      >
+        <h1>Startup Failed</h1>
+        <pre>{message}</pre>
       </div>
-    `;
-    throw new Error('Game data validation failed. Check console for details.');
+    );
   }
 }
 
 render(
   <ErrorBoundary>
-    <App />
+    <Bootstrap />
   </ErrorBoundary>,
   rootElement
 );
