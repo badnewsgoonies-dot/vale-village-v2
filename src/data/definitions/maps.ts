@@ -7,11 +7,11 @@ const createTile = (type: TileType, walkableOverride?: boolean): { type: TileTyp
   walkable: typeof walkableOverride === 'boolean' ? walkableOverride : type !== 'wall' && type !== 'water',
 });
 
-const VALLE_VILLAGE_WIDTH = 84;
+const VALLE_VILLAGE_WIDTH = 140;
 const VALLE_VILLAGE_HEIGHT = 20;
 // Single horizontal road row; houses and any building entrances sit one tile above this
 const ROAD_ROW = 13;
-const HOUSE_COUNT = 20;
+const HOUSE_COUNT = 30;
 const HOUSE_WIDTH = 11;
 const HOUSE_HEIGHT = 9;
 const HOUSE_CENTER_X = Math.floor(HOUSE_WIDTH / 2);
@@ -79,7 +79,7 @@ const createNPC = (id: string, x: number, y: number, spriteId = 'npc-default'): 
   spriteId,
 });
 
-const TOWER_ENTRANCE_COLUMN = 76;
+const TOWER_ENTRANCE_COLUMN = 134;
 
 const buildValeVillageNPCs = (): GameMap['npcs'] => [
   createNPC('tower-attendant', TOWER_ENTRANCE_COLUMN, ROAD_ROW),
