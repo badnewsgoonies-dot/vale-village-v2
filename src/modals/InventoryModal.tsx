@@ -1,5 +1,7 @@
 import { FunctionComponent } from 'preact';
-import { useState } from 'preact/hooks';
+import { useMemo, useState } from 'preact/hooks';
+import type { Equipment } from '../core/models/Equipment';
+import { useGameStore } from '../store/gameStore';
 import { useStore } from '../ui/state/store';
 import './modals.css';
 
@@ -8,14 +10,48 @@ interface InventoryModalProps {
 }
 
 export const InventoryModal: FunctionComponent<InventoryModalProps> = ({ onClose }) => {
-  const { gold, equipment } = useStore((s) => ({
+  const { gold: legacyGold, equipment: legacyEquipment } = useStore((s) => ({
     gold: s.gold,
     equipment: s.equipment,
   }));
+  const { inventoryItems, currency } = useGameStore((s) => ({
+    inventoryItems: s.playerData.inventory.items,
+    currency: s.playerData.currency,
+  }));
+
+  type DisplayItem = {
+    id: string;
+    name: string;
+    quantity: number;
+    slot: Equipment['slot'] | 'item';
+    statBonus: Partial<Equipment['statBonus']>;
+  };
+
+  const items: DisplayItem[] = useMemo(() => {
+    if (inventoryItems.length > 0) {
+      return inventoryItems.map((item) => ({
+        id: item.id,
+        name: item.name,
+        quantity: item.quantity,
+        slot: item.slot ?? 'item',
+        statBonus: item.statBonus ?? {},
+      }));
+    }
+
+    return legacyEquipment.map((item) => ({
+      id: item.id,
+      name: item.name,
+      quantity: 1,
+      slot: item.slot ?? 'item',
+      statBonus: item.statBonus ?? {},
+    }));
+  }, [inventoryItems, legacyEquipment]);
+
+  const gold = inventoryItems.length > 0 ? currency : legacyGold;
 
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
 
-  const selectedItem = equipment.find((item) => item.id === selectedItemId);
+  const selectedItem = items.find((item) => item.id === selectedItemId);
 
   return (
     <div class="modal-overlay" onClick={onClose}>
@@ -35,17 +71,18 @@ export const InventoryModal: FunctionComponent<InventoryModalProps> = ({ onClose
             </div>
             <div class="stat-item">
               <span class="stat-label">Equipment:</span>
-              <span class="stat-value">{equipment.length} items</span>
+              <span class="stat-value">{items.length} items</span>
             </div>
           </div>
 
           <div class="inventory-content">
             <div class="equipment-list">
-              {equipment.length === 0 ? (
+              {items.length === 0 ? (
                 <div class="empty-message">No equipment in inventory</div>
               ) : (
-                equipment.map((item) => {
+                items.map((item) => {
                   const isSelected = selectedItemId === item.id;
+                  const statBonus = item.statBonus ?? {};
 
                   return (
                     <div
@@ -56,13 +93,13 @@ export const InventoryModal: FunctionComponent<InventoryModalProps> = ({ onClose
                       <div class="item-icon">{item.slot === 'weapon' ? '⚔️' : '🛡️'}</div>
                       <div class="item-info">
                         <div class="item-name">{item.name}</div>
-                        <div class="item-type">{item.slot}</div>
+                        <div class="item-type">{item.slot ?? 'item'}</div>
                       </div>
                       <div class="item-stats">
-                        {(item.statBonus.atk ?? 0) > 0 && <span class="stat-bonus">ATK +{item.statBonus.atk}</span>}
-                        {(item.statBonus.def ?? 0) > 0 && <span class="stat-bonus">DEF +{item.statBonus.def}</span>}
-                        {(item.statBonus.mag ?? 0) > 0 && <span class="stat-bonus">MAG +{item.statBonus.mag}</span>}
-                        {(item.statBonus.spd ?? 0) > 0 && <span class="stat-bonus">SPD +{item.statBonus.spd}</span>}
+                        {(statBonus.atk ?? 0) > 0 && <span class="stat-bonus">ATK +{statBonus.atk}</span>}
+                        {(statBonus.def ?? 0) > 0 && <span class="stat-bonus">DEF +{statBonus.def}</span>}
+                        {(statBonus.mag ?? 0) > 0 && <span class="stat-bonus">MAG +{statBonus.mag}</span>}
+                        {(statBonus.spd ?? 0) > 0 && <span class="stat-bonus">SPD +{statBonus.spd}</span>}
                       </div>
                     </div>
                   );
@@ -75,16 +112,16 @@ export const InventoryModal: FunctionComponent<InventoryModalProps> = ({ onClose
                 <h3>{selectedItem.name}</h3>
                 <div class="detail-row">
                   <span class="detail-label">Type:</span>
-                  <span class="detail-value">{selectedItem.slot}</span>
+                  <span class="detail-value">{selectedItem.slot ?? 'item'}</span>
                 </div>
                 <div class="detail-row">
                   <span class="detail-label">Bonuses:</span>
                   <div class="detail-bonuses">
-                    {(selectedItem.statBonus.atk ?? 0) > 0 && <div>Attack: +{selectedItem.statBonus.atk}</div>}
-                    {(selectedItem.statBonus.def ?? 0) > 0 && <div>Defense: +{selectedItem.statBonus.def}</div>}
-                    {(selectedItem.statBonus.mag ?? 0) > 0 && <div>Magic: +{selectedItem.statBonus.mag}</div>}
-                    {(selectedItem.statBonus.spd ?? 0) > 0 && <div>Speed: +{selectedItem.statBonus.spd}</div>}
-                    {(selectedItem.statBonus.hp ?? 0) > 0 && <div>HP: +{selectedItem.statBonus.hp}</div>}
+                    {(selectedItem.statBonus?.atk ?? 0) > 0 && <div>Attack: +{selectedItem.statBonus?.atk}</div>}
+                    {(selectedItem.statBonus?.def ?? 0) > 0 && <div>Defense: +{selectedItem.statBonus?.def}</div>}
+                    {(selectedItem.statBonus?.mag ?? 0) > 0 && <div>Magic: +{selectedItem.statBonus?.mag}</div>}
+                    {(selectedItem.statBonus?.spd ?? 0) > 0 && <div>Speed: +{selectedItem.statBonus?.spd}</div>}
+                    {(selectedItem.statBonus?.hp ?? 0) > 0 && <div>HP: +{selectedItem.statBonus?.hp}</div>}
                   </div>
                 </div>
               </div>
