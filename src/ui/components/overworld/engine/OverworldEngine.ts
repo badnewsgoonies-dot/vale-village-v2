@@ -115,6 +115,8 @@ export class OverworldEngine {
   private savedOverworldPos: WorldPosition | null = null; // Saved when entering interior
   private _playerUnitId: string = 'adept';
   private playerSpeed: number;
+  private readonly ROAD_Y_TOP = 420;
+  private readonly ROAD_Y_BOTTOM = 480;
 
   // Input state for continuous movement
   private input: InputState = {
@@ -222,7 +224,7 @@ export class OverworldEngine {
 
     // Set tile size on layers that need it
     this.terrainLayer.setTileSize(this.config.tileSize);
-    this.terrainLayer.setCanvasSize(this.config.canvasWidth, this.config.canvasHeight);
+    this.terrainLayer.setCanvasSize(this.config.canvasHeight);
     this.entityLayer.setTileSize(this.config.tileSize);
 
     // Set up canvas for pixel art rendering
@@ -304,7 +306,6 @@ export class OverworldEngine {
    */
   setSceneBuildings(buildings: SceneBuilding[]): void {
     this.entityLayer.setSceneBuildings(buildings);
-    this.terrainLayer.setSceneMode(buildings.length > 0);
   }
 
   /**
@@ -339,10 +340,7 @@ export class OverworldEngine {
     // Regular movement is owned by the engine (store sync is tile-based), so avoid per-tile snapping.
     if (shouldSnap) {
       this.playerPos = { ...worldPos };
-      const cameraTargetY = this.entityLayer.isSceneMode()
-        ? this.camera.viewportHeight / 2
-        : worldPos.y;
-      this.camera.setTarget(worldPos.x, cameraTargetY);
+      this.camera.setTarget(worldPos.x, worldPos.y);
       this.camera.snapToTarget();
     }
     // Note: For smooth movement, the engine handles position updates internally
@@ -710,12 +708,7 @@ export class OverworldEngine {
 
     // Update camera - only follow player in overworld mode
     if (this.currentSceneType === 'overworld') {
-      if (this.entityLayer.isSceneMode()) {
-        // Scene mode uses art-directed screen-space Y for buildings; keep camera vertical scroll locked.
-        this.camera.setTarget(this.playerPos.x, this.camera.viewportHeight / 2);
-      } else {
-        this.camera.setTarget(this.playerPos.x, this.playerPos.y);
-      }
+      this.camera.setTarget(this.playerPos.x, this.playerPos.y);
       this.camera.update(dt);
     } else {
       // Interior mode - keep camera centered on room
@@ -889,17 +882,6 @@ export class OverworldEngine {
       dy /= len;
     }
 
-    // In scene mode, compensate for stretched aspect ratio
-    // World is 4032×240, canvas is 960×640
-    // Y movement appears ~11x faster on screen, so scale it down
-    if (this.entityLayer.isSceneMode()) {
-      const worldAspect = (this.mapData?.width ?? 84) * this.config.tileSize /
-                          ((this.mapData?.height ?? 5) * this.config.tileSize);
-      const canvasAspect = this.config.canvasWidth / this.config.canvasHeight;
-      const yScale = canvasAspect / worldAspect; // ~0.089
-      dy *= yScale;
-    }
-
     // Update facing direction
     if (dx !== 0 || dy !== 0) {
       if (Math.abs(dx) > Math.abs(dy)) {
@@ -936,6 +918,19 @@ export class OverworldEngine {
         this.exitBuilding();
       }
     } else {
+      if (this.entityLayer.isSceneMode()) {
+        if (this.mapData) {
+          const worldWidth = this.mapData.width * this.config.tileSize;
+          const halfTile = this.config.tileSize / 2;
+          this.playerPos.x = clamp(newX, halfTile, worldWidth - halfTile);
+          this.playerPos.y = clamp(newY, this.ROAD_Y_TOP, this.ROAD_Y_BOTTOM);
+        } else {
+          this.playerPos.x = newX;
+          this.playerPos.y = clamp(newY, this.ROAD_Y_TOP, this.ROAD_Y_BOTTOM);
+        }
+        return;
+      }
+
       // Overworld: check tile collision
       const newTile = worldToTile({ x: newX, y: newY }, this.config.tileSize);
       const canMove = this.checkCollision(newTile);
@@ -1131,7 +1126,6 @@ export class OverworldEngine {
     const ctx = this.ctx;
 
     const tile = worldToTile(this.playerPos, this.config.tileSize);
-    const isSceneMode = this.entityLayer.isSceneMode();
     const cameraRenderX = this.camera.getRenderX();
     const cameraRenderY = this.camera.getRenderY();
 
@@ -1139,25 +1133,12 @@ export class OverworldEngine {
     const worldHeightPx = this.mapData ? this.mapData.height * this.config.tileSize : null;
 
     const lines: string[] = [
-      `Scene: ${this.currentSceneType}${isSceneMode ? ' (sceneMode)' : ''}`,
+      `Scene: ${this.currentSceneType}`,
       `Player W: (${this.playerPos.x.toFixed(1)}, ${this.playerPos.y.toFixed(1)})`,
       `Tile: (${tile.x}, ${tile.y})  Facing: ${this.playerFacing}`,
       `Camera W: (${this.camera.x.toFixed(2)}, ${this.camera.y.toFixed(2)})`,
       `Camera R: (${cameraRenderX}, ${cameraRenderY})`,
     ];
-
-    if (isSceneMode && worldHeightPx && worldHeightPx > 0) {
-      const playerSceneY = (this.playerPos.y / worldHeightPx) * this.config.canvasHeight;
-      const sceneScaleY = this.config.canvasHeight / worldHeightPx;
-      lines.push(`Player S: y=${playerSceneY.toFixed(1)}  scaleY=${sceneScaleY.toFixed(3)}`);
-
-      if (worldWidthPx && worldWidthPx > 0) {
-        const worldAspect = worldWidthPx / worldHeightPx;
-        const canvasAspect = this.config.canvasWidth / this.config.canvasHeight;
-        const inputYScale = canvasAspect / worldAspect;
-        lines.push(`Input yScale: ${inputYScale.toFixed(3)}`);
-      }
-    }
 
     if (worldWidthPx && worldHeightPx) {
       lines.push(`World: ${worldWidthPx}×${worldHeightPx}px  (tile=${this.config.tileSize})`);
