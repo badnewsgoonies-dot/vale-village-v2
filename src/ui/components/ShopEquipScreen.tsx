@@ -132,7 +132,7 @@ export function ShopEquipScreen({ shopId, onClose }: ShopEquipScreenProps): JSX.
 
   // Equipment tab logic
   const handleEquip = (equipment: Equipment) => {
-    if (!selectedUnit || !selectedSlot) return;
+    if (!team || !selectedUnit || !selectedSlot) return;
 
     // If there's already an item in this slot, return it to inventory first
     const currentItem = selectedUnit.equipment[selectedSlot];
@@ -147,13 +147,13 @@ export function ShopEquipScreen({ shopId, onClose }: ShopEquipScreenProps): JSX.
     const newEquipment = { ...selectedUnit.equipment, [selectedSlot]: equipment };
     const updatedUnit = updateUnit(selectedUnit, { equipment: newEquipment });
 
-    const updatedUnits = team!.units.map((u) => (u.id === selectedUnit.id ? updatedUnit : u));
+    const updatedUnits = team.units.map((u) => (u.id === selectedUnit.id ? updatedUnit : u));
     updateTeamUnits(updatedUnits);
     setSelectedSlot(null);
   };
 
   const handleUnequip = (slot: EquipmentSlot) => {
-    if (!selectedUnit) return;
+    if (!team || !selectedUnit) return;
 
     // Get the item being unequipped
     const itemToUnequip = selectedUnit.equipment[slot];
@@ -167,7 +167,7 @@ export function ShopEquipScreen({ shopId, onClose }: ShopEquipScreenProps): JSX.
       addEquipment([itemToUnequip]);
     }
 
-    const updatedUnits = team!.units.map((u) => (u.id === selectedUnit.id ? updatedUnit : u));
+    const updatedUnits = team.units.map((u) => (u.id === selectedUnit.id ? updatedUnit : u));
     updateTeamUnits(updatedUnits);
   };
 
