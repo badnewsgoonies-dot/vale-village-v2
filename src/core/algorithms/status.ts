@@ -7,6 +7,13 @@ import type { Unit } from '../models/Unit';
 import type { PRNG } from '../random/prng';
 import { applyDamage } from './damage';
 
+const IMMUNITY_STATUS_TYPES = ['poison', 'burn', 'freeze', 'paralyze', 'stun', 'debuff'] as const;
+type ImmunityStatusType = (typeof IMMUNITY_STATUS_TYPES)[number];
+
+function isImmunityStatusType(type: string): type is ImmunityStatusType {
+  return (IMMUNITY_STATUS_TYPES as readonly string[]).includes(type);
+}
+
 /**
  * Process status effect tick at start of unit's turn
  * From GAME_MECHANICS.md Section 5.3
@@ -133,7 +140,7 @@ export function isFrozen(unit: Unit): boolean {
 /**
  * Phase 2: Check if unit is immune to a specific status type
  */
-export function isImmuneToStatus(unit: Unit, statusType: string): boolean {
+export function isImmuneToStatus(unit: Unit, statusType: Unit['statusEffects'][number]['type']): boolean {
   const immunities = unit.statusEffects.filter(s => s.type === 'immunity');
 
   // Check if any immunity grants "all" protection
@@ -142,8 +149,10 @@ export function isImmuneToStatus(unit: Unit, statusType: string): boolean {
   }
 
   // Check if any immunity specifically lists this status type
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return immunities.some(s => s.types?.includes(statusType as any));
+  if (!isImmunityStatusType(statusType)) {
+    return false;
+  }
+  return immunities.some(s => s.types?.includes(statusType));
 }
 
 /**
@@ -192,4 +201,3 @@ export function applyStatusToUnit(
     statusEffects: [...updatedStatusEffects, newStatus],
   };
 }
-
