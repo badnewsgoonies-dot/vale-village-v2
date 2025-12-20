@@ -8,7 +8,7 @@
  * 2. Scene-based: Explicit world positions for curated layouts
  */
 
-import { clamp, type Layer, type Camera, type Entity, type Direction, type WorldPosition } from '../engine/types';
+import { type Layer, type Camera, type Entity, type Direction, type WorldPosition } from '../engine/types';
 import type { GameMap, NPC } from '../../../../data/schemas/mapSchema';
 import { loadSprite } from '../../../sprites/loader';
 
@@ -39,8 +39,6 @@ export class EntityLayer implements Layer {
   private tileSize: number = 32;
   private timeOfDay: number = 0.5;
   private elapsedTime: number = 0; // For animations
-  private mapHeightTiles: number = 0;
-  private worldHeightPx: number = 1;
 
   // Scene-based buildings (pseudo-3D layout)
   private sceneBuildings: SceneBuilding[] = [];
@@ -56,7 +54,6 @@ export class EntityLayer implements Layer {
 
   setTileSize(size: number): void {
     this.tileSize = size;
-    this.worldHeightPx = this.mapHeightTiles * this.tileSize;
   }
 
   setTimeOfDay(time: number): void {
@@ -153,8 +150,6 @@ export class EntityLayer implements Layer {
    * Populate entities from map data
    */
   setMapData(map: GameMap): void {
-    this.mapHeightTiles = map.height;
-    this.worldHeightPx = map.height * this.tileSize;
     this.entities = [];
 
     // Add buildings from wall/door tiles (skip if in scene mode)
@@ -457,12 +452,6 @@ export class EntityLayer implements Layer {
    * Golden Sun–style depth scaling.
    * Lower on-screen entities (higher worldY) appear slightly larger.
    */
-  private getPerspectiveScale(worldY: number, maxY: number): number {
-    const safeMaxY = maxY || 1;
-    const depthNorm = clamp(worldY / safeMaxY, 0, 1);
-    return 0.7 + depthNorm * 0.3;
-  }
-
   /**
    * Update method (called each frame)
    */
@@ -496,11 +485,11 @@ export class EntityLayer implements Layer {
       const screenPos = camera.worldToScreen(entity.x, entity.y);
 
       // Draw shadow first
-      const perspectiveScale = this.getPerspectiveScale(entity.y, this.worldHeightPx);
-      this.drawShadow(ctx, screenPos, entity, perspectiveScale);
+      const scale = 1;
+      this.drawShadow(ctx, screenPos, entity, scale);
 
       // Draw entity
-      this.drawEntity(ctx, screenPos, entity, perspectiveScale);
+      this.drawEntity(ctx, screenPos, entity, scale);
 
       if (entity.type === 'building' && entity.id === this.nearbyBuildingId) {
         this.drawDoorGlow(ctx, screenPos.x, screenPos.y, entity);
@@ -720,31 +709,31 @@ export class EntityLayer implements Layer {
       if (entity.type !== 'building') continue;
 
       const screenPos = camera.worldToScreen(entity.x, entity.y);
-      const perspectiveScale = this.getPerspectiveScale(entity.y, this.worldHeightPx);
-      const width = entity.width * perspectiveScale;
-      const height = entity.height * perspectiveScale;
+      const scale = 1;
+      const width = entity.width * scale;
+      const height = entity.height * scale;
       const x = screenPos.x - width / 2;
       const y = screenPos.y - height;
 
       // Window glow effect
       const glowGradient = ctx.createRadialGradient(
-        x + 14 * perspectiveScale, y + 26 * perspectiveScale, 0,
-        x + 14 * perspectiveScale, y + 26 * perspectiveScale, 15 * perspectiveScale
+        x + 14 * scale, y + 26 * scale, 0,
+        x + 14 * scale, y + 26 * scale, 15 * scale
       );
       glowGradient.addColorStop(0, 'rgba(255, 200, 100, 0.4)');
       glowGradient.addColorStop(1, 'rgba(255, 200, 100, 0)');
       ctx.fillStyle = glowGradient;
-      ctx.fillRect(x, y + 14 * perspectiveScale, 30 * perspectiveScale, 24 * perspectiveScale);
+      ctx.fillRect(x, y + 14 * scale, 30 * scale, 24 * scale);
 
-      if (width > 50 * perspectiveScale) {
+      if (width > 50 * scale) {
         const glowGradient2 = ctx.createRadialGradient(
-          x + width - 14 * perspectiveScale, y + 26 * perspectiveScale, 0,
-          x + width - 14 * perspectiveScale, y + 26 * perspectiveScale, 15 * perspectiveScale
+          x + width - 14 * scale, y + 26 * scale, 0,
+          x + width - 14 * scale, y + 26 * scale, 15 * scale
         );
         glowGradient2.addColorStop(0, 'rgba(255, 200, 100, 0.4)');
         glowGradient2.addColorStop(1, 'rgba(255, 200, 100, 0)');
         ctx.fillStyle = glowGradient2;
-        ctx.fillRect(x + width - 30 * perspectiveScale, y + 14 * perspectiveScale, 30 * perspectiveScale, 24 * perspectiveScale);
+        ctx.fillRect(x + width - 30 * scale, y + 14 * scale, 30 * scale, 24 * scale);
       }
     }
 
