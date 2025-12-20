@@ -889,21 +889,41 @@ export function startTurnTick(
   }
 
   // Check for expired statuses by comparing old and new status effects
-  const makeStatusKey = (s: typeof currentActor.statusEffects[number]) =>
-    `${s.type}-${'duration' in s ? s.duration : 'usesRemaining' in s ? s.usesRemaining : 'permanent'}`;
-  const oldStatusIds = new Set(currentActor.statusEffects.map(makeStatusKey));
-  const newStatusIds = new Set(statusResult.updatedUnit.statusEffects.map(makeStatusKey));
-
-  currentActor.statusEffects.forEach(status => {
-    const statusKey = makeStatusKey(status);
-    if (oldStatusIds.has(statusKey) && !newStatusIds.has(statusKey)) {
-      newEvents.push({
-        type: 'status-expired',
-        targetId: currentActorId,
-        status,
-      });
+  const makeStableStatusKey = (s: typeof currentActor.statusEffects[number]) => {
+    if (s.type === 'buff' || s.type === 'debuff') return `${s.type}:${s.stat}:${s.modifier}`;
+    if (s.type === 'poison' || s.type === 'burn') return `${s.type}:${s.damagePerTurn}`;
+    if (s.type === 'healOverTime') return `${s.type}:${s.healPerTurn}`;
+    if (s.type === 'elementalResistance') return `${s.type}:${s.element}:${s.modifier}`;
+    if (s.type === 'damageReduction') return `${s.type}:${s.percent}`;
+    if (s.type === 'shield') return `${s.type}`;
+    if (s.type === 'immunity') {
+      const types = (s.types ?? []).slice().sort().join(',');
+      return `${s.type}:${s.all ? 'all' : 'some'}:${types}`;
     }
-  });
+    if (s.type === 'autoRevive') return `${s.type}:${s.hpPercent}`;
+    return `${s.type}`;
+  };
+
+  const remainingByKey = new Map<string, number>();
+  for (const status of statusResult.updatedUnit.statusEffects) {
+    const key = makeStableStatusKey(status);
+    remainingByKey.set(key, (remainingByKey.get(key) ?? 0) + 1);
+  }
+
+  for (const status of currentActor.statusEffects) {
+    const key = makeStableStatusKey(status);
+    const remaining = remainingByKey.get(key) ?? 0;
+    if (remaining > 0) {
+      remainingByKey.set(key, remaining - 1);
+      continue;
+    }
+
+    newEvents.push({
+      type: 'status-expired',
+      targetId: currentActorId,
+      status,
+    });
+  }
 
   return { updatedState: updatedBattle, events: newEvents };
 }
