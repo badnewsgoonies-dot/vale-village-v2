@@ -19,7 +19,7 @@ import {
   type SaveSlotMetadata,
 } from '../../core/services/SaveService';
 import type { SaveV1 } from '../../data/schemas/SaveV1Schema';
-import type { BattleSlice } from './battleSlice';
+import type { QueueBattleSlice } from './queueBattleSlice';
 import type { TeamSlice } from './teamSlice';
 import type { InventorySlice } from './inventorySlice';
 import type { StorySlice } from './storySlice';
@@ -163,7 +163,7 @@ function getStoryStateFromSave(saveData: SaveV1): StoryState {
 }
 
 export const createSaveSlice: StateCreator<
-  SaveSlice & BattleSlice & TeamSlice & InventorySlice & StorySlice & OverworldSlice & TowerSlice,
+  SaveSlice & QueueBattleSlice & TeamSlice & InventorySlice & StorySlice & OverworldSlice & TowerSlice,
   [['zustand/devtools', never]],
   [],
   SaveSlice
@@ -304,7 +304,6 @@ export const createSaveSlice: StateCreator<
           const rngSeed =
             typeof battleState.rngSeed === 'number' ? battleState.rngSeed : 0;
           state.setBattle(battleState.battle, rngSeed);
-          _set({ turnNumber: battleState.turnNumber ?? 0 });
         }
       } catch (error) {
         console.warn('Failed to parse battle state:', error);
@@ -340,7 +339,6 @@ export const createSaveSlice: StateCreator<
     const battleState = {
       battle,
       rngSeed,
-      turnNumber: get().turnNumber,
     };
     localStorage.setItem('vale-v2/battle-state', JSON.stringify(battleState));
 
@@ -387,7 +385,6 @@ export const createSaveSlice: StateCreator<
     const battleState = {
       battle,
       rngSeed,
-      turnNumber: get().turnNumber,
     };
     localStorage.setItem(`vale-v2/battle-state-slot-${slot}`, JSON.stringify(battleState));
 
@@ -455,7 +452,6 @@ export const createSaveSlice: StateCreator<
           const rngSeed =
             typeof battleState.rngSeed === 'number' ? battleState.rngSeed : 0;
           state.setBattle(battleState.battle, rngSeed);
-          _set({ turnNumber: battleState.turnNumber ?? 0 });
         }
       } catch (error) {
         console.warn('Failed to parse battle state:', error);

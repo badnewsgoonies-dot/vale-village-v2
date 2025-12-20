@@ -6,7 +6,6 @@
 import { createWithEqualityFn } from 'zustand/traditional';
 import type { GetState, SetState, StoreApi } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { createBattleSlice, type BattleSlice } from './battleSlice';
 import { createQueueBattleSlice, type QueueBattleSlice } from './queueBattleSlice';
 import { createTeamSlice, type TeamSlice } from './teamSlice';
 import { createSaveSlice, type SaveSlice } from './saveSlice';
@@ -19,8 +18,7 @@ import { createDialogueSlice, type DialogueSlice } from './dialogueSlice';
 import { createDevModeSlice, type DevModeSlice } from './devModeSlice';
 import { createTowerSlice, type TowerSlice } from './towerSlice';
 
-export type Store = BattleSlice &
-  QueueBattleSlice &
+export type Store = QueueBattleSlice &
   TeamSlice &
   SaveSlice &
   StorySlice &
@@ -35,7 +33,6 @@ export type Store = BattleSlice &
 // Store factory function to combine all slices
 const storeFactory = (set: SetState<Store>, get: GetState<Store>, api: StoreApi<Store>) => ({
   ...createTeamSlice(set, get, api),
-  ...createBattleSlice(set, get, api),
   ...createQueueBattleSlice(set, get, api),
   ...createSaveSlice(set, get, api),
   ...createStorySlice(set, get, api),
