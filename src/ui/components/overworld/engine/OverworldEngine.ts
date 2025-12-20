@@ -91,6 +91,7 @@ export class OverworldEngine {
   private overworldLayers: Layer[] = [];
   private skyLayer: SkyLayer;
   private backgroundLayer: BackgroundLayer;
+  private roadLayer: RoadLayer;
   private terrainLayer: TerrainLayer;
   private entityLayer: EntityLayer;
 
@@ -176,12 +177,14 @@ export class OverworldEngine {
     // Initialize overworld layers
     this.skyLayer = new SkyLayer();
     this.backgroundLayer = new BackgroundLayer();
+    this.roadLayer = new RoadLayer();
     this.terrainLayer = new TerrainLayer(256, this.config.canvasHeight); // Start at 4/10 (256px)
     this.entityLayer = new EntityLayer();
 
     this.overworldLayers = [
       this.skyLayer,
       this.backgroundLayer,
+      this.roadLayer,
       this.terrainLayer,
       this.entityLayer,
     ];
