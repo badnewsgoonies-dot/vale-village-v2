@@ -20,6 +20,7 @@ import {
 import type { GameMap, Position } from '../../../../data/schemas/mapSchema';
 import { SkyLayer } from '../layers/SkyLayer';
 import { BackgroundLayer } from '../layers/BackgroundLayer';
+import { RoadLayer } from '../layers/RoadLayer';
 import { TerrainLayer } from '../layers/TerrainLayer';
 import { EntityLayer, type SceneBuilding } from '../layers/EntityLayer';
 import { InteriorFloorLayer } from '../layers/InteriorFloorLayer';
@@ -521,7 +522,7 @@ export class OverworldEngine {
 
   /**
    * Initialize animated trees with sway effect
-   * TODO: Implement tree rendering in render loop
+   * Trees are rendered in renderTrees() method called from main render loop
    */
   private initializeTrees(): void {
     const treeSprites = [
