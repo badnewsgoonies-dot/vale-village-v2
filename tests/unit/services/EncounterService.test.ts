@@ -3,7 +3,7 @@
  * Verifies encounter difficulty affects gameplay (enemy stats + battle meta)
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { createBattleFromEncounter } from '../../../src/core/services/EncounterService';
 import { createUnit } from '../../../src/core/models/Unit';
 import { createTeam } from '../../../src/core/models/Team';
@@ -12,6 +12,10 @@ import { ADEPT } from '../../../src/data/definitions/units';
 import { ENEMIES } from '../../../src/data/definitions/enemies';
 
 describe('EncounterService', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
   it('scales enemy stats based on encounter difficulty', () => {
     const playerUnit = createUnit(ADEPT, 1, 0);
     const playerTeam = createTeam([playerUnit]);
@@ -35,5 +39,24 @@ describe('EncounterService', () => {
     const hardAtkExpected = Math.max(1, Math.round(hardEnemyDef!.stats.atk * 1.1));
     expect(hard!.battle.enemies[0].baseStats.atk).toBe(hardAtkExpected);
   });
-});
 
+  it('applies settings difficulty multiplier to encounters', () => {
+    const playerUnit = createUnit(ADEPT, 1, 0);
+    const playerTeam = createTeam([playerUnit]);
+
+    const enemyDef = ENEMIES['stone-guardian'];
+    expect(enemyDef).toBeDefined();
+
+    localStorage.setItem('vale:settings', JSON.stringify({ difficulty: 'normal' }));
+    const normal = createBattleFromEncounter('house-06', playerTeam, makePRNG(789));
+    expect(normal).not.toBeNull();
+    const normalHpExpected = Math.max(1, Math.round(enemyDef!.stats.hp * 1.0));
+    expect(normal!.battle.enemies[0].baseStats.hp).toBe(normalHpExpected);
+
+    localStorage.setItem('vale:settings', JSON.stringify({ difficulty: 'hard' }));
+    const hard = createBattleFromEncounter('house-06', playerTeam, makePRNG(101));
+    expect(hard).not.toBeNull();
+    const hardHpExpected = Math.max(1, Math.round(enemyDef!.stats.hp * 1.1));
+    expect(hard!.battle.enemies[0].baseStats.hp).toBe(hardHpExpected);
+  });
+});

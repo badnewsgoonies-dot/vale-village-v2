@@ -4,10 +4,11 @@
  */
 
 import { useState, useEffect, useCallback } from 'preact/hooks';
+import { useSettings } from '../../hooks/useSettings';
 import './SettingsScreen.css';
 
 type Tab = 'audio' | 'display' | 'controls' | 'gameplay';
-type BattleSpeed = 'slow' | 'normal' | 'fast' | 'ultra';
+type BattleSpeed = 'slow' | 'normal' | 'fast' | 'instant';
 type Difficulty = 'easy' | 'normal' | 'hard';
 
 interface SettingsScreenProps {
@@ -16,24 +17,21 @@ interface SettingsScreenProps {
 
 export function SettingsScreen({ onClose }: SettingsScreenProps) {
   const [activeTab, setActiveTab] = useState<Tab>('audio');
-
-  // Audio settings
-  const [masterVolume, setMasterVolume] = useState(80);
-  const [musicVolume, setMusicVolume] = useState(70);
-  const [sfxVolume, setSfxVolume] = useState(80);
-  const [battleMusic, setBattleMusic] = useState(true);
-  const [uiSounds, setUiSounds] = useState(true);
-
-  // Display settings
-  const [screenShake, setScreenShake] = useState(true);
-  const [battleAnimations, setBattleAnimations] = useState(true);
-  const [showDamageNumbers, setShowDamageNumbers] = useState(true);
-
-  // Gameplay settings
-  const [battleSpeed, setBattleSpeed] = useState<BattleSpeed>('normal');
-  const [difficulty, setDifficulty] = useState<Difficulty>('normal');
-  const [autoSave, setAutoSave] = useState(true);
-  const [battleTooltips, setBattleTooltips] = useState(true);
+  const { settings, updateSettings, resetSettings } = useSettings();
+  const {
+    masterVolume,
+    musicVolume,
+    sfxVolume,
+    battleMusic,
+    uiSounds,
+    screenShake,
+    battleAnimations,
+    showDamageNumbers,
+    battleSpeed,
+    difficulty,
+    autoSave,
+    battleTooltips,
+  } = settings;
 
   // Keyboard navigation
   useEffect(() => {
@@ -48,19 +46,8 @@ export function SettingsScreen({ onClose }: SettingsScreenProps) {
   }, [onClose]);
 
   const handleResetDefaults = useCallback(() => {
-    setMasterVolume(80);
-    setMusicVolume(70);
-    setSfxVolume(80);
-    setBattleMusic(true);
-    setUiSounds(true);
-    setScreenShake(true);
-    setBattleAnimations(true);
-    setShowDamageNumbers(true);
-    setBattleSpeed('normal');
-    setDifficulty('normal');
-    setAutoSave(true);
-    setBattleTooltips(true);
-  }, []);
+    resetSettings();
+  }, [resetSettings]);
 
   const tabs: { id: Tab; icon: string; label: string }[] = [
     { id: 'audio', icon: '🔊', label: 'Audio' },
@@ -128,7 +115,7 @@ export function SettingsScreen({ onClose }: SettingsScreenProps) {
                       min="0"
                       max="100"
                       value={masterVolume}
-                      onInput={(e) => setMasterVolume(Number.parseInt((e.target as HTMLInputElement).value, 10))}
+                      onInput={(e) => updateSettings({ masterVolume: Number.parseInt((e.target as HTMLInputElement).value, 10) })}
                       style={{ '--value': `${masterVolume}%` } as any}
                     />
                     <span class="slider-value">{masterVolume}%</span>
@@ -147,7 +134,7 @@ export function SettingsScreen({ onClose }: SettingsScreenProps) {
                       min="0"
                       max="100"
                       value={musicVolume}
-                      onInput={(e) => setMusicVolume(Number.parseInt((e.target as HTMLInputElement).value, 10))}
+                      onInput={(e) => updateSettings({ musicVolume: Number.parseInt((e.target as HTMLInputElement).value, 10) })}
                       style={{ '--value': `${musicVolume}%` } as any}
                     />
                     <span class="slider-value">{musicVolume}%</span>
@@ -166,7 +153,7 @@ export function SettingsScreen({ onClose }: SettingsScreenProps) {
                       min="0"
                       max="100"
                       value={sfxVolume}
-                      onInput={(e) => setSfxVolume(Number.parseInt((e.target as HTMLInputElement).value, 10))}
+                      onInput={(e) => updateSettings({ sfxVolume: Number.parseInt((e.target as HTMLInputElement).value, 10) })}
                       style={{ '--value': `${sfxVolume}%` } as any}
                     />
                     <span class="slider-value">{sfxVolume}%</span>
@@ -186,7 +173,7 @@ export function SettingsScreen({ onClose }: SettingsScreenProps) {
                     <input
                       type="checkbox"
                       checked={battleMusic}
-                      onChange={(e) => setBattleMusic((e.target as HTMLInputElement).checked)}
+                      onChange={(e) => updateSettings({ battleMusic: (e.target as HTMLInputElement).checked })}
                     />
                     <span class="toggle-slider" />
                   </label>
@@ -201,7 +188,7 @@ export function SettingsScreen({ onClose }: SettingsScreenProps) {
                     <input
                       type="checkbox"
                       checked={uiSounds}
-                      onChange={(e) => setUiSounds((e.target as HTMLInputElement).checked)}
+                      onChange={(e) => updateSettings({ uiSounds: (e.target as HTMLInputElement).checked })}
                     />
                     <span class="toggle-slider" />
                   </label>
@@ -225,7 +212,7 @@ export function SettingsScreen({ onClose }: SettingsScreenProps) {
                     <input
                       type="checkbox"
                       checked={screenShake}
-                      onChange={(e) => setScreenShake((e.target as HTMLInputElement).checked)}
+                      onChange={(e) => updateSettings({ screenShake: (e.target as HTMLInputElement).checked })}
                     />
                     <span class="toggle-slider" />
                   </label>
@@ -240,7 +227,7 @@ export function SettingsScreen({ onClose }: SettingsScreenProps) {
                     <input
                       type="checkbox"
                       checked={battleAnimations}
-                      onChange={(e) => setBattleAnimations((e.target as HTMLInputElement).checked)}
+                      onChange={(e) => updateSettings({ battleAnimations: (e.target as HTMLInputElement).checked })}
                     />
                     <span class="toggle-slider" />
                   </label>
@@ -255,7 +242,7 @@ export function SettingsScreen({ onClose }: SettingsScreenProps) {
                     <input
                       type="checkbox"
                       checked={showDamageNumbers}
-                      onChange={(e) => setShowDamageNumbers((e.target as HTMLInputElement).checked)}
+                      onChange={(e) => updateSettings({ showDamageNumbers: (e.target as HTMLInputElement).checked })}
                     />
                     <span class="toggle-slider" />
                   </label>
@@ -304,11 +291,11 @@ export function SettingsScreen({ onClose }: SettingsScreenProps) {
                     <div class="setting-description">Animation playback speed</div>
                   </div>
                   <div class="button-group">
-                    {(['slow', 'normal', 'fast', 'ultra'] as BattleSpeed[]).map((speed) => (
+                    {(['slow', 'normal', 'fast', 'instant'] as BattleSpeed[]).map((speed) => (
                       <button
                         key={speed}
                         class={`button-option ${battleSpeed === speed ? 'selected' : ''}`}
-                        onClick={() => setBattleSpeed(speed)}
+                        onClick={() => updateSettings({ battleSpeed: speed })}
                       >
                         {speed.charAt(0).toUpperCase() + speed.slice(1)}
                       </button>
@@ -325,7 +312,7 @@ export function SettingsScreen({ onClose }: SettingsScreenProps) {
                     <input
                       type="checkbox"
                       checked={battleTooltips}
-                      onChange={(e) => setBattleTooltips((e.target as HTMLInputElement).checked)}
+                      onChange={(e) => updateSettings({ battleTooltips: (e.target as HTMLInputElement).checked })}
                     />
                     <span class="toggle-slider" />
                   </label>
@@ -345,7 +332,7 @@ export function SettingsScreen({ onClose }: SettingsScreenProps) {
                       <button
                         key={diff}
                         class={`button-option ${difficulty === diff ? 'selected' : ''}`}
-                        onClick={() => setDifficulty(diff)}
+                        onClick={() => updateSettings({ difficulty: diff })}
                       >
                         {diff.charAt(0).toUpperCase() + diff.slice(1)}
                       </button>
@@ -362,7 +349,7 @@ export function SettingsScreen({ onClose }: SettingsScreenProps) {
                     <input
                       type="checkbox"
                       checked={autoSave}
-                      onChange={(e) => setAutoSave((e.target as HTMLInputElement).checked)}
+                      onChange={(e) => updateSettings({ autoSave: (e.target as HTMLInputElement).checked })}
                     />
                     <span class="toggle-slider" />
                   </label>

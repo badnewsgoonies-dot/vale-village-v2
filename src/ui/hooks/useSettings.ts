@@ -5,9 +5,16 @@ import { useState, useCallback, useEffect } from 'preact/hooks';
  * All settings are persisted to localStorage
  */
 export interface GameSettings {
+  masterVolume: number;     // 0-100
   musicVolume: number;      // 0-100
   sfxVolume: number;        // 0-100
-  battleSpeed: 'slow' | 'normal' | 'fast';
+  uiSounds: boolean;
+  battleMusic: boolean;
+  screenShake: boolean;
+  battleAnimations: boolean;
+  battleTooltips: boolean;
+  battleSpeed: 'slow' | 'normal' | 'fast' | 'instant';
+  difficulty: 'easy' | 'normal' | 'hard';
   showDamageNumbers: boolean;
   autoSave: boolean;
 }
@@ -15,9 +22,16 @@ export interface GameSettings {
 const STORAGE_KEY = 'vale:settings';
 
 const DEFAULT_SETTINGS: GameSettings = {
+  masterVolume: 80,
   musicVolume: 70,
   sfxVolume: 80,
+  uiSounds: true,
+  battleMusic: true,
+  screenShake: true,
+  battleAnimations: true,
+  battleTooltips: true,
   battleSpeed: 'normal',
+  difficulty: 'normal',
   showDamageNumbers: true,
   autoSave: true,
 };

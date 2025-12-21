@@ -13,6 +13,7 @@ import { ENEMIES } from '../../data/definitions/enemies';
 import { ENCOUNTERS } from '../../data/definitions/encounters';
 import { enemyToUnit } from '../utils/enemyToUnit';
 import { startBattle } from './BattleService';
+import { getSettings } from '../../ui/hooks/useSettings';
 
 type EncounterDifficulty = Encounter['difficulty'];
 
@@ -25,6 +26,19 @@ function getEncounterEnemyStatMultiplier(difficulty: EncounterDifficulty): numbe
     case 'boss':
       return 1.2;
     case 'medium':
+    default:
+      return 1.0;
+  }
+}
+
+function getSettingsDifficultyMultiplier(): number {
+  const settings = getSettings();
+  switch (settings.difficulty) {
+    case 'easy':
+      return 0.9;
+    case 'hard':
+      return 1.1;
+    case 'normal':
     default:
       return 1.0;
   }
@@ -59,7 +73,7 @@ function scaleStats(stats: Stats, multiplier: number): Stats {
 }
 
 function scaleEnemyUnitForEncounter(unit: Unit, difficulty: EncounterDifficulty): Unit {
-  const multiplier = getEncounterEnemyStatMultiplier(difficulty);
+  const multiplier = getEncounterEnemyStatMultiplier(difficulty) * getSettingsDifficultyMultiplier();
   if (multiplier === 1.0) {
     return unit;
   }
