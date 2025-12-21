@@ -174,6 +174,23 @@ export function DialogueChatOverlay() {
     advanceCurrentDialogue();
   }, [advanceCurrentDialogue, isTyping, skipTypewriter]);
 
+  const handleTap = useCallback(
+    (event: MouseEvent) => {
+      const target = event.target as HTMLElement | null;
+      if (target?.closest('button')) {
+        return;
+      }
+      if (isTyping) {
+        skipTypewriter();
+        return;
+      }
+      if (!hasChoices) {
+        handleAdvance();
+      }
+    },
+    [handleAdvance, hasChoices, isTyping, skipTypewriter],
+  );
+
   // Keep the chat scrolled to the latest message.
   const historyRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
@@ -247,11 +264,9 @@ export function DialogueChatOverlay() {
   const content = (
     <div
       class="dialogue-chat-overlay"
-      onClick={() => {
-        if (!hasChoices) handleAdvance();
-      }}
+      onClick={handleTap}
     >
-      <div class="dialogue-chat-panel" onClick={(e) => e.stopPropagation()}>
+      <div class="dialogue-chat-panel">
         <div class="dialogue-chat-header">
           <div class="dialogue-chat-title">{currentDialogueTree.name}</div>
           <button

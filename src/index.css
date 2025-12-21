@@ -22,11 +22,16 @@ body {
   color: var(--color-text);
   min-width: 320px;
   min-height: 100vh;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 #root {
   width: 100%;
   min-height: 100vh;
+  touch-action: none;
 }
 
 /* Utility classes */
@@ -48,6 +53,15 @@ body {
 button {
   font-family: inherit;
   cursor: pointer;
+}
+
+button:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.7);
+  outline-offset: 2px;
+}
+
+button:active {
+  transform: translateY(1px);
 }
 
 /* Hide scrollbar but keep functionality */
