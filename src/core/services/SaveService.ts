@@ -20,6 +20,7 @@ import { migrateSaveData } from '../migrations';
 import {
   calculateChecksum,
   verifyChecksum,
+  formatSaveFileError,
   type SaveFileValidationError,
 } from '../validation/saveFileValidation';
 
@@ -254,23 +255,25 @@ export function loadProgress(slot: number): Result<SaveV1, string> {
     try {
       wrapper = JSON.parse(serialized);
     } catch (parseError) {
-      // Try backup with error context
       const errorMsg = parseError instanceof Error ? parseError.message : 'Invalid JSON';
-      return loadProgressFromBackup(slot, `JSON parse failed: ${errorMsg}`);
+      return loadProgressFromBackup(
+        slot,
+        `This save file is corrupted and couldn't be read (${errorMsg}).`
+      );
     }
 
     // Validate and unwrap
     const unwrapResult = unwrapAndValidate<SaveV1>(wrapper, '1.0.0');
     if (!unwrapResult.ok) {
       // Try backup with error context
-      const errorMsg = unwrapResult.error.type;
-      return loadProgressFromBackup(slot, `Validation failed: ${errorMsg}`);
+      const errorMsg = formatSaveFileError(unwrapResult.error);
+      return loadProgressFromBackup(slot, errorMsg);
     }
 
     // Final schema validation
     const schemaResult = SaveV1Schema.safeParse(unwrapResult.value);
     if (!schemaResult.success) {
-      return Err(`Save file validation failed: ${schemaResult.error.message}`);
+      return Err('Save file validation failed. Try loading a backup or another slot.');
     }
 
     return Ok(schemaResult.data);
@@ -292,22 +295,22 @@ function loadProgressFromBackup(slot: number, mainError?: string): Result<SaveV1
     const serialized = localStorage.getItem(backupKey);
 
     if (!serialized) {
-      const context = mainError ? ` Main save error: ${mainError}` : '';
-      return Err(`Save file corrupted and no backup found.${context}`);
+      const context = mainError ? ` ${mainError}` : 'Save file could not be loaded.';
+      return Err(`${context} No backup was found for this slot. Try another slot or start a new game.`);
     }
 
     const wrapper = JSON.parse(serialized);
     const unwrapResult = unwrapAndValidate<SaveV1>(wrapper, '1.0.0');
 
     if (!unwrapResult.ok) {
-      const context = mainError ? ` Main save error: ${mainError}` : '';
-      return Err(`Both main save and backup are corrupted.${context}`);
+      const context = mainError ? ` ${mainError}` : 'Main save could not be loaded.';
+      return Err(`${context} Backup save is also corrupted. Try another slot or start a new game.`);
     }
 
     const schemaResult = SaveV1Schema.safeParse(unwrapResult.value);
     if (!schemaResult.success) {
-      const context = mainError ? ` Main save error: ${mainError}` : '';
-      return Err(`Backup validation failed.${context}`);
+      const context = mainError ? ` ${mainError}` : 'Main save could not be loaded.';
+      return Err(`${context} Backup save validation failed. Try another slot or start a new game.`);
     }
 
     // Restore backup to main slot
@@ -315,8 +318,8 @@ function loadProgressFromBackup(slot: number, mainError?: string): Result<SaveV1
 
     return Ok(schemaResult.data);
   } catch (error) {
-    const context = mainError ? ` Main save error: ${mainError}` : '';
-    return Err(`Failed to load backup: ${error instanceof Error ? error.message : String(error)}.${context}`);
+    const context = mainError ? ` ${mainError}` : 'Main save could not be loaded.';
+    return Err(`${context} Failed to load backup: ${error instanceof Error ? error.message : String(error)}.`);
   }
 }
 

@@ -351,20 +351,20 @@ export function saveGameSafe(slot: number, data: SaveV1): Result<void, SaveFileV
 export function formatSaveFileError(error: SaveFileValidationError): string {
   switch (error.type) {
     case 'CORRUPTED':
-      return `Save file is corrupted: ${error.reason}. ${
-        error.recoverable ? 'Recovery may be possible.' : 'Cannot recover.'
-      }`;
+      return error.recoverable
+        ? `This save file looks corrupted (${error.reason}). Try loading a backup or another slot.`
+        : `This save file is corrupted and can't be recovered (${error.reason}). Try another slot or start a new game.`;
     case 'VERSION_MISMATCH':
-      return `Save file is from version ${error.saveVersion}, current version is ${error.currentVersion}. ${
-        error.canMigrate ? 'Migration available.' : 'Migration not available.'
-      }`;
+      return error.canMigrate
+        ? `This save was created with version ${error.saveVersion}. Update the game to migrate it.`
+        : `This save was created with version ${error.saveVersion} and isn't compatible with ${error.currentVersion}. Update the game or start a new game.`;
     case 'CHECKSUM_FAILED':
-      return 'Save file integrity check failed. File may be corrupted or tampered with.';
+      return 'This save failed an integrity check and may be corrupted. Try loading a backup or another slot.';
     case 'MISSING_DATA':
-      return `Save file is incomplete. Missing: ${error.missingFields.join(', ')}`;
+      return `This save file is missing required data (${error.missingFields.join(', ')}). Try loading a backup or another slot.`;
     case 'INVALID_FORMAT':
-      return `Invalid save file format: ${error.message}`;
+      return `This save file format isn't recognized (${error.message}). Try another slot or delete this save.`;
     case 'SCHEMA_VALIDATION_FAILED':
-      return `Save file data is invalid: ${error.issues.slice(0, 3).join('; ')}${error.issues.length > 3 ? ` (+${error.issues.length - 3} more issues)` : ''}`;
+      return `This save contains invalid data (${error.issues.slice(0, 3).join('; ')}${error.issues.length > 3 ? `; +${error.issues.length - 3} more` : ''}). Try loading a backup or another slot.`;
   }
 }

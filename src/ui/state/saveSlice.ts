@@ -18,6 +18,7 @@ import {
   getSaveSlotMetadata,
   type SaveSlotMetadata,
 } from '../../core/services/SaveService';
+import { Err, type Result } from '../../core/utils/result';
 import type { SaveV1 } from '../../data/schemas/SaveV1Schema';
 import type { QueueBattleSlice } from './queueBattleSlice';
 import type { TeamSlice } from './teamSlice';
@@ -52,8 +53,8 @@ export interface SaveSlice {
   deleteSave: () => void;
   
   // Slot-based operations
-  saveGameSlot: (slot: number) => void;
-  loadGameSlot: (slot: number) => void;
+  saveGameSlot: (slot: number) => Result<void, string>;
+  loadGameSlot: (slot: number) => Result<SaveV1, string>;
   hasSaveSlot: (slot: number) => boolean;
   deleteSaveSlot: (slot: number) => void;
   getSaveSlotMetadata: (slot: number) => SaveSlotMetadata;
@@ -377,7 +378,7 @@ export const createSaveSlice: StateCreator<
     
     if (!saveData) {
       console.error('Cannot save: no team data');
-      return;
+      return Err('Cannot save: no team data');
     }
 
     // Store battle state separately
@@ -391,14 +392,17 @@ export const createSaveSlice: StateCreator<
     const result = saveGameSlot(slot, saveData);
     if (!result.ok) {
       console.error(`Failed to save game to slot ${slot}:`, result.error);
+      return result;
     }
+
+    return result;
   },
 
   loadGameSlot: (slot: number) => {
     const result = loadGameSlot(slot);
     if (!result.ok) {
       console.error(`Failed to load game from slot ${slot}:`, result.error);
-      return;
+      return result;
     }
 
     const saveData = result.value;
@@ -457,6 +461,8 @@ export const createSaveSlice: StateCreator<
         console.warn('Failed to parse battle state:', error);
       }
     }
+
+    return result;
   },
 
   hasSaveSlot: (slot: number) => hasSaveSlot(slot),
