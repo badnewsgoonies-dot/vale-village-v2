@@ -356,15 +356,17 @@ export function formatSaveFileError(error: SaveFileValidationError): string {
         : `This save file is corrupted and can't be recovered (${error.reason}). Try another slot or start a new game.`;
     case 'VERSION_MISMATCH':
       return error.canMigrate
-        ? `This save was created with version ${error.saveVersion}. Update the game to migrate it.`
+        ? `This save was created with version ${error.saveVersion}. Update the game to migrate it, or load another slot.`
         : `This save was created with version ${error.saveVersion} and isn't compatible with ${error.currentVersion}. Update the game or start a new game.`;
     case 'CHECKSUM_FAILED':
       return 'This save failed an integrity check and may be corrupted. Try loading a backup or another slot.';
     case 'MISSING_DATA':
-      return `This save file is missing required data (${error.missingFields.join(', ')}). Try loading a backup or another slot.`;
+      return `This save file is missing required data (${error.missingFields.join(', ')}). Try loading a backup, another slot, or start a new game.`;
     case 'INVALID_FORMAT':
       return `This save file format isn't recognized (${error.message}). Try another slot or delete this save.`;
     case 'SCHEMA_VALIDATION_FAILED':
-      return `This save contains invalid data (${error.issues.slice(0, 3).join('; ')}${error.issues.length > 3 ? `; +${error.issues.length - 3} more` : ''}). Try loading a backup or another slot.`;
+      return `This save contains invalid data (${error.issues.slice(0, 3).join('; ')}${
+        error.issues.length > 3 ? `; +${error.issues.length - 3} more` : ''
+      }). Try loading a backup or another slot.`;
   }
 }

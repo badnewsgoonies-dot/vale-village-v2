@@ -84,4 +84,17 @@ describe('formatSaveFileError', () => {
     expect(message).toContain('contains invalid data');
     expect(message).toContain('playerData.gold');
   });
+
+  it('summarizes schema issues when there are many', () => {
+    const error: SaveFileValidationError = {
+      type: 'SCHEMA_VALIDATION_FAILED',
+      issues: ['issue 1', 'issue 2', 'issue 3', 'issue 4'],
+    };
+
+    const message = formatSaveFileError(error);
+    expect(message).toContain('issue 1');
+    expect(message).toContain('issue 2');
+    expect(message).toContain('issue 3');
+    expect(message).toContain('+1 more');
+  });
 });

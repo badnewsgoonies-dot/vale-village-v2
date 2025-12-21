@@ -43,6 +43,19 @@ function formatPlaytime(seconds?: number): string {
   return `${minutes}:${(seconds % 60).toString().padStart(2, '0')}`;
 }
 
+function ensureLoadErrorActionable(message: string): string {
+  const normalized = message.toLowerCase();
+  if (
+    normalized.includes('try ') ||
+    normalized.includes('another slot') ||
+    normalized.includes('start a new game') ||
+    normalized.includes('choose another slot')
+  ) {
+    return message;
+  }
+  return `${message} Try another slot or start a new game.`;
+}
+
 export function SaveMenu({ onClose }: SaveMenuProps) {
   const { saveGameSlot, loadGameSlot, deleteSaveSlot, getSaveSlotMetadata: getMetadata, setMode } = useStore();
   const startTransition = useGameStore((s) => s.startTransition);
@@ -112,7 +125,7 @@ export function SaveMenu({ onClose }: SaveMenuProps) {
 
   const handleLoad = async (slotIndex: number) => {
     if (!slots[slotIndex]?.exists) {
-      setError('No save file found in this slot');
+      setError('No save file found in this slot. Choose another slot or start a new game.');
       return;
     }
     setIsLoading(true);
@@ -120,7 +133,7 @@ export function SaveMenu({ onClose }: SaveMenuProps) {
     try {
       const result = await loadGameSlot(slotIndex);
       if (!result.ok) {
-        setError(result.error);
+        setError(ensureLoadErrorActionable(result.error));
         return;
       }
       setMode('overworld');
@@ -128,7 +141,11 @@ export function SaveMenu({ onClose }: SaveMenuProps) {
       startTransition('overworld');
       onClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load game');
+      setError(
+        ensureLoadErrorActionable(
+          err instanceof Error ? err.message : 'Failed to load game'
+        )
+      );
     } finally {
       setIsLoading(false);
     }
