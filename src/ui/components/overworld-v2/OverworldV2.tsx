@@ -15,6 +15,7 @@ import { BackgroundLayer } from './layers/BackgroundLayer';
 import { RoadLayer } from './layers/RoadLayer';
 import { VillageLayer } from './layers/VillageLayer';
 import { PlayerLayer } from './layers/PlayerLayer';
+import { InteriorNpcLayer } from './layers/InteriorNpcLayer';
 import { InteriorFloorLayer } from '../overworld/layers/InteriorFloorLayer';
 import { InteriorFurnitureLayer } from '../overworld/layers/InteriorFurnitureLayer';
 import { VIEWPORT_HEIGHT, VIEWPORT_WIDTH, PLAYER_Y_MIN, PLAYER_Y_MAX } from './data/constants';
@@ -39,6 +40,8 @@ const INTERIOR_PLAYER_SPEED = 120;
 /** Exit trigger zone (bottom center of room) */
 const EXIT_ZONE_WIDTH = 60;
 const EXIT_ZONE_HEIGHT = 30;
+const INTERIOR_ENEMY_OFFSET_Y = 70;
+const INTERIOR_NPC_TRIGGER_RADIUS = 40;
 
 interface OverworldV2Props {
   width?: number;
@@ -54,6 +57,9 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
   const villageLayerRef = useRef<VillageLayer | null>(null);
   const interiorFloorRef = useRef<InteriorFloorLayer | null>(null);
   const interiorFurnitureRef = useRef<InteriorFurnitureLayer | null>(null);
+  const interiorNpcRef = useRef<InteriorNpcLayer | null>(null);
+  const interiorBattleTriggeredRef = useRef(false);
+  const pendingIntroHouseEntryRef = useRef(false);
   const keysRef = useRef<Set<string>>(new Set());
 
   // Track scene state
@@ -185,6 +191,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
 
   // Create interior layers
   const createInteriorLayers = useCallback((houseNum: number): Layer[] => {
+    const houseId = `house-${String(houseNum).padStart(2, '0')}`;
     const floorLayer = new InteriorFloorLayer();
     floorLayer.setRoomSize(INTERIOR_ROOM_WIDTH, INTERIOR_ROOM_HEIGHT);
     interiorFloorRef.current = floorLayer;
@@ -200,6 +207,19 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
     furnitureLayer.generateHouseFurniture(houseNum);
     interiorFurnitureRef.current = furnitureLayer;
 
+    // Interior access is already gated by door unlocks; only suppress enemies after completion.
+    const shouldSpawnEnemy = storyRef.current.flags[houseId] !== true;
+    const enemyOffsetY = houseNum === 1 ? INTERIOR_ROOM_HEIGHT / 2 : INTERIOR_ENEMY_OFFSET_Y;
+    const npcLayer = shouldSpawnEnemy
+      ? new InteriorNpcLayer({
+        id: `${houseId}-enemy`,
+        x: INTERIOR_ROOM_X + INTERIOR_ROOM_WIDTH / 2,
+        y: INTERIOR_ROOM_Y + enemyOffsetY,
+      })
+      : null;
+    interiorNpcRef.current = npcLayer;
+    interiorBattleTriggeredRef.current = false;
+
     // Create player layer for interior (centered at entrance)
     const playerLayer = new PlayerLayer({
       x: INTERIOR_ROOM_X + INTERIOR_ROOM_WIDTH / 2,
@@ -209,7 +229,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
     });
     playerLayerRef.current = playerLayer;
 
-    return [floorLayer, furnitureLayer, playerLayer];
+    return npcLayer ? [floorLayer, furnitureLayer, npcLayer, playerLayer] : [floorLayer, furnitureLayer, playerLayer];
   }, []);
 
   // Switch scene type with fade transition
@@ -276,6 +296,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
     // Tutorial beat: intercept House 1 entry to introduce Djinn (mirrors V1 flow).
     if (building.id === 'house-01' && !hasSeenDjinnIntro && !djinnIntroStartedRef.current) {
       djinnIntroStartedRef.current = true;
+      pendingIntroHouseEntryRef.current = true;
       startDialogueTree(DJINN_INTRO_DIALOGUE);
       return;
     }
@@ -495,6 +516,26 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
         // Check for exit trigger
         if (isInExitZone() && dy > 0) {
           exitInterior();
+        } else {
+          const npcLayer = interiorNpcRef.current;
+          if (npcLayer && !interiorBattleTriggeredRef.current) {
+            const npcPos = npcLayer.getPosition();
+            const dxNpc = newX - npcPos.x;
+            const dyNpc = newY - npcPos.y;
+            const distanceSq = dxNpc * dxNpc + dyNpc * dyNpc;
+            if (distanceSq <= INTERIOR_NPC_TRIGGER_RADIUS * INTERIOR_NPC_TRIGGER_RADIUS) {
+              const houseId = `house-${String(currentHouseNumRef.current).padStart(2, '0')}`;
+              if (storyRef.current.flags[houseId] !== true) {
+                interiorBattleTriggeredRef.current = true;
+                handleTrigger({
+                  id: `${houseId}-enemy`,
+                  type: 'battle',
+                  position: { x: 0, y: 0 },
+                  data: { encounterId: houseId },
+                });
+              }
+            }
+          }
         }
       }
     });
@@ -519,10 +560,11 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
       villageLayerRef.current = null;
       interiorFloorRef.current = null;
       interiorFurnitureRef.current = null;
+      interiorNpcRef.current = null;
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [width, height, handleKeyDown, handleKeyUp, createOverworldLayers, enterBuilding, exitInterior, isInExitZone]);
+  }, [width, height, handleKeyDown, handleKeyUp, createOverworldLayers, enterBuilding, exitInterior, isInExitZone, handleTrigger]);
 
   // Sync V1 store mode to V2 gameStore screens.
   // (Overworld V2 doesn't use tile triggers yet, but dialogue/battle effects still depend on mode transitions.)
@@ -549,6 +591,17 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
       transitionToScene(targetScene, houseNum);
     }
   }, [currentMapId, getSceneTypeFromMapId, getHouseNumberFromMapId, transitionToScene, isTransitioning]);
+
+  useEffect(() => {
+    if (!pendingIntroHouseEntryRef.current) return;
+    if (!hasSeenDjinnIntro) return;
+    if (mode !== 'overworld') return;
+    if (sceneTypeRef.current !== 'overworld') return;
+    if (isTransitioningRef.current) return;
+
+    pendingIntroHouseEntryRef.current = false;
+    enterBuilding('house-01');
+  }, [hasSeenDjinnIntro, mode, enterBuilding]);
 
   const sceneName = sceneTypeRef.current === 'interior'
     ? `House ${currentHouseNumRef.current} Interior`
