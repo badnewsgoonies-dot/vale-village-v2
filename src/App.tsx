@@ -1,5 +1,5 @@
 import { FunctionComponent, JSX } from 'preact';
-import { useState, useEffect, useMemo } from 'preact/hooks';
+import { useState, useEffect } from 'preact/hooks';
 import { shallow } from 'zustand/shallow';
 
 import { useGameStore, ScreenType, ModalType, GameStore } from './store/gameStore';
@@ -31,7 +31,11 @@ const TeamSelectWrapper: FunctionComponent = () => {
 
   const handleConfirm = () => {
     confirmBattleTeam();
-    startTransition('battle');
+    if (useStore.getState().mode === "battle") {
+      startTransition("battle");
+    } else {
+      console.error("Failed to start battle - validation or creation error");
+    }
   };
 
   const handleCancel = () => {
@@ -43,6 +47,21 @@ const TeamSelectWrapper: FunctionComponent = () => {
       startTransition('overworld');
     }
   };
+
+  useEffect(() => {
+    if (pendingBattleEncounterId) {
+      return;
+    }
+
+    if (towerEntryContext) {
+      setMode('tower');
+      startTransition('tower');
+      return;
+    }
+
+    setMode('overworld');
+    startTransition('overworld');
+  }, [pendingBattleEncounterId, setMode, startTransition, towerEntryContext]);
 
   if (!pendingBattleEncounterId) {
     // No pending battle, show loading or redirect
@@ -87,6 +106,21 @@ const RewardsWrapper: FunctionComponent = () => {
   }));
   const startTransition = useGameStore((s) => s.startTransition);
 
+  useEffect(() => {
+    if (lastBattleRewards && team) {
+      return;
+    }
+
+    if (towerStatus === 'in-run' || towerStatus === 'completed') {
+      setMode('tower');
+      startTransition('tower');
+      return;
+    }
+
+    returnToOverworld();
+    startTransition('overworld');
+  }, [lastBattleRewards, team, towerStatus, returnToOverworld, setMode, startTransition]);
+
   const handleRewardsContinue = () => {
     claimRewards();
     setBattle(null, 0);
@@ -124,10 +158,11 @@ const RewardsWrapper: FunctionComponent = () => {
 
 // Wrapper that reads shop props from V1 store
 const ShopWrapper: FunctionComponent = () => {
-  const { currentShopId, shopEntryContext, exitShop } = useStore((s) => ({
+  const { currentShopId, shopEntryContext, exitShop, setMode } = useStore((s) => ({
     currentShopId: s.currentShopId,
     shopEntryContext: s.shopEntryContext,
     exitShop: s.exitShop,
+    setMode: s.setMode,
   }));
   const startTransition = useGameStore((s) => s.startTransition);
 
@@ -136,6 +171,21 @@ const ShopWrapper: FunctionComponent = () => {
     exitShop();
     startTransition(entryContext === 'menu' ? 'menu' : 'overworld');
   };
+
+  useEffect(() => {
+    if (currentShopId) {
+      return;
+    }
+
+    if (shopEntryContext === 'menu') {
+      setMode('main-menu');
+      startTransition('menu');
+      return;
+    }
+
+    setMode('overworld');
+    startTransition('overworld');
+  }, [currentShopId, shopEntryContext, setMode, startTransition]);
 
   if (!currentShopId) {
     // No shop ID, redirect to overworld
@@ -163,14 +213,22 @@ import './index.css';
 function useStoreSync() {
   const mode = useStore((s) => s.mode);
   const setMode = useStore((s) => s.setMode);
+  const isDialogueActive = useStore((s) => Boolean(s.currentDialogueState));
   const towerStatus = useStore((s) => s.towerStatus);
   const currentScreen: ScreenType = useGameStore((s) => s.flow.screen);
   const activeModal = useGameStore((s) => s.flow.modal);
+  const isTransitioning = useGameStore((s) => s.flow.isTransitioning);
   const startTransition = useGameStore((s) => s.startTransition);
   const openModal = useGameStore((s) => s.openModal);
   const closeModal = useGameStore((s) => s.closeModal);
 
   useEffect(() => {
+    // Don't trigger new transitions while one is in progress - this prevents
+    // the sync from cancelling an ongoing transition
+    if (isTransitioning) {
+      return;
+    }
+
     switch (mode) {
       case 'tower':
         if (
@@ -277,7 +335,7 @@ function useStoreSync() {
       default:
         break;
     }
-  }, [mode, towerStatus, currentScreen, activeModal, startTransition, openModal, closeModal]);
+  }, [mode, towerStatus, currentScreen, activeModal, isTransitioning, startTransition, openModal, closeModal]);
 
   // Keep the legacy V1 store's mode aligned when navigation is driven by the new gameStore.
   useEffect(() => {
@@ -305,9 +363,13 @@ function useStoreSync() {
     }
 
     if (activeModal === 'dialogue' && mode !== 'dialogue') {
-      setMode('dialogue');
+      if (isDialogueActive) {
+        setMode('dialogue');
+      } else {
+        closeModal();
+      }
     }
-  }, [activeModal, currentScreen, mode, setMode]);
+  }, [activeModal, currentScreen, isDialogueActive, mode, setMode, closeModal]);
 }
 
 type DevOverlayProps = {
@@ -377,22 +439,6 @@ const App: FunctionComponent = () => {
   };
 
   const [isDevMode, setIsDevMode] = useState<boolean>(false);
-  const modeMapping = useMemo<Partial<Record<ScreenType, GameFlowSlice['mode']>>>(() => ({
-    title: 'title-screen',
-    intro: 'intro',
-    overworld: 'overworld',
-    battle: 'battle',
-    menu: 'main-menu',
-    compendium: 'compendium',
-    'team-select': 'team-select',
-    rewards: 'rewards',
-    shop: 'shop',
-    tower: 'tower',
-    'team-management': 'team-management',
-    'djinn-collection': 'djinn-collection',
-    credits: 'credits',
-    epilogue: 'epilogue',
-  }), []);
 
   useEffect(() => {
     if (!showCredits) {
@@ -401,17 +447,6 @@ const App: FunctionComponent = () => {
     setShowCredits(false);
     startTransition('credits');
   }, [showCredits, setShowCredits, startTransition]);
-
-  useEffect(() => {
-    const mappedMode = modeMapping[screen];
-    if (!mappedMode) {
-      return;
-    }
-
-    if (mappedMode !== mode) {
-      setMode(mappedMode);
-    }
-  }, [screen, mode, setMode, modeMapping]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent): void => {
