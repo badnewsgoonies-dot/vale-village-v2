@@ -395,7 +395,7 @@ function transitionToPlanningPhase(state: BattleState): BattleState {
     playerTeam: updatedTeam,
     djinnRecoveryTimers: updatedTimers,
   });
-  return refreshMana(nextState);
+  return nextState;
 }
 
 /**
