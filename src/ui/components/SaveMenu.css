@@ -70,6 +70,9 @@
   justify-content: center;
   transition: all 0.2s;
   line-height: 1;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .close-btn:hover {
@@ -117,6 +120,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .action-btn:hover:not(:disabled) {
@@ -148,6 +154,9 @@
   padding: 16px;
   cursor: pointer;
   transition: all 0.2s;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .save-slot:hover:not(.empty) {
@@ -265,6 +274,9 @@
   cursor: pointer;
   transition: all 0.2s;
   border: 2px solid;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .confirm-btn {
@@ -310,6 +322,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .delete-action-btn:hover:not(:disabled) {

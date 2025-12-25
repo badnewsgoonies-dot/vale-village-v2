@@ -886,6 +886,9 @@
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 0 4px 12px rgba(255, 216, 127, 0.3);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .prebattle-v2-selected .start-battle-btn:hover:not(:disabled) {
@@ -922,6 +925,9 @@
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.2s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .cancel-btn:hover {
@@ -933,6 +939,13 @@
 .keyboard-hints {
   font-size: 0.8rem;
   color: #8a7a6a;
+}
+
+/* Hide keyboard hints on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .keyboard-hints {
+    display: none;
+  }
 }
 
 .keyboard-hints .key {

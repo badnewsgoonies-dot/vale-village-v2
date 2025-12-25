@@ -93,7 +93,7 @@ export function PostBattleCutscene({ victory, onComplete }: PostBattleCutscenePr
           </div>
 
           <div className="cutscene-hint">
-            Press [ENTER] or [SPACE] to continue
+            Tap or press [ENTER] to continue
           </div>
         </div>
       </div>

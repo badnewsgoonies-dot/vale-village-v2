@@ -12,6 +12,7 @@ import { OverworldEngineV2 } from './engine/OverworldEngineV2';
 import { clampPlayerXToWorldBounds } from './engine/playerBounds';
 import { SkyLayer } from './layers/SkyLayer';
 import { BackgroundLayer } from './layers/BackgroundLayer';
+import { TerrainLayer } from './layers/TerrainLayer';
 import { RoadLayer } from './layers/RoadLayer';
 import { VillageLayer } from './layers/VillageLayer';
 import { PlayerLayer } from './layers/PlayerLayer';
@@ -178,6 +179,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
     return [
       new SkyLayer(),
       new BackgroundLayer(),
+      new TerrainLayer(),
       new RoadLayer(),
       villageLayer,
       playerLayer,

@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "swarm-memory": {
+      "command": "python3",
+      "args": [
+        "/home/geni/swarm/memory/core/mcp_memory_server.py"
+      ]
+    }
+  }
+}
