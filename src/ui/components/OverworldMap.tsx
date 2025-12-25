@@ -15,6 +15,7 @@ export function OverworldMap() {
   // Use gameStore for screen navigation state
   const screen = useGameStore((s) => s.flow.screen);
   const modal = useGameStore((s) => s.flow.modal);
+  const isTransitioning = useGameStore((s) => s.flow.isTransitioning);
 
   const startTransition = useGameStore((s) => s.startTransition);
   const openModal = useGameStore((s) => s.openModal);
@@ -109,11 +110,11 @@ export function OverworldMap() {
 
   useEffect(() => {
     // Only listen when on overworld screen with no modal open
-    if (screen !== 'overworld' || modal !== null) return;
+    if (screen !== 'overworld' || modal !== null || isTransitioning) return;
 
     const handleKeyDown = (event: KeyboardEvent) => {
       // Only handle movement when in overworld mode (not during dialogue, shops, etc.)
-      if (screen !== 'overworld' || modal !== null) return;
+      if (screen !== 'overworld' || modal !== null || isTransitioning) return;
 
       if (event.key === 'ArrowUp') {
         event.preventDefault();
@@ -138,7 +139,7 @@ export function OverworldMap() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [movePlayer, openModal, screen, modal, playerPosition, facing, map, handleTrigger, story]);
+  }, [movePlayer, openModal, screen, modal, isTransitioning, playerPosition, facing, map, handleTrigger, story]);
 
 
   useEffect(() => {

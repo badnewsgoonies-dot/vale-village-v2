@@ -16,6 +16,7 @@ import { isPreBattleDialogueTree } from '@/data/definitions/preBattleDialogues';
 import { createUnit } from '@/core/models/Unit';
 import { collectDjinn, equipDjinn } from '@/core/services/DjinnService';
 import { getXpForLevel } from '@/core/algorithms/xp';
+import { useGameStore } from '@/store/gameStore';
 
 export interface DialogueSlice {
   currentDialogueTree: DialogueTree | null;
@@ -173,6 +174,7 @@ export const createDialogueSlice: StateCreator<
     }
 
     const nextMode = prevMode === 'dialogue' ? returnMode : prevMode;
+    console.warn(`[endDialogue] prevMode=${prevMode}, returnMode=${returnMode}, nextMode=${nextMode}`);
     set({
       currentDialogueTree: null,
       currentDialogueState: null,
@@ -180,6 +182,10 @@ export const createDialogueSlice: StateCreator<
       // Race guard: if effects already changed mode, preserve that mode.
       mode: nextMode,
     });
+
+    // Explicitly close the gameStore modal to ensure the V2 store is in sync.
+    // Without this, the overworld's activeModalRef may remain 'dialogue' and block input.
+    useGameStore.getState().closeModal();
   },
 } as DialogueSlice);
 

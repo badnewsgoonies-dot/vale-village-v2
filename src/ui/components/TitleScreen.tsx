@@ -32,25 +32,27 @@ export function TitleScreen() {
       startTransition('menu');
     };
 
-    const handleClick = () => {
-      // Click anywhere also advances
-      startTransition('menu');
-    };
-
     window.addEventListener('keydown', handleKeyPress);
-    window.addEventListener('click', handleClick);
 
     return () => {
       window.removeEventListener('keydown', handleKeyPress);
-      window.removeEventListener('click', handleClick);
     };
   }, [startTransition]);
 
+  const handleInteraction = (e: Event) => {
+    e.preventDefault();
+    startTransition('menu');
+  };
+
   return (
-    <div class="title-screen" onClick={() => startTransition('menu')}>
+    <div
+      class="title-screen"
+      onClick={handleInteraction}
+      onTouchStart={handleInteraction}
+    >
       <div class="title-screen-content">
         <h1 class="title-screen-logo">Vale Chronicles</h1>
-        <p class="title-screen-subtitle">Press any key to continue</p>
+        <p class="title-screen-subtitle">Tap to continue</p>
       </div>
 
       {/* Animated character parade at bottom */}

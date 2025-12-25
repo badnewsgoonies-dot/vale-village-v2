@@ -18,6 +18,17 @@ import { PartyManagementScreen } from './PartyManagementScreen';
 import { ShopEquipScreen } from './ShopEquipScreen';
 import { DjinnCollectionScreen } from './DjinnCollectionScreen';
 
+// Helper for touch-friendly button props
+function touchButton(handler: () => void) {
+  return {
+    onClick: handler,
+    onTouchEnd: (e: TouchEvent) => {
+      e.preventDefault();
+      handler();
+    },
+  };
+}
+
 type ConfirmAction = 'quit' | 'restart' | null;
 type LoadoutPanel = 'party' | 'equipment' | 'djinn' | null;
 
@@ -124,13 +135,13 @@ export function TowerHubScreen(): JSX.Element {
             your personal-best floor to claim milestone rewards like Djinn, recruits, and equipment.
           </p>
           <div class="tower-actions">
-            <button class="primary" onClick={handleStartRun}>
+            <button class="primary" {...touchButton(handleStartRun)}>
               Start Tower Run
             </button>
-            <button class="ghost" onClick={handleTalkToGuide}>
+            <button class="ghost" {...touchButton(handleTalkToGuide)}>
               Talk to Guide
             </button>
-            <button onClick={handleExitTower}>
+            <button {...touchButton(handleExitTower)}>
               {towerEntryContext?.type === 'overworld' ? 'Return to Vale' : 'Back to Menu'}
             </button>
           </div>
@@ -186,13 +197,13 @@ export function TowerHubScreen(): JSX.Element {
                 : 'You cleared every defined floor for this phase.'}
             </p>
             <div class="tower-actions">
-              <button class="primary" onClick={handleStartRun}>
+              <button class="primary" {...touchButton(handleStartRun)}>
                 Start New Run
               </button>
-              <button class="ghost" onClick={handleTalkToGuide}>
+              <button class="ghost" {...touchButton(handleTalkToGuide)}>
                 Talk to Guide
               </button>
-              <button onClick={handleExitTower}>
+              <button {...touchButton(handleExitTower)}>
                 {towerEntryContext?.type === 'overworld' ? 'Return to Vale' : 'Back to Menu'}
               </button>
             </div>
@@ -202,23 +213,23 @@ export function TowerHubScreen(): JSX.Element {
             <h2>Rest Floor</h2>
             <p>Restore {Math.round(REST_HEAL * 100)}% HP and reset Djinn before the next stretch.</p>
             <div class="tower-actions">
-              <button class="primary" onClick={applyTowerRest}>
+              <button class="primary" {...touchButton(applyTowerRest)}>
                 Take Rest
               </button>
-              <button onClick={beginTowerFloorBattle}>Skip Rest</button>
-              <button class="ghost" onClick={handleTalkToGuide}>
+              <button {...touchButton(beginTowerFloorBattle)}>Skip Rest</button>
+              <button class="ghost" {...touchButton(handleTalkToGuide)}>
                 Talk to Guide
               </button>
-              <button class="ghost" onClick={handleQuitRun}>
+              <button class="ghost" {...touchButton(handleQuitRun)}>
                 Quit Run
               </button>
             </div>
             <div class="tower-loadout-actions">
               <span>Adjust loadouts:</span>
               <div class="tower-rest-buttons">
-                <button onClick={() => setLoadoutPanel('party')}>Party</button>
-                <button onClick={() => setLoadoutPanel('equipment')}>Equipment</button>
-                <button onClick={() => setLoadoutPanel('djinn')}>Djinn</button>
+                <button {...touchButton(() => setLoadoutPanel('party'))}>Party</button>
+                <button {...touchButton(() => setLoadoutPanel('equipment'))}>Equipment</button>
+                <button {...touchButton(() => setLoadoutPanel('djinn'))}>Djinn</button>
               </div>
             </div>
           </>
@@ -234,17 +245,17 @@ export function TowerHubScreen(): JSX.Element {
               <button
                 class="primary"
                 disabled={!currentFloor || isRestFloor}
-                onClick={beginTowerFloorBattle}
+                {...touchButton(beginTowerFloorBattle)}
               >
                 Begin Battle
               </button>
-              <button class="ghost" onClick={handleQuitRun}>
+              <button class="ghost" {...touchButton(handleQuitRun)}>
                 Quit Run
               </button>
-              <button class="ghost" onClick={handleTalkToGuide}>
+              <button class="ghost" {...touchButton(handleTalkToGuide)}>
                 Talk to Guide
               </button>
-              <button onClick={handleExitTower}>
+              <button {...touchButton(handleExitTower)}>
                 {towerEntryContext?.type === 'overworld' ? 'Return to Vale' : 'Back to Menu'}
               </button>
             </div>
@@ -320,10 +331,10 @@ export function TowerHubScreen(): JSX.Element {
                 : 'Start a new run? Your existing Tower progress will be lost.'}
             </p>
             <div class="tower-modal-actions">
-              <button class="primary" onClick={handleConfirmAction}>
+              <button class="primary" {...touchButton(handleConfirmAction)}>
                 {confirmAction === 'quit' ? 'Confirm Quit' : 'Start New Run'}
               </button>
-              <button onClick={() => setConfirmAction(null)}>Cancel</button>
+              <button {...touchButton(() => setConfirmAction(null))}>Cancel</button>
             </div>
           </div>
         </div>

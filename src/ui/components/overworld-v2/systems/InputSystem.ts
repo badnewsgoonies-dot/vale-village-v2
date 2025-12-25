@@ -1,6 +1,6 @@
 /**
  * InputSystem
- * Tracks keyboard state for movement and interaction.
+ * Tracks keyboard state and touch joystick for movement and interaction.
  */
 
 export type InputKey = 'left' | 'right' | 'up' | 'down' | 'action';
@@ -23,6 +23,11 @@ export class InputSystem {
   private justPressed: Set<InputKey> = new Set();
   private justReleased: Set<InputKey> = new Set();
 
+  // Touch joystick state
+  private touchHorizontal = 0;
+  private touchVertical = 0;
+  private touchAction = false;
+
   private boundKeyDown: (e: KeyboardEvent) => void;
   private boundKeyUp: (e: KeyboardEvent) => void;
 
@@ -44,6 +49,9 @@ export class InputSystem {
     this.heldKeys.clear();
     this.justPressed.clear();
     this.justReleased.clear();
+    this.touchHorizontal = 0;
+    this.touchVertical = 0;
+    this.touchAction = false;
   }
 
   private handleKeyDown(e: KeyboardEvent): void {
@@ -71,6 +79,20 @@ export class InputSystem {
     this.heldKeys.delete(key);
   }
 
+  /** Set touch joystick input (called from VirtualJoystick component) */
+  setTouchInput(horizontal: number, vertical: number): void {
+    this.touchHorizontal = horizontal;
+    this.touchVertical = vertical;
+  }
+
+  /** Set touch action button state */
+  setTouchAction(pressed: boolean): void {
+    if (pressed && !this.touchAction) {
+      this.justPressed.add('action');
+    }
+    this.touchAction = pressed;
+  }
+
   /** Call at end of each frame to clear one-shot states */
   endFrame(): void {
     this.justPressed.clear();
@@ -79,6 +101,7 @@ export class InputSystem {
 
   /** Check if a key is currently held down */
   isHeld(key: InputKey): boolean {
+    if (key === 'action' && this.touchAction) return true;
     return this.heldKeys.has(key);
   }
 
@@ -94,6 +117,10 @@ export class InputSystem {
 
   /** Get horizontal input (-1 = left, 0 = none, 1 = right) */
   getHorizontal(): number {
+    // Touch input takes priority if active
+    if (this.touchHorizontal !== 0) {
+      return this.touchHorizontal;
+    }
     let h = 0;
     if (this.heldKeys.has('left')) h -= 1;
     if (this.heldKeys.has('right')) h += 1;
@@ -102,15 +129,21 @@ export class InputSystem {
 
   /** Get vertical input (-1 = up, 0 = none, 1 = down) */
   getVertical(): number {
+    // Touch input takes priority if active
+    if (this.touchVertical !== 0) {
+      return this.touchVertical;
+    }
     let v = 0;
     if (this.heldKeys.has('up')) v -= 1;
     if (this.heldKeys.has('down')) v += 1;
     return v;
   }
 
-  /** Check if any movement key is held */
+  /** Check if any movement input is active (keyboard or touch) */
   isMoving(): boolean {
     return (
+      this.touchHorizontal !== 0 ||
+      this.touchVertical !== 0 ||
       this.heldKeys.has('left') ||
       this.heldKeys.has('right') ||
       this.heldKeys.has('up') ||

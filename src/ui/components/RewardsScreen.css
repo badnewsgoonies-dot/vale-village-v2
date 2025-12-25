@@ -656,6 +656,9 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
   animation: continuePulse 2s ease-in-out infinite;
   text-transform: uppercase;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 @keyframes continuePulse {

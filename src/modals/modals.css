@@ -94,6 +94,9 @@
   justify-content: center;
   transition: all 0.2s;
   line-height: 1;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .close-btn:hover {
@@ -235,6 +238,9 @@
   font-size: 14px;
   cursor: pointer;
   transition: all 0.2s;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .setting-btn:hover {
@@ -351,6 +357,9 @@
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .equipment-item:hover {
@@ -486,6 +495,9 @@
   transition: all 0.2s;
   text-align: left;
   color: #e0e0e0;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .save-slot:hover:not(:disabled) {
@@ -569,6 +581,9 @@
   cursor: pointer;
   transition: all 0.2s;
   border: 2px solid;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .btn-primary {

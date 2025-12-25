@@ -137,7 +137,7 @@ export function VictoryScreen({
 
       {/* Keyboard Hint */}
       <div class="victory-hint">
-        Press <kbd>SPACE</kbd> to continue
+        Tap or press <kbd>SPACE</kbd> to continue
       </div>
     </div>
   );
