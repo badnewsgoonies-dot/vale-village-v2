@@ -251,6 +251,9 @@
   transition: all 0.2s;
   box-shadow: 0 4px 12px rgba(255, 216, 127, 0.4);
   animation: button-appear 0.8s ease-out 0.8s both;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 @keyframes button-appear {
@@ -331,4 +334,11 @@
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
   border: 1px solid #555;
+}
+
+/* Hide keyboard hint on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .victory-hint {
+    display: none;
+  }
 }

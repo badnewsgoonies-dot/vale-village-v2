@@ -9,6 +9,7 @@ export type ModalType = 'inventory' | 'settings' | 'dialogue' | 'pause' | 'team-
 export interface FlowState {
     screen: ScreenType;
     modal: ModalType | null;
+    modalReturnTo: ModalType | null;
     isTransitioning: boolean;
     compendiumReturnTo: { screen: ScreenType; modal: ModalType | null } | null;
     shopEntryContext: 'menu' | 'overworld' | null;
@@ -141,6 +142,7 @@ const DEFAULT_INVENTORY_CAPACITY = 32;
 const initialFlowState: FlowState = {
     screen: 'title',
     modal: null,
+    modalReturnTo: null,
     isTransitioning: false,
     compendiumReturnTo: null,
     shopEntryContext: null,
@@ -165,6 +167,10 @@ const createGameSlice = (set: GameStoreSetState, get: GameStoreGetState): GameSl
     shopEntryContext: initialFlowState.shopEntryContext,
     setScreen: (screen) =>
         set((state) => {
+            transitionId += 1;
+            state.flow.isTransitioning = false;
+            state.flow.modal = null;
+            state.flow.modalReturnTo = null;
             state.flow.screen = screen;
         }),
     startTransition: (screen) => {
@@ -174,6 +180,8 @@ const createGameSlice = (set: GameStoreSetState, get: GameStoreGetState): GameSl
         // Start fade to black
         set((state) => {
             state.flow.isTransitioning = true;
+            state.flow.modal = null;
+            state.flow.modalReturnTo = null;
         });
 
         // Wait 150ms, change screen at peak darkness
@@ -202,11 +210,25 @@ const createGameSlice = (set: GameStoreSetState, get: GameStoreGetState): GameSl
     },
     openModal: (modal) =>
         set((state) => {
+            if (state.flow.isTransitioning) {
+                return;
+            }
+            
+            // Support nesting: if a modal is already open, save it to return to later
+            if (state.flow.modal && state.flow.modal !== modal) {
+                state.flow.modalReturnTo = state.flow.modal;
+            }
+            
             state.flow.modal = modal;
         }),
     closeModal: () =>
         set((state) => {
-            state.flow.modal = null;
+            if (state.flow.modalReturnTo) {
+                state.flow.modal = state.flow.modalReturnTo;
+                state.flow.modalReturnTo = null;
+            } else {
+                state.flow.modal = null;
+            }
         }),
     openCompendium: () => {
         set((state) => {
@@ -215,16 +237,20 @@ const createGameSlice = (set: GameStoreSetState, get: GameStoreGetState): GameSl
                 modal: state.flow.modal,
             };
             state.flow.modal = null;
+            state.flow.modalReturnTo = null;
         });
 
         get().setScreen('compendium');
     },
     closeCompendium: () => {
         set((state) => {
+            transitionId += 1;
+            state.flow.isTransitioning = false;
             const returnTo = state.flow.compendiumReturnTo;
             state.flow.compendiumReturnTo = null;
             state.flow.screen = returnTo?.screen ?? 'menu';
             state.flow.modal = returnTo?.modal ?? null;
+            state.flow.modalReturnTo = null;
         });
     },
     openShopFromMainMenu: () => {
@@ -232,6 +258,7 @@ const createGameSlice = (set: GameStoreSetState, get: GameStoreGetState): GameSl
             state.shopEntryContext = 'menu';
             state.flow.shopEntryContext = 'menu';
             state.flow.modal = null;
+            state.flow.modalReturnTo = null;
         });
 
         get().startTransition('shop');
@@ -243,6 +270,7 @@ const createGameSlice = (set: GameStoreSetState, get: GameStoreGetState): GameSl
             state.shopEntryContext = null;
             state.flow.shopEntryContext = null;
             state.flow.modal = null;
+            state.flow.modalReturnTo = null;
         });
 
         get().startTransition(entryContext === 'menu' ? 'menu' : 'overworld');
@@ -253,6 +281,7 @@ const createGameSlice = (set: GameStoreSetState, get: GameStoreGetState): GameSl
         }),
     resetFlow: () =>
         set((state) => {
+            transitionId += 1;
             state.flow = { ...initialFlowState };
             state.shopEntryContext = initialFlowState.shopEntryContext;
         }),
@@ -275,6 +304,7 @@ const createBattleSlice = (set: GameStoreSetState, _get: GameStoreGetState): Bat
             };
             state.flow.screen = 'battle';
             state.flow.modal = null;
+            state.flow.modalReturnTo = null;
         }),
     endBattle: () =>
         set((state) => {

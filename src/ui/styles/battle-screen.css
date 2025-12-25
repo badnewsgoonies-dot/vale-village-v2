@@ -459,6 +459,9 @@ body {
   color: #eee;
   text-align: center;
   cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .command-button:hover {
@@ -508,6 +511,10 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1px;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .ability-item:hover {
@@ -582,6 +589,9 @@ body {
   background: #333;
   color: #eee;
   cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .action-queue {
@@ -601,6 +611,9 @@ body {
   flex-direction: column;
   gap: 2px;
   cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .action-slot__unit {
@@ -693,6 +706,9 @@ body {
   font-weight: 600;
   font-size: 11px;
   cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .execute-button--disabled {
@@ -741,6 +757,9 @@ body {
   flex-direction: column;
   gap: 1px;
   cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .djinn-entry-header {
@@ -853,6 +872,9 @@ body {
   background: #333;
   color: #fff;
   cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .overlay-button:hover {

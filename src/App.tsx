@@ -267,64 +267,40 @@ function useStoreSync() {
         if (currentScreen !== 'team-management') {
           startTransition('team-management');
         }
-        if (activeModal) {
-          closeModal();
-        }
         break;
       case 'djinn-collection':
         if (currentScreen !== 'djinn-collection') {
           startTransition('djinn-collection');
-        }
-        if (activeModal) {
-          closeModal();
         }
         break;
       case 'credits':
         if (currentScreen !== 'credits') {
           startTransition('credits');
         }
-        if (activeModal) {
-          closeModal();
-        }
         break;
       case 'epilogue':
         if (currentScreen !== 'epilogue') {
           startTransition('epilogue');
-        }
-        if (activeModal) {
-          closeModal();
         }
         break;
       case 'overworld':
         if (currentScreen !== 'overworld') {
           startTransition('overworld');
         }
-        if (activeModal) {
-          closeModal();
-        }
         break;
       case 'intro':
         if (currentScreen !== 'intro') {
           startTransition('intro');
-        }
-        if (activeModal) {
-          closeModal();
         }
         break;
       case 'main-menu':
         if (currentScreen !== 'menu') {
           startTransition('menu');
         }
-        if (activeModal) {
-          closeModal();
-        }
         break;
       case 'title-screen':
         if (currentScreen !== 'title') {
           startTransition('title');
-        }
-        if (activeModal) {
-          closeModal();
         }
         break;
       case 'dialogue':
@@ -558,31 +534,24 @@ const App: FunctionComponent = () => {
         return <PauseMenu
           onClose={closeModal}
           onTeamManagement={() => {
-            closeModal();
             startTransition('team-management');
           }}
           onInventory={() => {
-            closeModal();
             openModal('inventory');
           }}
           onDjinnCollection={() => {
-            closeModal();
             startTransition('djinn-collection');
           }}
           onSaveGame={() => {
-            closeModal();
             openModal('save');
           }}
           onSettings={() => {
-            closeModal();
             openModal('settings');
           }}
           onHowToPlay={() => {
-            closeModal();
             openModal('help');
           }}
           onReturnToTitle={() => {
-            closeModal();
             startTransition('title');
           }}
         />;

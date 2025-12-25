@@ -173,7 +173,7 @@ export function DialogueBoxV2() {
     return null;
   }
 
-  const handleClick = (e: MouseEvent) => {
+  const handleClick = (e: MouseEvent | TouchEvent) => {
     // Don't advance if clicking on buttons or choices
     if (hasChoices || (e.target as HTMLElement).closest('.dialogue-choice-v2')) {
       return;
@@ -182,10 +182,17 @@ export function DialogueBoxV2() {
     handleAdvance();
   };
 
+  const handleTouchEnd = (e: TouchEvent) => {
+    // Prevent click event from also firing
+    e.preventDefault();
+    handleClick(e);
+  };
+
   const dialogueContent = (
     <div
       class="dialogue-overlay-v2"
       onClick={handleClick}
+      onTouchEnd={handleTouchEnd}
       style={{
         cursor: hasChoices ? 'default' : 'pointer',
       }}
@@ -267,7 +274,7 @@ export function DialogueBoxV2() {
                 <span class="next-label-v2">{isTyping ? 'Skip' : 'Next'}</span>
                 <span class="next-icon-v2" aria-hidden="true">▶</span>
               </button>
-              <span class="dialogue-hotkey-v2">PRESS SPACE</span>
+              <span class="dialogue-hotkey-v2">TAP TO CONTINUE</span>
               {!isTyping && <div class="arrow-sprite-v2"></div>}
             </div>
           )}

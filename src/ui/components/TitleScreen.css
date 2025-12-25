@@ -12,6 +12,9 @@
   color: #f6e9d7;
   cursor: pointer;
   overflow: hidden;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .title-screen::before {

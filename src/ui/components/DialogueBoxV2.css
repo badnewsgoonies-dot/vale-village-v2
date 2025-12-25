@@ -9,6 +9,9 @@
   justify-content: center;
   padding: 0;
   z-index: 1000;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .dialogue-box-v2 {
@@ -251,6 +254,9 @@
     0 3px 10px rgba(0, 0, 0, 0.35),
     inset 0 1px 0 rgba(255, 255, 255, 0.35);
   transition: transform 0.12s ease, box-shadow 0.12s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .dialogue-next-button-v2:hover {
@@ -327,6 +333,9 @@
   cursor: pointer;
   position: relative;
   text-align: left;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 
   /* Slanted hexagon shape */
   clip-path: polygon(
@@ -456,5 +465,12 @@
   .choice-button-v2 {
     font-size: 11px;
     padding: 12px 20px 12px 36px;
+  }
+}
+
+/* Hide keyboard hotkey on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .dialogue-hotkey-v2 {
+    display: none;
   }
 }

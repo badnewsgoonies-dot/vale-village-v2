@@ -49,6 +49,7 @@ export interface ActionResult {
   targetIds: readonly string[];
   updatedUnits: readonly Unit[];
   hit?: boolean;
+  targetResults?: Record<string, { damage?: number; healing?: number }>;
 }
 
 /**
@@ -217,14 +218,13 @@ export function performAction(
   }];
 
   // Add hit/heal events
-  if (result.damage !== undefined) {
-    targetIds.forEach(targetId => {
-      const target = targets.find(t => t.id === targetId);
-      if (target) {
+  if (result.targetResults) {
+    Object.entries(result.targetResults).forEach(([targetId, targetResult]) => {
+      if (targetResult.damage !== undefined) {
         events.push({
           type: 'hit',
           targetId,
-          amount: result.damage || 0,
+          amount: targetResult.damage,
           element: ability.element,
         });
 
@@ -234,17 +234,45 @@ export function performAction(
           events.push({ type: 'ko', unitId: targetId });
         }
       }
-    });
-  }
 
-  if (result.healing !== undefined) {
-    targetIds.forEach(targetId => {
-      events.push({
-        type: 'heal',
-        targetId,
-        amount: result.healing || 0,
-      });
+      if (targetResult.healing !== undefined) {
+        events.push({
+          type: 'heal',
+          targetId,
+          amount: targetResult.healing,
+        });
+      }
     });
+  } else {
+    // Fallback for when targetResults is not present (defensive)
+    if (result.damage !== undefined) {
+      targetIds.forEach(targetId => {
+        const target = targets.find(t => t.id === targetId);
+        if (target) {
+          events.push({
+            type: 'hit',
+            targetId,
+            amount: result.damage || 0,
+            element: ability.element,
+          });
+
+          const updatedTarget = result.updatedUnits.find(u => u.id === targetId);
+          if (updatedTarget && updatedTarget.currentHp <= 0) {
+            events.push({ type: 'ko', unitId: targetId });
+          }
+        }
+      });
+    }
+
+    if (result.healing !== undefined) {
+      targetIds.forEach(targetId => {
+        events.push({
+          type: 'heal',
+          targetId,
+          amount: result.healing || 0,
+        });
+      });
+    }
   }
 
   // Emit status-applied events for newly added status effects (on-hit statuses)
@@ -393,6 +421,7 @@ export function executeAbility(
   const targetIds = targets.map(t => t.id);
   let message = `${caster.name} uses ${ability.name}!`;
   const updatedUnits: Unit[] = [];
+  const targetResults: Record<string, { damage?: number; healing?: number }> = {};
 
   // Execute based on ability type
   switch (ability.type) {
@@ -434,6 +463,7 @@ export function executeAbility(
         }
 
         totalDamage += targetDamage;
+        targetResults[target.id] = { ...targetResults[target.id], damage: targetDamage };
 
         // Apply status effect (if any)
         if (ability.statusEffect) {
@@ -558,6 +588,7 @@ export function executeAbility(
           const { updatedUnit, actualDamage } = applyDamageWithShields(currentSecondary, splashDamage);
           currentSecondary = updatedUnit;
           totalDamage += actualDamage;
+          targetResults[secondaryTarget.id] = { ...targetResults[secondaryTarget.id], damage: actualDamage };
 
           // Update in the working set
           const existingIndex = updatedUnits.findIndex(u => u.id === currentSecondary.id);
@@ -586,6 +617,7 @@ export function executeAbility(
         targetIds,
         updatedUnits: finalUnits,
         hit: totalDamage > 0,
+        targetResults,
       });
     }
 
@@ -594,6 +626,7 @@ export function executeAbility(
 
       for (const target of targets) {
         let currentTarget = target;
+        let targetHealing = 0;
 
         // Handle revive
         if ((ability.revivesFallen || ability.revive) && isUnitKO(target)) {
@@ -603,13 +636,16 @@ export function executeAbility(
             ...target,
             currentHp: Math.floor(maxHp * reviveHPPercent),
           };
-          totalHealing += currentTarget.currentHp;
+          targetHealing = currentTarget.currentHp;
         } else if (!isUnitKO(target)) {
           // Use effective MAG for healing calculation
           const healAmount = calculateHealAmount(caster, team, ability);
           currentTarget = applyHealing(target, healAmount, ability.revivesFallen || ability.revive || false);
-          totalHealing += currentTarget.currentHp - target.currentHp;
+          targetHealing = currentTarget.currentHp - target.currentHp;
         }
+
+        totalHealing += targetHealing;
+        targetResults[target.id] = { ...targetResults[target.id], healing: targetHealing };
 
         // Apply heal-over-time effect (if any)
         if (ability.healOverTime && !isUnitKO(currentTarget)) {
@@ -648,6 +684,7 @@ export function executeAbility(
         targetIds,
         updatedUnits: finalUnits,
         hit: false,
+        targetResults,
       });
     }
 
