@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Battle Mock – Target Selection (B2)</title>
+    <link rel="stylesheet" href="../../src/ui/styles/battle-screen.css" />
+    <style>
+      .mock-nav {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 9999;
+        background: rgba(0, 0, 0, 0.65);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 6px;
+        padding: 6px 10px;
+        font-size: 12px;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+      .mock-nav a {
+        color: #fff;
+        text-decoration: none;
+      }
+      .mock-nav a:hover {
+        text-decoration: underline;
+      }
+      .mock-target-selected {
+        outline: 3px solid #ffeb3b;
+        box-shadow: 0 0 10px 2px rgba(255, 235, 59, 0.55);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="mock-nav">
+      <a href="./index.html">← Index</a>
+      <a href="./queue-based.html">Queue planning →</a>
+    </div>
+
+    <div class="game-root" data-battle-phase="planning">
+      <div class="battle-screen">
+        <!-- Turn order strip -->
+        <div class="turn-order-strip">
+          <div class="turn-order-unit turn-order-unit--player turn-order-unit--current" title="Isaac">
+            Isaac
+          </div>
+          <div class="turn-order-unit turn-order-unit--enemy" title="Wild Wolf">Wolf</div>
+          <div class="turn-order-unit turn-order-unit--player" title="Garet">Garet</div>
+          <div class="turn-order-unit turn-order-unit--enemy" title="Bandit">Bandi</div>
+          <div class="turn-order-unit turn-order-unit--player" title="Ivan">Ivan</div>
+          <div class="turn-order-unit turn-order-unit--enemy" title="Mad Plant">Plant</div>
+          <div class="turn-order-unit turn-order-unit--player" title="Mia">Mia</div>
+          <div class="turn-order-unit turn-order-unit--enemy" title="Ghoul">Ghoul</div>
+        </div>
+
+        <!-- Top row: player + enemies -->
+        <div class="top-row">
+          <div class="player-side">
+            <div class="side-title">Player Party</div>
+            <div class="unit-list">
+              <div class="unit-card unit-card--selected">
+                <div class="unit-sprite">ISA</div>
+                <div class="unit-header">
+                  <div class="unit-name">Isaac</div>
+                  <div class="unit-element">Venus</div>
+                </div>
+                <div class="unit-hp-row">
+                  <div class="hp-bar"><div class="hp-fill" style="width: 88%"></div></div>
+                  <div class="hp-text">88 / 100</div>
+                </div>
+                <div class="unit-status-row">
+                  <div class="status-icons">
+                    <div class="status-icon" title="Attack Up">ATK</div>
+                    <div class="status-icon" title="Defense Up">DEF</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="unit-card">
+                <div class="unit-sprite">GAR</div>
+                <div class="unit-header">
+                  <div class="unit-name">Garet</div>
+                  <div class="unit-element">Mars</div>
+                </div>
+                <div class="unit-hp-row">
+                  <div class="hp-bar"><div class="hp-fill" style="width: 64%"></div></div>
+                  <div class="hp-text">64 / 100</div>
+                </div>
+                <div class="unit-status-row">
+                  <div class="status-icons">
+                    <div class="status-icon" title="Poison">PSN</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="unit-card">
+                <div class="unit-sprite">IVA</div>
+                <div class="unit-header">
+                  <div class="unit-name">Ivan</div>
+                  <div class="unit-element">Jupiter</div>
+                </div>
+                <div class="unit-hp-row">
+                  <div class="hp-bar"><div class="hp-fill" style="width: 91%"></div></div>
+                  <div class="hp-text">91 / 100</div>
+                </div>
+                <div class="unit-status-row">
+                  <div class="status-icons"></div>
+                </div>
+              </div>
+
+              <div class="unit-card unit-card--ko">
+                <div class="unit-sprite">MIA</div>
+                <div class="unit-header">
+                  <div class="unit-name">Mia</div>
+                  <div class="unit-element">Mercury</div>
+                </div>
+                <div class="unit-hp-row">
+                  <div class="hp-bar"><div class="hp-fill hp-fill--empty"></div></div>
+                  <div class="hp-text">0 / 100</div>
+                </div>
+                <div class="unit-status-row">
+                  <div class="unit-status-label">KO</div>
+                  <div class="status-icons"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="enemy-side">
+            <div class="side-title">Enemies</div>
+            <div class="unit-list">
+              <div class="unit-card">
+                <div class="unit-sprite">WOLF</div>
+                <div class="unit-header">
+                  <div class="unit-name">Wild Wolf</div>
+                  <div class="unit-element">?</div>
+                </div>
+                <div class="unit-hp-row">
+                  <div class="hp-bar"><div class="hp-fill" style="width: 54%"></div></div>
+                  <div class="hp-text">54 / 100</div>
+                </div>
+                <div class="unit-status-row">
+                  <div class="status-icons">
+                    <div class="status-icon" title="Defense Down">↓DEF</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="unit-card">
+                <div class="unit-sprite">PLNT</div>
+                <div class="unit-header">
+                  <div class="unit-name">Mad Plant</div>
+                  <div class="unit-element">?</div>
+                </div>
+                <div class="unit-hp-row">
+                  <div class="hp-bar"><div class="hp-fill" style="width: 73%"></div></div>
+                  <div class="hp-text">73 / 100</div>
+                </div>
+                <div class="unit-status-row">
+                  <div class="status-icons"></div>
+                </div>
+              </div>
+
+              <div class="unit-card">
+                <div class="unit-sprite">BND</div>
+                <div class="unit-header">
+                  <div class="unit-name">Bandit</div>
+                  <div class="unit-element">?</div>
+                </div>
+                <div class="unit-hp-row">
+                  <div class="hp-bar"><div class="hp-fill" style="width: 41%"></div></div>
+                  <div class="hp-text">41 / 100</div>
+                </div>
+                <div class="unit-status-row">
+                  <div class="status-icons"></div>
+                </div>
+              </div>
+
+              <div class="unit-card">
+                <div class="unit-sprite">GHO</div>
+                <div class="unit-header">
+                  <div class="unit-name">Ghoul</div>
+                  <div class="unit-element">?</div>
+                </div>
+                <div class="unit-hp-row">
+                  <div class="hp-bar"><div class="hp-fill" style="width: 92%"></div></div>
+                  <div class="hp-text">92 / 100</div>
+                </div>
+                <div class="unit-status-row">
+                  <div class="status-icons">
+                    <div class="status-icon" title="Sleep">SLP</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Battlefield + phase -->
+        <div class="middle-row">
+          <div class="phase-indicator">Planning Phase · Target Selection</div>
+          <div class="battlefield">
+            <div class="battlefield-inner">
+              <div class="battlefield-column">
+                <div class="battlefield-unit battlefield-unit--current" title="Isaac">Isaac</div>
+                <div class="battlefield-unit" title="Garet">Garet</div>
+                <div class="battlefield-unit" title="Ivan">Ivan</div>
+                <div class="battlefield-unit" title="Mia (KO)">Mia</div>
+              </div>
+              <div class="battlefield-column">
+                <div class="battlefield-unit targetable mock-target-selected" title="Wild Wolf">Wolf</div>
+                <div class="battlefield-unit targetable" title="Mad Plant">Plant</div>
+                <div class="battlefield-unit targetable" title="Bandit">Bandit</div>
+                <div class="battlefield-unit targetable" title="Ghoul">Ghoul</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom panels -->
+        <div class="bottom-row">
+          <!-- Command panel -->
+          <div class="command-bar">
+            <div class="command-header">
+              Current Unit: <strong>Isaac (Venus Adept)</strong>
+            </div>
+            <div class="command-buttons">
+              <div class="command-button">[A] Attack</div>
+              <div class="command-button">[S] Psynergy</div>
+              <div class="command-button">[D] Djinn</div>
+              <div class="command-button">[F] Abilities</div>
+            </div>
+            <div class="ability-panel">
+              <div class="ability-section-title">Selected Ability</div>
+              <div class="ability-list">
+                <div class="ability-item">
+                  <div class="ability-item__top">
+                    <span class="ability-name">Quake</span>
+                    <span class="ability-meta">2 mana · [Psynergy]</span>
+                  </div>
+                  <div class="ability-detail">
+                    Pick a target. Highlighted enemies are valid.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Queue / mana -->
+          <div class="queue-mana-panel">
+            <div class="queue-header">
+              <span>Action Queue – Round 3</span>
+              <div class="queue-nav">
+                <button class="queue-nav-button">[Q] Prev Unit</button>
+                <button class="queue-nav-button">[E] Next Unit</button>
+              </div>
+            </div>
+
+            <div class="action-queue">
+              <div class="action-slot action-slot--filled action-slot--current">
+                <div class="action-slot__unit">Isaac</div>
+                <div class="action-slot__summary">Psynergy: Quake</div>
+                <div class="action-slot__meta">
+                  <span>2 mana</span>
+                  <span class="action-slot__clear">× Clear</span>
+                </div>
+              </div>
+              <div class="action-slot action-slot--empty">
+                <div class="action-slot__unit">Garet</div>
+                <div class="action-slot__summary">Choose…</div>
+              </div>
+              <div class="action-slot action-slot--empty">
+                <div class="action-slot__unit">Ivan</div>
+                <div class="action-slot__summary">Choose…</div>
+              </div>
+              <div class="action-slot action-slot--ko">
+                <div class="action-slot__unit">Mia</div>
+                <div class="action-slot__summary">KO</div>
+              </div>
+            </div>
+
+            <div class="mana-row">
+              <div class="mana-orbs">
+                <div class="mana-orb mana-orb--filled"></div>
+                <div class="mana-orb mana-orb--filled"></div>
+                <div class="mana-orb mana-orb--filled"></div>
+                <div class="mana-orb mana-orb--filled"></div>
+                <div class="mana-orb mana-orb--filled"></div>
+                <div class="mana-orb"></div>
+              </div>
+              <div class="mana-display">Mana: 5 / 6</div>
+            </div>
+
+            <div class="execute-row">
+              <span class="target-mode-banner">
+                Select Target: Use arrow keys or click a highlighted unit
+              </span>
+            </div>
+
+            <div class="execute-row">
+              <button class="execute-button execute-button--disabled" disabled>Execute Round</button>
+            </div>
+          </div>
+
+          <!-- Djinn / log -->
+          <div class="right-bottom-panel">
+            <div class="djinn-popup">
+              <div class="djinn-popup-title">Djinn</div>
+              <div class="djinn-list">
+                <div class="djinn-entry">
+                  <div class="djinn-entry-header">
+                    <span class="djinn-name">Flint</span>
+                    <span class="djinn-state--set">Set</span>
+                  </div>
+                  <div class="djinn-effect">Attack +5</div>
+                </div>
+                <div class="djinn-entry">
+                  <div class="djinn-entry-header">
+                    <span class="djinn-name">Breeze</span>
+                    <span class="djinn-state--standby">Standby</span>
+                  </div>
+                  <div class="djinn-effect">Agility +3</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="battle-log">
+              <div class="battle-log-title">Battle Log</div>
+              <div class="battle-log-entry">Isaac selected Quake.</div>
+              <div class="battle-log-entry">Choose a target (enemies highlighted).</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
