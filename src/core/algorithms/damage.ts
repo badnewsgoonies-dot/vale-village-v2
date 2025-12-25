@@ -44,8 +44,22 @@ export function getElementModifier(attackElement: Element, defenseElement: Eleme
 }
 
 /**
+ * Sum elemental resistance from all defensive equipment
+ * (Armor, Helm, Boots, Accessory)
+ */
+export function calculateTotalEquipmentElementalResistance(unit: Unit): number {
+  const { armor, helm, boots, accessory } = unit.equipment;
+  return (
+    (armor?.elementalResist || 0) +
+    (helm?.elementalResist || 0) +
+    (boots?.elementalResist || 0) +
+    (accessory?.elementalResist || 0)
+  );
+}
+
+/**
  * Phase 2: Apply damage modifiers from status effects
- * - Elemental resistance/weakness (from status effects)
+ * - Elemental resistance/weakness (from status effects and equipment)
  * - Damage reduction (global, from status effects)
  *
  * Applied AFTER elemental advantage but BEFORE minimum damage clamping
@@ -62,7 +76,7 @@ export function applyDamageModifiers(
 ): number {
   let modifiedDamage = baseDamage;
 
-  // 1. Apply elemental resistance/weakness from status effects
+  // 1. Apply elemental resistance/weakness from status effects and equipment
   if (abilityElement && abilityElement !== 'Neutral') {
     const resistanceEffects = defender.statusEffects.filter(
       effect => effect.type === 'elementalResistance' && effect.element === abilityElement
@@ -70,7 +84,9 @@ export function applyDamageModifiers(
 
     const resistanceModifiers = resistanceEffects.map(effect => effect.modifier);
 
-    const totalResistModifier = resistanceModifiers.reduce((sum, mod) => sum + mod, 0);
+    const totalResistModifier = 
+      resistanceModifiers.reduce((sum, mod) => sum + mod, 0) +
+      calculateTotalEquipmentElementalResistance(defender);
 
     // Convention: factor = 1 - modifier
     // modifier > 0 = resistance (reduces damage)
@@ -164,15 +180,9 @@ export function calculatePsynergyDamage(
     ? getElementModifier(ability.element, defender.element)
     : 1.0;
 
-  let rawDamage = (basePower + magicPower - magicDefense) * elementModifier;
+  const rawDamage = (basePower + magicPower - magicDefense) * elementModifier;
 
-  // Apply elemental resist from armor (e.g., Dragon Scales)
-  const resist = defender.equipment.armor?.elementalResist || 0;
-  if (ability.element && resist > 0) {
-    rawDamage = rawDamage * (1 - resist);
-  }
-
-  // Phase 2: Apply damage modifiers from status effects (elemental resist, damage reduction)
+  // Phase 2: Apply damage modifiers from status effects and equipment (elemental resist, damage reduction)
   const modifiedDamage = applyDamageModifiers(rawDamage, ability.element, defender);
 
   const damage = Math.max(BATTLE_CONSTANTS.MINIMUM_DAMAGE, Math.floor(modifiedDamage));
