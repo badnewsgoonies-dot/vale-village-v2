@@ -133,33 +133,33 @@ export function isFrozen(unit: Unit): boolean {
 /**
  * Phase 2: Check if unit is immune to a specific status type
  */
-export function isImmuneToStatus(unit: Unit, statusType: string): boolean {
+export function isImmuneToStatus(unit: Unit, status: { type: string; [key: string]: any }): boolean {
   const immunities = unit.statusEffects.filter(s => s.type === 'immunity');
 
-  // Check if any immunity grants "all" protection
-  if (immunities.some(s => s.all)) {
+  // Check if any immunity grants "all" protection (against negative statuses)
+  if (isNegativeStatus(status) && immunities.some(s => s.all)) {
     return true;
   }
 
   // Check if any immunity specifically lists this status type
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return immunities.some(s => s.types?.includes(statusType as any));
+  return immunities.some(s => s.types?.includes(status.type as any));
 }
 
 /**
  * Phase 2: Check if a status effect is negative (can be cleansed)
- * Negative statuses: poison, burn, freeze, paralyze, stun, debuffs
- * NOT negative: buffs, healOverTime, shields, resistance buffs
+ * Negative statuses: poison, burn, freeze, paralyze, stun, debuffs, elemental weakness
+ * NOT negative: buffs, healOverTime, shields, resistance buffs, global damage reduction
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function isNegativeStatus(status: { type: string; [key: string]: any }): boolean {
   // Damage-over-time and action-preventing statuses
-  if (['poison', 'burn', 'freeze', 'paralyze', 'stun'].includes(status.type)) {
+  if (['poison', 'burn', 'freeze', 'paralyze', 'stun', 'debuff'].includes(status.type)) {
     return true;
   }
 
-  // Debuffs (negative stat modifiers)
-  if (status.type === 'debuff') {
+  // Elemental weakness is also a negative status
+  if (status.type === 'elementalResistance' && typeof status.modifier === 'number' && status.modifier < 0) {
     return true;
   }
 
@@ -175,7 +175,7 @@ export function applyStatusToUnit(
   newStatus: typeof unit.statusEffects[number]
 ): Unit {
   // Check immunity (immunity statuses themselves always replace existing ones)
-  if (newStatus.type !== 'immunity' && isImmuneToStatus(unit, newStatus.type)) {
+  if (newStatus.type !== 'immunity' && isImmuneToStatus(unit, newStatus)) {
     return unit; // No change
   }
 
