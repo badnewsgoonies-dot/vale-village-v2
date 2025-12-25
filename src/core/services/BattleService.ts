@@ -159,28 +159,28 @@ export function performAction(
     return Err(`No valid targets for ability ${abilityId}`);
   }
 
-  // Re-validate targets exist and are alive (defensive check)
-  const aliveTargets = targets.filter(t => {
-    const exists = state.playerTeam.units.some(u => u.id === t.id) ||
-                   state.enemies.some(u => u.id === t.id);
-    return exists && !isUnitKO(t);
+  // Re-validate targets exist and check KO status (defensive check)
+  const canTargetKO = ability.revive || ability.revivesFallen;
+  const finalTargets = targets.filter(t => {
+    const exists = state.unitById.has(t.id);
+    return exists && (canTargetKO || !isUnitKO(t));
   });
 
-  if (aliveTargets.length === 0) {
+  if (finalTargets.length === 0) {
     transaction.rollback();
     return Err(`All targets are KO'd or invalid`);
   }
 
   // Store status effects before execution (for status-applied event detection)
-  const statusEffectsBefore = new Map<string, typeof aliveTargets[number]['statusEffects']>();
-  aliveTargets.forEach(target => {
+  const statusEffectsBefore = new Map<string, typeof finalTargets[number]['statusEffects']>();
+  finalTargets.forEach(target => {
     statusEffectsBefore.set(target.id, target.statusEffects);
   });
 
-  // Execute ability with validated alive targets
+  // Execute ability with validated targets
   // Pass team for effective stats calculation and RNG for status chance rolls
   const allUnits = [...state.playerTeam.units, ...state.enemies];
-  const abilityResult = executeAbility(actor, ability, aliveTargets, allUnits, state.playerTeam, state.enemies, rng);
+  const abilityResult = executeAbility(actor, ability, finalTargets, allUnits, state.playerTeam, state.enemies, rng);
   if (!abilityResult.ok) {
     transaction.rollback();
     return Err(abilityResult.error);

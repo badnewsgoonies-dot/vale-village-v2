@@ -85,7 +85,8 @@ function scoreAbility(
     state.playerTeam.units,
     state.enemies
   );
-  const validTargets = potentialTargets.filter(t => !isUnitKO(t));
+  const canTargetKO = ability.revive || ability.revivesFallen;
+  const validTargets = potentialTargets.filter(t => canTargetKO || !isUnitKO(t));
 
   if (validTargets.length === 0) {
     return -1000; // No valid targets
@@ -98,11 +99,17 @@ function scoreAbility(
     // Estimate damage using effective stats (includes equipment/Djinn/status)
     const basePower = ability.basePower || 0;
     const casterStat = ability.type === 'physical' ? casterStats.atk : casterStats.mag;
-    const avgTargetDef = validTargets.reduce((sum, t) => {
+    const aliveTargets = validTargets.filter(t => !isUnitKO(t));
+    
+    if (aliveTargets.length === 0) {
+      return -1000;
+    }
+
+    const avgTargetDef = aliveTargets.reduce((sum, t) => {
       const targetTeam = playerTeam.units.includes(t) ? playerTeam : enemyTeam;
       const def = calculateEffectiveStats(t, targetTeam).def;
       return sum + def;
-    }, 0) / validTargets.length;
+    }, 0) / aliveTargets.length;
 
     // Rough damage estimate (simplified formula)
     // Note: This is approximate - actual damage uses effective stats in BattleService
@@ -111,9 +118,9 @@ function scoreAbility(
 
     // Apply element modifier if applicable
     if (ability.element) {
-      const avgElementMod = validTargets.reduce((sum, t) => {
+      const avgElementMod = aliveTargets.reduce((sum, t) => {
         return sum + getElementModifier(ability.element!, t.element);
-      }, 0) / validTargets.length;
+      }, 0) / aliveTargets.length;
       estimatedValue = avgDamage * avgElementMod;
     } else {
       estimatedValue = avgDamage;
@@ -121,7 +128,7 @@ function scoreAbility(
 
     // Multi-target bonus
     if (ability.targets === 'all-enemies' || ability.targets === 'all-allies') {
-      estimatedValue *= validTargets.length;
+      estimatedValue *= aliveTargets.length;
     }
   } else if (ability.type === 'healing') {
     // Estimate healing value
@@ -129,6 +136,18 @@ function scoreAbility(
     const casterMag = casterStats.mag;
     const rawHeal = baseHeal + casterMag;
     estimatedValue = Math.max(1, rawHeal);
+
+    // Revival bonus
+    if (canTargetKO) {
+      const koTargets = validTargets.filter(isUnitKO);
+      if (koTargets.length > 0) {
+        // High value for reviving units
+        estimatedValue += 100 * koTargets.length;
+      } else if (ability.basePower === 0) {
+        // If it's a pure revival skill and no one is KO'd, it's useless
+        return -1000;
+      }
+    }
 
     // Multi-target bonus
     if (ability.targets === 'all-allies') {
@@ -172,10 +191,23 @@ function selectTargets(
     state.playerTeam.units,
     state.enemies
   );
-  const validTargets = potentialTargets.filter(t => !isUnitKO(t));
+  const canTargetKO = ability.revive || ability.revivesFallen;
+  const validTargets = potentialTargets.filter(t => canTargetKO || !isUnitKO(t));
 
   if (validTargets.length === 0) {
     return [];
+  }
+
+  // For revival abilities, prioritize KO'd units
+  if (canTargetKO) {
+    const koTargets = validTargets.filter(isUnitKO);
+    if (koTargets.length > 0) {
+      if (ability.targets === 'all-enemies' || ability.targets === 'all-allies') {
+        return koTargets.map(t => t.id);
+      }
+      // Pick first KO'd unit (could be randomized)
+      return [koTargets[0]!.id];
+    }
   }
 
   const targetHint = ability.aiHints?.target || 'weakest';
@@ -377,7 +409,8 @@ export function makeAIDecision(
       state.playerTeam.units,
       state.enemies
     );
-    const validTargets = potentialTargets.filter(t => !isUnitKO(t));
+    const canTargetKO = ability.revive || ability.revivesFallen;
+    const validTargets = potentialTargets.filter(t => canTargetKO || !isUnitKO(t));
     return validTargets.length > 0;
   });
 
