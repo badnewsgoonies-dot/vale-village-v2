@@ -52,7 +52,7 @@
 
 .overworld-stage {
   background:
-    radial-gradient(circle at 30% 30%, rgba(79, 149, 255, 0.1), transparent 45%),
+    radial-gradient(circle at 30% 30%, rgba(76, 175, 80, 0.1), transparent 45%),
     radial-gradient(circle at 70% 70%, rgba(255, 199, 94, 0.08), transparent 40%),
     #03080c;
   padding: 0.85rem;
@@ -96,7 +96,7 @@
 }
 
 .tile-grass {
-  background: linear-gradient(135deg, #3f6e3b 0%, #4f8c47 100%);
+  background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%);
 }
 
 .tile-path {

@@ -54,8 +54,8 @@ export function MainMenu() {
     { id: 'new-game', label: 'New Game', enabled: true },
     { id: 'continue', label: 'Continue', enabled: hasSaveFile },
     { id: 'shop', label: 'Shop', enabled: true },
-    { id: 'compendium', label: 'Compendium', enabled: true },
     { id: 'settings', label: 'Settings', enabled: true },
+    { id: 'compendium', label: 'Compendium', enabled: true },
     { id: 'how-to-play', label: 'How to Play', enabled: true },
     { id: 'battle-tower', label: 'Battle Tower (Beta)', enabled: true },
   ];
