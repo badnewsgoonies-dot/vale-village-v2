@@ -8,6 +8,7 @@ import type { Camera } from '../engine/Camera';
 import { SKY_HEIGHT } from '../data/constants';
 
 export class TerrainLayer implements Layer {
+  // Above background, below road/entities.
   zIndex = 1.5;
 
   private patternCanvas: HTMLCanvasElement | null = null;
@@ -23,7 +24,8 @@ export class TerrainLayer implements Layer {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    ctx.fillStyle = '#2f6a2f';
+    // Base grass color - made greener (less blue) to read as clearly green in the scene.
+    ctx.fillStyle = '#3cbf48';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Subtle grass noise (deterministic).
@@ -38,6 +40,32 @@ export class TerrainLayer implements Layer {
       }
     }
 
+    // Small pixel-art shrubs/bushes added into the repeating pattern to give foreground detail.
+    // Shapes are small clusters of pixels with two-tone greens and a darker base to read as bushes.
+    const shrubColors = ['#2b8e2b', '#4bb84b', '#154e18'];
+    const shrubPositions = [
+      { x: 6, y: 44 },
+      { x: 30, y: 50 },
+      { x: 50, y: 46 },
+      { x: 18, y: 36 },
+    ];
+
+    for (const pos of shrubPositions) {
+      // darker base
+      ctx.fillStyle = shrubColors[2];
+      ctx.fillRect(pos.x + 1, pos.y + 2, 4, 2);
+      // main volume
+      ctx.fillStyle = shrubColors[0];
+      ctx.fillRect(pos.x, pos.y, 6, 3);
+      // highlights
+      ctx.fillStyle = shrubColors[1];
+      ctx.fillRect(pos.x + 1, pos.y + 1, 2, 1);
+      ctx.fillRect(pos.x + 3, pos.y + 1, 2, 1);
+      // a few stray pixels for texture
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
+      ctx.fillRect(pos.x + 2, pos.y + 3, 1, 1);
+    }
+
     this.patternCanvas = canvas;
   }
 
@@ -46,8 +74,9 @@ export class TerrainLayer implements Layer {
     const height = ctx.canvas.height - top;
 
     const gradient = ctx.createLinearGradient(0, top, 0, top + height);
-    gradient.addColorStop(0, '#2f6a2f');
-    gradient.addColorStop(1, '#1f4522');
+    // Use greener gradient stops so the band reads as green on a variety of displays.
+    gradient.addColorStop(0, '#3cbf48');
+    gradient.addColorStop(1, '#1f6a1b');
     ctx.fillStyle = gradient;
     ctx.fillRect(0, top, ctx.canvas.width, height);
 
@@ -56,7 +85,8 @@ export class TerrainLayer implements Layer {
     }
     if (this.pattern && this.patternCanvas) {
       ctx.save();
-      ctx.globalAlpha = 0.35;
+      // Slightly stronger pattern alpha to make shrubs/bushes more visible without hiding entities above.
+      ctx.globalAlpha = 0.45;
       const snappedCameraX = Math.round(camera.x);
       ctx.translate(-(snappedCameraX % this.patternCanvas.width), top);
       ctx.fillStyle = this.pattern;
