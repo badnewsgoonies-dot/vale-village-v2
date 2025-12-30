@@ -36,6 +36,7 @@ Summary of the current battle UI, code locations, and known gaps (captured 2025-
 1. Add component-level notes (props/contracts) for BattleUnitSprite and QueueBattleView focusing on sprite resolution and uiPhase derivation.
 2. Create a short checklist for e2e flaky failures: capture DOM snapshot when enemy sprites missing, log battle.phase and events count.
 3. If desired, move this file into docs/compendium/ui/ and update links in README.
+4. Implement a watcher_prep utility (suggested path: src/ui/sprites/watcher_prep.ts) — a runtime and CI-friendly validator that scans the sprite manifest, reports missing/undefined sprite keys, and emits structured diagnostics (console warnings + machine-readable JSON) so tests can fail fast and debugging is reproducible. Note: watcher_prep is not present in the repository and should be created as the next implementation task; it should avoid any randomization and rely only on the canonical sprite manifest and constants.
 
 ---
 
@@ -73,4 +74,21 @@ Summary of the current battle UI, code locations, and known gaps (captured 2025-
 - Decision: keep this doc under docs/compendium for discoverability; move to docs/compendium/ui/ when UI docs grow beyond one page.
 - Non-obvious decision: Placeholder rendering chosen over silent failure to make UI/test failures visible and reproducible.
 - Follow-up tasks: implement runtime validation utility for sprite manifest to centralize checks (suggested file: src/ui/sprites/validateManifest.ts).
+
+## Investigation: Current Battle Screen State (detailed)
+
+- Snapshot date: 2025-12-30T06:23:30Z (UTC).
+- Entry points: src/ui/components/QueueBattleView.tsx -> LayoutBattle.tsx -> src/ui/components/battle/* (Battlefield, BattleActionMenu, BattleManaBar, BattlePortraitRow, BattleUnitSprite).
+- Canonical state slices: src/ui/state/battleSlice.ts (primary), src/ui/state/queueBattleSlice.ts (planning/queue operations). Avoid duplicating state across slices; prefer selectors that read from the canonical battleSlice.
+- Sprite system: src/ui/sprites/manifest.ts provides the canonical mapping; keys enumerated in src/ui/sprites/mappings/battleSprites.ts. Recommend promoting an exported constant (e.g. SPRITE_KEYS) and using it for prop typing and runtime validation in BattleUnitSprite.
+- Deterministic logic source: src/core/services/BattleService.ts (simulation) — all UI-driven animations and resolution must be derived from BattleService outputs, not randomized UI code.
+- Tests & flakiness: tests/e2e/enemy-animations.spec.ts often exposes missing class toggles; add a validateManifest unit test and a small runtime checker to make sprite resolution failures fail fast with structured diagnostics.
+- Suggested files to review / next edits:
+  - src/ui/components/QueueBattleView.tsx
+  - src/ui/components/battle/BattleUnitSprite.tsx
+  - src/ui/sprites/manifest.ts
+  - src/ui/sprites/mappings/battleSprites.ts
+  - tests/e2e/enemy-animations.spec.ts
+
+- Minimal, non-invasive next implementation: create src/ui/sprites/validateManifest.ts that reads the manifest, confirms every used spriteKey has an entry, and exports a function that tests and logs structured JSON diagnostics (no randomness, pure validation).
 
