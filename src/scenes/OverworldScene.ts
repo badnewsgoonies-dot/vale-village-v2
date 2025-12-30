@@ -63,6 +63,36 @@ export class OverworldScene {
   }
 
   /**
+   * Convenience: enter House 02 interior, recording an exterior return-point.
+   */
+  enterSecondHouse(): void {
+    const toMapId = 'house-02-interior';
+    const fallback = MAPS[toMapId]?.spawnPoint ?? { x: 5, y: 7 };
+    this.transition({
+      toMapId,
+      toPosition: fallback,
+      toFacing: 'up',
+      reason: 'enter-house-02',
+    });
+  }
+
+  /**
+   * Convenience: exit House 02 interior back to Vale Village.
+   * Uses the return-point recorded on entry, falling back to the map spawnPoint.
+   */
+  exitSecondHouse(): void {
+    const toMapId = 'vale-village';
+    const fallback = MAPS[toMapId]?.spawnPoint ?? { x: 7, y: 13 };
+    this.transition({
+      toMapId,
+      toPosition: undefined,
+      toFacing: undefined,
+      reason: 'exit-house-02',
+      fallbackPosition: fallback,
+    });
+  }
+
+  /**
    * Handle a transition trigger, with special handling for House 01 entry/exit.
    * Safe to call from either overworld UI implementation (DOM grid or canvas engine).
    */
@@ -88,8 +118,18 @@ export class OverworldScene {
       return;
     }
 
+    if (trigger.id === 'house-02-door' && fromMapId === 'vale-village') {
+      this.enterSecondHouse();
+      return;
+    }
+
     if (trigger.id === 'house-01-exit' && fromMapId === 'house-01-interior') {
       this.exitFirstHouse();
+      return;
+    }
+
+    if (trigger.id === 'house-02-exit' && fromMapId === 'house-02-interior') {
+      this.exitSecondHouse();
       return;
     }
 
