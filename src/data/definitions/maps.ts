@@ -92,7 +92,8 @@ const buildValeVillageTriggers = (): GameMap['triggers'] => {
     position: { x: overworldX, y: HOUSE_ENTRANCE_ROW },
     data: {
       targetMap: `house-${houseNum}-interior`,
-      targetPos: { x: HOUSE_CENTER_X, y: HOUSE_EXIT_Y },
+      // Place player at the interior spawn (one tile inside) to avoid landing on the interior exit door and causing immediate re-trigger loops.
+      targetPos: { x: HOUSE_CENTER_X, y: HOUSE_EXIT_Y - 1 },
       requiredFlags: index === 0 ? undefined : [`house-${HOUSE_IDS[index - 1]}`],
     },
   }));
@@ -191,10 +192,10 @@ const createHouseInterior = (
         id: `house-${houseNum}-exit`,
         type: 'transition',
         position: { x: HOUSE_CENTER_X, y: HOUSE_EXIT_Y },
-        data: { targetMap: 'vale-village', targetPos: { x: overworldEntranceX, y: ROAD_ROW } },
+        data: { targetMap: 'vale-village', targetPos: { x: overworldEntranceX, y: HOUSE_ENTRANCE_ROW } },
       },
     ],
-    spawnPoint: { x: HOUSE_CENTER_X, y: HOUSE_EXIT_Y },
+    spawnPoint: { x: HOUSE_CENTER_X, y: HOUSE_EXIT_Y - 1 },
   };
 };
 
