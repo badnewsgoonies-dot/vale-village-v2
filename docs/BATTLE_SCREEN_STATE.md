@@ -93,4 +93,10 @@ Documenting these constants here reduces surprises during refactors and enforces
 
 ---
 
-(Generated on 2025-12-30)
+## Audit snapshot
+
+- Verified existing documentation present at docs/BATTLE_SCREEN_STATE.md; avoiding duplicate files per repository invariant.
+- Files inspected during this audit: src/core/constants.ts (DEV_WATCH_BATTLE_UI_PORT, RNG_STREAMS, RNG_STREAM_BASE_MULTIPLIER, BATTLE_CONSTANTS, createEmptyQueue, createRNGStream) and scripts/watch-battle-ui.ts (lightweight static server serving mockups/battle on DEV_WATCH_BATTLE_UI_PORT).
+- How to run the visual harness: `node -r ts-node/register scripts/watch-battle-ui.ts` then open http://localhost:5173/ (port read from src/core/constants.ts as DEV_WATCH_BATTLE_UI_PORT).
+
+(Generated on 2025-12-30T06:18:01Z)
