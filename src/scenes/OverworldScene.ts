@@ -69,12 +69,19 @@ export class OverworldScene {
   handleTransitionTrigger(trigger: MapTrigger): void {
     if (trigger.type !== 'transition') return;
 
-    const data = trigger.data as { targetMap?: string; targetPos?: Position } | null;
+    const data = trigger.data as { targetMap?: string; targetPos?: Position; requiredFlags?: string[] } | null;
     const targetMap = data?.targetMap;
     if (!targetMap) return;
 
     const store = this.getStore();
     const fromMapId = store.currentMapId;
+
+    // Gating: if the trigger defines requiredFlags, ensure all are present in story flags
+    const requiredFlags = Array.isArray(data?.requiredFlags) ? data!.requiredFlags : undefined;
+    if (requiredFlags && requiredFlags.length > 0) {
+      const unmet = requiredFlags.some((flag) => !store.story.flags[flag]);
+      if (unmet) return; // Do not process transition if requirements unmet
+    }
 
     if (trigger.id === 'house-01-door' && fromMapId === 'vale-village') {
       this.enterFirstHouse();
