@@ -13,8 +13,9 @@
 }
 
 .virtual-joystick {
-  width: 120px;
-  height: 120px;
+  /* Use design tokens; joystick intentionally larger than button-size to provide comfortable movement area */
+  width: calc(var(--button-size-lg) * 2.5);
+  height: calc(var(--button-size-lg) * 2.5);
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.15);
   border: 3px solid rgba(255, 255, 255, 0.3);
@@ -25,11 +26,13 @@
   touch-action: none;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
+  min-width: calc(var(--button-size-lg) * 2);
+  min-height: calc(var(--button-size-lg) * 2);
 }
 
 .virtual-joystick-knob {
-  width: 50px;
-  height: 50px;
+  width: var(--button-size-lg);
+  height: var(--button-size-lg);
   border-radius: 50%;
   background: linear-gradient(145deg, rgba(255, 216, 127, 0.9), rgba(242, 197, 114, 0.9));
   border: 2px solid rgba(255, 255, 255, 0.5);
@@ -41,8 +44,8 @@
 }
 
 .virtual-action-button {
-  width: 70px;
-  height: 70px;
+  width: var(--button-size-xl);
+  height: var(--button-size-xl);
   border-radius: 50%;
   background: linear-gradient(145deg, rgba(255, 216, 127, 0.9), rgba(242, 197, 114, 0.9));
   border: 3px solid rgba(255, 255, 255, 0.5);
@@ -60,6 +63,8 @@
     0 4px 12px rgba(0, 0, 0, 0.3),
     inset 0 2px 4px rgba(255, 255, 255, 0.3);
   cursor: pointer;
+  min-width: var(--button-size-xl);
+  min-height: var(--button-size-xl);
 }
 
 .virtual-action-button:active {
