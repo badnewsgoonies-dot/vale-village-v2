@@ -173,16 +173,15 @@ export const createDialogueSlice: StateCreator<
       }
     }
 
-    // Default next mode assumes we either return to the stored returnMode or keep whatever
-    // non-dialogue mode we were already in. However, if a pending battle intent exists we must
-    // ensure we preserve it (team-select or battle) instead of reverting to overworld.
-    let nextMode = prevMode === 'dialogue' ? returnMode : prevMode;
+    // Prefer preserving any pending battle intent. If a pending battle exists we must ensure we
+    // remain in team-select (or battle if already transitioned) rather than reverting to overworld.
     const pendingEncounter = get().pendingBattleEncounterId;
+    let nextMode: GameFlowSlice['mode'];
     if (pendingEncounter) {
-      // If the store's mode was already moved out of dialogue (e.g. to 'team-select' or 'battle')
-      // prefer that. Otherwise default to 'team-select' so the player can confirm the team.
       const postMode = get().mode;
-      nextMode = postMode !== 'dialogue' ? postMode : 'team-select';
+      nextMode = postMode !== 'dialogue' && (postMode === 'team-select' || postMode === 'battle') ? postMode : 'team-select';
+    } else {
+      nextMode = prevMode === 'dialogue' ? returnMode : prevMode;
     }
 
     console.warn(`[endDialogue] prevMode=${prevMode}, returnMode=${returnMode}, nextMode=${nextMode}`);

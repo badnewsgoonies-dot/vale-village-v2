@@ -52,7 +52,8 @@ const TeamSelectWrapper: FunctionComponent = () => {
       return;
     }
 
-    setMode('overworld');
+    // Passive observer: when there's no pending battle and not entering tower,
+    // don't force a mode change; let the app/gameStore drive navigation.
   }, [pendingBattleEncounterId, setMode, towerEntryContext]);
 
   if (!pendingBattleEncounterId) {
@@ -231,14 +232,10 @@ function useStoreSync() {
         }
         break;
       case 'team-select':
-        if (currentScreen !== 'team-select') {
-          startTransition('team-select');
-        }
+        // No-op: team-select transitions are driven by V1 confirmBattleTeam to avoid races.
         break;
       case 'battle':
-        if (currentScreen !== 'battle') {
-          startTransition('battle');
-        }
+        // No-op: battle transition is triggered by confirmBattleTeam in gameFlowSlice.
         break;
       case 'rewards':
         if (currentScreen !== 'rewards') {
