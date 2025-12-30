@@ -113,21 +113,57 @@ Risks / Constraints
 Contact / References
 - When modifying the battle UI, update this file first. See the files listed above for implementations and tests.
 
-Last-updated: 2025-12-30 (automated note)
+Last-updated: 2025-12-30T06:34:13Z (automated note)
 
 Handoff notes:
 - Non-obvious decision: "events queue drives UI executing state" documented above; this explains why deriveUIPhase may differ from BattleState.phase during animations.
 - Avoid removing validateBattleState calls — they protect many invariants across services and saves.
 
-Watcher preparation (watcher_prep):
-- No file, symbol, or script named `watcher_prep` was found in the repository at the time of this update. If `watcher_prep` refers to a CI watcher, test helper, or developer utility used to prepare or validate battle-screen watches/tests, it should be added under scripts/ or tests/helpers and referenced from relevant READMEs.
-- Recommended minimal implementation: a small script (e.g., scripts/watcher_prep.sh or tests/helpers/watcher_prep.ts) that installs dev deps, builds assets needed for the battle screen, and starts a lightweight dev server or test harness so watchers can run deterministically.
-- Document usage and expected outputs so the next worker can quickly validate the watcher and its side-effects (e.g., files generated, ports used).
+Chosen preparer (decision):
+- Canonical preparer chosen for watcher and CI use: scripts/watcher_prep.sh (shell preparer). Rationale: a single, simple script is easiest to invoke from package.json scripts and CI jobs without requiring a Node runtime in CI test harnesses.
 
-Handoff actions for next worker:
-- Confirm whether `watcher_prep` is a missing artifact or an alias; if missing, implement a small script under scripts/watcher_prep.* that prepares a dev watch environment for the battle screen or update docs to reference the correct tool.
-- Implement the recommended visual diagram of lifecycle (trigger -> pre-battle -> confirm -> setBattle -> planning -> execute events -> victory -> rewards/post-battle) and add unit tests for UI-phase derivation and round execution glue.
-- Verify tower-run reward suppression behavior and add a short test or integration check to avoid regressions.
+Quick reference: scripts/watcher_prep.sh (canonical)
+- Expected behavior (docs-only, do not create here):
+  - Installs dependencies deterministically using pnpm --frozen-lockfile
+  - Builds UI-only artifacts to speed startup
+  - Validates produced artifacts exist (dist/index.html, dist/assets/*)
+  - Starts a lightweight static preview server on a configurable port and prints a deterministic success message
+- Environment variables to support configurability (avoid magic numbers):
+  - WATCHER_PREP_PORT (default 5173)
+  - WATCHER_BUILD_TARGET (default "ui")
+
+Checklist before changing battle-screen code (must follow):
+- Update docs/BATTLE_SCREEN_STATE.md with any UX or phase semantics changes.
+- Add or update unit/integration tests that cover UI-phase derivation and at least one full round execution flow.
+- Introduce named constants for any numeric literals (e.g., default ports, mana caps) in a dedicated constants module; reference that module in both UI and core where applicable.
+- Ensure validateBattleState still passes on newly created battles and add a regression test if it previously failed.
+- If adding or modifying watcher_prep, update package.json scripts and CI job(s) that rely on it.
+
+ASCII lifecycle diagram (compact):
+
+  trigger -> pre-battle -> team-confirm -> setBattle -> planning (queue actions)
+      -> execute (events queue) -> animation playback -> check_end -> victory/defeat -> rewards/post-dialogue
+
+Watcher_prep integration (pkg script):
+- Add to package.json (example):
+  "scripts": {
+    "watcher:prep": "sh ./scripts/watcher_prep.sh"
+  }
+- CI should call: WATCHER_PREP_PORT=5173 pnpm run watcher:prep
+- Script must print exactly on success: "WATCHER_PREP_READY port=${WATCHER_PREP_PORT}" to make CI greppable and deterministic.
+
+Hand-off actions (concrete next steps):
+1) Implement scripts/watcher_prep.sh using the template in this document and ensure it respects WATCHER_PREP_PORT and WATCHER_BUILD_TARGET env vars.
+2) Add package.json script "watcher:prep" and reference it from README/CI job; include the expected success message in the CI step.
+3) Add at least one integration test that uses tests/helpers (or the script) to build assets, start the preview, and exercise a minimal Round execution (createBattleFromEncounter -> queue sample actions -> executeRound -> assert events and final state).
+
+Risks / Constraints (updated):
+- Choosing a shell script binder means CI runners must have a POSIX shell available; if Windows-native CI is required, tests should invoke the shell via sh or use the Node helper alternative.
+- Keep WATCHER_PREP_PORT configurable to avoid port conflicts on shared runners.
+
+Notes for reviewers:
+- This change is docs-only; no runtime or tests were modified in this commit.
+- The canonical preparer decision reduces ambiguity for next worker and avoids creating multiple conflicting preparers.
 
 (End of document)
 
