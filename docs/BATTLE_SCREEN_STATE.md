@@ -64,7 +64,7 @@ This document captures the current state of the battle screen implementation as 
 - Clear separation exists between presentation (ui/components) and game-rule orchestration (core/services). Maintain this boundary when refactoring: adapters are preferable to mixing core logic into UI components.
 - Battle state shape is validated by schemas and invariant checks (BattleStateSchema, battleStateInvariants). Any state-shape changes must update those schemas and corresponding tests.
 - Several visual and e2e tests exercise battle flows; update or extend them if UI changes alter render order/timing.
-- watcher_prep: no dedicated "watcher_prep" artifact or script was found in the repository root. Developers typically rely on existing scripts (capture-battle-ui, mockups, and the QueueBattleView harness). If a dedicated watcher or dev harness is required for iterative visual testing, add a short script under scripts/ (no magic numbers; expose constants) and document it here.
+- watcher_prep: a lightweight watcher script has been added at scripts/watch-battle-ui.ts which serves mockups/battle/ on the configured DEV_WATCH_BATTLE_UI_PORT (see src/core/constants.ts). Run with: `node -r ts-node/register scripts/watch-battle-ui.ts` to open a browser at http://localhost:<port>/ and iterate on mockups; the script reads the port from the constant to avoid magic numbers.
 
 ## Recommended next actions (concrete)
 
@@ -78,6 +78,18 @@ This document captures the current state of the battle screen implementation as 
 - Extract numeric thresholds and timings to src/core/constants.ts (avoid magic numbers) before changing behavior.
 - Preserve validation hooks in src/core/validation; update tests when the shape changes.
 - Document any non-obvious decisions here so the next worker can understand trade-offs.
+
+---
+
+## Relevant constants referenced (src/core/constants.ts)
+
+- DEV_WATCH_BATTLE_UI_PORT: port for scripts/watch-battle-ui.ts (default 5173). Use the constant when launching the dev harness to avoid magic numbers.
+- RNG_STREAMS: named offsets for deterministic RNG streams used across battle processing (STATUS_EFFECTS, ACTIONS, VICTORY, END_TURN, QUEUE_ROUND). Prefer createRNGStream(rngSeed, turnNumber, stream) to derive per-turn seeds and avoid ad-hoc arithmetic in services.
+- RNG_STREAM_BASE_MULTIPLIER: base multiplier (1_000_000) used to separate per-turn streams; keeps RNG sequences non-overlapping across turns.
+- BATTLE_CONSTANTS: centralized numeric thresholds and rates (REVIVE_HP_PERCENTAGE, DEFENSE_MULTIPLIER, PSYNERGY_DEFENSE_MULTIPLIER, ELEMENT_* multipliers, EQUIPMENT_DROP_RATE_*, MINIMUM_DAMAGE, MINIMUM_HEALING). Reference these constants from UI and core logic to eliminate magic numbers.
+- createEmptyQueue(size): helper that validates queue size between MIN_PARTY_SIZE and MAX_PARTY_SIZE (1..4) and returns a typed empty queue; use this to construct queue-shaped defaults rather than manual array fills.
+
+Documenting these constants here reduces surprises during refactors and enforces the use of centralized constants instead of scattered literals.
 
 ---
 
