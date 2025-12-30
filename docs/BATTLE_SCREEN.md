@@ -32,6 +32,20 @@ Observations & recommendations
 - Consider adding Storybook stories for LayoutBattle and visual regression tests for the core battle states (idle, targeting, resolve) to catch UI regressions early.
 - If making changes that affect state invariants, update src/core/validation/battleStateInvariants.ts and corresponding unit tests to fix root-cause issues rather than masking them.
 
+Verification
+- Automated
+  - Run unit tests that cover battle invariants: tests/unit/validation/battleStateInvariants.test.ts. Ensure they pass before and after refactors.
+  - Run E2E/animation test suite: tests/e2e/battle-animations.spec.ts (uses Playwright). Capture screenshots and compare against baseline to detect visual regressions.
+  - When extracting constants, add unit tests that assert the constant values are imported and used by LayoutBattle and battleConfig to prevent regressions.
+- Manual
+  - Start the dev server (e.g., pnpm dev or npm run dev) and navigate to the battle screen or run the battle simulator scripts (scripts/tower-battle-test.ts) to exercise common flows: idle, targeting, resolving.
+  - Verify animation timings and hitboxes by checking recorded screenshots in playwright-report/ and comparing to expected behaviors.
+- Acceptance criteria
+  - No failing unit or E2E tests related to battle behavior.
+  - No visual regressions in core battle states (idle, targeting, resolve).
+  - All previous magic numbers in LayoutBattle are replaced by named constants in src/ui/state/battleConstants.ts and covered by at least one unit test.
+
+
 Handoff notes
 - Start work by auditing LayoutBattle.tsx and identifying any inline numeric literals; extract them to battleConstants.ts and import where needed.
 - Verify tests under tests/unit/validation and tests/e2e/battle-animations to ensure invariant expectations and animation timings are still valid after refactors.
@@ -44,4 +58,20 @@ Next actions (concrete)
 Notes
 - No duplicate summary file was found prior to creating this document; this file is placed at docs/BATTLE_SCREEN.md.
 - Non-obvious decision: chose docs/ for the summary (central place for human-facing documentation) rather than top-level repo because a docs/ directory already exists and is used in the project.
+
+Investigation findings
+- src/ui/components/battle/LayoutBattle.tsx is a minimal wrapper component with no inline numeric literals or animation timings; safe to refactor but not urgent.
+- src/ui/state/battleConfig.ts already declares named constants (DEFAULT_BATTLE_SLOT_COUNT, DEFAULT_DJINN_SLOT_COUNT) ensuring most magic numbers are centralized.
+- src/core/validation/battleStateInvariants.ts contains comprehensive runtime checks for numeric boundaries and phase/queue consistency; invariants are explicit and throw descriptive errors.
+- No immediate breaking issues were discovered during this inspection; next work should prioritise extracting any remaining shared numeric values into a single constants module and adding visual tests.
+
+Updated next actions
+1. Audit src/ui/components/battle/**/* for inline numeric literals and extract shared values to src/ui/state/battleConstants.ts only where values are semantically shared across modules.
+2. Add unit tests asserting that exported constants from battleConstants.ts are consumed by LayoutBattle and battleConfig to prevent regressions.
+3. Create Storybook stories and visual regression snapshots for the three core phases (idle, targeting, resolve).
+
+Handoff
+- Run unit tests: pnpm test
+- Start dev server: pnpm dev and navigate to /battle or run scripts/tower-battle-test.ts for simulated flows.
+- Run E2E visual checks: pnpm playwright test
 
