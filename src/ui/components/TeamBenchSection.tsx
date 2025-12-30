@@ -8,6 +8,7 @@ import type { Unit } from '@/core/models/Unit';
 import { MAX_PARTY_SIZE } from '@/core/constants';
 import { SimpleSprite } from '../sprites/SimpleSprite';
 import { getPortraitSprite } from '../sprites/mappings';
+import { PORTRAIT_SIZE_SM, PORTRAIT_SIZE_MD } from '../constants/layout';
 
 interface TeamBenchSectionProps {
   activeParty: readonly (Unit | null)[];
@@ -59,8 +60,8 @@ export function TeamBenchSection({
                   <div class="unit-portrait">
                     <SimpleSprite
                       id={getPortraitSprite(unit.id)}
-                      width={56}
-                      height={56}
+                      width={PORTRAIT_SIZE_MD}
+                      height={PORTRAIT_SIZE_MD}
                       alt={`${unit.name} portrait`}
                     />
                   </div>
@@ -93,8 +94,8 @@ export function TeamBenchSection({
                 <div class="bench-portrait">
                   <SimpleSprite
                     id={getPortraitSprite(unit.id)}
-                    width={44}
-                    height={44}
+                    width={PORTRAIT_SIZE_SM}
+                    height={PORTRAIT_SIZE_SM}
                     alt={`${unit.name} portrait`}
                   />
                 </div>

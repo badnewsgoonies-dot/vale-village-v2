@@ -42,7 +42,7 @@ export class TerrainLayer implements Layer {
 
     // Small pixel-art shrubs/bushes added into the repeating pattern to give foreground detail.
     // Shapes are small clusters of pixels with two-tone greens and a darker base to read as bushes.
-    const shrubColors = ['#2b8e2b', '#4bb84b', '#154e18'];
+    const shrubColors = ['#2b8e2b', '#4bb84b', '#154e18'] as const;
     const shrubPositions = [
       { x: 6, y: 44 },
       { x: 30, y: 50 },
