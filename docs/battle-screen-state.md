@@ -89,3 +89,25 @@ RISKS / NOTES
 - Do not merge instrumentation into main without gating behind a feature flag or dev-only guard.
 
 End of update by worker b.
+
+---
+
+Watcher prep check
+
+- Note: No file or artifact named `watcher_prep` was found in the repository; the expected watcher preparation step referenced in the handoff appears to be missing.
+- Recommendation: Add a small watcher prep doc (docs/watcher_prep.md) or a script (scripts/watcher_prep.sh) that documents the automated reproduction steps and required artifacts. Suggested contents:
+  1. Command(s) to run the failing e2e with verbose logging (e.g., pnpm test -- tests/e2e/enemy-animations.spec.ts --reporter=list --debug) and where to store screenshots/DOM (./tmp/vv2-screenshots or ./test-artifacts).
+  2. Exact selectors and breakpoints to capture: [data-testid="battle-view"], battle-enemy elements, console logs before/after execute round.
+  3. Minimal CI job / local script that runs the unit test for sprite mapping (tests/unit/sprites/battleSprites.test.ts) and uploads artifacts for triage.
+
+Concrete next actions (additive to the "NEXT STEPS" above)
+
+1. Create docs/watcher_prep.md containing the commands and artifact locations so automated watchers can reproduce the animation failure consistently.
+2. Implement the small unit test for sprite mapping at tests/unit/sprites/battleSprites.test.ts and ensure it runs fast on CI.
+3. Run e2e with the watcher_prep steps and attach the DOM + console logs to the issue created for enemy animation failures.
+
+Decision
+
+- Extend the central docs/battle-screen-state.md (this file) rather than creating a duplicate. Keep watcher_prep as a small, focused followup doc so CI/watchers can reproduce and collect artifacts.
+
+End of update by worker b.
