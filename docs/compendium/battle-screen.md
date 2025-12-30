@@ -99,3 +99,9 @@ Change log
 
 - Extended this compendium entry with a verified component map and responsibilities to accelerate onboarding.
 
+Verified LayoutBattle.tsx
+
+- File: src/ui/components/battle/LayoutBattle.tsx — simple wrapper that renders a root .game-root and a .battle-screen container, sets a data-battle-phase attribute from props, and renders children. It contains no internal logic or side effects and accepts LayoutBattleProps { children, phase } defined in types.ts.
+
+This verification was performed by inspecting the source file and confirming the component's minimal responsibilities match the documented expectations.
+
