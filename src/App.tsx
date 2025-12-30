@@ -37,12 +37,14 @@ const TeamSelectWrapper: FunctionComponent = () => {
   };
 
   const handleCancel = () => {
+    // Clear pending battle and let GameFlowSlice / useStoreSync drive the
+    // actual screen transition. Avoid directly calling startTransition here
+    // to prevent races with the V2 store becoming authoritative for flow.
     setPendingBattle(null);
     if (towerEntryContext) {
       setMode('tower');
-      startTransition('tower');
     } else {
-      startTransition('overworld');
+      setMode('overworld');
     }
   };
 
