@@ -87,6 +87,8 @@ export const HOUSE_03: Encounter = {
       type: 'fixed',
       itemId: 'iron-armor',
     },
+    // Story auto-recruit after victory
+    unlockUnit: 'ranger',
   },
 };
 
@@ -149,6 +151,8 @@ export const HOUSE_06: Encounter = {
       type: 'fixed',
       itemId: 'steel-helm',
     },
+    // Assign recruitable unit for House 6 upon completion
+    unlockUnit: 'stone-guardian',
   },
 };
 
