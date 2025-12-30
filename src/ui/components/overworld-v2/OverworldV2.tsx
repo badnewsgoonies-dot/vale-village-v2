@@ -7,6 +7,7 @@ import { useEffect, useRef, useCallback, useState } from 'preact/hooks';
 import { useStore } from '../../state/store';
 import { useGameStore } from '../../../store/gameStore';
 import { DJINN_INTRO_DIALOGUE } from '@/data/definitions/dialogues';
+import { MAPS } from '@/data/definitions/maps';
 import { isHouseUnlocked } from '../../../core/services/StoryService';
 import { OverworldEngineV2 } from './engine/OverworldEngineV2';
 import { clampPlayerXToWorldBounds } from './engine/playerBounds';
@@ -116,6 +117,12 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
         unlocked.add(building.id);
       }
     }
+
+    const HOUSE_02_ID = 'house-02';
+    // House-02 explicitly enabled for OverworldV2 wiring/testing; MAP definitions control interiors/spawn.
+    // This is a deliberate wiring choice to ensure H02 is interactable in V2 while story progression
+    // remains authoritative elsewhere.
+    unlocked.add(HOUSE_02_ID);
 
     return unlocked;
   }, []);
@@ -339,9 +346,11 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
     // Transition to interior
     transitionToScene('interior', houseNum);
 
-    // Update store (optional, for save/load)
+    // Update store (optional, for save/load) - use MAPS definitions for accurate spawn points when available
     if (building.interiorMapId) {
-      teleportPlayer(building.interiorMapId, { x: 5, y: 7 });
+      const mapData = MAPS[building.interiorMapId];
+      const spawnPoint = mapData?.spawnPoint ?? { x: 5, y: 7 };
+      teleportPlayer(building.interiorMapId, spawnPoint);
     }
   }, [transitionToScene, getHouseNumberFromMapId, teleportPlayer, enterTowerFromOverworld, handleTrigger, hasSeenDjinnIntro, startDialogueTree]);
 
