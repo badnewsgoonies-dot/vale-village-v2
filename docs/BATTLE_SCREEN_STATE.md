@@ -48,10 +48,67 @@ Known TODOs / Risks
 - Risk: checkBattleEnd and related guards log errors when battle arrays are empty; upstream code must ensure non-empty enemies/playerTeam when creating battles.
 - TODO: Add a visual diagram and sequence-of-events section (recommended next work) and add unit tests for UI-phase derivations and round execution glue.
 
+
 Handoff / Next steps
 - Confirm UX behavior for tower-run auto-complete and reward suppression (queueBattleSlice and towerSlice interaction).
 - Add a small diagram showing the lifecycle: trigger -> pre-battle -> confirm -> setBattle -> planning -> execute events -> victory -> rewards/post-battle dialogue.
 - Add tests that simulate a full round (createBattleFromEncounter -> queue actions -> executeRound) and assert events emitted and final BattleState status.
+
+Watcher preparation (watcher_prep) — recommended implementation
+- Rationale: worker b reported `watcher_prep` was missing; this section prescribes a deterministic, reviewable preparer that developers and CI can use to reliably start a minimal environment for battle-screen watches and integration tests without adding non-determinism.
+- Location: prefer scripts/watcher_prep.sh for a cross-shell helper and tests/helpers/watcher_prep.ts for a node-based preparer used by tests or CI. Do NOT add multiple conflicting preparers; pick one canonical path and reference it from package.json scripts and docs.
+
+Example: scripts/watcher_prep.sh (suggested content)
+
+```sh
+#!/usr/bin/env bash
+set -euo pipefail
+# Constants - avoid magic numbers
+readonly DEV_SERVER_PORT=5173
+readonly BUILD_TARGET="ui"
+
+# Ensure dependencies are installed deterministically
+pnpm install --frozen-lockfile --silent
+
+# Build only UI assets to speed up watcher startup
+pnpm --silent build --filter "${BUILD_TARGET}..."
+
+# Start a lightweight dev server serving the built UI (used by watch/tests)
+# This should run in foreground for CI; in local manual runs append & to background
+pnpm --silent preview -- --port ${DEV_SERVER_PORT}
+```
+
+Notes on the script above
+- Use constants (DEV_SERVER_PORT, BUILD_TARGET) and document them in the script for clarity.
+- Use pnpm flags that respect the lockfile to avoid introducing dependency drift in CI.
+- Prefer `pnpm preview` or a framework-specific static server that reproduces production asset layout rather than starting a full dev hot-reload server for deterministic tests.
+
+Example: tests/helpers/watcher_prep.ts (minimal Node helper)
+- Purpose: be usable from test harnesses (Vitest/Jest) to prepare assets programmatically and return a handle (port, process) to the caller.
+- Responsibilities: run the same build steps as the shell script, validate expected artifact files (e.g., public/index.html, dist/*), and resolve when ready.
+
+Validation checklist for watcher_prep
+- Exit code 0 on success and print a deterministic success message: "WATCHER_PREP_READY port=${DEV_SERVER_PORT}"
+- Created artifacts: list the expected files (e.g., dist/index.html, dist/assets/*.js) and fail if missing
+- Port availability: verify the chosen port is free before starting server; if occupied, print actionable error and exit non-zero
+- Determinism: use frozen lockfile install and targeted build to keep CI reproducible
+
+How to wire into repo (docs-only guidance)
+- Add a package.json script (one-line) to call the canonical preparer:
+  "scripts": { "watcher:prep": "sh ./scripts/watcher_prep.sh" }
+- Reference `npm run watcher:prep` (or pnpm equivalent) from README and CI job that runs battle-screen watchers.
+
+Handoff actions for next worker (concrete)
+- Decide canonical preparer: choose either scripts/watcher_prep.sh OR tests/helpers/watcher_prep.ts and implement that file (do not create both unless intentionally duplicating responsibilities).
+- Implement the chosen preparer using the templates above, commit the script, and add a package.json script "watcher:prep" that invokes it.
+- Add a small CI job or local README entry demonstrating `pnpm run watcher:prep` usage and the expected success message so reviewers can validate behavior quickly.
+
+Risks / Constraints
+- Cannot start network services in CI without documenting ports; ensure chosen DEV_SERVER_PORT is configurable via env var.
+- Keep preparer idempotent and safe to run in parallel by test runners; validate port and artifact locations.
+
+(End of document)
+
 
 Contact / References
 - When modifying the battle UI, update this file first. See the files listed above for implementations and tests.
@@ -73,3 +130,4 @@ Handoff actions for next worker:
 - Verify tower-run reward suppression behavior and add a short test or integration check to avoid regressions.
 
 (End of document)
+
