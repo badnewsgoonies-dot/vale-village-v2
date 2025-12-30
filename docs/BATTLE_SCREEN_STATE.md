@@ -113,7 +113,7 @@ Risks / Constraints
 Contact / References
 - When modifying the battle UI, update this file first. See the files listed above for implementations and tests.
 
-Last-updated: 2025-12-30T06:34:13Z (automated note)
+Last-updated: 2025-12-30T06:36:54Z (automated note)
 
 Handoff notes:
 - Non-obvious decision: "events queue drives UI executing state" documented above; this explains why deriveUIPhase may differ from BattleState.phase during animations.
@@ -164,6 +164,28 @@ Risks / Constraints (updated):
 Notes for reviewers:
 - This change is docs-only; no runtime or tests were modified in this commit.
 - The canonical preparer decision reduces ambiguity for next worker and avoids creating multiple conflicting preparers.
+
+Worker b (this round) additions:
+- Explicit recommendation to centralize numeric literals in a single constants module: src/config/constants/battleConstants.ts.
+- Suggested constant names (examples only; choose exact names in implementation):
+  - WATCHER_PREP_PORT_DEFAULT = 5173
+  - WATCHER_BUILD_TARGET_DEFAULT = "ui"
+  - BATTLE_DEFAULT_MAX_MANA = 100
+  - BATTLE_DEFAULT_STARTING_MANA = 0
+  - BATTLE_DEFAULT_QUEUE_LIMIT = 8
+- Rationale: keeps magic numbers out of UI/core and makes tests/CI configurable.
+
+Committed docs edits:
+- Extended watcher_prep guidance, added deterministic success message requirement, and clarified handoff checklist.
+
+Concrete next actions (for next worker):
+1) Implement src/config/constants/battleConstants.ts exporting the suggested defaults and import them where appropriate (UI and core).
+2) Implement scripts/watcher_prep.sh per template, wire into package.json as "watcher:prep", and ensure it prints "WATCHER_PREP_READY port=${WATCHER_PREP_PORT}".
+3) Add an integration test that runs the preparer, starts the preview, runs a minimal round execution, and asserts deterministic events and final BattleState.
+
+Round 6 review:
+- Reviewed rounds 1-5 and confirmed existing documentation; no runtime code changes were required in this round.
+- Updated the Last-updated timestamp and added explicit next-step clarifications for the next worker.
 
 (End of document)
 
