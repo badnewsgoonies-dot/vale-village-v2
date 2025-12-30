@@ -26,10 +26,12 @@ import { makePRNG } from '../../core/random/prng';
 import { autoHealUnits } from '../../core/algorithms/healing';
 import { updateTeam } from '../../core/models/Team';
 import {
+  buildUnitIndex,
+  calculateTeamManaPool,
   getEncounterId,
   updateBattleState,
 } from '../../core/models/BattleState';
-import { createRNGStream, RNG_STREAMS } from '../../core/constants';
+import { createEmptyQueue, createRNGStream, MAX_PARTY_SIZE, MIN_PARTY_SIZE, RNG_STREAMS } from '../../core/constants';
 import { isUnitKO } from '../../core/models/Unit';
 
 const critFlashTimeouts = new Map<string, ReturnType<typeof setTimeout>>();
@@ -61,6 +63,58 @@ function computePendingMana(battle: BattleState): { pendingThisRound: number; pe
 
 function sumBattleStat(units: readonly Unit[], key: 'damageDealt' | 'damageTaken'): number {
   return units.reduce((total, unit) => total + (unit.battleStats?.[key] ?? 0), 0);
+}
+
+function normalizeBattleState(battle: BattleState): BattleState | null {
+  if (!battle.playerTeam || !Array.isArray(battle.playerTeam.units) || !Array.isArray(battle.enemies)) {
+    console.error('Invalid battle state: missing player team or enemies');
+    return null;
+  }
+
+  const teamSize = battle.playerTeam.units.length;
+  const safeTeamSize = Math.min(Math.max(teamSize, MIN_PARTY_SIZE), MAX_PARTY_SIZE);
+  const baseQueue = createEmptyQueue(safeTeamSize) as BattleState['queuedActions'];
+
+  const queuedActions = Array.isArray(battle.queuedActions) ? [...battle.queuedActions] : [...baseQueue];
+  if (queuedActions.length < safeTeamSize) {
+    for (let i = queuedActions.length; i < safeTeamSize; i += 1) {
+      queuedActions.push(null);
+    }
+  } else if (queuedActions.length > safeTeamSize) {
+    queuedActions.length = safeTeamSize;
+  }
+
+  const maxMana = Number.isFinite(battle.maxMana) ? battle.maxMana : calculateTeamManaPool(battle.playerTeam);
+  const remainingMana = Number.isFinite(battle.remainingMana) ? battle.remainingMana : maxMana;
+  const currentTurn = Number.isFinite(battle.currentTurn) ? battle.currentTurn : 0;
+  const roundNumber = Number.isFinite(battle.roundNumber) ? battle.roundNumber : 1;
+  const currentQueueIndex = Number.isFinite(battle.currentQueueIndex) ? battle.currentQueueIndex : 0;
+  const executionIndex = Number.isFinite(battle.executionIndex) ? battle.executionIndex : 0;
+
+  const phase = ['planning', 'executing', 'victory', 'defeat'].includes(battle.phase ?? '')
+    ? battle.phase
+    : 'planning';
+  const status = battle.status ?? 'ongoing';
+
+  return {
+    ...battle,
+    queuedActions,
+    queuedDjinn: Array.isArray(battle.queuedDjinn) ? battle.queuedDjinn : [],
+    maxMana,
+    remainingMana,
+    currentTurn,
+    roundNumber,
+    currentQueueIndex,
+    executionIndex,
+    phase,
+    status,
+    log: Array.isArray(battle.log) ? battle.log : [],
+    turnOrder: Array.isArray(battle.turnOrder) ? battle.turnOrder : [],
+    djinnRecoveryTimers: battle.djinnRecoveryTimers ?? {},
+    unitById: battle.unitById instanceof Map
+      ? battle.unitById
+      : buildUnitIndex(battle.playerTeam.units, battle.enemies),
+  };
 }
 
 export interface QueueBattleSlice {
@@ -128,7 +182,11 @@ export const createQueueBattleSlice: StateCreator<
   setBattle: (battle, seed) => {
     const critThresholds: Record<string, number> = {};
     const critCounters: Record<string, number> = {};
-    const battleState = battle ? structuredClone(battle) : null;
+    const clonedBattle = battle ? structuredClone(battle) : null;
+    const battleState = clonedBattle ? normalizeBattleState(clonedBattle) : null;
+    const battleError = clonedBattle && !battleState
+      ? 'Battle data is missing required fields. Try starting a new battle.'
+      : null;
     if (battleState) {
       battleState.playerTeam.units.forEach((unit) => {
         critThresholds[unit.id] = critThresholds[unit.id] ?? 10;
@@ -148,7 +206,7 @@ export const createQueueBattleSlice: StateCreator<
       critCounters,
       critThresholds,
       critFlash: {},
-      lastError: null,
+      lastError: battleError,
     });
   },
 

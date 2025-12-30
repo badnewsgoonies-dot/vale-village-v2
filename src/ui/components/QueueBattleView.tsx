@@ -670,7 +670,7 @@ export function QueueBattleView() {
   }, [battle, activePortraitIndex]);
 
   const totalQueuedMana = useMemo(() =>
-    battle?.queuedActions.reduce((sum, a) => sum + (a?.manaCost || 0), 0) || 0
+    battle?.queuedActions?.reduce((sum, a) => sum + (a?.manaCost || 0), 0) || 0
   , [battle?.queuedActions]);
 
   const isQueueComplete = useMemo(() => {
@@ -984,7 +984,55 @@ export function QueueBattleView() {
 
 // --- RENDER ---
 
-  if (!battle) return <div>Loading Battle...</div>;
+  if (!battle) {
+    return (
+      <div
+        style={{
+          width: '100vw',
+          height: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '1rem',
+          background: '#000',
+          color: '#fff',
+          textAlign: 'center',
+          padding: '2rem',
+        }}
+      >
+        <div style={{ fontSize: '1.1rem', fontWeight: 700 }}>Battle not ready</div>
+        <div style={{ color: '#aaa' }}>Try starting a new battle from the overworld.</div>
+        {lastError && (
+          <div
+            style={{
+              maxWidth: 520,
+              padding: '0.75rem 1rem',
+              borderRadius: 8,
+              background: 'rgba(255, 99, 71, 0.15)',
+              border: '1px solid rgba(255, 99, 71, 0.4)',
+              color: '#ffb3b3',
+            }}
+          >
+            {lastError}
+          </div>
+        )}
+        <button
+          onClick={returnToOverworld}
+          style={{
+            padding: '0.6rem 1.2rem',
+            borderRadius: 8,
+            border: '1px solid rgba(255,255,255,0.2)',
+            background: 'rgba(255,255,255,0.08)',
+            color: '#fff',
+            cursor: 'pointer',
+          }}
+        >
+          Return to Overworld
+        </button>
+      </div>
+    );
+  }
 
   // Post-battle handling
   if (showCutscene && battleOutcome) {

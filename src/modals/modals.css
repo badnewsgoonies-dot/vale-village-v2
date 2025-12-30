@@ -86,8 +86,9 @@
   border-radius: 4px;
   color: #fff;
   font-size: 24px;
-  width: 36px;
-  height: 36px;
+  width: var(--button-size-md);
+  height: var(--button-size-md);
+  min-width: 40px;
   cursor: pointer;
   display: flex;
   align-items: center;

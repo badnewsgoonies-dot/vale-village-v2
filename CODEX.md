@@ -64,6 +64,13 @@ This is **vale-village-v2**, a Preact port of a Golden Sun-inspired RPG. Key are
 - `src/core/` - Game logic, models, algorithms
 - `tests/e2e/` - Playwright tests
 
+### Overworld Rendering (Important)
+The live overworld uses **OverworldV2**. If you need to change overworld visuals, work in:
+- `src/ui/components/overworld-v2/OverworldV2.tsx`
+- `src/ui/components/overworld-v2/layers/*`
+
+Avoid creating or editing a standalone `src/overworld/` directory; it is not wired into the running game.
+
 ### Common Issues to Watch For
 1. **Battle state leakage** - queuedActions not cleared between battles
 2. **deriveUIPhase** - Can return unexpected phases based on unit KO status
