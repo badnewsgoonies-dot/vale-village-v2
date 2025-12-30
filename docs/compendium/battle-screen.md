@@ -72,3 +72,30 @@ Contact / Handoff notes
 - Non-obvious decision: document placed in docs/compendium to follow existing UI documentation conventions (see docs/compendium/ui-sitemap.md).
 - No code changes were made; this is an investigative document to reduce duplication of search work for future contributors.
 
+Component map (verified)
+
+The following presentational components live in src/ui/components/battle and their primary responsibilities and prop contracts (see types.ts for detailed VM/props):
+
+- LayoutBattle.tsx — Top-level layout wrapper; renders .battle-screen and accepts LayoutBattleProps (children, phase).
+- Battlefield.tsx — Renders player and enemy unit positions and selection/targeting interactions (BattlefieldProps).
+- SidePanelPlayer.tsx — Player-side panel listing UnitCard components and unit selection (SidePanelPlayerProps).
+- SidePanelEnemy.tsx — Enemy-side panel for selectable enemies (SidePanelEnemyProps).
+- UnitCard.tsx — Small presentational unit card (UnitCardProps) used by side panels and battlefield overlays.
+- TurnOrderStrip.tsx — Horizontal/vertical turn-order visualization (TurnOrderStripProps).
+- CommandPanel.tsx — Primary action chooser (attack/psynergy/djinn/abilities) (CommandPanelProps).
+- AbilityPanel.tsx — Lists selectable abilities (AbilityPanelProps).
+- DjinnPanel.tsx — Djinn list and selection UI (DjinnPanelProps).
+- QueuePanel.tsx — Round/queue UI showing planned actions, mana, and execution controls (QueuePanelProps).
+- BattleOverlay.tsx — End-of-battle overlay for victory/defeat and rewards (BattleOverlayProps).
+- BattleOverlay.tsx — See BattleOverlayProps in types.ts for continue/retry/return handlers.
+- BattleLog (virtual) — Log entries are typed by BattleLogEntry and consumed by a small log UI (BattleLogProps).
+
+Notes on componentization
+
+- The types.ts file provides a clear contract for each component; keeping props small and VM-focused avoids leaking core models into UI.
+- Many presentational components are already separated; next worker should open each file and add a one-line responsibility comment at top of the file if missing.
+
+Change log
+
+- Extended this compendium entry with a verified component map and responsibilities to accelerate onboarding.
+
