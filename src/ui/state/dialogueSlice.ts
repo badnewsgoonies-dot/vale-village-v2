@@ -173,13 +173,24 @@ export const createDialogueSlice: StateCreator<
       }
     }
 
-    const nextMode = prevMode === 'dialogue' ? returnMode : prevMode;
+    // Default next mode assumes we either return to the stored returnMode or keep whatever
+    // non-dialogue mode we were already in. However, if a pending battle intent exists we must
+    // ensure we preserve it (team-select or battle) instead of reverting to overworld.
+    let nextMode = prevMode === 'dialogue' ? returnMode : prevMode;
+    const pendingEncounter = get().pendingBattleEncounterId;
+    if (pendingEncounter) {
+      // If the store's mode was already moved out of dialogue (e.g. to 'team-select' or 'battle')
+      // prefer that. Otherwise default to 'team-select' so the player can confirm the team.
+      const postMode = get().mode;
+      nextMode = postMode !== 'dialogue' ? postMode : 'team-select';
+    }
+
     console.warn(`[endDialogue] prevMode=${prevMode}, returnMode=${returnMode}, nextMode=${nextMode}`);
+
     set({
       currentDialogueTree: null,
       currentDialogueState: null,
       dialogueReturnMode: null,
-      // Race guard: if effects already changed mode, preserve that mode.
       mode: nextMode,
     });
 

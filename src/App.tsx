@@ -31,20 +31,14 @@ const TeamSelectWrapper: FunctionComponent = () => {
 
   const handleConfirm = () => {
     confirmBattleTeam();
-    if (useStore.getState().mode === "battle") {
-      startTransition("battle");
-    } else {
-      console.error("Failed to start battle - validation or creation error");
-    }
   };
 
   const handleCancel = () => {
     setPendingBattle(null);
     if (towerEntryContext) {
       setMode('tower');
-      startTransition('tower');
     } else {
-      startTransition('overworld');
+      setMode('overworld');
     }
   };
 
@@ -55,13 +49,11 @@ const TeamSelectWrapper: FunctionComponent = () => {
 
     if (towerEntryContext) {
       setMode('tower');
-      startTransition('tower');
       return;
     }
 
     setMode('overworld');
-    startTransition('overworld');
-  }, [pendingBattleEncounterId, setMode, startTransition, towerEntryContext]);
+  }, [pendingBattleEncounterId, setMode, towerEntryContext]);
 
   if (!pendingBattleEncounterId) {
     // No pending battle, show loading or redirect

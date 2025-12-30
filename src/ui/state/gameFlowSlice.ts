@@ -1,4 +1,5 @@
 import type { StateCreator } from 'zustand';
+import { useGameStore } from '@/store/gameStore';
 import type { MapTrigger } from '@/core/models/overworld';
 import type { Encounter } from '@/data/schemas/EncounterSchema';
 import type { Unit } from '@/core/models/Unit';
@@ -375,6 +376,11 @@ export const createGameFlowSlice: StateCreator<
         pendingBattleEncounterId: null,
         currentBattleConfig: null,
       });
+
+      // Authoritative V2 transition trigger: after the V1 store switches to battle mode,
+      // ask the V2 gameStore to begin the visual transition. This keeps transition timing
+      // deterministic and prevents the overworld from racing to start/undo transitions.
+      useGameStore.getState().startTransition('battle');
     } catch (error) {
       console.error('Error creating battle:', error);
     }

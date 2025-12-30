@@ -569,13 +569,11 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
   }, [width, height, handleKeyDown, handleKeyUp, createOverworldLayers, enterBuilding, exitInterior, isInExitZone, handleTrigger]);
 
   // Sync V1 store mode to V2 gameStore screens.
-  // (Overworld V2 doesn't use tile triggers yet, but dialogue/battle effects still depend on mode transitions.)
+  // Note: team-select and battle transitions are now driven by the V1 store's
+  // confirmBattleTeam flow to avoid races; Overworld should not unilaterally
+  // trigger those transitions.
   useEffect(() => {
-    if (mode === 'team-select') {
-      startTransition('team-select');
-    } else if (mode === 'battle') {
-      startTransition('battle');
-    } else if (mode === 'shop') {
+    if (mode === 'shop') {
       startTransition('shop');
     } else if (mode === 'rewards') {
       startTransition('rewards');
@@ -583,6 +581,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
       // When returning to overworld (e.g., dialogue ends), ensure no stale modal is left open.
       closeModal();
     }
+    // Intentionally noop for 'team-select' and 'battle' to avoid racing V1's authoritative flow.
   }, [mode, startTransition, closeModal]);
 
   // React to map changes from store (e.g., from save/load)
