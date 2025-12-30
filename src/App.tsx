@@ -48,24 +48,34 @@ const TeamSelectWrapper: FunctionComponent = () => {
     }
   };
 
-  useEffect(() => {
-    if (pendingBattleEncounterId) {
-      return;
-    }
-
-    if (towerEntryContext) {
-      setMode('tower');
-      startTransition('tower');
-      return;
-    }
-
-    setMode('overworld');
-    startTransition('overworld');
-  }, [pendingBattleEncounterId, setMode, startTransition, towerEntryContext]);
-
   if (!pendingBattleEncounterId) {
-    // No pending battle, show loading or redirect
-    return <div style={{ color: '#fff', textAlign: 'center', padding: '2rem' }}>No battle pending...</div>;
+    // No pending battle, show explicit return action instead of auto-redirecting
+    return (
+      <div style={{ color: '#fff', textAlign: 'center', padding: '2rem' }}>
+        <div style={{ marginBottom: '1rem' }}>No battle pending...</div>
+        <button
+          onClick={() => {
+            if (towerEntryContext) {
+              setMode('tower');
+              startTransition('tower');
+            } else {
+              setMode('overworld');
+              startTransition('overworld');
+            }
+          }}
+          style={{
+            padding: '0.6rem 1.2rem',
+            borderRadius: 8,
+            border: '1px solid rgba(255,255,255,0.2)',
+            background: 'rgba(255,255,255,0.08)',
+            color: '#fff',
+            cursor: 'pointer',
+          }}
+        >
+          Return
+        </button>
+      </div>
+    );
   }
 
   return (
@@ -215,6 +225,7 @@ function useStoreSync() {
   const setMode = useStore((s) => s.setMode);
   const isDialogueActive = useStore((s) => Boolean(s.currentDialogueState));
   const towerStatus = useStore((s) => s.towerStatus);
+  const pendingBattleEncounterId = useStore((s) => s.pendingBattleEncounterId);
   const currentScreen: ScreenType = useGameStore((s) => s.flow.screen);
   const activeModal = useGameStore((s) => s.flow.modal);
   const isTransitioning = useGameStore((s) => s.flow.isTransitioning);
@@ -226,6 +237,11 @@ function useStoreSync() {
     // Don't trigger new transitions while one is in progress - this prevents
     // the sync from cancelling an ongoing transition
     if (isTransitioning) {
+      return;
+    }
+
+    if (pendingBattleEncounterId && currentScreen !== 'team-select') {
+      startTransition('team-select');
       return;
     }
 
@@ -315,6 +331,9 @@ function useStoreSync() {
 
   // Keep the legacy V1 store's mode aligned when navigation is driven by the new gameStore.
   useEffect(() => {
+    if (isTransitioning) {
+      return;
+    }
     const screenToMode: Partial<Record<ScreenType, GameFlowSlice['mode']>> = {
       title: 'title-screen',
       menu: 'main-menu',
@@ -334,6 +353,9 @@ function useStoreSync() {
 
     const desiredMode = screenToMode[currentScreen];
     if (desiredMode && desiredMode !== mode) {
+      if (desiredMode === 'overworld' && mode === 'team-select' && pendingBattleEncounterId) {
+        return;
+      }
       setMode(desiredMode);
       return;
     }
@@ -345,7 +367,7 @@ function useStoreSync() {
         closeModal();
       }
     }
-  }, [activeModal, currentScreen, isDialogueActive, mode, setMode, closeModal]);
+  }, [activeModal, currentScreen, isDialogueActive, isTransitioning, mode, pendingBattleEncounterId, setMode, closeModal]);
 }
 
 type DevOverlayProps = {

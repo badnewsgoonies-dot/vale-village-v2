@@ -562,9 +562,18 @@ export function PreBattleTeamSelectScreenV2({
 
         {/* Footer with Cancel */}
         <div class="prebattle-v2-footer">
-          <button class="cancel-btn" onClick={onCancel}>
-            ← Cancel
-          </button>
+          <div class="prebattle-v2-footer-actions">
+            <button class="cancel-btn" onClick={onCancel}>
+              ← Cancel
+            </button>
+            <button
+              class="proceed-btn"
+              onClick={handleStartBattle}
+              disabled={!configValidation.valid}
+            >
+              Proceed →
+            </button>
+          </div>
           <div class="keyboard-hints">
             <span class="key">Enter</span> Start &nbsp;|&nbsp; <span class="key">Esc</span> Cancel
           </div>

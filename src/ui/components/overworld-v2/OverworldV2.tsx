@@ -13,6 +13,7 @@ import { clampPlayerXToWorldBounds } from './engine/playerBounds';
 import { SkyLayer } from './layers/SkyLayer';
 import { BackgroundLayer } from './layers/BackgroundLayer';
 import { TerrainLayer } from './layers/TerrainLayer';
+import { TreeLayer } from './layers/TreeLayer';
 import { RoadLayer } from './layers/RoadLayer';
 import { VillageLayer } from './layers/VillageLayer';
 import { PlayerLayer } from './layers/PlayerLayer';
@@ -25,6 +26,8 @@ import { clamp } from './engine/math';
 import type { OverworldSlice } from '../../state/overworldSlice';
 import type { Layer } from './engine/types';
 import '../overworld/OverworldCanvas.css';
+import { VirtualJoystick } from '../VirtualJoystick';
+
 
 /** Movement speed in world pixels per second */
 const PLAYER_SPEED = 160;
@@ -62,6 +65,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
   const interiorBattleTriggeredRef = useRef(false);
   const pendingIntroHouseEntryRef = useRef(false);
   const keysRef = useRef<Set<string>>(new Set());
+  const touchInputRef = useRef<{ h: number; v: number; action: boolean }>({ h: 0, v: 0, action: false });
 
   // Track scene state
   const sceneTypeRef = useRef<SceneType>('overworld');
@@ -180,6 +184,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
       new SkyLayer(),
       new BackgroundLayer(),
       new TerrainLayer(),
+      new TreeLayer(),
       new RoadLayer(),
       villageLayer,
       playerLayer,
@@ -408,10 +413,12 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
       const keys = keysRef.current;
       const isOverworld = sceneTypeRef.current === 'overworld';
 
-      // Handle SPACE/Enter for interactions
-      if (keys.has(' ') || keys.has('Enter')) {
+      // Handle SPACE/Enter for interactions or touch action
+      if (keys.has(' ') || keys.has('Enter') || touchInputRef.current.action) {
         keys.delete(' ');
         keys.delete('Enter');
+        // consume touch action once to mirror keyboard single-press behaviour
+        if (touchInputRef.current.action) touchInputRef.current.action = false;
 
         if (isOverworld) {
           // Check for nearby door
@@ -426,11 +433,17 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
       let dx = 0;
       let dy = 0;
 
-      // Read input
-      if (keys.has('ArrowLeft') || keys.has('a')) dx -= 1;
-      if (keys.has('ArrowRight') || keys.has('d')) dx += 1;
-      if (keys.has('ArrowUp') || keys.has('w')) dy -= 1;
-      if (keys.has('ArrowDown') || keys.has('s')) dy += 1;
+      // Read input (touch takes priority)
+      const t = touchInputRef.current;
+      if (t.h !== 0 || t.v !== 0) {
+        dx = t.h;
+        dy = t.v;
+      } else {
+        if (keys.has('ArrowLeft') || keys.has('a')) dx -= 1;
+        if (keys.has('ArrowRight') || keys.has('d')) dx += 1;
+        if (keys.has('ArrowUp') || keys.has('w')) dy -= 1;
+        if (keys.has('ArrowDown') || keys.has('s')) dy += 1;
+      }
 
       const isMoving = dx !== 0 || dy !== 0;
       player.setPlayerState({ isMoving });
@@ -630,6 +643,15 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
           />
         </div>
       </div>
+      <VirtualJoystick
+        onMove={(h: number, v: number) => {
+          touchInputRef.current.h = Math.max(-1, Math.min(1, h));
+          touchInputRef.current.v = Math.max(-1, Math.min(1, v));
+        }}
+        onAction={(pressed: boolean) => {
+          touchInputRef.current.action = pressed;
+        }}
+      />
     </div>
   );
 }
