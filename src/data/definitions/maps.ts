@@ -184,9 +184,9 @@ const createHouseInterior = (
     triggers: [
       {
         id: `house-${houseNum}-enemy`,
-        type: 'battle',
+        type: 'npc',
         position: { x: HOUSE_CENTER_X, y: HOUSE_ENEMY_Y },
-        data: { encounterId: `house-${houseNum.padStart(2, '0')}` },
+        data: { dialogueId: `house-${houseNum.padStart(2, '0')}` },
       },
       {
         id: `house-${houseNum}-exit`,

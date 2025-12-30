@@ -1,7 +1,7 @@
 /**
  * Liberation Dialogues - Vale Village Liberation Arc
  *
- * Pre-battle dialogues for all 20 houses
+ * Pre-battle dialogues for all 30 houses
  * Each dialogue ends with a startBattle effect to trigger combat
  * Tone: Balanced (hopeful + serious) with good humor mixed in
  *
@@ -9,9 +9,9 @@
  */
 import type { DialogueTree } from '@/core/models/dialogue';
 
-// ============================================================================
+// ============================================================================ 
 // ACT 1: DISCOVERY (Houses 1-7)
-// ============================================================================
+// ============================================================================ 
 
 export const HOUSE_01_DIALOGUE: DialogueTree = {
   id: 'house-01-liberation',
@@ -174,9 +174,9 @@ export const HOUSE_07_DIALOGUE: DialogueTree = {
   ],
 };
 
-// ============================================================================
+// ============================================================================ 
 // ACT 2: RESISTANCE (Houses 8-14)
-// ============================================================================
+// ============================================================================ 
 
 export const HOUSE_08_DIALOGUE: DialogueTree = {
   id: 'house-08-sentinel-fizz',
@@ -374,9 +374,9 @@ export const HOUSE_14_DIALOGUE: DialogueTree = {
   ],
 };
 
-// ============================================================================
+// ============================================================================ 
 // ACT 3: LIBERATION (Houses 15-20)
-// ============================================================================
+// ============================================================================ 
 
 export const HOUSE_15_DIALOGUE: DialogueTree = {
   id: 'house-15-stormcaller',
@@ -566,7 +566,7 @@ export const HOUSE_20_DIALOGUE: DialogueTree = {
     {
       id: 'isaac-stands-firm',
       speaker: 'Isaac',
-      text: 'You enslaved an entire village. Beasts, people, even legendary creatures. Your "power" is built on suffering. That ends TODAY.',
+      text: 'You enslaved an entire village. Beasts, people, even legendary creatures. Your \'power\' is built on suffering. That ends TODAY.',
       portrait: 'isaac',
       nextNodeId: 'overseer-summons',
     },
@@ -601,9 +601,233 @@ export const HOUSE_20_DIALOGUE: DialogueTree = {
   ],
 };
 
-// ============================================================================
-// Export all dialogues
-// ============================================================================
+// ============================================================================ 
+// CHAPTER 2: POST-VALE PROGRESSION (Houses 21-30)
+// ============================================================================ 
+
+export const HOUSE_21_DIALOGUE: DialogueTree = {
+  id: 'house-21-liberation',
+  name: 'House 21: Undead Incursion',
+  startNodeId: 'pre-battle',
+  nodes: [
+    {
+      id: 'pre-battle',
+      speaker: 'Skeleton Warrior',
+      text: '*clatters* Fresh... life... must... consume... ', 
+      portrait: 'enemy-skeleton',
+      nextNodeId: 'isaac-resolve',
+    },
+    {
+      id: 'isaac-resolve',
+      speaker: 'Isaac',
+      text: 'Even the dead are being used by the Overseer\'s lingering influence. I\'ll put you to rest.',
+      portrait: 'isaac',
+      effects: { startBattle: 'house-21' },
+    },
+  ],
+};
+
+export const HOUSE_22_DIALOGUE: DialogueTree = {
+  id: 'house-22-liberation',
+  name: 'House 22: Aerial Assault',
+  startNodeId: 'pre-battle',
+  nodes: [
+    {
+      id: 'pre-battle',
+      speaker: 'Storm Raven',
+      text: '*screeches* Your ground-bound magic cannot reach the heights we soar!',
+      portrait: 'enemy-bird',
+      nextNodeId: 'isaac-jupiter',
+    },
+    {
+      id: 'isaac-jupiter',
+      speaker: 'Isaac',
+      text: 'I have friends who command the very winds you fly on. Let\'s see you soar through a storm!',
+      portrait: 'isaac',
+      effects: { startBattle: 'house-22' },
+    },
+  ],
+};
+
+export const HOUSE_23_DIALOGUE: DialogueTree = {
+  id: 'house-23-liberation',
+  name: 'House 23: Golem Fortress',
+  startNodeId: 'pre-battle',
+  nodes: [
+    {
+      id: 'pre-battle',
+      speaker: 'Iron Golem',
+      text: '*mechanical grinding* INTRUDER DETECTED. COMMENCING TERMINATION PROTOCOL.',
+      portrait: 'enemy-golem',
+      nextNodeId: 'isaac-bracing',
+    },
+    {
+      id: 'isaac-bracing',
+      speaker: 'Isaac',
+      text: 'Heavy armor, but I\'ve cracked tougher nuts than you. Brace yourself!',
+      portrait: 'isaac',
+      effects: { startBattle: 'house-23' },
+    },
+  ],
+};
+
+export const HOUSE_24_DIALOGUE: DialogueTree = {
+  id: 'house-24-liberation',
+  name: 'House 24: Frostbound Depths',
+  startNodeId: 'pre-battle',
+  nodes: [
+    {
+      id: 'pre-battle',
+      speaker: 'Frost Serpent',
+      text: '*hisses* The cold will preserve your failures forever.',
+      portrait: 'enemy-serpent',
+      nextNodeId: 'isaac-warmth',
+    },
+    {
+      id: 'isaac-warmth',
+      speaker: 'Isaac',
+      text: 'The fire of liberation burns too bright for your frost to handle!',
+      portrait: 'isaac',
+      effects: { startBattle: 'house-24' },
+    },
+  ],
+};
+
+export const HOUSE_25_DIALOGUE: DialogueTree = {
+  id: 'house-25-liberation',
+  name: 'House 25: Tempest Heights',
+  startNodeId: 'pre-battle',
+  nodes: [
+    {
+      id: 'pre-battle',
+      speaker: 'Cyclone Djinni',
+      text: 'You free the houses, but can you survive the eye of the storm?',
+      portrait: 'enemy-djinni',
+      nextNodeId: 'isaac-storm',
+    },
+    {
+      id: 'isaac-storm',
+      speaker: 'Isaac',
+      text: 'I\'ve walked through worse. Time to clear the air!',
+      portrait: 'isaac',
+      effects: { startBattle: 'house-25' },
+    },
+  ],
+};
+
+export const HOUSE_26_DIALOGUE: DialogueTree = {
+  id: 'house-26-liberation',
+  name: 'House 26: Necromantic Rites',
+  startNodeId: 'pre-battle',
+  nodes: [
+    {
+      id: 'pre-battle',
+      speaker: 'Bone Mage',
+      text: 'The souls of this village will fuel my ultimate spell!',
+      portrait: 'enemy-mage',
+      nextNodeId: 'isaac-sanctity',
+    },
+    {
+      id: 'isaac-sanctity',
+      speaker: 'Isaac',
+      text: 'I won\'t let you desecrate their lives any longer. Your rites end here.',
+      portrait: 'isaac',
+      effects: { startBattle: 'house-26' },
+    },
+  ],
+};
+
+export const HOUSE_27_DIALOGUE: DialogueTree = {
+  id: 'house-27-liberation',
+  name: 'House 27: Crystal Convergence',
+  startNodeId: 'pre-battle',
+  nodes: [
+    {
+      id: 'pre-battle',
+      speaker: 'Crystal Golem',
+      text: '*shimmers* Reflection... redirection... your power is mine to use.',
+      portrait: 'enemy-golem',
+      nextNodeId: 'isaac-shatter',
+    },
+    {
+      id: 'isaac-shatter',
+      speaker: 'Isaac',
+      text: 'Then I\'ll just have to hit you harder than you can reflect. Shatter!',
+      portrait: 'isaac',
+      effects: { startBattle: 'house-27' },
+    },
+  ],
+};
+
+export const HOUSE_28_DIALOGUE: DialogueTree = {
+  id: 'house-28-liberation',
+  name: 'House 28: Draconic Convergence',
+  startNodeId: 'pre-battle',
+  nodes: [
+    {
+      id: 'pre-battle',
+      speaker: 'Tempest Dragon',
+      text: '*roars* Mortals dare to challenge the kings of the sky?',
+      portrait: 'enemy-dragon',
+      nextNodeId: 'isaac-dragon',
+    },
+    {
+      id: 'isaac-dragon',
+      speaker: 'Isaac',
+      text: 'Size doesn\'t make you a king. It just makes you a bigger target.',
+      portrait: 'isaac',
+      effects: { startBattle: 'house-28' },
+    },
+  ],
+};
+
+export const HOUSE_29_DIALOGUE: DialogueTree = {
+  id: 'house-29-liberation',
+  name: 'House 29: Abyssal Depths',
+  startNodeId: 'pre-battle',
+  nodes: [
+    {
+      id: 'pre-battle',
+      speaker: 'Tidal Wraith',
+      text: 'Drown in the depths of your own ambition, boy.',
+      portrait: 'enemy-wraith',
+      nextNodeId: 'isaac-depths',
+    },
+    {
+      id: 'isaac-depths',
+      speaker: 'Isaac',
+      text: 'I\'m not sinking. I\'m rising. And I\'m taking this house with me!',
+      portrait: 'isaac',
+      effects: { startBattle: 'house-29' },
+    },
+  ],
+};
+
+export const HOUSE_30_DIALOGUE: DialogueTree = {
+  id: 'house-30-liberation',
+  name: 'House 30: Volcanic Summit',
+  startNodeId: 'pre-battle',
+  nodes: [
+    {
+      id: 'pre-battle',
+      speaker: 'Magma Colossus',
+      text: '*rumbling* I AM THE CORE. I AM THE END.',
+      portrait: 'enemy-colossus',
+      nextNodeId: 'isaac-summit',
+    },
+    {
+      id: 'isaac-summit',
+      speaker: 'Isaac',
+      text: 'This is the final hurdle. I\'ll cool you down once and for all!',
+      portrait: 'isaac',
+      effects: { startBattle: 'house-30' },
+    },
+  ],
+};
+
+// ============================================================================ 
+// Export all dialogues 
+// ============================================================================ 
 
 export const LIBERATION_DIALOGUES: Record<string, DialogueTree> = {
   'house-01': HOUSE_01_DIALOGUE,
@@ -626,4 +850,14 @@ export const LIBERATION_DIALOGUES: Record<string, DialogueTree> = {
   'house-18': HOUSE_18_DIALOGUE,
   'house-19': HOUSE_19_DIALOGUE,
   'house-20': HOUSE_20_DIALOGUE,
+  'house-21': HOUSE_21_DIALOGUE,
+  'house-22': HOUSE_22_DIALOGUE,
+  'house-23': HOUSE_23_DIALOGUE,
+  'house-24': HOUSE_24_DIALOGUE,
+  'house-25': HOUSE_25_DIALOGUE,
+  'house-26': HOUSE_26_DIALOGUE,
+  'house-27': HOUSE_27_DIALOGUE,
+  'house-28': HOUSE_28_DIALOGUE,
+  'house-29': HOUSE_29_DIALOGUE,
+  'house-30': HOUSE_30_DIALOGUE,
 };
