@@ -87,6 +87,7 @@ export const HOUSE_03: Encounter = {
       type: 'fixed',
       itemId: 'iron-armor',
     },
+    unlockUnit: 'ranger',
   },
 };
 
@@ -149,6 +150,7 @@ export const HOUSE_06: Encounter = {
       type: 'fixed',
       itemId: 'steel-helm',
     },
+    unlockUnit: 'stone-guardian',
   },
 };
 
