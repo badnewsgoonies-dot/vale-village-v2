@@ -29,6 +29,16 @@ export const ENCOUNTER_TO_RECRUITMENT_DIALOGUE: Record<string, string> = {
   'house-17': 'house-17-recruit',
   'house-18': 'house-18-djinn',
   'house-20': 'house-20-djinn',
+  'house-21': 'house-generic-victory',
+  'house-22': 'house-generic-victory',
+  'house-23': 'house-23-recruit',
+  'house-24': 'house-generic-victory',
+  'house-25': 'house-25-recruit',
+  'house-26': 'house-generic-victory',
+  'house-27': 'house-generic-victory',
+  'house-28': 'house-28-recruit',
+  'house-29': 'house-generic-victory',
+  'house-30': 'house-30-recruit',
 };
 
 /**
