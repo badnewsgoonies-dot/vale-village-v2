@@ -30,12 +30,8 @@ const TeamSelectWrapper: FunctionComponent = () => {
   const startTransition = useGameStore((s) => s.startTransition);
 
   const handleConfirm = () => {
+    // Team confirmation is authoritative; GameFlow.confirmBattleTeam will drive the transition.
     confirmBattleTeam();
-    if (useStore.getState().mode === "battle") {
-      startTransition("battle");
-    } else {
-      console.error("Failed to start battle - validation or creation error");
-    }
   };
 
   const handleCancel = () => {
@@ -59,8 +55,8 @@ const TeamSelectWrapper: FunctionComponent = () => {
       return;
     }
 
-    setMode('overworld');
-    startTransition('overworld');
+    // Do not force a transition to overworld here — make TeamSelect a passive observer
+    // of GameFlow-driven transitions. Only update legacy mode if needed.
   }, [pendingBattleEncounterId, setMode, startTransition, towerEntryContext]);
 
   if (!pendingBattleEncounterId) {
@@ -241,11 +237,6 @@ function useStoreSync() {
       case 'team-select':
         if (currentScreen !== 'team-select') {
           startTransition('team-select');
-        }
-        break;
-      case 'battle':
-        if (currentScreen !== 'battle') {
-          startTransition('battle');
         }
         break;
       case 'rewards':

@@ -571,11 +571,9 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
   // Sync V1 store mode to V2 gameStore screens.
   // (Overworld V2 doesn't use tile triggers yet, but dialogue/battle effects still depend on mode transitions.)
   useEffect(() => {
-    if (mode === 'team-select') {
-      startTransition('team-select');
-    } else if (mode === 'battle') {
-      startTransition('battle');
-    } else if (mode === 'shop') {
+    // Only drive non-battle/team-select transitions from this component.
+    // Confirmed battles/team-select flows are initiated by the GameFlow slice to avoid races.
+    if (mode === 'shop') {
       startTransition('shop');
     } else if (mode === 'rewards') {
       startTransition('rewards');

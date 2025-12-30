@@ -143,7 +143,6 @@ export const createDialogueSlice: StateCreator<
   },
 
   endDialogue: () => {
-    const prevMode = get().mode;
     const activeTreeId = get().currentDialogueTree?.id;
     const returnMode = get().dialogueReturnMode ?? 'overworld';
 
@@ -173,13 +172,28 @@ export const createDialogueSlice: StateCreator<
       }
     }
 
-    const nextMode = prevMode === 'dialogue' ? returnMode : prevMode;
-    console.warn(`[endDialogue] prevMode=${prevMode}, returnMode=${returnMode}, nextMode=${nextMode}`);
+    const prevMode = get().mode;
+    const pendingBattle = get().pendingBattleEncounterId;
+
+    let nextMode: GameFlowSlice['mode'];
+
+    // If a pending battle intent exists, prefer preserving/entering the battle flow.
+    if (pendingBattle) {
+      // If we're already in an active battle, keep that; otherwise route to team-select.
+      nextMode = prevMode === 'battle' ? 'battle' : 'team-select';
+    } else if (prevMode !== 'dialogue') {
+      // If effects already moved us out of dialogue mode, preserve that.
+      nextMode = prevMode as GameFlowSlice['mode'];
+    } else {
+      nextMode = returnMode;
+    }
+
+    console.warn(`[endDialogue] prevMode=${prevMode}, pendingBattle=${String(pendingBattle)}, returnMode=${returnMode}, nextMode=${nextMode}`);
+
     set({
       currentDialogueTree: null,
       currentDialogueState: null,
       dialogueReturnMode: null,
-      // Race guard: if effects already changed mode, preserve that mode.
       mode: nextMode,
     });
 

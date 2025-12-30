@@ -41,8 +41,6 @@ export function OverworldMap() {
   useEffect(() => {
     if (mode === 'team-select') {
       startTransition('team-select');
-    } else if (mode === 'battle') {
-      startTransition('battle');
     } else if (mode === 'shop') {
       startTransition('shop');
     } else if (mode === 'rewards') {

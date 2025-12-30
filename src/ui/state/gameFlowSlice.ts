@@ -8,6 +8,7 @@ import type { EquipmentSlot, Equipment } from '@/core/models/Equipment';
 import { createEmptyLoadout } from '@/core/models/Equipment';
 import { ENCOUNTERS } from '@/data/definitions/encounters';
 import { createBattleFromEncounter } from '@/core/services/EncounterService';
+import { useGameStore } from '@/store/gameStore';
 import { makePRNG } from '@/core/random/prng';
 import { DIALOGUES } from '@/data/definitions/dialogues';
 import { getPreBattleDialogue } from '@/data/definitions/preBattleDialogues';
@@ -375,6 +376,14 @@ export const createGameFlowSlice: StateCreator<
         pendingBattleEncounterId: null,
         currentBattleConfig: null,
       });
+
+      // Trigger V2 gameStore scene transition to battle; this must be authoritative
+      // so that the visual transition happens after the battle state is set.
+      const gs = useGameStore.getState();
+      // Only request a battle transition if not already onscreen or transitioning
+      if (gs.flow.screen !== 'battle' && !gs.flow.isTransitioning) {
+        gs.startTransition('battle');
+      }
     } catch (error) {
       console.error('Error creating battle:', error);
     }

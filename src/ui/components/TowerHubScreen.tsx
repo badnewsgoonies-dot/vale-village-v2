@@ -82,8 +82,6 @@ export function TowerHubScreen(): JSX.Element {
   useEffect(() => {
     if (mode === 'team-select') {
       startTransition('team-select');
-    } else if (mode === 'battle') {
-      startTransition('battle');
     } else if (mode === 'rewards') {
       startTransition('rewards');
     }
