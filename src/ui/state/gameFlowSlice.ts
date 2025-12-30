@@ -11,6 +11,7 @@ import { createBattleFromEncounter } from '@/core/services/EncounterService';
 import { makePRNG } from '@/core/random/prng';
 import { DIALOGUES } from '@/data/definitions/dialogues';
 import { getPreBattleDialogue } from '@/data/definitions/preBattleDialogues';
+import { useGameStore } from '@/store/gameStore';
 import type { QueueBattleSlice } from './queueBattleSlice';
 import type { TeamSlice } from './teamSlice';
 import type { DialogueSlice } from './dialogueSlice';
@@ -375,6 +376,12 @@ export const createGameFlowSlice: StateCreator<
         pendingBattleEncounterId: null,
         currentBattleConfig: null,
       });
+
+      // Trigger the V2 gameStore transition to the battle screen. Making the
+      // transition call authoritative here avoids races where the dialogue
+      // slice or UI observers might revert mode before the GameStore starts
+      // its transition animation.
+      useGameStore.getState().startTransition('battle');
     } catch (error) {
       console.error('Error creating battle:', error);
     }

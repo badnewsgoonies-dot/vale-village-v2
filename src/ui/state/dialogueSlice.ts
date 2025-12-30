@@ -173,7 +173,18 @@ export const createDialogueSlice: StateCreator<
       }
     }
 
-    const nextMode = prevMode === 'dialogue' ? returnMode : prevMode;
+    let nextMode = prevMode === 'dialogue' ? returnMode : prevMode;
+
+    // Preserve pending battle intent: if a dialogue effect initiated a battle
+    // (which sets pendingBattleEncounterId and mode='team-select'), don't
+    // accidentally revert to overworld when closing the dialogue shell.
+    const pendingBattle = get().pendingBattleEncounterId;
+    if (pendingBattle) {
+      if (nextMode === 'overworld') {
+        nextMode = 'team-select';
+      }
+    }
+
     console.warn(`[endDialogue] prevMode=${prevMode}, returnMode=${returnMode}, nextMode=${nextMode}`);
     set({
       currentDialogueTree: null,

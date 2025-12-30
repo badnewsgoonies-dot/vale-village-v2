@@ -30,12 +30,10 @@ const TeamSelectWrapper: FunctionComponent = () => {
   const startTransition = useGameStore((s) => s.startTransition);
 
   const handleConfirm = () => {
+    // confirmBattleTeam is now authoritative and will trigger the V2
+    // transition itself when the battle state is set. Keep this wrapper a
+    // thin delegator to avoid races.
     confirmBattleTeam();
-    if (useStore.getState().mode === "battle") {
-      startTransition("battle");
-    } else {
-      console.error("Failed to start battle - validation or creation error");
-    }
   };
 
   const handleCancel = () => {
@@ -48,20 +46,10 @@ const TeamSelectWrapper: FunctionComponent = () => {
     }
   };
 
-  useEffect(() => {
-    if (pendingBattleEncounterId) {
-      return;
-    }
-
-    if (towerEntryContext) {
-      setMode('tower');
-      startTransition('tower');
-      return;
-    }
-
-    setMode('overworld');
-    startTransition('overworld');
-  }, [pendingBattleEncounterId, setMode, startTransition, towerEntryContext]);
+  // TeamSelectWrapper is a passive observer of pendingBattleEncounterId.
+  // Navigation decisions (including transitions) are now driven by the
+  // GameFlowSlice and confirmBattleTeam to avoid races; do not force
+  // transitions here.
 
   if (!pendingBattleEncounterId) {
     // No pending battle, show loading or redirect
