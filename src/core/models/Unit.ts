@@ -5,6 +5,7 @@
 
 import type { Element, Stats, GrowthRates, UnitRole, StatusEffect } from './types';
 import type { EquipmentLoadout } from './Equipment';
+import { calculateEquipmentBonuses } from './Equipment';
 import type { Ability } from '../../data/schemas/AbilitySchema';
 
 /**
@@ -66,7 +67,17 @@ export interface Unit {
  */
 export function calculateMaxHp(unit: Unit): number {
   const levelBonus = (unit.level - 1) * unit.growthRates.hp;
-  return unit.baseStats.hp + levelBonus;
+  const equipment = calculateEquipmentBonuses(unit.equipment);
+  
+  // Calculate status modifiers for HP
+  let statusHp = 0;
+  for (const status of unit.statusEffects) {
+    if ((status.type === 'buff' || status.type === 'debuff') && status.stat === 'hp' && status.modifier) {
+      statusHp += status.modifier;
+    }
+  }
+
+  return Math.max(1, Math.floor(unit.baseStats.hp + levelBonus + (equipment.hp ?? 0) + statusHp));
 }
 
 /**

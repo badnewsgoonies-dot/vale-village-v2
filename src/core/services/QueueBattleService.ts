@@ -595,6 +595,7 @@ function executeDjinnSummons(
     } else if (summonEffect.type === 'heal') {
       const healAmount = summonEffect.healAmount;
       const healedUnits = currentState.playerTeam.units.map((unit) => {
+        if (isUnitKO(unit)) return unit;
         const maxHp = calculateEffectiveStats(unit, currentState.playerTeam).hp;
         const newHp = Math.min(unit.currentHp + healAmount, maxHp);
         if (newHp !== unit.currentHp) {
