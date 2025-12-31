@@ -59,8 +59,8 @@ const HOUSE_FURNITURE_LAYOUTS: Record<number, (w: number, h: number) => Furnitur
     { id: 'bed-1', type: 'bed', x: w - 70, y: 30, width: 50, height: 80 },
     { id: 'chest-1', type: 'chest', x: 20, y: 40, width: 40, height: 30 },
     { id: 'chest-2', type: 'chest', x: 70, y: 40, width: 40, height: 30 },
-    { id: 'table-1', type: 'table', x: w / 2 - 30, y: h - 60, width: 60, height: 40 },
-    { id: 'chair-1', type: 'chair', x: w / 2 - 10, y: h - 90, width: 20, height: 30 },
+    { id: 'table-1', type: 'table', x: w / 2 - 30, y: h / 2 - 20, width: 60, height: 40 },
+    { id: 'chair-1', type: 'chair', x: w / 2 - 10, y: h / 2 - 50, width: 20, height: 30 },
     { id: 'plant-1', type: 'plant', x: w / 2 - 60, y: 30, width: 25, height: 35 },
   ],
 

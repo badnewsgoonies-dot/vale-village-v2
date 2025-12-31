@@ -180,15 +180,18 @@ export const PORTRAIT_MAP: Record<string, string> = {
  * @returns Sprite ID for the character's portrait
  */
 export function getPortraitSprite(name: string): string {
-  // Try exact match first
-  const exactMatch = PORTRAIT_MAP[name];
+  // Strip unique suffix if present (e.g., adept_0 -> adept)
+  const baseName = name.replace(/_\d+$/, '');
+
+  // Try exact match first (preferring base name)
+  const exactMatch = PORTRAIT_MAP[baseName] || PORTRAIT_MAP[name];
   if (exactMatch) {
     return exactMatch;
   }
 
   // Try lowercase match
-  const lowerName = name.toLowerCase();
-  const lowerMatch = PORTRAIT_MAP[lowerName];
+  const lowerName = baseName.toLowerCase();
+  const lowerMatch = PORTRAIT_MAP[lowerName] || PORTRAIT_MAP[name.toLowerCase()];
   if (lowerMatch) {
     return lowerMatch;
   }

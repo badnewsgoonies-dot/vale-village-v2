@@ -76,7 +76,33 @@ const ENEMY_SPRITES: Record<string, SpriteStateMap> = {
   // Test goblins + tutorial encounters
   'enemy-1': makeSinglePose('/sprites/battle/enemies/Goblin.gif'),
   'enemy-2': makeSinglePose('/sprites/battle/enemies/Alec_Goblin.gif'),
-  'garet-enemy': makeSinglePose('/sprites/battle/enemies/Brigand.gif'),
+    'garet-enemy': makeSinglePose('/sprites/battle/enemies/Brigand.gif'),
+  
+  // Basic enemies (often missing)
+  'bat': makeSinglePose('/sprites/battle/enemies/Bat.gif'),
+  'rat': makeSinglePose('/sprites/battle/enemies/Rat.gif'),
+  'spider': makeSinglePose('/sprites/battle/enemies/Spider.gif'),
+  'zombie': makeSinglePose('/sprites/battle/enemies/Zombie.gif'),
+  'skeleton': makeSinglePose('/sprites/battle/enemies/Skeleton.gif'),
+  'slime': makeSinglePose('/sprites/battle/enemies/Slime.gif'),
+  'goblin': makeSinglePose('/sprites/battle/enemies/Goblin.gif'),
+  'wolf': makeSinglePose('/sprites/battle/enemies/Wild_Wolf.gif'),
+  'bear': makeSinglePose('/sprites/battle/enemies/Grizzly.gif'),
+  'ghost': makeSinglePose('/sprites/battle/enemies/Ghost.gif'),
+  'spirit': makeSinglePose('/sprites/battle/enemies/Spirit.gif'),
+  'ape': makeSinglePose('/sprites/battle/enemies/Ape.gif'),
+  'orc': makeSinglePose('/sprites/battle/enemies/Orc.gif'),
+  'lizard': makeSinglePose('/sprites/battle/enemies/Lizard_Man.gif'),
+  'siren': makeSinglePose('/sprites/battle/enemies/Siren.gif'),
+  'harpy': makeSinglePose('/sprites/battle/enemies/Harpy.gif'),
+  'golem': makeSinglePose('/sprites/battle/enemies/Golem.gif'),
+  'dragon': makeSinglePose('/sprites/battle/enemies/Dragon.gif'),
+  'chimera': makeSinglePose('/sprites/battle/enemies/Chimera.gif'),
+  'hydra': makeSinglePose('/sprites/battle/enemies/Hydra.gif'),
+  'willowisp': makeSinglePose('/sprites/battle/enemies/Willowisp.gif'),
+  'gnome': makeSinglePose('/sprites/battle/enemies/Gnome.gif'),
+  'kobold': makeSinglePose('/sprites/battle/enemies/Kobold.gif'),
+  'mimic': makeSinglePose('/sprites/battle/enemies/Mimic.gif'),
   'war-mage': makeSinglePose('/sprites/battle/enemies/Brigand.gif'),
 
   // Houses 2-5 (Act 1 focus)
@@ -224,7 +250,9 @@ export const EARLY_HOUSE_THRESHOLD = EARLY_HOUSE_MAX;
  * Resolve a player unit battle sprite.
  */
 export function getPlayerBattleSprite(unitId: string, state: BattleSpriteState): string | null {
-  const spriteMap = PLAYER_SPRITES[unitId];
+  // Strip unique suffix if present (consistency with enemy logic)
+  const baseId = unitId.replace(/_\d+$/, '');
+  const spriteMap = PLAYER_SPRITES[baseId] || PLAYER_SPRITES[unitId];
   if (!spriteMap) {
     return null;
   }
@@ -235,7 +263,9 @@ export function getPlayerBattleSprite(unitId: string, state: BattleSpriteState):
  * Resolve an enemy battle sprite.
  */
 export function getEnemyBattleSprite(enemyId: string, state: BattleSpriteState): string | null {
-  const spriteMap = ENEMY_SPRITES[enemyId];
+  // Strip unique suffix (e.g., venus-wolf_0 -> venus-wolf)
+  const baseId = enemyId.replace(/_\d+$/, '');
+  const spriteMap = ENEMY_SPRITES[baseId] || ENEMY_SPRITES[enemyId];
   if (!spriteMap) {
     return null;
   }
