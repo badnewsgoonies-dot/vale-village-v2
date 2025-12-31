@@ -276,7 +276,7 @@ export function performAction(
   }
 
   // Emit status-applied events for newly added status effects (on-hit statuses)
-  if (ability.statusEffect) {
+  // if (ability.statusEffect) {
     targetIds.forEach(targetId => {
       const beforeStatuses = statusEffectsBefore.get(targetId) || [];
       const afterUnit = result.updatedUnits.find(u => u.id === targetId);
@@ -297,7 +297,7 @@ export function performAction(
         });
       }
     });
-  }
+  // }
 
   transaction.commit();
   return Ok({ state: updatedState, result, events });

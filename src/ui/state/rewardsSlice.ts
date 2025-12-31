@@ -54,7 +54,7 @@ export const createRewardsSlice: StateCreator<
 
     const { team, setTeam, updateTeam, updateTeamUnits } = get();
     const newDjinnIds =
-      team?.collectedDjinn.filter(
+      result.updatedTeam.collectedDjinn.filter(
         (djinnId) => !battle.playerTeam.collectedDjinn.includes(djinnId)
       ) ?? [];
     // IMPORTANT: Do not overwrite the whole team object here.

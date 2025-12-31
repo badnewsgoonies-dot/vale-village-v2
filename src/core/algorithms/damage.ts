@@ -48,9 +48,9 @@ export function getElementModifier(attackElement: Element, defenseElement: Eleme
  * (Armor, Helm, Boots, Accessory)
  */
 export function calculateTotalEquipmentElementalResistance(unit: Unit): number {
-  const { armor, helm, boots, accessory } = unit.equipment;
+  const { weapon, armor, helm, boots, accessory } = unit.equipment;
   return (
-    (armor?.elementalResist || 0) +
+    (weapon?.elementalResist || 0) + (armor?.elementalResist || 0) +
     (helm?.elementalResist || 0) +
     (boots?.elementalResist || 0) +
     (accessory?.elementalResist || 0)
