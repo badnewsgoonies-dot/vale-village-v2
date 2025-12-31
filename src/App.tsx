@@ -385,7 +385,7 @@ function useStoreSync() {
         closeModal();
       }
     }
-  }, [activeModal, currentScreen, isDialogueActive, isTransitioning, mode, pendingBattleEncounterId, setMode, closeModal]);
+  }, [activeModal, currentScreen, isDialogueActive, isTransitioning, pendingBattleEncounterId, setMode, closeModal]);
 }
 
 type DevOverlayProps = {
@@ -572,12 +572,14 @@ const App: FunctionComponent = () => {
         return <PauseMenu
           onClose={closeModal}
           onTeamManagement={() => {
+            setMode('team-management');
             startTransition('team-management');
           }}
           onInventory={() => {
             openModal('inventory');
           }}
           onDjinnCollection={() => {
+            setMode('djinn-collection');
             startTransition('djinn-collection');
           }}
           onSaveGame={() => {

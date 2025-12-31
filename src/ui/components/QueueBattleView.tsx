@@ -35,6 +35,77 @@ import { getEventTiming } from '../constants/animationTiming';
 import { useBattleSpeed } from '../hooks/useBattleSpeed';
 import { getBackgroundPath, getTowerFloorBackground } from '../sprites/backgrounds';
 
+function getElementColor(element?: string): string {
+  switch (element) {
+    case 'Venus': return '#8B4513'; // Brown/Earth
+    case 'Mars': return '#ff6600'; // Orange/Fire
+    case 'Mercury': return '#00ccff'; // Blue/Water
+    case 'Jupiter': return '#9932CC'; // Purple/Wind
+    default: return '#ffd87f'; // Golden default
+  }
+}
+
+function BattleAbilityEffect({ event, fx }: { event: BattleEvent; fx: string }) {
+  const ability = ABILITIES[event.abilityId];
+  const elementColor = getElementColor(ability?.element);
+  
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        zIndex: 20,
+        pointerEvents: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+       {/* Expanding ring effect */}
+       <div
+         style={{
+           position: 'absolute',
+           width: 120,
+           height: 120,
+           borderRadius: '50%',
+           border: `3px solid ${elementColor}`,
+           animation: 'psynergyRing 0.9s ease-out infinite',
+           pointerEvents: 'none',
+         }}
+       />
+       {/* Secondary ring with delay */}
+       <div
+         style={{
+           position: 'absolute',
+           width: 120,
+           height: 120,
+           borderRadius: '50%',
+           border: `2px solid ${elementColor}`,
+           animation: 'psynergyRing 0.9s ease-out 0.3s infinite',
+           pointerEvents: 'none',
+         }}
+       />
+       {/* GIF with burst animation */}
+       <img
+         src={fx}
+         width={120}
+         height={120}
+         style={{
+           borderRadius: 10,
+           imageRendering: 'pixelated',
+           objectFit: 'cover',
+           mixBlendMode: 'screen',
+           animation: 'psynergyBurst 0.6s ease-out forwards',
+           color: elementColor,
+         }}
+         alt=""
+       />
+    </div>
+  );
+}
+
 // Z-Index layering constants to prevent overlay conflicts
 const Z_INDEX = {
   BACKGROUND: 0,
@@ -84,6 +155,8 @@ const ABILITY_FX_MAP: Record<string, string> = {
   'iron-bulwark': FX_LIBRARY.sonicSlash,
   'arcane-bolt': FX_LIBRARY.blueBolt,
   'steel-focus': FX_LIBRARY.sonicSlash,
+  'mythril-slice': FX_LIBRARY.sonicSlash,
+  'legendary-strike': FX_LIBRARY.supernova,
 
   // === FIRE/MARS ===
   'fireball': FX_LIBRARY.heatWave,
@@ -97,6 +170,8 @@ const ABILITY_FX_MAP: Record<string, string> = {
   'flame-burst-damage': FX_LIBRARY.fieryBlast,
   'blazing-fury': FX_LIBRARY.fieryBlast,
   'meteor-strike': FX_LIBRARY.pyroclasm,
+  'volcano': FX_LIBRARY.pyroclasm,
+  'magma-ball': FX_LIBRARY.inferno,
 
   // === ICE/MERCURY ===
   'ice-shard': FX_LIBRARY.glacier,
@@ -106,6 +181,9 @@ const ABILITY_FX_MAP: Record<string, string> = {
   'heal': FX_LIBRARY.deluge,
   'party-heal': FX_LIBRARY.deluge,
   'cure': FX_LIBRARY.deluge,
+  'frost': FX_LIBRARY.glacier,
+  'tundra': FX_LIBRARY.glacier,
+  'diamond-dust': FX_LIBRARY.freezePrism,
 
   // === LIGHTNING/JUPITER ===
   'chain-lightning': FX_LIBRARY.sparkPlasma,
@@ -113,12 +191,18 @@ const ABILITY_FX_MAP: Record<string, string> = {
   'tempest': FX_LIBRARY.tempest,
   'gust': FX_LIBRARY.tempest,
   'plasma-shot': FX_LIBRARY.blueBolt,
+  'thunderbolt': FX_LIBRARY.blueBolt,
+  'storm': FX_LIBRARY.tempest,
+  'tornado': FX_LIBRARY.tempest,
 
   // === EARTH/VENUS ===
   'quake': FX_LIBRARY.grandGaia,
   'earthquake': FX_LIBRARY.grandGaia,
   'earth-spike': FX_LIBRARY.grandGaia,
   'poison-strike': FX_LIBRARY.fume,
+  'gaia': FX_LIBRARY.grandGaia,
+  'spire': FX_LIBRARY.grandGaia,
+  'growth': FX_LIBRARY.grandGaia,
 
   // === STATUS/BUFF ===
   'boost-atk': FX_LIBRARY.heatWave,
@@ -126,6 +210,8 @@ const ABILITY_FX_MAP: Record<string, string> = {
   'weaken-def': FX_LIBRARY.fume,
   'blind': FX_LIBRARY.fume,
   'guard': FX_LIBRARY.grandGaia,
+  'revive': FX_LIBRARY.deluge,
+  'resurrect': FX_LIBRARY.deluge,
 };
 
 /**
@@ -1442,6 +1528,9 @@ export function QueueBattleView() {
                       ⯈
                     </div>
                   )}
+                  {isExecuting && events.length > 0 && events[0]?.type === 'ability' && events[0].targets.includes(enemy.id) && (
+                     <BattleAbilityEffect event={events[0]} fx={currentFx || FX_FALLBACK} />
+                  )}
                 </div>
               );
             })}
@@ -1527,6 +1616,9 @@ export function QueueBattleView() {
                     >
                       ⯈
                     </div>
+                  )}
+                  {isExecuting && events.length > 0 && events[0]?.type === 'ability' && events[0].targets.includes(unit.id) && (
+                     <BattleAbilityEffect event={events[0]} fx={currentFx || FX_FALLBACK} />
                   )}
                   {floatingNumbers
                     .filter((n) => n.unitId === unit.id)
@@ -1847,7 +1939,7 @@ export function QueueBattleView() {
             alignItems: 'center',
             gap: 14,
             zIndex: Z_INDEX.FX_CARD,
-            minWidth: 420,
+            minWidth: 300,
             justifyContent: 'center',
           }}
         >
@@ -1858,16 +1950,7 @@ export function QueueBattleView() {
             const abilityName = ABILITIES[evt.abilityId]?.name ?? evt.abilityId;
             const ability = ABILITIES[evt.abilityId];
 
-            // Get element color for psynergy glow effect
-            const getElementColor = (element?: string): string => {
-              switch (element) {
-                case 'Venus': return '#8B4513'; // Brown/Earth
-                case 'Mars': return '#ff6600'; // Orange/Fire
-                case 'Mercury': return '#00ccff'; // Blue/Water
-                case 'Jupiter': return '#9932CC'; // Purple/Wind
-                default: return '#ffd87f'; // Golden default
-              }
-            };
+
             const elementColor = getElementColor(ability?.element);
 
             // Find target names for display
@@ -1878,74 +1961,17 @@ export function QueueBattleView() {
             }).join(', ');
 
             return (
-              <>
-                {fx && (
-                  <div
-                    style={{
-                      position: 'relative',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    {/* Expanding ring effect */}
-                    <div
-                      style={{
-                        position: 'absolute',
-                        width: 180,
-                        height: 180,
-                        borderRadius: '50%',
-                        border: `3px solid ${elementColor}`,
-                        animation: 'psynergyRing 0.9s ease-out infinite',
-                        pointerEvents: 'none',
-                      }}
-                    />
-                    {/* Secondary ring with delay */}
-                    <div
-                      style={{
-                        position: 'absolute',
-                        width: 180,
-                        height: 180,
-                        borderRadius: '50%',
-                        border: `2px solid ${elementColor}`,
-                        animation: 'psynergyRing 0.9s ease-out 0.3s infinite',
-                        pointerEvents: 'none',
-                      }}
-                    />
-                    {/* GIF with burst animation */}
-                    <img
-                      src={fx}
-                      width={180}
-                      height={180}
-                      style={{
-                        borderRadius: 10,
-                        imageRendering: 'pixelated',
-                        objectFit: 'cover',
-                        boxShadow: `0 0 30px ${elementColor}, 0 0 60px ${elementColor}40`,
-                        mixBlendMode: 'screen',
-                        animation: 'psynergyBurst 0.6s ease-out forwards',
-                        color: elementColor,
-                      }}
-                      onLoad={() => loadedFxRef.current.add(fx)}
-                      onError={() => {
-                        loadedFxRef.current.add(FX_FALLBACK);
-                      }}
-                      alt="Ability effect"
-                    />
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4, alignItems: 'center' }}>
+                <div style={{ fontWeight: 800, color: elementColor, fontSize: '1.2rem', textShadow: '0 0 8px rgba(0,0,0,0.5)' }}>{abilityName}</div>
+                {targetNames && (
+                  <div style={{ color: '#FFD87F', fontSize: '0.9rem', fontWeight: 600 }}>
+                    Target: {targetNames}
                   </div>
                 )}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                  <div style={{ fontWeight: 800, color: elementColor, fontSize: '1.05rem' }}>{abilityName}</div>
-                  {targetNames && (
-                    <div style={{ color: '#FFD87F', fontSize: '0.85rem', fontWeight: 600 }}>
-                      Target: {targetNames}
-                    </div>
-                  )}
-                  <div style={{ color: '#e0e0e0', fontSize: '0.95rem', maxWidth: 320 }}>
-                    {renderEventText(evt)}
-                  </div>
+                <div style={{ color: '#e0e0e0', fontSize: '1rem', marginTop: 4 }}>
+                  {renderEventText(evt)}
                 </div>
-              </>
+              </div>
             );
           })()}
         </div>

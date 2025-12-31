@@ -270,6 +270,9 @@ export function RewardsScreen({
                 <div class="recruitment-level">Level {rewards.recruitedUnit.level}</div>
                 <div class="recruitment-element">{rewards.recruitedUnit.element}</div>
                 <div class="recruitment-message">has joined your roster!</div>
+                <div class="recruitment-hint" style={{ fontSize: '0.9rem', color: '#ffd700', marginTop: '0.5rem', fontStyle: 'italic' }}>
+                  Tip: Go to Menu → Team to manage your new ally.
+                </div>
               </div>
             </div>
           </section>
