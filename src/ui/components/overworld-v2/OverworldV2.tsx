@@ -66,6 +66,8 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
   const pendingIntroHouseEntryRef = useRef(false);
   const keysRef = useRef<Set<string>>(new Set());
   const touchInputRef = useRef<{ h: number; v: number; action: boolean }>({ h: 0, v: 0, action: false });
+  const lastGamepadStartRef = useRef(false);
+  const lastGamepadActionRef = useRef(false);
 
   // Track scene state
   const sceneTypeRef = useRef<SceneType>('overworld');
@@ -240,7 +242,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
   }, []);
 
   // Switch scene type with fade transition
-  const transitionToScene = useCallback((targetScene: SceneType, houseNum: number = 1) => {
+  const transitionToScene = useCallback((targetScene: SceneType, houseNum: number = 1, teleportTo?: { mapId: string; position?: { x: number; y: number } }) => {
     if (isTransitioningRef.current) return;
 
     isTransitioningRef.current = true;
@@ -256,6 +258,16 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
         const engine = engineRef.current;
         if (engine) {
           sceneTypeRef.current = targetScene;
+
+          // Perform teleport at the same point we switch layers to avoid double transitions
+          if (teleportTo) {
+            try {
+              teleportPlayer(teleportTo.mapId, teleportTo.position ?? { x: 5, y: 7 });
+            } catch (err) {
+              // Teleport failure should not block rendering
+              console.error('Failed to teleport during transition', err);
+            }
+          }
 
           if (targetScene === 'interior') {
             engine.setLayers(createInteriorLayers(houseNum));
@@ -293,7 +305,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
     };
 
     requestAnimationFrame(fadeOut);
-  }, [createOverworldLayers, createInteriorLayers]);
+  }, [createOverworldLayers, createInteriorLayers, teleportPlayer]);
 
   // Handle entering a building
   const enterBuilding = useCallback((buildingId: string) => {
@@ -336,22 +348,14 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
     // Get house number (e.g., "house-05" -> 5)
     const houseNum = getHouseNumberFromMapId(building.id);
 
-    // Transition to interior
-    transitionToScene('interior', houseNum);
-
-    // Update store (optional, for save/load)
-    if (building.interiorMapId) {
-      teleportPlayer(building.interiorMapId, { x: 5, y: 7 });
-    }
+    // Transition to interior and request teleport when layers switch
+    transitionToScene('interior', houseNum, building.interiorMapId ? { mapId: building.interiorMapId, position: { x: 5, y: 7 } } : undefined);
   }, [transitionToScene, getHouseNumberFromMapId, teleportPlayer, enterTowerFromOverworld, handleTrigger, hasSeenDjinnIntro, startDialogueTree]);
 
   // Handle exiting interior
   const exitInterior = useCallback(() => {
-    // Transition back to overworld
-    transitionToScene('overworld');
-
-    // Update store
-    teleportPlayer('vale-village', { x: Math.floor(savedOverworldXRef.current / 32), y: 14 });
+    // Transition back to overworld and teleport at scene switch
+    transitionToScene('overworld', 1, { mapId: 'vale-village', position: { x: Math.floor(savedOverworldXRef.current / 32), y: 14 } });
   }, [transitionToScene, teleportPlayer]);
 
   // Check if player is in exit zone
@@ -413,8 +417,30 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
       const keys = keysRef.current;
       const isOverworld = sceneTypeRef.current === 'overworld';
 
-      // Handle SPACE/Enter for interactions or touch action
-      if (keys.has(' ') || keys.has('Enter') || touchInputRef.current.action) {
+      // Poll Gamepad
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+      const gp = gamepads[0]; // Support first controller
+      let gpAction = false;
+      let gpStart = false;
+
+      if (gp) {
+        // Standard mapping: 0 = Bottom (A/Cross), 9 = Start/Options
+        if (gp.buttons[0]?.pressed) gpAction = true;
+        if (gp.buttons[9]?.pressed) gpStart = true;
+
+        // Handle Start Button (Toggle Pause) - Rising Edge Only
+        if (gpStart && !lastGamepadStartRef.current) {
+          openModal('pause');
+        }
+        lastGamepadStartRef.current = gpStart;
+      }
+
+      // Handle SPACE/Enter for interactions or touch/gamepad action
+      const actionPressed = keys.has(' ') || keys.has('Enter') || touchInputRef.current.action || (gpAction && !lastGamepadActionRef.current);
+      // Update gamepad latch
+      lastGamepadActionRef.current = gpAction;
+
+      if (actionPressed) {
         keys.delete(' ');
         keys.delete('Enter');
         // consume touch action once to mirror keyboard single-press behaviour
@@ -433,12 +459,28 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
       let dx = 0;
       let dy = 0;
 
-      // Read input (touch takes priority)
+      // Read input (touch > gamepad > keyboard)
       const t = touchInputRef.current;
       if (t.h !== 0 || t.v !== 0) {
         dx = t.h;
         dy = t.v;
-      } else {
+      } else if (gp) {
+        // Gamepad Axis (Left Stick)
+        const axisX = gp.axes[0] || 0;
+        const axisY = gp.axes[1] || 0;
+        // Deadzone
+        if (Math.abs(axisX) > 0.2) dx = axisX;
+        if (Math.abs(axisY) > 0.2) dy = axisY;
+
+        // Gamepad D-Pad (Buttons 12-15: Up, Down, Left, Right)
+        if (gp.buttons[12]?.pressed) dy -= 1; // Up
+        if (gp.buttons[13]?.pressed) dy += 1; // Down
+        if (gp.buttons[14]?.pressed) dx -= 1; // Left
+        if (gp.buttons[15]?.pressed) dx += 1; // Right
+      } 
+      
+      // Fallback to keyboard if no other input
+      if (dx === 0 && dy === 0) {
         if (keys.has('ArrowLeft') || keys.has('a')) dx -= 1;
         if (keys.has('ArrowRight') || keys.has('d')) dx += 1;
         if (keys.has('ArrowUp') || keys.has('w')) dy -= 1;

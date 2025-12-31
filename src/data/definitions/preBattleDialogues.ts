@@ -10,6 +10,7 @@ import {
   HOUSE_03_DIALOGUE,
   HOUSE_04_DIALOGUE,
   HOUSE_05_DIALOGUE,
+  HOUSE_06_DIALOGUE,
 } from './liberationDialogues';
 
 /**
@@ -21,6 +22,7 @@ export const ENCOUNTER_TO_PRE_BATTLE_DIALOGUE: Record<string, string> = {
   'house-03': 'house-03-ice',
   'house-04': 'house-04-breeze',
   'house-05': 'house-05-escalation',
+  'house-06': 'house-06-forge',
 };
 
 /**
@@ -32,6 +34,7 @@ const PRE_BATTLE_DIALOGUE_MAP: Record<string, DialogueTree> = {
   'house-03-ice': HOUSE_03_DIALOGUE,
   'house-04-breeze': HOUSE_04_DIALOGUE,
   'house-05-escalation': HOUSE_05_DIALOGUE,
+  'house-06-forge': HOUSE_06_DIALOGUE,
 };
 
 const PRE_BATTLE_DIALOGUE_IDS = new Set<string>(Object.values(ENCOUNTER_TO_PRE_BATTLE_DIALOGUE));
