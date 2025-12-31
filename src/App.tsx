@@ -15,6 +15,8 @@ import { ShopScreen } from './ui/components/ShopScreen';
 import { TowerHubScreen } from './ui/components/TowerHubScreen';
 import { IntroScreen } from './ui/components/IntroScreen';
 import { useStore, store } from './ui/state/store';
+import { DIALOGUES } from '@/data/definitions/dialogues';
+import { ENCOUNTER_TO_POST_BATTLE_DIALOGUE } from '@/data/definitions/postBattleDialogues';
 import type { GameFlowSlice } from './ui/state/gameFlowSlice';
 import { ToolboxHelpers } from './ui/components/debug/ToolboxHelpers';
 
@@ -101,6 +103,8 @@ const RewardsWrapper: FunctionComponent = () => {
     setBattle,
     towerStatus,
     setMode,
+    lastBattleEncounterId,
+    startDialogueTree,
   } = useStore((s) => ({
     lastBattleRewards: s.lastBattleRewards,
     team: s.team,
@@ -113,6 +117,8 @@ const RewardsWrapper: FunctionComponent = () => {
     setBattle: s.setBattle,
     towerStatus: s.towerStatus,
     setMode: s.setMode,
+    lastBattleEncounterId: s.lastBattleEncounterId,
+    startDialogueTree: s.startDialogueTree,
   }));
   const startTransition = useGameStore((s) => s.startTransition);
 
@@ -135,8 +141,20 @@ const RewardsWrapper: FunctionComponent = () => {
     claimRewards();
     setBattle(null, 0);
 
-    // Clear the stored encounterId after using it (if needed in future)
-    store.setState({ lastBattleEncounterId: null });
+    const encounterId = lastBattleEncounterId;
+
+    // If a post-battle dialogue exists for this encounter, start it and consume the stored encounterId
+    if (encounterId) {
+      const postId = ENCOUNTER_TO_POST_BATTLE_DIALOGUE[encounterId] ?? null;
+      if (postId && DIALOGUES[postId]) {
+        // Clear stored encounterId so it doesn't replay later
+        store.setState({ lastBattleEncounterId: null });
+        startDialogueTree(DIALOGUES[postId]);
+        return; // Dialogue flow will handle returning to overworld when complete
+      }
+      // No dialogue found - clear the stored id to avoid replay
+      store.setState({ lastBattleEncounterId: null });
+    }
 
     // Check if we're in tower mode - if so, return to tower hub instead of overworld
     if (towerStatus === 'in-run' || towerStatus === 'completed') {

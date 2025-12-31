@@ -100,6 +100,16 @@ export const createBattleSlice: StateCreator<
       }
 
       set((state) => ({ battle: result.value.state, events: [...state.events, ...newEvents] }));
+
+      // Notify story slice of encounter completion if an encounterId exists
+      // This mirrors the behavior performed in performAIAction and queue-based battles.
+      const updatedEncounterId = getEncounterId(result.value.state);
+      if (updatedEncounterId) {
+        const { onBattleEvents } = get();
+        if (onBattleEvents) {
+          onBattleEvents(newEvents);
+        }
+      }
     } else {
       // Battle continues - advance to next turn
       const rngEndTurn = makePRNG(createRNGStream(rngSeed, turnNumber, RNG_STREAMS.END_TURN));
