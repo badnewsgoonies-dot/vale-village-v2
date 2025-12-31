@@ -894,7 +894,7 @@ export const MYSTERIOUS_STRANGER: DialogueTree = {
 // ============================================================================
 
 export const HOUSE_06_POST_BATTLE: DialogueTree = {
-  id: 'house-06-post',
+  id: 'house-06-post-battle',
   name: 'House 06: Victory',
   startNodeId: 'victory',
   nodes: [
