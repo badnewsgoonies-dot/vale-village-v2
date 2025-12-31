@@ -92,6 +92,10 @@ function scoreAbility(
     return -1000; // No valid targets
   }
 
+  if (ability.targets === 'all-enemies' || ability.targets === 'all-allies') {
+    return validTargets.map(t => t.id);
+  }
+
   // Estimate damage/healing value
   let estimatedValue = 0;
 
@@ -154,12 +158,17 @@ function scoreAbility(
       estimatedValue *= validTargets.length;
     }
   } else if (ability.type === 'buff' || ability.type === 'debuff') {
-    // Status utility - value based on stat modifier
     if (ability.buffEffect) {
       const statMods = Object.values(ability.buffEffect).filter(v => typeof v === 'number');
       const totalMod = statMods.reduce((sum, mod) => sum + Math.abs(mod as number), 0);
-      estimatedValue = totalMod * 2; // Status effects are valuable
+      estimatedValue += totalMod * 2;
     }
+    if (ability.debuffEffect) {
+      const statMods = Object.values(ability.debuffEffect).filter(v => typeof v === 'number');
+      const totalMod = statMods.reduce((sum, mod) => sum + Math.abs(mod as number), 0);
+      estimatedValue += totalMod * 2;
+    }
+    // Status utility - value based on stat modifier
   }
 
   // Apply status utility weight
@@ -196,6 +205,10 @@ function selectTargets(
 
   if (validTargets.length === 0) {
     return [];
+  }
+
+  if (ability.targets === 'all-enemies' || ability.targets === 'all-allies') {
+    return validTargets.map(t => t.id);
   }
 
   // For revival abilities, prioritize KO'd units
@@ -308,6 +321,10 @@ function selectTargets(
       if (validTargets.length === 0) {
         return [];
       }
+
+  if (ability.targets === 'all-enemies' || ability.targets === 'all-allies') {
+    return validTargets.map(t => t.id);
+  }
       // AoE abilities ignore random single-target selection and hit everyone
       if (ability.targets === 'all-enemies' || ability.targets === 'all-allies') {
         return validTargets.map(t => t.id);
@@ -322,6 +339,10 @@ function selectTargets(
       if (validTargets.length === 0) {
         return [];
       }
+
+  if (ability.targets === 'all-enemies' || ability.targets === 'all-allies') {
+    return validTargets.map(t => t.id);
+  }
       
       const scored = validTargets.map(target => {
         // Use base DEF (AI doesn't have access to effective stats here)

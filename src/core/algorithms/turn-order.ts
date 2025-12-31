@@ -51,7 +51,7 @@ export function calculateTurnOrder(
   }
   // Precompute deterministic tie values per unit to keep sort comparator pure
   const tieValues = new Map<string, number>();
-  for (const unit of [...aliveUnits].sort((a, b) => a.id.localeCompare(b.id))) {
+  for (const unit of [...units].sort((a, b) => a.id.localeCompare(b.id))) {
     tieValues.set(unit.id, tieRng.next());
   }
 
