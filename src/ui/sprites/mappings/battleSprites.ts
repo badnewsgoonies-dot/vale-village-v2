@@ -142,9 +142,7 @@ const ENEMY_SPRITES: Record<string, SpriteStateMap> = {
   'fire-commander': makeSinglePose('/sprites/battle/enemies/Red_Demon.gif'),
   'volcano-warlord': makeSinglePose('/sprites/battle/enemies/Grand_Chimera.gif'),
   'storm-commander': makeSinglePose('/sprites/battle/enemies/Tornado_Lizard.gif'),
-  'hydra': makeSinglePose('/sprites/battle/enemies/Hydra.gif'),
   'overseer': makeSinglePose('/sprites/battle/enemies/Chimera.gif'),
-  'chimera': makeSinglePose('/sprites/battle/enemies/Chimera.gif'),
   'tempest-warlord': makeSinglePose('/sprites/battle/enemies/Thunder_Lizard.gif'),
 
   // Existing misc mappings
@@ -237,9 +235,7 @@ const ENEMY_SPRITES: Record<string, SpriteStateMap> = {
   'maelstrom-beast': makeSinglePose('/sprites/battle/enemies/Slime_Beast.gif'),
   'thunderstorm-colossus': makeSinglePose('/sprites/battle/enemies/Bombander.gif'),
 
-  // Legacy aliases (point to same sprites as canonical IDs)
-  'slime': makeSinglePose('/sprites/battle/enemies/Slime.gif'),
-  'wolf': makeSinglePose('/sprites/battle/enemies/Wild_Wolf.gif'),
+  // Legacy alias (point to same sprites as canonical IDs)
   'beetle': makeSinglePose('/sprites/battle/enemies/Punch_Ant.gif'),
 };
 
