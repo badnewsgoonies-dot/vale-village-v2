@@ -53,17 +53,38 @@ interface ProtagonistPoseConfig {
   front: string;
   back: string;
   side: string;
+  // Optional walk variants
+  walkFront?: string;
+  walkBack?: string;
+  walkSide?: string;
 }
 
-const ISAAC_POSE: ProtagonistPoseConfig = { front: 'Isaac.gif', back: 'Isaac_Back.gif', side: 'Isaac_Right.gif' };
+const ISAAC_POSE: ProtagonistPoseConfig = { 
+  front: 'Isaac.gif', 
+  back: 'Isaac_Back.gif', 
+  side: 'Isaac_Right.gif',
+  walkFront: 'Isaac_Walk.gif',
+  walkBack: 'Isaac_Walk_Up.gif',
+  walkSide: 'Isaac_Walk_Right.gif'
+};
 
 const PROTAGONIST_POSES: Record<string, ProtagonistPoseConfig> = {
   Isaac: ISAAC_POSE,
   Garet: { front: 'Garet.gif', back: 'Garet_Back.gif', side: 'Garet_Right.gif' },
   Mia: { front: 'Mia.gif', back: 'Mia_Back.gif', side: 'Mia_Right.gif' },
   Ivan: { front: 'Ivan.gif', back: 'Ivan_Back.gif', side: 'Ivan_Right.gif' },
-  Felix: { front: 'Felix.gif', back: 'Felix_Back.gif', side: 'Felix_E.gif' },
-  Jenna: { front: 'Jenna.gif', back: 'Jenna_Back.gif', side: 'Jenna_Right.gif' },
+  Felix: { 
+    front: 'Felix.gif', 
+    back: 'Felix_Back.gif', 
+    side: 'Felix_E.gif',
+    walkFront: 'Felix_Walk.gif'
+  },
+  Jenna: { 
+    front: 'Jenna.gif', 
+    back: 'Jenna_Back.gif', 
+    side: 'Jenna_Right.gif',
+    walkFront: 'Jenna_Walk.gif'
+  },
 };
 
 const DEFAULT_POSE = ISAAC_POSE;
@@ -76,21 +97,35 @@ function getPoseConfig(baseName: string): ProtagonistPoseConfig {
   return PROTAGONIST_POSES[baseName] ?? DEFAULT_POSE;
 }
 
-export function getPlayerSprite(unitId: string, direction: Direction): string {
+export function getPlayerSprite(unitId: string, direction: Direction, isMoving: boolean = false): string {
   const baseName = PLAYER_UNIT_TO_SPRITE[unitId] || 'Isaac';
   const poseConfig = getPoseConfig(baseName);
 
   const poseFile = (() => {
-    switch (direction) {
-      case 'up':
-        return poseConfig.back;
-      case 'down':
-        return poseConfig.front;
-      case 'right':
-      case 'left':
-        return poseConfig.side;
-      default:
-        return poseConfig.front;
+    if (isMoving) {
+      switch (direction) {
+        case 'up':
+          return poseConfig.walkBack ?? poseConfig.back;
+        case 'down':
+          return poseConfig.walkFront ?? poseConfig.front;
+        case 'right':
+        case 'left':
+          return poseConfig.walkSide ?? poseConfig.side;
+        default:
+          return poseConfig.walkFront ?? poseConfig.front;
+      }
+    } else {
+      switch (direction) {
+        case 'up':
+          return poseConfig.back;
+        case 'down':
+          return poseConfig.front;
+        case 'right':
+        case 'left':
+          return poseConfig.side;
+        default:
+          return poseConfig.front;
+      }
     }
   })();
 
@@ -121,6 +156,7 @@ const SPECIFIC_NPC_TO_FILE: Record<string, string> = {
   'shopkeeper-weapons': NPC_ROLE_TO_FILE.shopkeeper,
   'tower-attendant': NPC_ROLE_TO_FILE.elder,
   'djinn-guide': NPC_ROLE_TO_FILE.elder,
+  'flint-intro': '/sprites/overworld/djinn/Venus_Djinn.gif',
 };
 
 function npcPath(file: string): string {
@@ -134,6 +170,7 @@ function npcPath(file: string): string {
 export function getNPCSprite(npcId: string): string {
   const specificFile = SPECIFIC_NPC_TO_FILE[npcId];
   if (specificFile) {
+    if (specificFile.startsWith('/')) return specificFile;
     return npcPath(specificFile);
   }
 

@@ -200,6 +200,7 @@ type DialogueEffectEvent =
   | { kind: 'quest-accepted' }
   | { kind: 'open-shop' }
   | { kind: 'set-story-flag'; key: string; value: boolean }
+  | { kind: 'remove-npc'; npcId: string }
   | { kind: 'auto-save' };
 
 function mapEffectsToEvents(effects: DialogueEffects, currentDialogueTreeId?: string): DialogueEffectEvent[] {
@@ -226,6 +227,10 @@ function mapEffectsToEvents(effects: DialogueEffects, currentDialogueTreeId?: st
 
   if (typeof effects.grantDjinn === 'string') {
     events.push({ kind: 'grant-djinn', djinnId: effects.grantDjinn });
+  }
+
+  if (typeof effects.removeNPC === 'string') {
+    events.push({ kind: 'remove-npc', npcId: effects.removeNPC });
   }
 
   // Additional boolean keys (excluding reserved ones) are treated as story flags
@@ -346,6 +351,16 @@ function applyDialogueEvents(
         if (canSetStoryFlag) {
           store.setStoryFlag(event.key, event.value);
           console.warn(`Story flag set via dialogue: ${event.key} = ${event.value}`);
+        }
+        break;
+      }
+      case 'remove-npc': {
+        const npcId = event.npcId;
+        console.warn();
+        // We don't have a dedicated NPC removal slice yet, 
+        // but we can set a story flag that the map definition respects.
+        if (canSetStoryFlag) {
+          store.setStoryFlag(`npc_removed_${npcId}`, true);
         }
         break;
       }

@@ -34,6 +34,9 @@ export class PlayerLayer implements Layer {
 
   private width: number;
   private height: number;
+  
+  /** Whether to render the sprite image (default true). Set false if using DOM overlay. */
+  public shouldRenderSprite: boolean = true;
 
   constructor(
     initialState: Partial<PlayerState> = {},
@@ -41,7 +44,7 @@ export class PlayerLayer implements Layer {
   ) {
     this.playerState = {
       x: initialState.x ?? 200,
-      y: initialState.y ?? 450,
+      y: initialState.y ?? 490, // Adjusted for new road position (460-520)
       facing: initialState.facing ?? 'down',
       unitId: initialState.unitId ?? 'adept',
       isMoving: initialState.isMoving ?? false,
@@ -113,6 +116,8 @@ export class PlayerLayer implements Layer {
     ctx.ellipse(screenX, screenY + 4, this.width * 0.4, 6, 0, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
+
+    if (!this.shouldRenderSprite) return;
 
     // Get sprite for current direction
     const spritePath = getPlayerSprite(unitId, facing);

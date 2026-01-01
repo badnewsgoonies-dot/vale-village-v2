@@ -1,0 +1,386 @@
+
+> vale-village-v2@0.1.0 dev /home/geni/Documents/vale-village-v2
+> vite --host
+
+
+  VITE v5.4.21  ready in 955 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: http://10.0.0.52:5173/
+  ➜  Network: http://100.77.95.110:5173/
+9:11:49 p.m. [vite] hmr update /src/App.tsx
+9:17:18 p.m. [vite] hmr update /src/ui/components/RewardsScreen.tsx
+9:22:25 p.m. [vite] hmr update /src/ui/components/QueueBattleView.tsx
+9:27:25 p.m. [vite] hmr update /src/ui/components/QueueBattleView.tsx
+9:28:17 p.m. [vite] hmr update /src/ui/components/QueueBattleView.tsx
+9:33:27 p.m. [vite] hmr update /src/App.tsx
+9:34:44 p.m. [vite] hmr update /src/App.tsx
+9:37:09 p.m. [vite] hmr update /src/ui/components/QueueBattleView.tsx
+9:37:09 p.m. [vite] hmr update /src/ui/sprites/mappings/battleSprites.ts
+10:47:15 p.m. [vite] hmr update /src/ui/components/overworld/layers/InteriorFurnitureLayer.ts
+10:52:06 p.m. [vite] hmr update /src/ui/components/QueueBattleView.tsx
+11:02:16 p.m. [vite] hmr update /src/ui/sprites/mappings/battleSprites.ts
+11:02:37 p.m. [vite] hmr update /src/ui/sprites/mappings/battleSprites.ts
+11:02:53 p.m. [vite] hmr update /src/ui/components/CompendiumScreen.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/RewardsScreen.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/BattleUnitSprite.tsx, /src/ui/components/EnemyPortalTile.tsx
+11:31:17 p.m. [vite] warning: Duplicate key "hydra" in object literal
+132|    'volcano-warlord': makeSinglePose('/sprites/battle/enemies/Grand_Chimera.gif'),
+133|    'storm-commander': makeSinglePose('/sprites/battle/enemies/Tornado_Lizard.gif'),
+134|    'hydra': makeSinglePose('/sprites/battle/enemies/Hydra.gif'),
+   |    ^
+135|    'overseer': makeSinglePose('/sprites/battle/enemies/Chimera.gif'),
+136|    'chimera': makeSinglePose('/sprites/battle/enemies/Chimera.gif'),
+
+  Plugin: vite:esbuild
+  File: /home/geni/Documents/vale-village-v2/src/ui/sprites/mappings/battleSprites.ts
+11:31:17 p.m. [vite] warning: Duplicate key "chimera" in object literal
+134|    'hydra': makeSinglePose('/sprites/battle/enemies/Hydra.gif'),
+135|    'overseer': makeSinglePose('/sprites/battle/enemies/Chimera.gif'),
+136|    'chimera': makeSinglePose('/sprites/battle/enemies/Chimera.gif'),
+   |    ^
+137|    'tempest-warlord': makeSinglePose('/sprites/battle/enemies/Thunder_Lizard.gif'),
+138|    // Existing misc mappings
+
+  Plugin: vite:esbuild
+  File: /home/geni/Documents/vale-village-v2/src/ui/sprites/mappings/battleSprites.ts
+11:31:17 p.m. [vite] warning: Duplicate key "slime" in object literal
+213|    'thunderstorm-colossus': makeSinglePose('/sprites/battle/enemies/Bombander.gif'),
+214|    // Legacy aliases (point to same sprites as canonical IDs)
+215|    'slime': makeSinglePose('/sprites/battle/enemies/Slime.gif'),
+   |    ^
+216|    'wolf': makeSinglePose('/sprites/battle/enemies/Wild_Wolf.gif'),
+217|    'beetle': makeSinglePose('/sprites/battle/enemies/Punch_Ant.gif')
+
+  Plugin: vite:esbuild
+  File: /home/geni/Documents/vale-village-v2/src/ui/sprites/mappings/battleSprites.ts
+11:31:17 p.m. [vite] warning: Duplicate key "wolf" in object literal
+214|    // Legacy aliases (point to same sprites as canonical IDs)
+215|    'slime': makeSinglePose('/sprites/battle/enemies/Slime.gif'),
+216|    'wolf': makeSinglePose('/sprites/battle/enemies/Wild_Wolf.gif'),
+   |    ^
+217|    'beetle': makeSinglePose('/sprites/battle/enemies/Punch_Ant.gif')
+218|  };
+
+  Plugin: vite:esbuild
+  File: /home/geni/Documents/vale-village-v2/src/ui/sprites/mappings/battleSprites.ts
+11:31:17 p.m. [vite] warning: Duplicate key "hydra" in object literal
+132|    'volcano-warlord': makeSinglePose('/sprites/battle/enemies/Grand_Chimera.gif'),
+133|    'storm-commander': makeSinglePose('/sprites/battle/enemies/Tornado_Lizard.gif'),
+134|    'hydra': makeSinglePose('/sprites/battle/enemies/Hydra.gif'),
+   |    ^
+135|    'overseer': makeSinglePose('/sprites/battle/enemies/Chimera.gif'),
+136|    'chimera': makeSinglePose('/sprites/battle/enemies/Chimera.gif'),
+
+  Plugin: vite:esbuild
+  File: /home/geni/Documents/vale-village-v2/src/ui/sprites/mappings/battleSprites.ts
+11:31:17 p.m. [vite] warning: Duplicate key "chimera" in object literal
+134|    'hydra': makeSinglePose('/sprites/battle/enemies/Hydra.gif'),
+135|    'overseer': makeSinglePose('/sprites/battle/enemies/Chimera.gif'),
+136|    'chimera': makeSinglePose('/sprites/battle/enemies/Chimera.gif'),
+   |    ^
+137|    'tempest-warlord': makeSinglePose('/sprites/battle/enemies/Thunder_Lizard.gif'),
+138|    // Existing misc mappings
+
+  Plugin: vite:esbuild
+  File: /home/geni/Documents/vale-village-v2/src/ui/sprites/mappings/battleSprites.ts
+11:31:17 p.m. [vite] warning: Duplicate key "slime" in object literal
+213|    'thunderstorm-colossus': makeSinglePose('/sprites/battle/enemies/Bombander.gif'),
+214|    // Legacy aliases (point to same sprites as canonical IDs)
+215|    'slime': makeSinglePose('/sprites/battle/enemies/Slime.gif'),
+   |    ^
+216|    'wolf': makeSinglePose('/sprites/battle/enemies/Wild_Wolf.gif'),
+217|    'beetle': makeSinglePose('/sprites/battle/enemies/Punch_Ant.gif')
+
+  Plugin: vite:esbuild
+  File: /home/geni/Documents/vale-village-v2/src/ui/sprites/mappings/battleSprites.ts
+11:31:17 p.m. [vite] warning: Duplicate key "wolf" in object literal
+214|    // Legacy aliases (point to same sprites as canonical IDs)
+215|    'slime': makeSinglePose('/sprites/battle/enemies/Slime.gif'),
+216|    'wolf': makeSinglePose('/sprites/battle/enemies/Wild_Wolf.gif'),
+   |    ^
+217|    'beetle': makeSinglePose('/sprites/battle/enemies/Punch_Ant.gif')
+218|  };
+
+  Plugin: vite:esbuild
+  File: /home/geni/Documents/vale-village-v2/src/ui/sprites/mappings/battleSprites.ts
+11:47:06 p.m. [vite] hmr update /src/ui/components/CompendiumScreen.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/RewardsScreen.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/BattleUnitSprite.tsx, /src/ui/components/EnemyPortalTile.tsx, /src/ui/components/overworld-v2/layers/PlayerLayer.ts, /src/ui/components/overworld-v2/layers/InteriorNpcLayer.ts
+11:47:09 p.m. [vite] hmr update /src/ui/components/CompendiumScreen.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/RewardsScreen.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/BattleUnitSprite.tsx, /src/ui/components/EnemyPortalTile.tsx, /src/ui/components/overworld-v2/layers/PlayerLayer.ts, /src/ui/components/overworld-v2/layers/InteriorNpcLayer.ts
+11:47:13 p.m. [vite] hmr update /src/data/definitions/maps.ts
+11:47:20 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+11:47:24 p.m. [vite] hmr update /src/ui/components/overworld-v2/OverworldV2.tsx
+11:47:32 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+11:49:01 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+11:49:02 p.m. [vite] Pre-transform error: /home/geni/Documents/vale-village-v2/src/ui/state/dialogueSlice.ts: Unexpected token ','. (363:30)
+
+  361 |         // but we can set a story flag that the map definition respects.
+  362 |         if (canSetStoryFlag) {
+> 363 |           store.setStoryFlag(, true);
+      |                               ^
+  364 |         }
+  365 |         break;
+  366 |       }
+11:49:02 p.m. [vite] Internal server error: /home/geni/Documents/vale-village-v2/src/ui/state/dialogueSlice.ts: Unexpected token ','. (363:30)
+
+  361 |         // but we can set a story flag that the map definition respects.
+  362 |         if (canSetStoryFlag) {
+> 363 |           store.setStoryFlag(, true);
+      |                               ^
+  364 |         }
+  365 |         break;
+  366 |       }
+  Plugin: vite:preact-jsx
+  File: /home/geni/Documents/vale-village-v2/src/ui/state/dialogueSlice.ts:363:30
+  361|          // but we can set a story flag that the map definition respects.
+  362|          if (canSetStoryFlag) {
+  363|            store.setStoryFlag(, true);
+     |                                ^
+  364|          }
+  365|          break;
+      at constructor (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:367:19)
+      at TypeScriptParserMixin.raise (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:6624:19)
+      at TypeScriptParserMixin.parseExprListItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12232:14)
+      at TypeScriptParserMixin.parseCallExpressionArguments (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:11316:22)
+      at TypeScriptParserMixin.parseCoverCallAndAsyncArrowHead (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:11250:29)
+      at TypeScriptParserMixin.parseSubscript (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:11184:19)
+      at TypeScriptParserMixin.parseSubscript (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9329:18)
+      at TypeScriptParserMixin.parseSubscripts (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:11158:19)
+      at TypeScriptParserMixin.parseExprSubscripts (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:11149:17)
+      at TypeScriptParserMixin.parseUpdate (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:11130:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:11110:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9890:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10963:61)
+      at TypeScriptParserMixin.parseExprOps (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10968:23)
+      at TypeScriptParserMixin.parseMaybeConditional (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10945:23)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10895:21)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9839:20)
+      at TypeScriptParserMixin.parseExpressionBase (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10848:23)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10844:39
+      at TypeScriptParserMixin.allowInAnd (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12495:16)
+      at TypeScriptParserMixin.parseExpression (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10844:17)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12971:23)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseStatementListItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12823:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13392:61)
+      at TypeScriptParserMixin.parseBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13385:10)
+      at TypeScriptParserMixin.parseBlock (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13373:10)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12934:21)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseStatementOrSloppyAnnexBFunctionDeclaration (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12833:17)
+      at TypeScriptParserMixin.parseIfStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13206:28)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12872:21)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseStatementListItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12823:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13392:61)
+      at TypeScriptParserMixin.parseBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13385:10)
+      at TypeScriptParserMixin.parseBlock (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13373:10)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12934:21)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseStatementListItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12823:17)
+      at TypeScriptParserMixin.parseSwitchStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13250:36)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12876:21)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseStatementListItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12823:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13392:61)
+12:16:35 a.m. [vite] Internal server error: /home/geni/Documents/vale-village-v2/src/ui/state/dialogueSlice.ts: Unexpected token ','. (363:30)
+
+  361 |         // but we can set a story flag that the map definition respects.
+  362 |         if (canSetStoryFlag) {
+> 363 |           store.setStoryFlag(, true);
+      |                               ^
+  364 |         }
+  365 |         break;
+  366 |       }
+  Plugin: vite:preact-jsx
+  File: /home/geni/Documents/vale-village-v2/src/ui/state/dialogueSlice.ts:363:30
+  361|          // but we can set a story flag that the map definition respects.
+  362|          if (canSetStoryFlag) {
+  363|            store.setStoryFlag(, true);
+     |                                ^
+  364|          }
+  365|          break;
+      at constructor (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:367:19)
+      at TypeScriptParserMixin.raise (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:6624:19)
+      at TypeScriptParserMixin.parseExprListItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12232:14)
+      at TypeScriptParserMixin.parseCallExpressionArguments (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:11316:22)
+      at TypeScriptParserMixin.parseCoverCallAndAsyncArrowHead (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:11250:29)
+      at TypeScriptParserMixin.parseSubscript (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:11184:19)
+      at TypeScriptParserMixin.parseSubscript (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9329:18)
+      at TypeScriptParserMixin.parseSubscripts (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:11158:19)
+      at TypeScriptParserMixin.parseExprSubscripts (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:11149:17)
+      at TypeScriptParserMixin.parseUpdate (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:11130:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:11110:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9890:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10963:61)
+      at TypeScriptParserMixin.parseExprOps (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10968:23)
+      at TypeScriptParserMixin.parseMaybeConditional (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10945:23)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10895:21)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9839:20)
+      at TypeScriptParserMixin.parseExpressionBase (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10848:23)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10844:39
+      at TypeScriptParserMixin.allowInAnd (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12495:16)
+      at TypeScriptParserMixin.parseExpression (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10844:17)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12971:23)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseStatementListItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12823:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13392:61)
+      at TypeScriptParserMixin.parseBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13385:10)
+      at TypeScriptParserMixin.parseBlock (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13373:10)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12934:21)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseStatementOrSloppyAnnexBFunctionDeclaration (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12833:17)
+      at TypeScriptParserMixin.parseIfStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13206:28)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12872:21)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseStatementListItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12823:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13392:61)
+      at TypeScriptParserMixin.parseBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13385:10)
+      at TypeScriptParserMixin.parseBlock (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13373:10)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12934:21)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseStatementListItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12823:17)
+      at TypeScriptParserMixin.parseSwitchStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13250:36)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12876:21)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseStatementListItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12823:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13392:61)
+12:27:29 a.m. [vite] Internal server error: /home/geni/Documents/vale-village-v2/src/ui/state/dialogueSlice.ts: Unexpected token ','. (363:30)
+
+  361 |         // but we can set a story flag that the map definition respects.
+  362 |         if (canSetStoryFlag) {
+> 363 |           store.setStoryFlag(, true);
+      |                               ^
+  364 |         }
+  365 |         break;
+  366 |       }
+  Plugin: vite:preact-jsx
+  File: /home/geni/Documents/vale-village-v2/src/ui/state/dialogueSlice.ts:363:30
+  361|          // but we can set a story flag that the map definition respects.
+  362|          if (canSetStoryFlag) {
+  363|            store.setStoryFlag(, true);
+     |                                ^
+  364|          }
+  365|          break;
+      at constructor (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:367:19)
+      at TypeScriptParserMixin.raise (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:6624:19)
+      at TypeScriptParserMixin.parseExprListItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12232:14)
+      at TypeScriptParserMixin.parseCallExpressionArguments (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:11316:22)
+      at TypeScriptParserMixin.parseCoverCallAndAsyncArrowHead (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:11250:29)
+      at TypeScriptParserMixin.parseSubscript (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:11184:19)
+      at TypeScriptParserMixin.parseSubscript (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9329:18)
+      at TypeScriptParserMixin.parseSubscripts (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:11158:19)
+      at TypeScriptParserMixin.parseExprSubscripts (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:11149:17)
+      at TypeScriptParserMixin.parseUpdate (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:11130:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:11110:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9890:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10963:61)
+      at TypeScriptParserMixin.parseExprOps (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10968:23)
+      at TypeScriptParserMixin.parseMaybeConditional (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10945:23)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10895:21)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9839:20)
+      at TypeScriptParserMixin.parseExpressionBase (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10848:23)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10844:39
+      at TypeScriptParserMixin.allowInAnd (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12495:16)
+      at TypeScriptParserMixin.parseExpression (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10844:17)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12971:23)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseStatementListItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12823:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13392:61)
+      at TypeScriptParserMixin.parseBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13385:10)
+      at TypeScriptParserMixin.parseBlock (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13373:10)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12934:21)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseStatementOrSloppyAnnexBFunctionDeclaration (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12833:17)
+      at TypeScriptParserMixin.parseIfStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13206:28)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12872:21)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseStatementListItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12823:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13392:61)
+      at TypeScriptParserMixin.parseBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13385:10)
+      at TypeScriptParserMixin.parseBlock (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13373:10)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12934:21)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseStatementListItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12823:17)
+      at TypeScriptParserMixin.parseSwitchStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13250:36)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12876:21)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseStatementListItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12823:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13392:61)
+5:43:56 a.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:21:29 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:21:33 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:21:45 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:21:51 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:22:11 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:22:31 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:22:43 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:23:04 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:23:17 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:23:34 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:23:46 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:23:46 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:23:59 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:30:36 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:31:08 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:31:08 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:31:38 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:31:54 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:32:12 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:32:27 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:32:43 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:33:04 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:33:16 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:33:53 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:37:21 p.m. [vite] hmr update /src/ui/components/ShopEquipScreen.tsx, /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx, /src/ui/components/BattlePortraitRow.tsx
+1:37:24 p.m. [vite] hmr update /src/ui/components/ShopEquipScreen.tsx, /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx, /src/ui/components/BattlePortraitRow.tsx
+1:40:06 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:42:57 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:43:06 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:43:10 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:45:12 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:45:20 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:45:32 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:45:41 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:45:45 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:47:29 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:47:37 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:47:41 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:47:49 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:49:34 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:49:52 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:49:52 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:51:01 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:51:21 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:52:11 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+1:53:19 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+2:10:16 p.m. [vite] hmr update /src/App.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/ShopScreen.tsx, /src/ui/components/IntroScreen.tsx, /src/ui/components/TowerHubScreen.tsx, /src/ui/components/SaveMenu.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/DjinnCollectionScreen.tsx, /src/modals/InventoryModal.tsx, /src/ui/components/ShopEquipScreen.tsx, /src/ui/components/DjinnDetailModal.tsx, /src/ui/components/TitleScreen.tsx, /src/ui/components/QueueBattleView.tsx, /src/ui/components/MainMenu.tsx, /src/ui/components/PauseMenu.tsx, /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/BattleActionMenu.tsx
+2:53:32 p.m. [vite] hmr update /src/ui/components/QueueBattleView.tsx
+2:57:48 p.m. [vite] hmr update /src/ui/components/BattlePortraitRow.tsx
+3:05:25 p.m. [vite] hmr update /src/ui/components/QueueBattleView.tsx
+3:09:04 p.m. [vite] hmr update /src/ui/components/QueueBattleView.tsx
+3:12:22 p.m. [vite] hmr update /src/ui/components/QueueBattleView.tsx
+3:18:57 p.m. [vite] hmr update /src/ui/components/QueueBattleView.tsx
+3:22:07 p.m. [vite] hmr update /src/ui/components/overworld-v2/layers/PlayerLayer.ts
+3:24:16 p.m. [vite] hmr update /src/ui/components/overworld-v2/OverworldV2.tsx
+4:00:47 p.m. [vite] hmr update /src/ui/components/overworld-v2/OverworldV2.tsx
+4:00:47 p.m. [vite] hmr update /src/ui/components/QueueBattleView.tsx
+4:31:53 p.m. [vite] hmr update /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/overworld-v2/layers/RoadLayer.ts, /src/ui/components/overworld-v2/data/villageLayout.ts, /src/ui/components/overworld-v2/engine/OverworldEngineV2.ts, /src/ui/components/overworld-v2/layers/TreeLayer.tsx, /src/ui/components/overworld-v2/layers/TerrainLayer.ts
+4:32:45 p.m. [vite] hmr update /src/ui/components/CompendiumScreen.tsx, /src/ui/components/PreBattleTeamSelectScreenV2.tsx, /src/ui/components/RewardsScreen.tsx, /src/ui/components/DialogueChatOverlay.tsx, /src/ui/components/PartyManagementScreen.tsx, /src/ui/components/BattleUnitSprite.tsx, /src/ui/components/EnemyPortalTile.tsx, /src/ui/components/overworld-v2/layers/PlayerLayer.ts, /src/ui/components/overworld-v2/layers/InteriorNpcLayer.ts, /src/ui/components/overworld-v2/OverworldV2.tsx
+4:33:00 p.m. [vite] hmr update /src/ui/components/overworld-v2/OverworldV2.tsx
+4:39:19 p.m. [vite] hmr update /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/overworld-v2/layers/RoadLayer.ts, /src/ui/components/overworld-v2/data/villageLayout.ts, /src/ui/components/overworld-v2/engine/OverworldEngineV2.ts, /src/ui/components/overworld-v2/layers/TreeLayer.tsx, /src/ui/components/overworld-v2/layers/TerrainLayer.ts
+4:39:50 p.m. [vite] hmr update /src/ui/components/overworld-v2/layers/PlayerLayer.ts
+4:43:26 p.m. [vite] hmr update /src/ui/components/overworld-v2/OverworldV2.tsx
+5:16:49 p.m. [vite] hmr update /src/ui/components/BattleActionMenu.tsx

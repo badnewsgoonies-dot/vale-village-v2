@@ -117,6 +117,15 @@ function normalizeBattleState(battle: BattleState): BattleState | null {
   };
 }
 
+export interface BattleStateUpdate {
+  battle: BattleState;
+  currentMana: number;
+  maxMana: number;
+  pendingManaThisRound: number;
+  pendingManaNextRound: number;
+  pendingUpdate: BattleStateUpdate | null;
+}
+
 export interface QueueBattleSlice {
   battle: BattleState | null;
   events: BattleEvent[];
@@ -129,6 +138,7 @@ export interface QueueBattleSlice {
   maxMana: number;
   pendingManaThisRound: number;
   pendingManaNextRound: number;
+  pendingUpdate: BattleStateUpdate | null;
   critCounters: Record<string, number>;
   critThresholds: Record<string, number>;
   critFlash: Record<string, boolean>;
@@ -174,6 +184,7 @@ export const createQueueBattleSlice: StateCreator<
   maxMana: 0,
   pendingManaThisRound: 0,
   pendingManaNextRound: 0,
+  pendingUpdate: null,
   critCounters: {},
   critThresholds: {},
   critFlash: {},
@@ -203,6 +214,7 @@ export const createQueueBattleSlice: StateCreator<
       maxMana: battleState?.maxMana ?? 0,
       pendingManaThisRound: 0,
       pendingManaNextRound: 0,
+  pendingUpdate: null,
       critCounters,
       critThresholds,
       critFlash: {},
@@ -293,8 +305,6 @@ export const createQueueBattleSlice: StateCreator<
       battle: result.value,
       currentMana: result.value.remainingMana,
       maxMana: result.value.maxMana,
-      pendingManaThisRound: sameTurn,
-      pendingManaNextRound,
       lastError: null,
     });
     return true;
@@ -320,8 +330,6 @@ export const createQueueBattleSlice: StateCreator<
       battle: result.value,
       currentMana: result.value.remainingMana,
       maxMana: result.value.maxMana,
-      pendingManaThisRound: sameTurn,
-      pendingManaNextRound,
       lastError: null,
     });
   },
@@ -382,10 +390,6 @@ export const createQueueBattleSlice: StateCreator<
     set({
       battle: result.state,
       events: battleEvents,
-      currentMana: result.state.remainingMana,
-      maxMana: result.state.maxMana,
-      pendingManaThisRound: sameTurn,
-      pendingManaNextRound,
       lastError: null,
     });
 
@@ -504,9 +508,25 @@ export const createQueueBattleSlice: StateCreator<
     set((state) => {
       if (state.events.length === 0) return state;
 
+      const nextEvents = state.events.slice(1);
+
+      // If queue is now empty and we have a pending update, apply it
+      if (nextEvents.length === 0 && state.pendingUpdate) {
+        const { battle, currentMana, maxMana, pendingManaThisRound, pendingManaNextRound } = state.pendingUpdate;
+        return {
+          events: [],
+          battle,
+          currentMana,
+          maxMana,
+          pendingManaThisRound,
+          pendingManaNextRound,
+          pendingUpdate: null,
+        };
+      }
+
       // MANA FIX: Sync currentMana with battle.remainingMana after dequeuing event
       // This ensures UI shows accurate mana during event processing (e.g., mana-generated events)
-      const updates: Partial<QueueBattleSlice> = { events: state.events.slice(1) };
+      const updates: Partial<QueueBattleSlice> = { events: nextEvents };
       if (state.battle) {
         updates.currentMana = state.battle.remainingMana;
       }

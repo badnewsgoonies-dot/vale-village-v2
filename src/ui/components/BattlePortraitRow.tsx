@@ -1,3 +1,4 @@
+import { memo } from 'preact/compat';
 import type { Unit } from '../../core/models/Unit';
 import type { QueuedAction } from '../../core/models/BattleState';
 import { calculateMaxHp } from '../../core/models/Unit';
@@ -90,7 +91,7 @@ function StatusChips({ unit }: { unit: Unit }) {
   );
 }
 
-export function BattlePortraitRow({
+export const BattlePortraitRow = memo(function BattlePortraitRow({
   units,
   activeIndex,
   queuedActions,
@@ -125,8 +126,8 @@ export function BattlePortraitRow({
             key={unit.id}
             onClick={() => onSelect?.(idx)}
             style={{
-              width: 56,
-              height: 56,
+              width: 80,
+              height: 80,
               position: 'relative',
               border: isActive ? '3px solid #FFD54A' : '2px solid rgba(255,215,0,0.3)',
               borderRadius: 8,
@@ -171,8 +172,8 @@ export function BattlePortraitRow({
                   right: 4,
                   background: '#4CAF50',
                   color: '#fff',
-                  width: 18,
-                  height: 18,
+                  width: 24,
+                  height: 24,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -192,7 +193,7 @@ export function BattlePortraitRow({
                 bottom: 0,
                 left: 0,
                 width: '100%',
-                height: 6,
+                height: 10,
                 background: 'rgba(0,0,0,0.7)',
                 borderTop: '1px solid rgba(255,255,255,0.1)',
               }}
@@ -233,4 +234,4 @@ export function BattlePortraitRow({
       })}
     </div>
   );
-}
+});
