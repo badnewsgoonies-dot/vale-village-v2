@@ -191,6 +191,10 @@ export const createQueueBattleSlice: StateCreator<
   lastError: null,
 
   setBattle: (battle, seed) => {
+    // Clear any pending crit flash timeouts from previous battle
+    critFlashTimeouts.forEach((timeout) => clearTimeout(timeout));
+    critFlashTimeouts.clear();
+
     const critThresholds: Record<string, number> = {};
     const critCounters: Record<string, number> = {};
     const clonedBattle = battle ? structuredClone(battle) : null;
@@ -214,7 +218,7 @@ export const createQueueBattleSlice: StateCreator<
       maxMana: battleState?.maxMana ?? 0,
       pendingManaThisRound: 0,
       pendingManaNextRound: 0,
-  pendingUpdate: null,
+      pendingUpdate: null,
       critCounters,
       critThresholds,
       critFlash: {},
@@ -299,12 +303,14 @@ export const createQueueBattleSlice: StateCreator<
       return false;
     }
 
-    const { pendingThisRound: sameTurn, pendingManaNextRound } = computePendingMana(result.value);
+    const { pendingThisRound, pendingManaNextRound } = computePendingMana(result.value);
 
     set({
       battle: result.value,
       currentMana: result.value.remainingMana,
       maxMana: result.value.maxMana,
+      pendingManaThisRound: pendingThisRound,
+      pendingManaNextRound,
       lastError: null,
     });
     return true;
@@ -324,12 +330,14 @@ export const createQueueBattleSlice: StateCreator<
       return;
     }
 
-    const { pendingThisRound: sameTurn, pendingManaNextRound } = computePendingMana(result.value);
+    const { pendingThisRound, pendingManaNextRound } = computePendingMana(result.value);
 
     set({
       battle: result.value,
       currentMana: result.value.remainingMana,
       maxMana: result.value.maxMana,
+      pendingManaThisRound: pendingThisRound,
+      pendingManaNextRound,
       lastError: null,
     });
   },
@@ -385,11 +393,13 @@ export const createQueueBattleSlice: StateCreator<
     const previousEvents = get().events;
     const battleEvents = [...previousEvents, ...result.events];
 
-    const { pendingThisRound: sameTurn, pendingManaNextRound } = computePendingMana(result.state);
+    const { pendingThisRound, pendingManaNextRound } = computePendingMana(result.state);
 
     set({
       battle: result.state,
       events: battleEvents,
+      pendingManaThisRound: pendingThisRound,
+      pendingManaNextRound,
       lastError: null,
     });
 
