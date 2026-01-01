@@ -738,37 +738,6 @@ export function BattleActionMenu({
       <SectionHeader title="ACTIONS" />
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <button
-          onClick={onSelectAttack}
-          data-testid="battle-action-attack"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 10,
-            width: '100%',
-            background: 'rgba(0,0,0,0.5)',
-            border: '2px solid rgba(255, 213, 74, 0.7)',
-            borderRadius: 6,
-            padding: '8px 10px',
-            cursor: 'pointer',
-            transition: 'all 0.15s',
-          }}
-        >
-          <img
-            src={ACTION_ICONS.attack}
-            alt=""
-            width={24}
-            height={24}
-            style={{ imageRendering: 'pixelated', transform: 'scale(1.5)', transformOrigin: 'center' }}
-          />
-          <div style={{ textAlign: 'left' }}>
-            <div style={{ color: '#ffd87f', fontWeight: 600, fontSize: '0.95rem', textShadow: '1px 1px 2px #000' }}>
-              ATTACK
-            </div>
-            <div style={{ color: '#aaa', fontSize: '0.75rem' }}>+1 mana</div>
-          </div>
-        </button>
-
-        <button
           onClick={() => onModeChange('abilities')}
           data-testid="battle-action-psynergy"
           style={{
