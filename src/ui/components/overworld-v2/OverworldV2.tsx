@@ -6,7 +6,7 @@
 import { useEffect, useRef, useCallback, useState } from 'preact/hooks';
 import { useStore } from '../../state/store';
 import { useGameStore } from '../../../store/gameStore';
-import { DJINN_INTRO_DIALOGUE } from '@/data/definitions/dialogues';
+
 import { isHouseUnlocked } from '../../../core/services/StoryService';
 import { OverworldEngineV2 } from './engine/OverworldEngineV2';
 import { clampPlayerXToWorldBounds } from './engine/playerBounds';
@@ -27,6 +27,7 @@ import type { OverworldSlice } from '../../state/overworldSlice';
 import type { Layer } from './engine/types';
 import '../overworld/OverworldCanvas.css';
 import { VirtualJoystick } from '../VirtualJoystick';
+import { getPlayerSprite } from '../../sprites/mappings/overworldSprites';
 
 
 /** Movement speed in world pixels per second */
@@ -68,6 +69,10 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
   const touchInputRef = useRef<{ h: number; v: number; action: boolean }>({ h: 0, v: 0, action: false });
   const lastGamepadStartRef = useRef(false);
   const lastGamepadActionRef = useRef(false);
+  
+  // DOM Player Overlay Refs
+  const playerDomRef = useRef<HTMLImageElement>(null);
+  const playerDomContainerRef = useRef<HTMLDivElement>(null);
 
   // Track scene state
   const sceneTypeRef = useRef<SceneType>('overworld');
@@ -178,6 +183,8 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
       facing: 'right',
       unitId: 'adept',
     });
+    // Disable canvas rendering for player sprite (only render shadow)
+    playerLayer.shouldRenderSprite = false;
     playerLayerRef.current = playerLayer;
 
     villageLayer.setPlayerPosition(savedOverworldXRef.current, 450);
@@ -236,6 +243,8 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
       facing: 'up',
       unitId: 'adept',
     });
+    // Disable canvas rendering for player sprite (only render shadow)
+    playerLayer.shouldRenderSprite = false;
     playerLayerRef.current = playerLayer;
 
     return npcLayer ? [floorLayer, furnitureLayer, npcLayer, playerLayer] : [floorLayer, furnitureLayer, playerLayer];
@@ -312,13 +321,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
     const building = VILLAGE_BUILDINGS.find(b => b.id === buildingId);
     if (!building) return;
 
-    // Tutorial beat: intercept House 1 entry to introduce Djinn (mirrors V1 flow).
-    if (building.id === 'house-01' && !hasSeenDjinnIntro && !djinnIntroStartedRef.current) {
-      djinnIntroStartedRef.current = true;
-      pendingIntroHouseEntryRef.current = true;
-      startDialogueTree(DJINN_INTRO_DIALOGUE);
-      return;
-    }
+
 
     // Save current X position for return
     const playerPos = playerLayerRef.current?.getPosition();
@@ -407,6 +410,32 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
       const player = playerLayerRef.current;
       const village = villageLayerRef.current;
       if (!player || isTransitioningRef.current) return;
+
+      // Sync DOM player position
+      if (playerDomContainerRef.current && playerDomRef.current) {
+        const state = player.getPlayerState();
+        const pos = player.getPosition();
+        
+        // Determine sprite source (handling direction)
+        const spriteSrc = getPlayerSprite(state.unitId, state.facing, state.isMoving);
+        if (playerDomRef.current.src !== window.location.origin + spriteSrc) {
+            playerDomRef.current.src = spriteSrc;
+        }
+        
+        // Handle mirroring for left facing
+        const mirror = state.facing === 'left';
+        playerDomRef.current.style.transform = mirror ? 'scaleX(-1)' : 'scaleX(1)';
+        
+        // Position DOM element via camera projection
+        // We use worldToScreenSnapped to align with canvas pixel grid
+        const screenPos = eng.getCamera().worldToScreenSnapped(pos.x, pos.y);
+        
+        // The container is centered at player feet (like the canvas render)
+        // Sprite is 32x48, anchor is bottom-center
+        // container is 0x0 at screenPos.
+        // We offset the image inside the container
+        playerDomContainerRef.current.style.transform = `translate(${screenPos.x}px, ${screenPos.y}px)`;
+      }
 
       // Freeze player control when not actively in overworld mode or while a modal is open.
       if (isGameplayInputLocked(modeRef.current) || activeModalRef.current !== null) {
@@ -649,16 +678,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
     }
   }, [currentMapId, getSceneTypeFromMapId, getHouseNumberFromMapId, transitionToScene, isTransitioning]);
 
-  useEffect(() => {
-    if (!pendingIntroHouseEntryRef.current) return;
-    if (!hasSeenDjinnIntro) return;
-    if (mode !== 'overworld') return;
-    if (sceneTypeRef.current !== 'overworld') return;
-    if (isTransitioningRef.current) return;
 
-    pendingIntroHouseEntryRef.current = false;
-    enterBuilding('house-01');
-  }, [hasSeenDjinnIntro, mode, enterBuilding]);
 
   const sceneName = sceneTypeRef.current === 'interior'
     ? `House ${currentHouseNumRef.current} Interior`
@@ -676,13 +696,42 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
       </div>
 
       <div class="overworld-stage">
-        <div class="overworld-canvas-container">
+        <div class="overworld-canvas-container" style={{ position: 'relative' }}>
           <canvas
             ref={canvasRef}
             width={width}
             height={height}
             class="overworld-canvas"
           />
+          
+          {/* DOM Player Overlay for GIF Animation Support */}
+          <div 
+            ref={playerDomContainerRef}
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: 0,
+              height: 0,
+              pointerEvents: 'none',
+              zIndex: 10, 
+              willChange: 'transform',
+            }}
+          >
+            <img 
+              ref={playerDomRef}
+              src="/sprites/overworld/protagonists/Isaac.gif"
+              style={{
+                position: 'absolute',
+                left: '-16px', // -width/2
+                top: '-58px',  // -height + 10px shift
+                width: '32px',
+                height: '48px',
+                imageRendering: 'pixelated',
+              }}
+              alt=""
+            />
+          </div>
         </div>
       </div>
       <VirtualJoystick
