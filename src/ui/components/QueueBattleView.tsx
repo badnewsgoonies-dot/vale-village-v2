@@ -46,9 +46,22 @@ function getElementColor(element?: string): string {
   }
 }
 
-function BattleAbilityEffect({ event, fx }: { event: BattleEvent; fx: string }) {
+// Basic attack ability IDs - these use unit attack animations, not psynergy GIFs
+const BASIC_ATTACK_IDS = ['strike', 'heavy-strike', 'guard-break', 'precise-jab'];
+
+function isBasicAttackAbility(abilityId: string): boolean {
+  return BASIC_ATTACK_IDS.includes(abilityId);
+}
+
+// Narrowed type for ability events
+type AbilityEvent = Extract<BattleEvent, { type: 'ability' }>;
+
+function BattleAbilityEffect({ event, fx }: { event: AbilityEvent; fx: string }) {
   const ability = ABILITIES[event.abilityId];
   const elementColor = getElementColor(ability?.element);
+  
+  // Don't show psynergy effects for basic attacks - those use unit attack animations
+  if (isBasicAttackAbility(event.abilityId)) return null;
   
   return (
     <div
@@ -88,18 +101,17 @@ function BattleAbilityEffect({ event, fx }: { event: BattleEvent; fx: string }) 
            pointerEvents: 'none',
          }}
        />
-       {/* GIF with burst animation */}
+       {/* GIF with burst animation - no background, blend mode removes black */}
        <img
          src={fx}
          width={120}
          height={120}
          style={{
-           borderRadius: 10,
            imageRendering: 'pixelated',
-           objectFit: 'cover',
+           objectFit: 'contain',
            mixBlendMode: 'screen',
            animation: 'psynergyBurst 0.6s ease-out forwards',
-           color: elementColor,
+           filter: `drop-shadow(0 0 8px ${elementColor})`,
          }}
          alt=""
        />
@@ -225,9 +237,9 @@ function getEventGif(event: BattleEvent | undefined): string | null {
 
   const abilityId = event.abilityId;
 
-  // Basic attacks always use sonic slash
-  if (['strike', 'heavy-strike', 'guard-break', 'precise-jab'].includes(abilityId)) {
-    return FX_LIBRARY.sonicSlash;
+  // Basic attacks don't use psynergy GIFs - they use unit attack sprites
+  if (isBasicAttackAbility(abilityId)) {
+    return null;
   }
 
   // Direct mapping (most abilities)
@@ -250,7 +262,7 @@ function getEventGif(event: BattleEvent | undefined): string | null {
     }
   }
 
-  // Final fallback
+  // Final fallback for psynergy
   return FX_LIBRARY.sonicSlash;
 }
 
@@ -809,6 +821,19 @@ export function QueueBattleView() {
     currentEvent?.type === 'hit' || currentEvent?.type === 'heal' || currentEvent?.type === 'status-applied' || currentEvent?.type === 'status-expired' ? undefined :
     currentEvent?.type === 'ko' ? currentEvent.unitId :
     undefined;
+  
+  // Determine if a unit should show attack animation (for basic attacks)
+  const isBasicAttackEvent = currentEvent?.type === 'ability' && isBasicAttackAbility(currentEvent.abilityId);
+  const attackingUnitId = isBasicAttackEvent ? currentActorId : null;
+  
+  // Determine targets being hit (for hit animation)
+  const hitTargetIds = new Set<string>();
+  if (currentEvent?.type === 'hit') {
+    hitTargetIds.add(currentEvent.targetId);
+  } else if (isBasicAttackEvent && currentEvent?.type === 'ability') {
+    currentEvent.targets.forEach(t => hitTargetIds.add(t));
+  }
+  
   const highlightedTargets = new Set<string>();
   if (currentEvent) {
     if (currentEvent.type === 'ability') {
@@ -1566,6 +1591,10 @@ export function QueueBattleView() {
               const isActor = currentActorId === unit.id;
               const isTarget = highlightedTargets.has(unit.id);
               const isShaking = shakingUnits.has(unit.id);
+              const isAttacking = attackingUnitId === unit.id;
+              const isBeingHit = hitTargetIds.has(unit.id);
+              // Determine sprite state: attack > hit > idle
+              const spriteState: 'idle' | 'attack' | 'hit' = isAttacking ? 'attack' : isBeingHit ? 'hit' : 'idle';
               return (
                 <div
                   key={unit.id}
@@ -1600,7 +1629,7 @@ export function QueueBattleView() {
                       animation: isShaking ? 'unitDamageShake 240ms ease-in-out' : 'none',
                     }}
                   >
-                    <BattleUnitSprite unitId={unit.id} state="idle" size="large" />
+                    <BattleUnitSprite unitId={unit.id} state={spriteState} size="large" />
                   </div>
                   {isTarget && (
                     <div
@@ -1992,7 +2021,6 @@ export function QueueBattleView() {
           {(() => {
             const evt = events[0];
             if (!evt || evt.type !== 'ability') return null;
-            const fx = getEventGif(evt);
             const abilityName = ABILITIES[evt.abilityId]?.name ?? evt.abilityId;
             const ability = ABILITIES[evt.abilityId];
 
