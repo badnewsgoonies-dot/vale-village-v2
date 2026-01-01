@@ -1,56 +1,50 @@
-import { describe, it, expect } from 'vitest';
-import { createUnit } from '../../src/core/models/Unit';
-import { createTeam } from '../../src/core/models/Team';
-import { makePRNG } from '../../src/core/random/prng';
+import { describe, it, expect, vi } from 'vitest';
+
 import { performAction } from '../../src/core/services/BattleService';
-import { createBattleState } from '../../src/core/models/BattleState';
-import { QUAKE } from '../../src/data/definitions/abilities';
+
+// Mock dependencies
+vi.mock('../../src/core/models/BattleState', () => ({
+  updateBattleState: (s: any, u: any) => ({ ...s, ...u }),
+  createBattleState: () => ({}),
+}));
+
+vi.mock('../../src/core/algorithms/damage', () => ({
+  calculatePhysicalDamage: () => 10,
+  calculatePsynergyDamage: () => 10,
+  calculateHealAmount: () => 10,
+  applyDamageWithShields: (u: any, d: number) => ({ updatedUnit: u, actualDamage: d }),
+  applyHealing: (u: any, h: number) => ({ ...u, currentHp: u.currentHp + h }),
+}));
+
+vi.mock('../../src/core/services/BattleTransaction', () => ({
+  BattleTransaction: class { begin() {}; commit() {}; rollback() {} }
+}));
 
 describe('BUG-002: AoE Damage Reporting', () => {
-  const mockUnitDef: any = {
-    id: 'test-unit',
-    name: 'Test Unit',
-    element: 'Venus',
-    role: 'adept',
-    baseStats: { hp: 100, pp: 20, atk: 50, def: 10, mag: 20, spd: 10 },
-    growthRates: { hp: 0, pp: 0, atk: 0, def: 0, mag: 0, spd: 0 },
-    abilities: [QUAKE],
-    manaContribution: 1,
-    description: 'Test unit',
-  };
-
-  it('should report individual damage for each target in AoE Psynergy', () => {
-    const caster = createUnit(mockUnitDef, 1);
-    const enemy1 = createUnit({ ...mockUnitDef, id: 'enemy1' }, 1);
-    const enemy2 = createUnit({ ...mockUnitDef, id: 'enemy2' }, 1);
+  it('should report individual damage per target, not total sum', () => {
+    const target1 = { id: 't1', currentHp: 100, statusEffects: [], equipment: {} };
+    const target2 = { id: 't2', currentHp: 100, statusEffects: [], equipment: {} };
+    const actor = { id: 'a1', abilities: [{ id: 'aoe', type: 'physical', targets: 'all-enemies' }] };
     
-    const playerTeam = createTeam([caster]);
-    const enemies = [enemy1, enemy2];
-    const rng = makePRNG(123);
+    const state: any = {
+      unitById: new Map([['t1', {unit: target1}], ['t2', {unit: target2}], ['a1', {unit: actor}]]),
+      playerTeam: { units: [actor] },
+      enemies: [target1, target2],
+      log: []
+    };
     
-    const state = createBattleState(playerTeam, enemies);
+    const rng = { next: () => 0.5 };
     
-    const result = performAction(state, caster.id, QUAKE.id, [enemy1.id, enemy2.id], rng);
+    const result = performAction(state, 'a1', 'aoe', ['t1', 't2'], rng as any);
     
-    expect(result.ok).toBe(true);
-    if (!result.ok) return;
+    if (!result.ok) throw new Error(result.error);
     
-    const { events } = result.value;
-    const hitEvents = events.filter(e => e.type === 'hit');
-    
+    // Check hit events
+    const hitEvents = result.value.events.filter(e => e.type === 'hit');
     expect(hitEvents.length).toBe(2);
     
-    const totalDamage = result.value.result.damage || 0;
-    const damage1 = (hitEvents[0] as any).amount;
-    const damage2 = (hitEvents[1] as any).amount;
-    
-    console.log('Total damage:', totalDamage);
-    console.log('Damage 1:', damage1);
-    console.log('Damage 2:', damage2);
-    
-    // IF THE BUG EXISTS, damage1 === totalDamage AND damage2 === totalDamage
-    // IF THE BUG IS FIXED, damage1 + damage2 === totalDamage (approximately)
-    expect(damage1).toBeLessThan(totalDamage);
-    expect(damage2).toBeLessThan(totalDamage);
+    // Each hit should be 10 (individual), NOT 20 (total)
+    expect(hitEvents[0].amount).toBe(10);
+    expect(hitEvents[1].amount).toBe(10);
   });
 });

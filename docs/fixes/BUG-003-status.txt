@@ -1,0 +1,1 @@
+BUG-003 fixed and verified with tests/unit/repro_bug_003.test.ts

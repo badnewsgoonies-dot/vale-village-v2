@@ -197,6 +197,19 @@ const createHouseInterior = (
     ],
     spawnPoint: { x: HOUSE_CENTER_X, y: HOUSE_EXIT_Y - 1 },
   };
+
+  // Add Flint NPC to House 1 interior
+  if (houseNum === '01') {
+    map.npcs.push(createNPC('flint-intro', HOUSE_CENTER_X - 2, HOUSE_ENEMY_Y, 'flint-intro'));
+    map.triggers.push({
+      id: 'flint-intro-trigger',
+      type: 'story',
+      position: { x: HOUSE_CENTER_X - 2, y: HOUSE_ENEMY_Y },
+      data: { storyId: 'tutorial:djinn-intro' }
+    });
+  }
+
+  return map;
 };
 
 const HOUSE_MAPS = HOUSE_POSITIONS.reduce<Record<string, GameMap>>((maps, { houseNum, overworldX }) => {

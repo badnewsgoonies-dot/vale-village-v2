@@ -102,6 +102,7 @@ export const DJINN_INTRO_DIALOGUE: DialogueTree = {
         // Use story flag for tutorial completion; Djinn is already present from the starting team setup
         grantDjinn: 'flint',
         first_djinn_intro_completed: true,
+        removeNPC: 'flint-intro',
       },
     },
   ],
