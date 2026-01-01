@@ -27,6 +27,7 @@ import { getEnemyBattleSprite, getEnemyBattleSpriteWithOverride } from '../sprit
 import { SimpleSprite } from '../sprites/SimpleSprite';
 import { BattleUnitSprite } from './BattleUnitSprite';
 import { ABILITIES } from '../../data/definitions/abilities';
+import { DJINN } from '../../data/definitions/djinn';
 // Direct ability→GIF mapping in ABILITY_FX_MAP below (only for existing GIFs)
 import { DIALOGUES } from '../../data/definitions/dialogues';
 import { VS1_ENCOUNTER_ID, VS1_SCENE_PRE } from '../../story/vs1Constants';
@@ -254,11 +255,13 @@ function getEventGif(event: BattleEvent | undefined): string | null {
 }
 
 
-const djinnSprites = [
-  { id: 'venus', name: 'Flint', path: '/sprites/battle/djinn/Venus_Djinn_Front.gif' },
-  { id: 'mars', name: 'Granite', path: '/sprites/battle/djinn/Mars_Djinn_Front.gif' },
-  { id: 'mercury', name: 'Echo', path: '/sprites/battle/djinn/Mercury_Djinn_Front.gif' },
-];
+// Element to sprite path mapping for Djinn
+const DJINN_SPRITE_BY_ELEMENT: Record<string, string> = {
+  Venus: '/sprites/battle/djinn/Venus_Djinn_Front.gif',
+  Mars: '/sprites/battle/djinn/Mars_Djinn_Front.gif',
+  Mercury: '/sprites/battle/djinn/Mercury_Djinn_Front.gif',
+  Jupiter: '/sprites/battle/djinn/Jupiter_Djinn_Front.gif',
+};
 
 // --- CSS CONSTANTS ---
 // Unused - commented out to fix TypeScript warnings
@@ -1653,36 +1656,46 @@ export function QueueBattleView() {
             })}
           </div>
 
-          {/* Djinn companions behind party */}
-          <div
-            style={{
-              position: 'absolute',
-              right: '6%',
-              bottom: '34%',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 4,
-              zIndex: 8,
-            }}
-          >
-            {djinnSprites.map((djinn, idx) => (
-              <div
-                key={djinn.id}
-                style={{
-                  position: 'relative',
-                left: idx % 2 === 0 ? 0 : 6,
+          {/* Djinn companions behind party - dynamic based on equipped */}
+          {battle.playerTeam.equippedDjinn.length > 0 && (
+            <div
+              onClick={() => setMenuMode('summon')}
+              title="Open Summon Menu"
+              style={{
+                cursor: 'pointer',
+                position: 'absolute',
+                right: '6%',
+                bottom: '34%',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 4,
+                zIndex: 8,
               }}
             >
-              <img
-                src={djinn.path}
-                alt={djinn.name}
-                width={32}
-                height={32}
-                style={{ imageRendering: 'pixelated', transform: 'scale(2.5)' }}
-              />
+              {battle.playerTeam.equippedDjinn.map((djinnId, idx) => {
+                const djinn = DJINN[djinnId];
+                if (!djinn) return null;
+                const spritePath = DJINN_SPRITE_BY_ELEMENT[djinn.element] || '/sprites/battle/djinn/Venus_Djinn_Front.gif';
+                return (
+                  <div
+                    key={djinnId}
+                    style={{
+                      position: 'relative',
+                      left: idx % 2 === 0 ? 0 : 6,
+                    }}
+                  >
+                    <img
+                      src={spritePath}
+                      alt={djinn.name}
+                      width={32}
+                      height={32}
+                      style={{ imageRendering: 'pixelated', transform: 'scale(2.5)' }}
+                    />
+                  </div>
+                );
+              })}
             </div>
-          ))}
-        </div>
+          )}
         </div>
 
         {validTargets.length > 0 && (
@@ -1765,6 +1778,39 @@ export function QueueBattleView() {
           pendingThisRound={pendingManaThisRound}
           pendingNextRound={pendingManaNextRound}
         />
+        {/* Quick Attack Button - next to portraits */}
+        <button
+          onClick={handleAutoAttack}
+          disabled={isExecuting || uiPhase !== 'planning' || !currentUnit || isUnitKO(currentUnit)}
+          data-testid="battle-quick-attack"
+          title="Quick Attack (Q)"
+          style={{
+            width: 56,
+            height: 56,
+            padding: 0,
+            background: isExecuting ? 'rgba(0,0,0,0.5)' : 'linear-gradient(180deg, #3a3a4a 0%, #1a1a2e 100%)',
+            border: '2px solid rgba(255, 213, 74, 0.7)',
+            borderRadius: 8,
+            cursor: isExecuting || uiPhase !== 'planning' ? 'not-allowed' : 'pointer',
+            opacity: isExecuting ? 0.5 : 1,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 2,
+            boxShadow: '0 2px 8px rgba(0,0,0,0.5)',
+            transition: 'all 0.15s ease',
+          }}
+        >
+          <img
+            src="/sprites/icons/buttons/Attack.gif"
+            alt="Attack"
+            width={28}
+            height={28}
+            style={{ imageRendering: 'pixelated' }}
+          />
+          <span style={{ color: '#ffd87f', fontSize: '0.6rem', fontWeight: 700 }}>ATK</span>
+        </button>
         <BattlePortraitRow
           units={battle.playerTeam.units}
           activeIndex={activePortraitIndex}
