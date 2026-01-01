@@ -7,8 +7,6 @@ import { useEffect, useState, useMemo, useRef, useCallback } from 'preact/hooks'
 import { ToolboxHelpers } from './debug/ToolboxHelpers';
 import { useStore } from '../state/store';
 import { useGameStore } from '../../store/gameStore';
-import { renderEventText } from '../utils/text';
-import { BattleLog } from './BattleLog';
 import { PostBattleCutscene } from './PostBattleCutscene';
 import { VictoryOverlay } from './VictoryOverlay';
 import { DefeatOverlay } from './DefeatOverlay';
@@ -53,219 +51,15 @@ function isBasicAttackAbility(abilityId: string): boolean {
   return BASIC_ATTACK_IDS.includes(abilityId);
 }
 
-// Narrowed type for ability events
-type AbilityEvent = Extract<BattleEvent, { type: 'ability' }>;
-
-function BattleAbilityEffect({ event, fx }: { event: AbilityEvent; fx: string }) {
-  const ability = ABILITIES[event.abilityId];
-  const elementColor = getElementColor(ability?.element);
-  
-  // Don't show psynergy effects for basic attacks - those use unit attack animations
-  if (isBasicAttackAbility(event.abilityId)) return null;
-  
-  return (
-    <div
-      style={{
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        zIndex: 20,
-        pointerEvents: 'none',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-       {/* Expanding ring effect */}
-       <div
-         style={{
-           position: 'absolute',
-           width: 120,
-           height: 120,
-           borderRadius: '50%',
-           border: `3px solid ${elementColor}`,
-           animation: 'psynergyRing 0.9s ease-out infinite',
-           pointerEvents: 'none',
-         }}
-       />
-       {/* Secondary ring with delay */}
-       <div
-         style={{
-           position: 'absolute',
-           width: 120,
-           height: 120,
-           borderRadius: '50%',
-           border: `2px solid ${elementColor}`,
-           animation: 'psynergyRing 0.9s ease-out 0.3s infinite',
-           pointerEvents: 'none',
-         }}
-       />
-       {/* GIF with burst animation - no background, blend mode removes black */}
-       <img
-         src={fx}
-         width={120}
-         height={120}
-         style={{
-           imageRendering: 'pixelated',
-           objectFit: 'contain',
-           mixBlendMode: 'screen',
-           animation: 'psynergyBurst 0.6s ease-out forwards',
-           filter: `drop-shadow(0 0 8px ${elementColor})`,
-         }}
-         alt=""
-       />
-    </div>
-  );
-}
-
 // Z-Index layering constants to prevent overlay conflicts
 const Z_INDEX = {
   BACKGROUND: 0,
   SPRITES: 10,
   HUD: 40,
-  BATTLE_LOG: 45,
   BOTTOM_BAR: 50,
   MODE_LABEL: 55,
   TARGET_MODAL: 60,
-  RESOLVING_CARD: 80,
-  FX_CARD: 90,
 } as const;
-
-const FX_LIBRARY = {
-  grandGaia: '/sprites/psynergy/Grand_Gaia.gif',
-  pyroclasm: '/sprites/psynergy/Pyroclasm.gif',
-  sparkPlasma: '/sprites/psynergy/Spark_Plasma.gif',
-  deluge: '/sprites/psynergy/Deluge.gif',
-  blueBolt: '/sprites/psynergy/Blue_Bolt.gif',
-  heatWave: '/sprites/psynergy/Heat_Wave.gif',
-  tempest: '/sprites/psynergy/Tempest.gif',
-  glacier: '/sprites/psynergy/Glacier.gif',
-  freezePrism: '/sprites/psynergy/Freeze_Prism.gif',
-  inferno: '/sprites/psynergy/Inferno.gif',
-  supernova: '/sprites/psynergy/Supernova.gif',
-  dragonFire: '/sprites/psynergy/Dragon_Fire.gif',
-  fieryBlast: '/sprites/psynergy/Fiery_Blast.gif',
-  iceMissile: '/sprites/psynergy/Ice_Missile.gif',
-  nettle: '/sprites/psynergy/Nettle.gif',
-  destructRay: '/sprites/psynergy/Destruct_Ray.gif',
-  frothSpiral: '/sprites/psynergy/Froth_Spiral.gif',
-  fume: '/sprites/psynergy/Fume.gif',
-  sonicSlash: '/sprites/psynergy/Sonic_Slash.gif',
-} as const;
-const FX_FALLBACK = FX_LIBRARY.sonicSlash;
-
-// Direct ability ID → GIF mapping (only for GIFs we actually have)
-const ABILITY_FX_MAP: Record<string, string> = {
-  // === BASIC/PHYSICAL ATTACKS ===
-  'strike': FX_LIBRARY.sonicSlash,
-  'heavy-strike': FX_LIBRARY.sonicSlash,
-  'guard-break': FX_LIBRARY.sonicSlash,
-  'precise-jab': FX_LIBRARY.sonicSlash,
-  'wooden-strike': FX_LIBRARY.sonicSlash,
-  'bronze-slash': FX_LIBRARY.sonicSlash,
-  'iron-thrust': FX_LIBRARY.sonicSlash,
-  'iron-bulwark': FX_LIBRARY.sonicSlash,
-  'arcane-bolt': FX_LIBRARY.blueBolt,
-  'steel-focus': FX_LIBRARY.sonicSlash,
-  'mythril-slice': FX_LIBRARY.sonicSlash,
-  'legendary-strike': FX_LIBRARY.supernova,
-
-  // === FIRE/MARS ===
-  'fireball': FX_LIBRARY.heatWave,
-  'fire-burst': FX_LIBRARY.heatWave,
-  'flare': FX_LIBRARY.heatWave,
-  'burn-touch': FX_LIBRARY.heatWave,
-  'inferno-slash': FX_LIBRARY.inferno,
-  'supernova': FX_LIBRARY.supernova,
-  'pyroclasm': FX_LIBRARY.pyroclasm,
-  'dragon-breath': FX_LIBRARY.dragonFire,
-  'flame-burst-damage': FX_LIBRARY.fieryBlast,
-  'blazing-fury': FX_LIBRARY.fieryBlast,
-  'meteor-strike': FX_LIBRARY.pyroclasm,
-  'volcano': FX_LIBRARY.pyroclasm,
-  'magma-ball': FX_LIBRARY.inferno,
-
-  // === ICE/MERCURY ===
-  'ice-shard': FX_LIBRARY.glacier,
-  'freeze-blast': FX_LIBRARY.freezePrism,
-  'blizzard': FX_LIBRARY.freezePrism,
-  'ice-lance-damage': FX_LIBRARY.iceMissile,
-  'heal': FX_LIBRARY.deluge,
-  'party-heal': FX_LIBRARY.deluge,
-  'cure': FX_LIBRARY.deluge,
-  'frost': FX_LIBRARY.glacier,
-  'tundra': FX_LIBRARY.glacier,
-  'diamond-dust': FX_LIBRARY.freezePrism,
-
-  // === LIGHTNING/JUPITER ===
-  'chain-lightning': FX_LIBRARY.sparkPlasma,
-  'paralyze-shock': FX_LIBRARY.sparkPlasma,
-  'tempest': FX_LIBRARY.tempest,
-  'gust': FX_LIBRARY.tempest,
-  'plasma-shot': FX_LIBRARY.blueBolt,
-  'thunderbolt': FX_LIBRARY.blueBolt,
-  'storm': FX_LIBRARY.tempest,
-  'tornado': FX_LIBRARY.tempest,
-
-  // === EARTH/VENUS ===
-  'quake': FX_LIBRARY.grandGaia,
-  'earthquake': FX_LIBRARY.grandGaia,
-  'earth-spike': FX_LIBRARY.grandGaia,
-  'poison-strike': FX_LIBRARY.fume,
-  'gaia': FX_LIBRARY.grandGaia,
-  'spire': FX_LIBRARY.grandGaia,
-  'growth': FX_LIBRARY.grandGaia,
-
-  // === STATUS/BUFF ===
-  'boost-atk': FX_LIBRARY.heatWave,
-  'boost-def': FX_LIBRARY.grandGaia,
-  'weaken-def': FX_LIBRARY.fume,
-  'blind': FX_LIBRARY.fume,
-  'guard': FX_LIBRARY.grandGaia,
-  'revive': FX_LIBRARY.deluge,
-  'resurrect': FX_LIBRARY.deluge,
-};
-
-/**
- * SIMPLIFIED FX SYSTEM
- * Single source of truth for event -> GIF mapping
- * No complex fallback chains - just simple, predictable logic
- */
-function getEventGif(event: BattleEvent | undefined): string | null {
-  if (!event || event.type !== 'ability') return null;  // Only abilities show GIFs
-
-  const abilityId = event.abilityId;
-
-  // Basic attacks don't use psynergy GIFs - they use unit attack sprites
-  if (isBasicAttackAbility(abilityId)) {
-    return null;
-  }
-
-  // Direct mapping (most abilities)
-  if (ABILITY_FX_MAP[abilityId]) {
-    return ABILITY_FX_MAP[abilityId];
-  }
-
-  // Element fallback for unmapped psynergy
-  const ability = ABILITIES[abilityId];
-  if (ability?.element) {
-    switch (ability.element) {
-      case 'Mars':
-        return FX_LIBRARY.heatWave;
-      case 'Mercury':
-        return FX_LIBRARY.deluge;
-      case 'Jupiter':
-        return FX_LIBRARY.sparkPlasma;
-      case 'Venus':
-        return FX_LIBRARY.grandGaia;
-    }
-  }
-
-  // Final fallback for psynergy
-  return FX_LIBRARY.sonicSlash;
-}
-
 
 // Element to sprite path mapping for Djinn
 const DJINN_SPRITE_BY_ELEMENT: Record<string, string> = {
@@ -534,25 +328,29 @@ export function QueueBattleView() {
   const [showVictoryOverlay, setShowVictoryOverlay] = useState(false);
   const [showDefeatOverlay, setShowDefeatOverlay] = useState(false);
   const [battleOutcome, setBattleOutcome] = useState<'victory' | 'defeat' | null>(null);
-  const loadedFxRef = useRef<Set<string>>(new Set());
   const [floatingNumbers, setFloatingNumbers] = useState<
     { id: number; unitId: string; amount: number; kind: 'damage' | 'heal'; isCrit?: boolean }[]
   >([]);
+  const [floatingActions, setFloatingActions] = useState<
+    { id: number; unitId: string; text: string; color: string }[]
+  >([]);
   const [showBattleTips, setShowBattleTips] = useState<boolean>(false);
   const floatingIdRef = useRef(0);
+  const floatingActionIdRef = useRef(0);
   const [shakingUnits, setShakingUnits] = useState<Set<string>>(new Set());
+  const [attackingUnits, setAttackingUnits] = useState<Set<string>>(new Set());
+  const [castingUnits, setCastingUnits] = useState<Set<string>>(new Set());
   const shakeTimeoutsRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
+  const attackTimeoutsRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
+  const castTimeoutsRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
   const currentAttackerRef = useRef<string | null>(null);
   const floatingTimeoutsRef = useRef<Map<number, ReturnType<typeof setTimeout>>>(new Map());
+  const floatingActionTimeoutsRef = useRef<Map<number, ReturnType<typeof setTimeout>>>(new Map());
   const lastProcessedEventRef = useRef<BattleEvent | undefined>(undefined);
   const lastCritProcessedEventRef = useRef<BattleEvent | undefined>(undefined);
+  const lastActionEventRef = useRef<BattleEvent | undefined>(undefined);
+  const lastAttackAnimEventRef = useRef<BattleEvent | undefined>(undefined);
   const pendingDequeueEventRef = useRef<string | undefined>(undefined);
-
-  // Reset per-battle transient state
-  useEffect(() => {
-    if (!battle) return;
-    loadedFxRef.current.clear();
-  }, [battle]);
 
   // Redirect to tower hub if battle is null during tower run
   useEffect(() => {
@@ -624,32 +422,48 @@ export function QueueBattleView() {
     showVictoryOverlay,
   ]);
 
-  const currentFx = useMemo(() => getEventGif(events[0]), [events]);
-
-  // Reset floating numbers and shake states when battle changes and clear timers on unmount
+  // Reset floating numbers, actions and animation states when battle changes and clear timers on unmount
   useEffect(() => {
     floatingTimeoutsRef.current.forEach((timeout) => clearTimeout(timeout));
     floatingTimeoutsRef.current.clear();
+    floatingActionTimeoutsRef.current.forEach((timeout) => clearTimeout(timeout));
+    floatingActionTimeoutsRef.current.clear();
     shakeTimeoutsRef.current.forEach((timeout) => clearTimeout(timeout));
     shakeTimeoutsRef.current.clear();
+    attackTimeoutsRef.current.forEach((timeout) => clearTimeout(timeout));
+    attackTimeoutsRef.current.clear();
+    castTimeoutsRef.current.forEach((timeout) => clearTimeout(timeout));
+    castTimeoutsRef.current.clear();
     setFloatingNumbers([]);
+    setFloatingActions([]);
     setShakingUnits(new Set());
+    setAttackingUnits(new Set());
+    setCastingUnits(new Set());
     lastProcessedEventRef.current = undefined;
     lastCritProcessedEventRef.current = undefined;
+    lastActionEventRef.current = undefined;
+    lastAttackAnimEventRef.current = undefined;
 
     return () => {
       floatingTimeoutsRef.current.forEach((timeout) => clearTimeout(timeout));
       floatingTimeoutsRef.current.clear();
+      floatingActionTimeoutsRef.current.forEach((timeout) => clearTimeout(timeout));
+      floatingActionTimeoutsRef.current.clear();
       shakeTimeoutsRef.current.forEach((timeout) => clearTimeout(timeout));
       shakeTimeoutsRef.current.clear();
+      attackTimeoutsRef.current.forEach((timeout) => clearTimeout(timeout));
+      attackTimeoutsRef.current.clear();
+      castTimeoutsRef.current.forEach((timeout) => clearTimeout(timeout));
+      castTimeoutsRef.current.clear();
     };
   }, [battle]);
 
   // Add separate effect for unmount cleanup
   useEffect(() => {
     return () => {
-      // Cleanup floating numbers on unmount
+      // Cleanup floating numbers and actions on unmount
       setFloatingNumbers([]);
+      setFloatingActions([]);
     };
   }, []);
 
@@ -708,7 +522,6 @@ export function QueueBattleView() {
   // Crit counter progression for basic attacks (during execution phase)
   // This ensures the counter only increments when the attack actually happens,
   // not during planning (prevents counter increment if unit is KO'd before their turn)
-  const BASIC_ATTACK_IDS = ['strike', 'heavy-strike', 'guard-break', 'precise-jab'];
   useEffect(() => {
     if (!battle || uiPhase !== 'executing') return;
     const evt = events[0];
@@ -734,6 +547,88 @@ export function QueueBattleView() {
     }
   }, [uiPhase, events, battle, critCounters, critThresholds, incrementCritCounter, resetCritCounter, triggerCritFlash]);
 
+  // Spawn floating action text for ability events (shows ability name near caster)
+  useEffect(() => {
+    if (!battle || uiPhase !== 'executing') return;
+    const evt = events[0];
+    if (!evt) return;
+    if (evt === lastActionEventRef.current) return;
+    lastActionEventRef.current = evt;
+
+    if (evt.type === 'ability') {
+      const ability = ABILITIES[evt.abilityId];
+      const abilityName = ability?.name ?? evt.abilityId;
+      const element = ability?.element;
+      const color = getElementColor(element);
+      
+      const id = floatingActionIdRef.current + 1;
+      floatingActionIdRef.current = id;
+      
+      setFloatingActions((prev) => [...prev, { id, unitId: evt.casterId, text: abilityName, color }]);
+      const timeoutId = setTimeout(() => {
+        setFloatingActions((prev) => prev.filter((a) => a.id !== id));
+        floatingActionTimeoutsRef.current.delete(id);
+      }, 1200);
+      floatingActionTimeoutsRef.current.set(id, timeoutId);
+    } else if (evt.type === 'ko') {
+      const id = floatingActionIdRef.current + 1;
+      floatingActionIdRef.current = id;
+      
+      setFloatingActions((prev) => [...prev, { id, unitId: evt.unitId, text: 'KO!', color: '#ff4444' }]);
+      const timeoutId = setTimeout(() => {
+        setFloatingActions((prev) => prev.filter((a) => a.id !== id));
+        floatingActionTimeoutsRef.current.delete(id);
+      }, 1500);
+      floatingActionTimeoutsRef.current.set(id, timeoutId);
+    }
+  }, [uiPhase, events, battle]);
+
+  // Trigger attack/cast animations when ability events fire
+  useEffect(() => {
+    if (!battle || uiPhase !== 'executing') return;
+    const evt = events[0];
+    if (!evt) return;
+    if (evt === lastAttackAnimEventRef.current) return;
+    lastAttackAnimEventRef.current = evt;
+
+    if (evt.type === 'ability') {
+      const casterId = evt.casterId;
+      const isBasicAttack = BASIC_ATTACK_IDS.includes(evt.abilityId);
+      
+      // Clear any existing animation timeout for this unit
+      const existingAttackTimeout = attackTimeoutsRef.current.get(casterId);
+      if (existingAttackTimeout) clearTimeout(existingAttackTimeout);
+      const existingCastTimeout = castTimeoutsRef.current.get(casterId);
+      if (existingCastTimeout) clearTimeout(existingCastTimeout);
+      
+      if (isBasicAttack) {
+        // Physical attack - lunge animation
+        setAttackingUnits((prev) => new Set([...prev, casterId]));
+        const timeout = setTimeout(() => {
+          setAttackingUnits((prev) => {
+            const next = new Set(prev);
+            next.delete(casterId);
+            return next;
+          });
+          attackTimeoutsRef.current.delete(casterId);
+        }, 400);
+        attackTimeoutsRef.current.set(casterId, timeout);
+      } else {
+        // Psynergy/ability - cast pulse animation
+        setCastingUnits((prev) => new Set([...prev, casterId]));
+        const timeout = setTimeout(() => {
+          setCastingUnits((prev) => {
+            const next = new Set(prev);
+            next.delete(casterId);
+            return next;
+          });
+          castTimeoutsRef.current.delete(casterId);
+        }, 500);
+        castTimeoutsRef.current.set(casterId, timeout);
+      }
+    }
+  }, [uiPhase, events, battle]);
+
   // 4. Event Queue Processing - with stale closure protection
   useEffect(() => {
     if (!battle || uiPhase !== 'executing' || events.length === 0) {
@@ -744,7 +639,7 @@ export function QueueBattleView() {
     const eventId = `${currentEvent.type}-${currentEvent.type === 'ability' ? currentEvent.casterId : currentEvent.type === 'turn-start' ? currentEvent.actorId : 'event'}-${Date.now()}`;
     pendingDequeueEventRef.current = eventId;
 
-    const baseDelay = getEventTiming(currentEvent?.type ?? 'unknown', loadedFxRef.current.has(currentFx ?? ''));
+    const baseDelay = getEventTiming(currentEvent?.type ?? 'unknown', false);
     const delay = applySpeed(baseDelay);
     const timer = setTimeout(() => {
       // Only dequeue if this timer is still the active one (prevents stale closure race)
@@ -760,7 +655,7 @@ export function QueueBattleView() {
         pendingDequeueEventRef.current = undefined;
       }
     };
-  }, [uiPhase, events, dequeue, currentFx, battle, applySpeed]);
+  }, [uiPhase, events, dequeue, battle, applySpeed]);
 
   // --- COMPUTED VALUES ---
 
@@ -1014,13 +909,17 @@ export function QueueBattleView() {
     // Reset selection for next
     setSelectedAbilityId(undefined);
 
-    // Auto-advance to next unit by SPEED
+    // Auto-advance to next unit by SPEED, skipping KO'd units and those with actions
     const order = getPlanningTurnOrder(battle);
     const currentOrderIdx = order.indexOf(activePortraitIndex);
-    if (currentOrderIdx !== -1 && currentOrderIdx < order.length - 1) {
-      const nextIndex = order[currentOrderIdx + 1];
-      if (nextIndex !== undefined) {
+    for (let i = currentOrderIdx + 1; i < order.length; i++) {
+      const nextIndex = order[i];
+      if (nextIndex === undefined) continue;
+      const nextUnit = battle.playerTeam.units[nextIndex];
+      // Skip KO'd units and units that already have an action queued
+      if (nextUnit && !isUnitKO(nextUnit) && battle.queuedActions[nextIndex] === null) {
         setActivePortrait(nextIndex);
+        break;
       }
     }
   };
@@ -1324,21 +1223,34 @@ export function QueueBattleView() {
               80% { transform: translateX(2px); }
               100% { transform: translateX(0); }
             }
-            @keyframes psynergyBurst {
-              0% { transform: scale(0.8); opacity: 0; box-shadow: 0 0 20px currentColor; }
-              30% { transform: scale(1.05); opacity: 1; box-shadow: 0 0 40px currentColor; }
-              70% { transform: scale(1.02); opacity: 0.9; box-shadow: 0 0 30px currentColor; }
-              100% { transform: scale(1); opacity: 0.8; box-shadow: 0 0 25px currentColor; }
-            }
-            @keyframes psynergyRing {
-              0% { transform: scale(0.6); opacity: 0.8; }
-              100% { transform: scale(1.8); opacity: 0; }
-            }
             @keyframes criticalFloat {
               0% { opacity: 1; transform: translate(-50%, 0) scale(1.5); filter: brightness(1.5); }
               15% { transform: translate(-50%, -4px) scale(1.8); filter: brightness(2); }
               40% { opacity: 1; transform: translate(-50%, -10px) scale(1.4); filter: brightness(1.3); }
               100% { opacity: 0; transform: translate(-50%, -32px) scale(1.2); filter: brightness(1); }
+            }
+            @keyframes floatAction {
+              0% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+              20% { opacity: 1; transform: translate(-50%, -8px) scale(1.1); }
+              100% { opacity: 0; transform: translate(-50%, -30px) scale(0.9); }
+            }
+            @keyframes attackLungeLeft {
+              0% { transform: translateX(0) scale(1); }
+              30% { transform: translateX(-25px) scale(1.15); }
+              60% { transform: translateX(-20px) scale(1.1); }
+              100% { transform: translateX(0) scale(1); }
+            }
+            @keyframes attackLungeRight {
+              0% { transform: translateX(0) scale(1); }
+              30% { transform: translateX(25px) scale(1.15); }
+              60% { transform: translateX(20px) scale(1.1); }
+              100% { transform: translateX(0) scale(1); }
+            }
+            @keyframes castPulse {
+              0% { transform: scale(1); filter: brightness(1); }
+              25% { transform: scale(1.1); filter: brightness(1.4) drop-shadow(0 0 10px rgba(255,216,127,0.8)); }
+              50% { transform: scale(1.05); filter: brightness(1.2) drop-shadow(0 0 6px rgba(255,216,127,0.5)); }
+              100% { transform: scale(1); filter: brightness(1); }
             }
           `}
         </style>
@@ -1424,6 +1336,8 @@ export function QueueBattleView() {
               const isResolvingTarget = highlightedTargets.has(enemy.id);
               const isActor = currentActorId === enemy.id;
               const isShaking = shakingUnits.has(enemy.id);
+              const isAttacking = attackingUnits.has(enemy.id);
+              const isCasting = castingUnits.has(enemy.id);
               // Don't filter out KO'd units if they have ANY pending events related to them
               // This includes ability casts, hits, heals, status changes, and KO animations
               const hasPendingEvent = events.some(evt => {
@@ -1444,6 +1358,17 @@ export function QueueBattleView() {
                 : getEnemyBattleSprite(enemy.id, 'idle');
               const nameBasedFallback = `/sprites/battle/enemies/${enemy.name.replace(/\s+/g, '')}.gif`;
               const spriteId = mappedSprite ?? nameBasedFallback;
+              
+              // Determine animation: attack lunge (right toward player), shake, or casting
+              let spriteAnimation = 'none';
+              if (isAttacking) {
+                spriteAnimation = 'attackLungeRight 400ms ease-out';
+              } else if (isCasting) {
+                spriteAnimation = 'castPulse 500ms ease-out';
+              } else if (isShaking) {
+                spriteAnimation = 'unitDamageShake 240ms ease-in-out';
+              }
+              
               return (
                 <div
                   key={enemy.id}
@@ -1480,7 +1405,7 @@ export function QueueBattleView() {
                       : isTargetCandidate
                         ? 'drop-shadow(0 0 8px rgba(255,216,127,0.7))'
                         : 'none',
-                      animation: isShaking ? 'unitDamageShake 240ms ease-in-out' : 'none',
+                      animation: spriteAnimation,
                     }}
                   >
                     <SimpleSprite
@@ -1526,6 +1451,29 @@ export function QueueBattleView() {
                         </div>
                       );
                     })}
+                  {/* Floating action text (ability names, KO) */}
+                  {floatingActions
+                    .filter((a) => a.unitId === enemy.id)
+                    .map((action, idx) => (
+                      <div
+                        key={action.id}
+                        style={{
+                          position: 'absolute',
+                          top: `calc(-20px - ${idx * 18}px)`,
+                          left: '50%',
+                          color: action.color,
+                          fontSize: '0.75rem',
+                          fontWeight: 700,
+                          textShadow: '0 0 6px rgba(0,0,0,0.9), 1px 1px 2px rgba(0,0,0,0.8)',
+                          animation: 'floatAction 1.1s ease-out forwards',
+                          pointerEvents: 'none',
+                          zIndex: 15,
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
+                        {action.text}
+                      </div>
+                    ))}
                   <div
                     style={{
                       marginTop: 4,
@@ -1555,9 +1503,6 @@ export function QueueBattleView() {
                     >
                       ⯈
                     </div>
-                  )}
-                  {isExecuting && events.length > 0 && events[0]?.type === 'ability' && events[0].targets.includes(enemy.id) && (
-                     <BattleAbilityEffect event={events[0]} fx={currentFx || FX_FALLBACK} />
                   )}
                 </div>
               );
@@ -1591,10 +1536,23 @@ export function QueueBattleView() {
               const isActor = currentActorId === unit.id;
               const isTarget = highlightedTargets.has(unit.id);
               const isShaking = shakingUnits.has(unit.id);
-              const isAttacking = attackingUnitId === unit.id;
+              const isAttacking = attackingUnits.has(unit.id);
+              const isCasting = castingUnits.has(unit.id);
+              const isAttackingBasic = attackingUnitId === unit.id;
               const isBeingHit = hitTargetIds.has(unit.id);
               // Determine sprite state: attack > hit > idle
-              const spriteState: 'idle' | 'attack' | 'hit' = isAttacking ? 'attack' : isBeingHit ? 'hit' : 'idle';
+              const spriteState: 'idle' | 'attack' | 'hit' = isAttackingBasic ? 'attack' : isBeingHit ? 'hit' : 'idle';
+              
+              // Determine animation: attack lunge (left toward enemy), shake, or casting
+              let spriteAnimation = 'none';
+              if (isAttacking) {
+                spriteAnimation = 'attackLungeLeft 400ms ease-out';
+              } else if (isCasting) {
+                spriteAnimation = 'castPulse 500ms ease-out';
+              } else if (isShaking) {
+                spriteAnimation = 'unitDamageShake 240ms ease-in-out';
+              }
+              
               return (
                 <div
                   key={unit.id}
@@ -1626,7 +1584,7 @@ export function QueueBattleView() {
                       transform: isActor ? 'scale(2.7)' : 'scale(2.5)',
                       zIndex: 1,
                       filter: isTarget ? 'drop-shadow(0 0 12px rgba(255,216,127,0.8))' : 'none',
-                      animation: isShaking ? 'unitDamageShake 240ms ease-in-out' : 'none',
+                      animation: spriteAnimation,
                     }}
                   >
                     <BattleUnitSprite unitId={unit.id} state={spriteState} size="large" />
@@ -1648,9 +1606,6 @@ export function QueueBattleView() {
                     >
                       ⯈
                     </div>
-                  )}
-                  {isExecuting && events.length > 0 && events[0]?.type === 'ability' && events[0].targets.includes(unit.id) && (
-                     <BattleAbilityEffect event={events[0]} fx={currentFx || FX_FALLBACK} />
                   )}
                   {floatingNumbers
                     .filter((n) => n.unitId === unit.id)
@@ -1680,6 +1635,29 @@ export function QueueBattleView() {
                         </div>
                       );
                     })}
+                  {/* Floating action text (ability names, KO) */}
+                  {floatingActions
+                    .filter((a) => a.unitId === unit.id)
+                    .map((action, idx) => (
+                      <div
+                        key={action.id}
+                        style={{
+                          position: 'absolute',
+                          top: `calc(-20px - ${idx * 18}px)`,
+                          left: '50%',
+                          color: action.color,
+                          fontSize: '0.75rem',
+                          fontWeight: 700,
+                          textShadow: '0 0 6px rgba(0,0,0,0.9), 1px 1px 2px rgba(0,0,0,0.8)',
+                          animation: 'floatAction 1.1s ease-out forwards',
+                          pointerEvents: 'none',
+                          zIndex: 15,
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
+                        {action.text}
+                      </div>
+                    ))}
                 </div>
               );
             })}
@@ -1760,26 +1738,6 @@ export function QueueBattleView() {
             >
               Cancel
             </button>
-          </div>
-        )}
-
-        {isExecuting && (
-          <div
-            style={{
-              position: 'absolute',
-              right: 16,
-              bottom: 16,
-              width: 340,
-              maxHeight: '45vh',
-              overflow: 'auto',
-              background: 'rgba(0,0,0,0.35)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              borderRadius: 8,
-              padding: 8,
-              zIndex: Z_INDEX.BATTLE_LOG,
-            }}
-          >
-            <BattleLog events={events} renderText={renderEventText} />
           </div>
         )}
       </div>
@@ -1971,85 +1929,6 @@ export function QueueBattleView() {
           )}
         </div>
       </div>
-
-      {/* Execution overlay to show current resolving event */}
-      {isExecuting && events.length > 0 && (
-        <div
-          style={{
-            position: 'absolute',
-            top: 16,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            background: 'rgba(0, 0, 0, 0.65)',
-            padding: '8px 14px',
-            borderRadius: 8,
-            border: '1px solid rgba(255, 215, 127, 0.4)',
-            color: '#f9e0a8',
-            fontWeight: 700,
-            boxShadow: '0 4px 12px rgba(0,0,0,0.45)',
-            zIndex: Z_INDEX.RESOLVING_CARD,
-            minWidth: 260,
-            textAlign: 'center',
-            transition: 'transform 0.2s ease, opacity 0.2s ease',
-          }}
-        >
-          Resolving: {events[0] ? renderEventText(events[0]) : 'Loading...'}
-        </div>
-      )}
-
-      {/* FX overlay for ability events only (hit/heal/status just show damage numbers) */}
-      {isExecuting && events.length > 0 && events[0]?.type === 'ability' && (
-        <div
-          style={{
-            position: 'absolute',
-            top: '12%',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            background: 'rgba(0,0,0,0.25)',
-            padding: '14px 18px',
-            borderRadius: 12,
-            border: '1px solid rgba(255, 215, 127, 0.45)',
-            boxShadow: '0 12px 28px rgba(0,0,0,0.55)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 14,
-            zIndex: Z_INDEX.FX_CARD,
-            minWidth: 300,
-            justifyContent: 'center',
-          }}
-        >
-          {(() => {
-            const evt = events[0];
-            if (!evt || evt.type !== 'ability') return null;
-            const abilityName = ABILITIES[evt.abilityId]?.name ?? evt.abilityId;
-            const ability = ABILITIES[evt.abilityId];
-
-
-            const elementColor = getElementColor(ability?.element);
-
-            // Find target names for display
-            const targetNames = evt.targets.map(targetId => {
-              const enemy = battle.enemies.find(e => e.id === targetId);
-              const ally = battle.playerTeam.units.find(u => u.id === targetId);
-              return enemy?.name || ally?.name || 'Unknown';
-            }).join(', ');
-
-            return (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 4, alignItems: 'center' }}>
-                <div style={{ fontWeight: 800, color: elementColor, fontSize: '1.2rem', textShadow: '0 0 8px rgba(0,0,0,0.5)' }}>{abilityName}</div>
-                {targetNames && (
-                  <div style={{ color: '#FFD87F', fontSize: '0.9rem', fontWeight: 600 }}>
-                    Target: {targetNames}
-                  </div>
-                )}
-                <div style={{ color: '#e0e0e0', fontSize: '1rem', marginTop: 4 }}>
-                  {renderEventText(evt)}
-                </div>
-              </div>
-            );
-          })()}
-        </div>
-      )}
       </div>
     </div>
   );
