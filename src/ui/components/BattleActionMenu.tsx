@@ -167,7 +167,7 @@ interface BattleActionMenuProps {
   selectedAbilityId: string | null;
   mode: ActionMenuMode;
   onModeChange: (mode: ActionMenuMode) => void;
-  onSelectAttack: () => void;
+  onSelectAttack: () => void;  // Currently unused - attack button moved to QueueBattleView
   onSelectAbility: (id: string | null, ability?: Ability) => void;
 }
 
@@ -381,7 +381,7 @@ export function BattleActionMenu({
   selectedAbilityId,
   mode,
   onModeChange,
-  onSelectAttack,
+  onSelectAttack: _onSelectAttack,  // Attack button moved to QueueBattleView
   onSelectAbility,
 }: BattleActionMenuProps) {
   const queueDjinnActivation = useStore((s) => s.queueDjinnActivation);
