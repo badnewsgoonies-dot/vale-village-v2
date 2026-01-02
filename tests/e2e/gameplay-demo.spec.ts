@@ -1,17 +1,25 @@
 import { test, expect, type Page } from '@playwright/test';
 
+// DEMO MODE: Slower, more visual-friendly timings for watching the game play
+const DEMO_MODE = process.env.DEMO_MODE === 'true';
+const DEMO_DELAY_MULTIPLIER = DEMO_MODE ? 3 : 1; // 3x slower in demo mode
 const DEFAULT_TIMEOUT = 10_000;
 const MAX_ROUNDS = 20;
 
+// Helper to add demo-friendly delays
+async function demoDelay(page: Page, ms: number) {
+  await page.waitForTimeout(ms * DEMO_DELAY_MULTIPLIER);
+}
+
 async function hold(page: Page, key: string, ms: number) {
   await page.keyboard.down(key);
-  await page.waitForTimeout(ms);
+  await demoDelay(page, ms);
   await page.keyboard.up(key);
 }
 
 async function tapSpace(page: Page) {
   await page.keyboard.down('Space');
-  await page.waitForTimeout(120);
+  await demoDelay(page, 120);
   await page.keyboard.up('Space');
 }
 
@@ -32,19 +40,19 @@ async function dismissDialogueIfPresent(page: Page) {
     const choice = page.locator('.dialogue-chat-choice').first();
     if (await choice.isVisible({ timeout: 200 }).catch(() => false)) {
       await choice.click();
-      await page.waitForTimeout(120);
+      await demoDelay(page, 300); // Longer delay in demo mode to read dialogue
       continue;
     }
 
     const nextButton = page.locator('.dialogue-chat-next');
     if (await nextButton.isVisible({ timeout: 200 }).catch(() => false)) {
       await nextButton.click();
-      await page.waitForTimeout(120);
+      await demoDelay(page, 300);
       continue;
     }
 
     await page.keyboard.press('Space');
-    await page.waitForTimeout(120);
+    await demoDelay(page, 300);
   }
 
   await expect(chatOverlay).not.toBeVisible({ timeout: 10_000 });
@@ -62,7 +70,7 @@ async function advancePostBattleCutscene(page: Page) {
     } else {
       await page.keyboard.press('Enter');
     }
-    await page.waitForTimeout(200);
+    await demoDelay(page, 500); // Longer delay to see cutscene
   }
 
   await expect(cutscene).not.toBeVisible({ timeout: 10_000 });
@@ -76,19 +84,19 @@ async function advanceVictoryOverlay(page: Page) {
   const continueButton = victoryOverlay.locator('.victory-continue-btn');
   if (await continueButton.isVisible({ timeout: 500 }).catch(() => false)) {
     await continueButton.click();
-    await page.waitForTimeout(300);
+    await demoDelay(page, 500);
     return true;
   }
 
   const genericContinue = victoryOverlay.locator('button').filter({ hasText: /continue/i }).first();
   if (await genericContinue.isVisible({ timeout: 500 }).catch(() => false)) {
     await genericContinue.click();
-    await page.waitForTimeout(300);
+    await demoDelay(page, 500);
     return true;
   }
 
   await page.keyboard.press('Enter');
-  await page.waitForTimeout(300);
+  await demoDelay(page, 500);
   return true;
 }
 
@@ -109,7 +117,7 @@ async function waitForBattleStep(page: Page) {
     const label = (await executeButton.innerText().catch(() => '')).trim();
     if (label && !/Executing/i.test(label)) return 'planning';
 
-    await page.waitForTimeout(250);
+    await demoDelay(page, 250);
   }
 
   throw new Error('Timed out waiting for battle state to advance.');
@@ -119,12 +127,14 @@ async function startTowerRun(page: Page) {
   const startRunButton = page.locator('button').filter({ hasText: /start tower run/i });
   if (await startRunButton.isVisible({ timeout: 2_000 }).catch(() => false)) {
     await startRunButton.click();
+    await demoDelay(page, 1000);
     return;
   }
 
   const primaryAction = page.locator('button.primary').first();
   if (await primaryAction.isVisible({ timeout: 2_000 }).catch(() => false)) {
     await primaryAction.click();
+    await demoDelay(page, 1000);
     return;
   }
 
@@ -137,17 +147,20 @@ async function beginBattleFromTower(page: Page) {
 
   if (await beginBattleButton.isVisible({ timeout: 2_000 }).catch(() => false)) {
     await beginBattleButton.click();
+    await demoDelay(page, 1000);
     return;
   }
 
   if (await skipRestButton.isVisible({ timeout: 2_000 }).catch(() => false)) {
     await skipRestButton.click();
+    await demoDelay(page, 1000);
     return;
   }
 
   const primaryAction = page.locator('button.primary').first();
   if (await primaryAction.isVisible({ timeout: 2_000 }).catch(() => false)) {
     await primaryAction.click();
+    await demoDelay(page, 1000);
     return;
   }
 
@@ -161,7 +174,7 @@ async function runBasicBattle(page: Page) {
   const tutorialSkip = page.locator('[data-testid="battle-tutorial"] button').filter({ hasText: /^Skip$/i });
   if (await tutorialSkip.isVisible({ timeout: 1_000 }).catch(() => false)) {
     await tutorialSkip.click();
-    await page.waitForTimeout(300);
+    await demoDelay(page, 500);
   }
 
   const rewardsScreen = page.locator('.rewards-screen');
@@ -199,73 +212,90 @@ async function runBasicBattle(page: Page) {
       continue;
     }
 
+    // Queue actions - slower in demo mode to see each action
     for (let i = 0; i < 8; i++) {
       const label = (await executeButton.innerText().catch(() => '')).trim();
       if (/^Execute Round$/i.test(label)) break;
       if (/Executing/i.test(label)) {
-        await page.waitForTimeout(250);
+        await demoDelay(page, 500); // Longer delay during execution
         continue;
       }
 
       await attackButton.click();
+      await demoDelay(page, 200); // Pause to see action selection
       await firstEnemy.click();
-      await page.waitForTimeout(120);
+      await demoDelay(page, 300); // Pause to see target selection
     }
 
     if (await rewardsScreen.isVisible({ timeout: 300 }).catch(() => false)) break;
 
     if (/^Execute Round$/i.test((await executeButton.innerText().catch(() => '')).trim())) {
       await executeButton.click();
+      await demoDelay(page, 1000); // Pause before execution
     }
 
     const step = await waitForBattleStep(page);
     if (step === 'cutscene') {
       await advancePostBattleCutscene(page);
     } else if (step === 'victory') {
-      await page.waitForTimeout(2_500);
+      await demoDelay(page, 3000); // Longer pause to see victory
     } else if (step === 'defeat') {
       throw new Error('Battle ended in defeat.');
     }
   }
 
   await expect(rewardsScreen).toBeVisible({ timeout: 30_000 });
+  await demoDelay(page, 2000); // Pause to see rewards
 }
 
-test('Gameplay journey (title -> tower run -> rewards)', async ({ page }) => {
-  test.setTimeout(180_000);
+test('Gameplay demo - watch the game play through automatically', async ({ page }) => {
+  test.setTimeout(300_000); // 5 minutes for demo mode
+
+  console.log('🎮 Starting gameplay demo...');
+  if (DEMO_MODE) {
+    console.log('📺 DEMO MODE: Running at 3x slower speed for better viewing');
+  }
 
   await page.goto('/');
   await expect(page.locator('.title-screen')).toBeVisible({ timeout: DEFAULT_TIMEOUT });
+  await demoDelay(page, 2000); // Pause on title screen
 
   await page.keyboard.press('Enter');
   await expect(page.locator('.main-menu')).toBeVisible({ timeout: DEFAULT_TIMEOUT });
+  await demoDelay(page, 1500); // Pause to see menu
 
   const battleTowerOption = page.locator('.main-menu-option').filter({ hasText: /battle tower/i });
   await expect(battleTowerOption).toBeVisible({ timeout: DEFAULT_TIMEOUT });
   await battleTowerOption.click();
+  await demoDelay(page, 1000);
 
   const towerHub = page.locator('.tower-hub');
   await expect(towerHub).toBeVisible({ timeout: 15_000 });
+  await demoDelay(page, 2000); // Pause to see tower hub
 
   await startTowerRun(page);
-  await page.waitForTimeout(1_000);
   await beginBattleFromTower(page);
 
   const teamSelect = page.locator('.prebattle-v2-overlay');
   const fallbackNoBattle = page.getByText('No battle pending');
   await expect(teamSelect.or(fallbackNoBattle)).toBeVisible({ timeout: 10_000 });
+  await demoDelay(page, 2000); // Pause to see team select
 
   if (await fallbackNoBattle.isVisible({ timeout: 500 }).catch(() => false)) {
     throw new Error('Battle did not start: prebattle overlay missing and "No battle pending" shown.');
   }
 
   await page.keyboard.press('Enter');
-  await page.waitForTimeout(2_000);
+  await demoDelay(page, 2000);
 
+  console.log('⚔️ Starting battle...');
   await runBasicBattle(page);
+  console.log('✅ Battle complete!');
 
   await page.keyboard.press('Enter');
   await expect(towerHub).toBeVisible({ timeout: 20_000 });
+  await demoDelay(page, 2000);
 
   await dismissDialogueIfPresent(page);
+  console.log('🎉 Demo complete!');
 });
