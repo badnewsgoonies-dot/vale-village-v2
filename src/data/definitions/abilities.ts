@@ -670,10 +670,6 @@ export const DRAGON_WARD: Ability = {
   targets: 'self',
   unlockLevel: 1,
   description: 'Channel dragon scales\' power. Grants elemental resistance.',
-  elementalResistance: {
-    element: 'Mars',
-    modifier: 0.3,
-  },
   duration: 4,
   aiHints: { priority: 2.5, target: 'random', opener: true },
 };
@@ -1370,7 +1366,6 @@ export const FLAME_WALL: Ability = {
   targets: 'self',
   unlockLevel: 8,
   description: 'Surround yourself with flames, granting fire resistance.',
-  elementalResistance: { element: 'Mars', modifier: 0.3 },
   duration: 4,
   aiHints: { priority: 2.0, target: 'random', opener: true },
 };
@@ -2074,7 +2069,6 @@ export const EARTHEN_ARMOR: Ability = {
   unlockLevel: 12,
   description: 'Cover yourself in earthen plates.',
   damageReductionPercent: 0.35,
-  elementalResistance: { element: 'Venus', modifier: 0.3 },
   duration: 4,
   aiHints: { priority: 2.5, target: 'random', opener: true },
 };
@@ -2384,7 +2378,6 @@ export const LIGHTNING_SANCTUARY: Ability = {
   unlockLevel: 16,
   description: 'Electric field protects party.',
   grantImmunity: { all: false, types: ['paralyze', 'stun'], duration: 3 },
-  elementalResistance: { element: 'Jupiter', modifier: 0.4 },
   duration: 4,
   aiHints: { priority: 2.8, target: 'random', opener: true },
 };

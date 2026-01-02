@@ -86,12 +86,6 @@ export const AbilitySchema = z.object({
   // Phase 2: Damage reduction granting
   damageReductionPercent: z.number().min(0).max(1).optional(), // % damage reduction granted to target(s)
 
-  // Phase 2: Elemental resistance granting
-  elementalResistance: z.object({
-    element: z.enum(['Venus', 'Mars', 'Mercury', 'Jupiter']),
-    modifier: z.number(), // Positive = resistance, negative = weakness
-  }).optional(),
-
   // Phase 2: Immunity granting
   grantImmunity: z.object({
     all: z.boolean(), // If true, immune to all negative statuses

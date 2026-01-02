@@ -24,7 +24,7 @@ describe('BUG-002: AoE Damage Reporting', () => {
   it('should report individual damage per target, not total sum', () => {
     const target1 = { id: 't1', currentHp: 100, statusEffects: [], equipment: {} };
     const target2 = { id: 't2', currentHp: 100, statusEffects: [], equipment: {} };
-    const actor = { id: 'a1', abilities: [{ id: 'aoe', type: 'physical', targets: 'all-enemies' }] };
+    const actor = { id: 'a1', abilities: [{ id: 'aoe', type: 'physical', targets: 'all-enemies' }], statusEffects: [] };
     
     const state: any = {
       unitById: new Map([['t1', {unit: target1}], ['t2', {unit: target2}], ['a1', {unit: actor}]]),

@@ -53,7 +53,6 @@ export const EquipmentSchema = z.object({
   allowedElements: z.array(ElementSchema).min(1).readonly(), // CHANGED: Make readonly for compatibility with Equipment type
   unlocksAbility: z.string().optional(),
   equipmentUnlocksPermanent: z.boolean().optional(),
-  elementalResist: z.number().min(0).max(1).optional(), // 0-1 range (0% to 100%)
   alwaysFirstTurn: z.boolean().optional(),
   availableIn: ContentAvailabilitySchema.optional().readonly(),
 });
