@@ -218,7 +218,7 @@ test('Gameplay tour (screens + overworld)', async ({ page }) => {
   }
 
   const executeButton = page.locator('[data-testid="battle-execute-round"]');
-  const attackButton = page.locator('[data-testid="battle-action-attack"]');
+  const attackButton = page.locator('[data-testid="battle-quick-attack"]');
   const firstEnemy = page.locator('[data-testid^="battle-enemy-"]').first();
 
   for (let round = 0; round < 20; round++) {
