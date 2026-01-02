@@ -1,12 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { createBattleState } from '../../../src/core/models/BattleState';
-import { createTeam } from '../../../src/core/models/Team';
-import { createUnit } from '../../../src/core/models/Unit';
-import { executeRound, queueAction } from '../../../src/core/services/QueueBattleService';
-import { makePRNG } from '../../../src/core/random/prng';
-import { UNIT_DEFINITIONS } from '../../../src/data/definitions/units';
-import { enemyToUnit } from '../../../src/core/utils/enemyToUnit';
-import { GARET_ENEMY } from '../../../src/data/definitions/enemies';
+import { createBattleState } from '../../../../src/core/models/BattleState';
+import { createTeam } from '../../../../src/core/models/Team';
+import { createUnit } from '../../../../src/core/models/Unit';
+import { executeRound, queueAction } from '../../../../src/core/services/QueueBattleService';
+import { makePRNG } from '../../../../src/core/random/prng';
+import { UNIT_DEFINITIONS } from '../../../../src/data/definitions/units';
+import { enemyToUnit } from '../../../../src/core/utils/enemyToUnit';
+import { GARET_ENEMY } from '../../../../src/data/definitions/enemies';
 
 describe('Mana Persistence', () => {
   const rng = makePRNG(12345);
@@ -18,27 +18,23 @@ describe('Mana Persistence', () => {
     const team = createTeam([playerUnit]);
     const initialState = createBattleState(team, [enemy], []);
     
-    // Ensure we have enough mana for the test (Adept usually has some)
-    // We'll manually set maxMana and remainingMana for precise testing
     initialState.maxMana = 10;
     initialState.remainingMana = 10;
 
-    // Queue actions totaling 4 mana (if we had a 4-mana ability)
-    // Since we want to test specifically the transition, we can just manually adjust remainingMana 
-    // to simulate mana being spent, then execute a round.
-    // Or better, actually queue something that costs mana.
+    // Queue a basic attack to allow the round to execute
+    const queued = queueAction(initialState, playerUnit.id, null, [enemy.id]);
+    expect(queued.ok).toBe(true);
     
-    // For simplicity in this unit test of the service, we can simulate the state after spending mana
-    initialState.remainingMana = 6;
-    
-    // Execute a round where no player actions generate mana (e.g. they just wait or use items)
-    // To keep it simple, we'll just execute a round with no actions queued.
-    const result = executeRound(initialState, rng);
+    // Simulate spending 4 mana (10 -> 6) before execution
+    const stateWithSpentMana = { ...queued.value, remainingMana: 6 };
+
+    const result = executeRound(stateWithSpentMana, rng);
     
     // After one round, it should transition back to planning phase
     expect(result.state.phase).toBe('planning');
     expect(result.state.roundNumber).toBe(2);
-    expect(result.state.remainingMana).toBe(6);
+    // Basic attack generates +1 mana, so 6 + 1 = 7
+    expect(result.state.remainingMana).toBe(7);
   });
 
   it('should preserve mana generated during execution (Test Case 2)', () => {

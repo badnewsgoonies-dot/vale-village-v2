@@ -79,7 +79,6 @@ export const GRANITE_EARTH_WALL = makeAbility({
   description: 'Raise an earthen wall, granting strong Venus resistance.',
   buffEffect: { def: 8 },
   duration: 3,
-  elementalResistance: { element: 'Venus', modifier: 0.4 },
 });
 
 export const GRANITE_TERRA_BREAK = makeAbility({
@@ -993,7 +992,6 @@ export const GRANITE_ROCK_SHIELD = makeAbility({
   description: 'Form a protective barrier of solid rock with Venus resistance.',
   buffEffect: { def: 5 },
   duration: 3,
-  elementalResistance: { element: 'Venus', modifier: 0.25 },
 });
 
 export const GRANITE_TERRA_HEAL = makeAbility({
@@ -1386,7 +1384,6 @@ export const FIZZ_AQUA_BARRIER = makeAbility({
   description: 'Create a protective barrier of flowing water that resists Mars psynergy.',
   buffEffect: { def: 6 },
   duration: 3,
-  elementalResistance: { element: 'Mars', modifier: 0.25 },
 });
 
 export const FIZZ_FROST_STORM = makeAbility({
@@ -1901,7 +1898,6 @@ export const STORM_TEMPEST_SHIELD = makeAbility({
   description: 'Shield with raging tempest while building resistance to Mercury psynergy.',
   buffEffect: { def: 10 },
   duration: 3,
-  elementalResistance: { element: 'Mercury', modifier: 0.3 },
 });
 
 export const STORM_COLD_HAIL = makeAbility({

@@ -260,6 +260,9 @@ function selectTargets(
 
         if (nonOverkill.length > 0) {
           // Length check guarantees [0] exists
+          if (ability.targets === 'all-enemies' || ability.targets === 'all-allies') {
+            return scored.map(s => s.target.id);
+          }
           return [nonOverkill[0]!.target.id];
         }
       }

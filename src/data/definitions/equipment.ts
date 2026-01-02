@@ -332,7 +332,6 @@ export const DRAGON_SCALES: Equipment = {
   cost: 10000,
   statBonus: { def: 62, hp: 110 },
   allowedElements: ['Venus'], // Adept, Sentinel - legendary heavy armor
-  elementalResist: 0.25,
   unlocksAbility: 'dragon-ward',
 };
 
@@ -344,7 +343,6 @@ export const VALKYRIE_MAIL: Equipment = {
   cost: 20000,
   statBonus: { def: 78, hp: 140 },
   allowedElements: ['Venus'], // Adept, Sentinel - artifact heavy armor
-  elementalResist: 0.3,
 };
 
 // ========================================
@@ -590,7 +588,6 @@ export const ELEMENTAL_STAR: Equipment = {
   cost: 4500,
   statBonus: { mag: 18, pp: 20 },
   allowedElements: ['Mercury', 'Jupiter'], // Mystic, Stormcaller - powerful mage accessory
-  elementalResist: 0.15,
   unlocksAbility: 'mythril-wisdom', // Reuse mythril-wisdom for mage accessory
 };
 
@@ -622,7 +619,6 @@ export const IRIS_ROBE: Equipment = {
   cost: 12000,
   statBonus: { def: 20, mag: 20 },
   allowedElements: ['Mercury', 'Jupiter'], // Mystic, Stormcaller - ultimate mage robe
-  elementalResist: 0.2,
 };
 
 export const COSMOS_SHIELD: Equipment = {
@@ -633,7 +629,6 @@ export const COSMOS_SHIELD: Equipment = {
   cost: 17000,
   statBonus: { def: 30, hp: 50 },
   allowedElements: ['Venus'], // Adept, Sentinel - ultimate tank accessory
-  elementalResist: 0.25,
   unlocksAbility: 'silver-shield', // Reuse silver-shield for artifact tier
 };
 
@@ -698,7 +693,6 @@ export const GAIA_GREATSHIELD: Equipment = {
   cost: 0,
   statBonus: { def: 45, hp: 80 },
   allowedElements: ['Venus'],
-  elementalResist: 0.3,
   availableIn: ['tower'],
 };
 
@@ -711,7 +705,6 @@ export const TEMPEST_ARMOR: Equipment = {
   cost: 0,
   statBonus: { def: 55, spd: 12, mag: 10 },
   allowedElements: ['Jupiter'],
-  elementalResist: 0.2,
   availableIn: ['tower'],
 };
 
@@ -723,7 +716,6 @@ export const GLACIER_MAIL: Equipment = {
   cost: 0,
   statBonus: { def: 58, hp: 75, mag: 8 },
   allowedElements: ['Mercury'],
-  elementalResist: 0.25,
   availableIn: ['tower'],
 };
 
@@ -735,7 +727,6 @@ export const INFERNO_PLATE: Equipment = {
   cost: 0,
   statBonus: { def: 52, atk: 15, hp: 50 },
   allowedElements: ['Mars'],
-  elementalResist: 0.2,
   availableIn: ['tower'],
 };
 
@@ -808,7 +799,6 @@ export const TOWER_CHAMPIONS_RING: Equipment = {
   cost: 0,
   statBonus: { atk: 20, def: 20, mag: 20, spd: 10 },
   allowedElements: ['Venus', 'Mars', 'Mercury', 'Jupiter'],
-  elementalResist: 0.15,
   availableIn: ['tower'],
 };
 
@@ -820,7 +810,6 @@ export const TOWER_MASTERS_MEDALLION: Equipment = {
   cost: 0,
   statBonus: { atk: 25, def: 25, mag: 25, spd: 15, hp: 100, pp: 50 },
   allowedElements: ['Venus', 'Mars', 'Mercury', 'Jupiter'],
-  elementalResist: 0.25,
   availableIn: ['tower'],
 };
 
@@ -897,7 +886,6 @@ export const EARTH_WARDEN_SHIELD: Equipment = {
   cost: 1900,
   statBonus: { def: 18, hp: 40 },
   allowedElements: ['Venus'],
-  elementalResist: 0.2,
   unlocksAbility: 'earth-wall',
 };
 
@@ -932,7 +920,6 @@ export const INFERNO_GAUNTLETS: Equipment = {
   cost: 4000,
   statBonus: { atk: 18, mag: 10, def: 6 },
   allowedElements: ['Mars'],
-  elementalResist: 0.15,
   unlocksAbility: 'inferno-fist',
 };
 
@@ -956,7 +943,6 @@ export const GLACIAL_ROBES: Equipment = {
   cost: 4800,
   statBonus: { def: 40, mag: 15, hp: 60 },
   allowedElements: ['Mercury'],
-  elementalResist: 0.2,
 };
 
 // Jupiter Element Gear
@@ -1006,7 +992,6 @@ export const SHADOWFLAME_STAFF: Equipment = {
   cost: 0,
   statBonus: { atk: 35, mag: 55, pp: 30 },
   allowedElements: ['Mars', 'Mercury'],
-  elementalResist: 0.2,
   unlocksAbility: 'shadowflame',
   availableIn: ['tower'],
 };
@@ -1019,7 +1004,6 @@ export const AETHERIC_MANTLE: Equipment = {
   cost: 0,
   statBonus: { def: 70, mag: 25, hp: 120, pp: 40 },
   allowedElements: ['Mercury', 'Jupiter'],
-  elementalResist: 0.3,
   availableIn: ['tower'],
 };
 

@@ -21,7 +21,6 @@ const statusIconMap: Record<string, string> = {
   stun: '/sprites/icons/misc/Exclamatory.gif',
   buff: '/sprites/icons/misc/Stat-Up.gif',
   debuff: '/sprites/icons/misc/Stat-Down.gif',
-  elementalResistance: '/sprites/icons/misc/Venus_Star.gif',
   damageReduction: '/sprites/icons/misc/Stat-Up.gif',
   shield: '/sprites/icons/misc/Stat-Up.gif',
   invulnerable: '/sprites/icons/misc/Stat-Up.gif',

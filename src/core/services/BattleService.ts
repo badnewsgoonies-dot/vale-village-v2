@@ -342,20 +342,6 @@ function applyPhase2Effects(
       };
     }
 
-    // 3. Elemental resistance granting
-    if (ability.elementalResistance) {
-      const elementalResistanceStatus: Extract<typeof target.statusEffects[number], { type: 'elementalResistance' }> = {
-        type: 'elementalResistance',
-        element: ability.elementalResistance.element,
-        modifier: ability.elementalResistance.modifier,
-        duration: ability.duration || 3,
-      };
-
-      modifiedTarget = {
-        ...modifiedTarget,
-        statusEffects: [...modifiedTarget.statusEffects, elementalResistanceStatus],
-      };
-    }
 
     // 4. Immunity granting
     if (ability.grantImmunity) {

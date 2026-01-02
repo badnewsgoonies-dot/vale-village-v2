@@ -158,10 +158,6 @@ export function isNegativeStatus(status: { type: string; [key: string]: any }): 
     return true;
   }
 
-  // Elemental weakness is also a negative status
-  if (status.type === 'elementalResistance' && typeof status.modifier === 'number' && status.modifier < 0) {
-    return true;
-  }
 
   return false;
 }
