@@ -17,7 +17,11 @@
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:journey": "playwright test tests/e2e/gameplay-journey.spec.ts",
-    "test:all": "pnpm test && pnpm test:e2e"
+    "test:e2e:demo": "DEMO_MODE=true playwright test --headed tests/e2e/gameplay-demo.spec.ts",
+    "test:e2e:demo:ui": "DEMO_MODE=true playwright test --ui tests/e2e/gameplay-demo.spec.ts",
+    "test:all": "pnpm test && pnpm test:e2e",
+    "test:e2e:tower": "playwright test --headed tests/e2e/gameplay-full-tower.spec.ts",
+    "test:e2e:tower:demo": "DEMO_MODE=true playwright test --headed tests/e2e/gameplay-full-tower.spec.ts"
   },
   "dependencies": {
     "immer": "^11.0.1",
