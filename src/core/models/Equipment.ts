@@ -33,7 +33,6 @@ export interface Equipment {
 
   // Special properties
   readonly unlocksAbility?: string;      // Legendary equipment unlocks abilities
-  readonly elementalResist?: number;     // e.g., 0.2 = 20% reduction
   readonly alwaysFirstTurn?: boolean;    // Hermes' Sandals property
 }
 

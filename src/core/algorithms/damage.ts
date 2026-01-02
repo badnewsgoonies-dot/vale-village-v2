@@ -46,15 +46,10 @@ export function getElementModifier(attackElement: Element, defenseElement: Eleme
 /**
  * Sum elemental resistance from all defensive equipment
  * (Armor, Helm, Boots, Accessory)
+ * @deprecated Removed as per request (Zero Resistance)
  */
 export function calculateTotalEquipmentElementalResistance(unit: Unit): number {
-  const { weapon, armor, helm, boots, accessory } = unit.equipment;
-  return (
-    (weapon?.elementalResist || 0) + (armor?.elementalResist || 0) +
-    (helm?.elementalResist || 0) +
-    (boots?.elementalResist || 0) +
-    (accessory?.elementalResist || 0)
-  );
+  return 0;
 }
 
 /**
@@ -76,26 +71,8 @@ export function applyDamageModifiers(
 ): number {
   let modifiedDamage = baseDamage;
 
-  // 1. Apply elemental resistance/weakness from status effects and equipment
-  if (abilityElement && abilityElement !== 'Neutral') {
-    const resistanceEffects = defender.statusEffects.filter(
-      effect => effect.type === 'elementalResistance' && effect.element === abilityElement
-    ) as Array<Extract<typeof defender.statusEffects[number], { type: 'elementalResistance' }>>;
-
-    const resistanceModifiers = resistanceEffects.map(effect => effect.modifier);
-
-    const totalResistModifier = 
-      resistanceModifiers.reduce((sum, mod) => sum + mod, 0) +
-      calculateTotalEquipmentElementalResistance(defender);
-
-    // Convention: factor = 1 - modifier
-    // modifier > 0 = resistance (reduces damage)
-    // modifier < 0 = weakness (increases damage)
-    // Example: 0.4 resist → factor 0.6 → damage × 0.6
-    // Example: -0.2 weakness → factor 1.2 → damage × 1.2
-    const resistanceFactor = 1 - totalResistModifier;
-    modifiedDamage *= resistanceFactor;
-  }
+  // 1. Elemental resistance removed as per request (Zero Resistance)
+  // Logic cleared.
 
   // 2. Apply damage reduction from status effects
   const damageReductionEffects = defender.statusEffects.filter(

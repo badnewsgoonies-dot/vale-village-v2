@@ -71,15 +71,6 @@ export const StatusEffectSchema = z.discriminatedUnion('type', [
     healPerTurn: z.number().int().positive(),
     duration: z.number().int().positive(),
   }),
-  // Phase 2: Elemental resistance/weakness
-  // Convention: modifier > 0 = resistance (reduces damage), modifier < 0 = weakness (increases damage)
-  // Damage factor = 1 - modifier: 0.4 = 40% resist → damage × 0.6, -0.2 = 20% weakness → damage × 1.2
-  z.object({
-    type: z.literal('elementalResistance'),
-    element: ElementSchema,
-    modifier: z.number(), // Can be positive (resist) or negative (weakness)
-    duration: z.number().int().positive(),
-  }),
   // Phase 2: Global damage reduction
   z.object({
     type: z.literal('damageReduction'),
