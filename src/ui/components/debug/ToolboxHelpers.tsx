@@ -76,6 +76,7 @@ export function ToolboxHelpers({
             <button
               key={action.id}
               class="toolbox-action"
+              data-testid={`toolbox-action-${action.id}`}
               onClick={(e) => {
                 e.stopPropagation();
                 action.onClick();
