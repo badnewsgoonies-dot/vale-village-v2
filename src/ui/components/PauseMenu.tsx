@@ -11,6 +11,7 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'preact/hooks';
+import useFocusRestore from '../hooks/useFocusRestore';
 import { useStore } from '../state/store';
 import './PauseMenu.css';
 
@@ -157,10 +158,8 @@ export function PauseMenu({
     return () => window.removeEventListener('keydown', handleKeyDown, true);
   }, [selectedIndex, menuItems, executeAction, onClose, onTeamManagement, onInventory, onDjinnCollection, onSaveGame, onSettings, onHowToPlay, onReturnToTitle]);
 
-  // Focus management
-  useEffect(() => {
-    menuRef.current?.focus();
-  }, []);
+  // Focus management: move focus into the menu on mount and restore on unmount
+  useFocusRestore(menuRef);
 
   return (
     <div class="pause-overlay" role="dialog" aria-modal="true" aria-label="Pause Menu">
@@ -184,11 +183,12 @@ export function PauseMenu({
       <div class="pause-menu" ref={menuRef} tabIndex={-1}>
         <h1 class="pause-title">PAUSED</h1>
 
-        <div class="menu-options" role="menu">
+        <div class="menu-options" role="menu" data-testid="pause-menu-options">
           {menuItems.map((item, index) => (
             <div key={item.id}>
               <button
                 class={`menu-option ${selectedIndex === index ? 'selected' : ''} ${flashIndex === index ? 'flash' : ''}`}
+                data-testid={`pause-option-${item.id}`}
                 onClick={() => {
                   setSelectedIndex(index);
                   executeAction(index);
