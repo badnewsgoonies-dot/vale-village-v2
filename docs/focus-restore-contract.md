@@ -16,6 +16,8 @@ Test IDs added (exact values)
   - Added to every PauseMenu option button. Replace <id> with a menu id such as "resume", "inventory", "settings".
 - pause-menu-options
   - Added on the element with role="menu" that contains the option buttons.
+- toolbox-action-<id>
+  - Added to toolbox action buttons; e.g. "toolbox-action-pause" is the pause menu opener used in Overworld map/toolbox helpers.
 
 Notes for e2e (Playwright)
 - To test focus restoration:
