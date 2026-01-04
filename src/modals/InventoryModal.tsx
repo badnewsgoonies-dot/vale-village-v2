@@ -1,9 +1,10 @@
 import { FunctionComponent } from 'preact';
-import { useMemo, useState } from 'preact/hooks';
+import { useMemo, useState, useEffect, useRef } from 'preact/hooks';
 import type { Equipment } from '../core/models/Equipment';
 import { useGameStore } from '../store/gameStore';
 import { useStore } from '../ui/state/store';
 import './modals.css';
+import { focusRestore } from '../ui/utils/focusRestore';
 
 interface InventoryModalProps {
   onClose?: () => void;
@@ -53,12 +54,21 @@ export const InventoryModal: FunctionComponent<InventoryModalProps> = ({ onClose
 
   const selectedItem = items.find((item) => item.id === selectedItemId);
 
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const restore = focusRestore();
+    // focus modal container for accessibility
+    modalRef.current?.focus();
+    return () => restore();
+  }, []);
+
   return (
-    <div class="modal-overlay" onClick={onClose}>
-      <div class="modal modal--inventory" onClick={(e) => e.stopPropagation()}>
+    <div class="modal-overlay" onClick={onClose} data-testid="inventory-modal-overlay">
+      <div class="modal modal--inventory" ref={modalRef} tabIndex={-1} onClick={(e) => e.stopPropagation()} data-testid="inventory-modal">
         <div class="modal-header">
           <h2>Inventory</h2>
-          <button class="close-btn" onClick={onClose} aria-label="Close inventory">
+          <button class="close-btn" onClick={onClose} aria-label="Close inventory" data-testid="inventory-close-button">
             ×
           </button>
         </div>
@@ -129,7 +139,7 @@ export const InventoryModal: FunctionComponent<InventoryModalProps> = ({ onClose
           </div>
 
           <div class="inventory-footer">
-            <button class="btn btn-secondary" onClick={onClose}>
+            <button class="btn btn-secondary" onClick={onClose} data-testid="inventory-close-footer">
               Close
             </button>
           </div>

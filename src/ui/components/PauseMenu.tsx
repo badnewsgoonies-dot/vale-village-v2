@@ -13,6 +13,7 @@
 import { useState, useEffect, useCallback, useRef } from 'preact/hooks';
 import { useStore } from '../state/store';
 import './PauseMenu.css';
+import { focusRestore, attachFocusRestore } from '../utils/focusRestore';
 
 interface PauseMenuProps {
   onClose: () => void;
@@ -159,11 +160,18 @@ export function PauseMenu({
 
   // Focus management
   useEffect(() => {
+    const restore = focusRestore();
     menuRef.current?.focus();
+    return () => restore();
+  }, []);
+
+  useEffect(() => {
+    // Wire focus restore helper for pause->inventory flow (contract)
+    attachFocusRestore('pause-inventory-button', 'inventory-modal', 'inventory-close-button');
   }, []);
 
   return (
-    <div class="pause-overlay" role="dialog" aria-modal="true" aria-label="Pause Menu">
+    <div class="pause-overlay" role="dialog" aria-modal="true" aria-label="Pause Menu" data-testid="pause-menu-overlay">
       {/* Status Bar */}
       <div class="pause-status-bar">
         <div class="status-item">
@@ -181,7 +189,7 @@ export function PauseMenu({
       </div>
 
       {/* Pause Menu Container */}
-      <div class="pause-menu" ref={menuRef} tabIndex={-1}>
+      <div class="pause-menu" ref={menuRef} tabIndex={-1} data-testid="pause-menu">
         <h1 class="pause-title">PAUSED</h1>
 
         <div class="menu-options" role="menu">
@@ -189,6 +197,7 @@ export function PauseMenu({
             <div key={item.id}>
               <button
                 class={`menu-option ${selectedIndex === index ? 'selected' : ''} ${flashIndex === index ? 'flash' : ''}`}
+                data-testid={item.id === 'inventory' ? 'pause-inventory-button' : `pause-menu-option-${item.id}`}
                 onClick={() => {
                   setSelectedIndex(index);
                   executeAction(index);
