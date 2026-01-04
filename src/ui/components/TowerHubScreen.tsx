@@ -17,6 +17,7 @@ import { UNIT_DEFINITIONS } from '@/data/definitions/units';
 import { PartyManagementScreen } from './PartyManagementScreen';
 import { ShopEquipScreen } from './ShopEquipScreen';
 import { DjinnCollectionScreen } from './DjinnCollectionScreen';
+import { useFocusRestore } from '../hooks/useFocusRestore';
 
 // Helper for touch-friendly button props
 function touchButton(handler: () => void) {
@@ -323,21 +324,11 @@ export function TowerHubScreen(): JSX.Element {
       <TowerRecords towerRecord={towerRecord} />
 
       {confirmAction && (
-        <div class="tower-modal" role="dialog" aria-modal="true">
-          <div class="tower-modal-content">
-            <p>
-              {confirmAction === 'quit'
-                ? 'Are you sure? This will end the current Tower run.'
-                : 'Start a new run? Your existing Tower progress will be lost.'}
-            </p>
-            <div class="tower-modal-actions">
-              <button class="primary" {...touchButton(handleConfirmAction)}>
-                {confirmAction === 'quit' ? 'Confirm Quit' : 'Start New Run'}
-              </button>
-              <button {...touchButton(() => setConfirmAction(null))}>Cancel</button>
-            </div>
-          </div>
-        </div>
+        <ConfirmModal
+          action={confirmAction}
+          onConfirm={handleConfirmAction}
+          onCancel={() => setConfirmAction(null)}
+        />
       )}
 
       {loadoutPanel === 'party' && <PartyManagementScreen onClose={closeLoadoutPanel} />}
@@ -445,6 +436,27 @@ function buildDjinnStatus(team: Store['team']) {
   }
 
   return entries;
+}
+
+function ConfirmModal({ action, onConfirm, onCancel }: { action: ConfirmAction; onConfirm: () => void; onCancel: () => void }) {
+  useFocusRestore();
+  return (
+    <div class="tower-modal" role="dialog" aria-modal="true" data-testid="tower-confirm-modal">
+      <div class="tower-modal-content" tabIndex={-1}>
+        <p>
+          {action === 'quit'
+            ? 'Are you sure? This will end the current Tower run.'
+            : 'Start a new run? Your existing Tower progress will be lost.'}
+        </p>
+        <div class="tower-modal-actions">
+          <button class="primary" onClick={onConfirm}>
+            {action === 'quit' ? 'Confirm Quit' : 'Start New Run'}
+          </button>
+          <button onClick={onCancel}>Cancel</button>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function TowerRecords({ towerRecord }: { towerRecord: Store['towerRecord'] }): JSX.Element {
