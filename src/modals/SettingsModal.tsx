@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'preact';
-import { useEffect, useState, useRef } from 'preact/hooks';
+import { useEffect, useState, useRef, useCallback } from 'preact/hooks';
 import { useSettings } from '../ui/hooks/useSettings';
 import './modals.css';
 
@@ -14,10 +14,19 @@ export const SettingsModal: FunctionComponent<SettingsModalProps> = ({ onClose }
   const [activeTab, setActiveTab] = useState<SettingsTab>('audio');
   const modalRef = useRef<HTMLDivElement>(null);
 
-  // Focus modal on mount for accessibility and keyboard navigation
+  const openerRef = useRef<HTMLElement | null>(null);
+  // Capture opener and focus modal on mount for accessibility and keyboard navigation
   useEffect(() => {
+    openerRef.current = document.activeElement as HTMLElement | null;
     modalRef.current?.focus();
   }, []);
+
+  const handleClose = useCallback(() => {
+    onClose?.();
+    setTimeout(() => {
+      openerRef.current?.focus();
+    }, 0);
+  }, [onClose]);
 
   useEffect(() => {
     if (!onClose) return;
@@ -26,17 +35,18 @@ export const SettingsModal: FunctionComponent<SettingsModalProps> = ({ onClose }
       if (event.key !== 'Escape') return;
       event.preventDefault();
       event.stopPropagation();
-      onClose();
+      handleClose();
     };
 
     window.addEventListener('keydown', handleKeyDown, true);
     return () => window.removeEventListener('keydown', handleKeyDown, true);
-  }, [onClose]);
+  }, [onClose, handleClose]);
 
   return (
-    <div class="modal-overlay" onClick={onClose} role="presentation">
+    <div class="modal-overlay" onClick={handleClose} role="presentation">
       <div
         class="modal modal--settings"
+        data-testid="settings-modal"
         onClick={(e) => e.stopPropagation()}
         ref={modalRef}
         tabIndex={-1}
@@ -46,7 +56,7 @@ export const SettingsModal: FunctionComponent<SettingsModalProps> = ({ onClose }
       >
         <div class="modal-header">
           <h2 id="settings-title">Settings</h2>
-          <button class="close-btn" onClick={onClose} aria-label="Close settings">
+          <button class="close-btn" onClick={handleClose} data-testid="settings-close" aria-label="Close settings">
             ×
           </button>
         </div>
@@ -188,7 +198,7 @@ export const SettingsModal: FunctionComponent<SettingsModalProps> = ({ onClose }
             <button class="btn btn-secondary" onClick={resetSettings}>
               Reset to Defaults
             </button>
-            <button class="btn btn-primary" onClick={onClose}>
+            <button class="btn btn-primary" onClick={handleClose} data-testid="settings-close">
               Close
             </button>
           </div>

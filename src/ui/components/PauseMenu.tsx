@@ -47,6 +47,7 @@ export function PauseMenu({
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [flashIndex, setFlashIndex] = useState<number | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const openerRef = useRef<HTMLElement | null>(null);
 
   // Get game state for status bar
   const story = useStore((s) => s.story);
@@ -65,17 +66,27 @@ export function PauseMenu({
     { id: 'title', icon: '🏠', label: 'Return to Title', shortcut: 'Q', action: onReturnToTitle },
   ];
 
+  const handleClose = useCallback(() => {
+    onClose();
+    setTimeout(() => {
+      openerRef.current?.focus();
+    }, 0);
+  }, [onClose]);
+
   // Execute menu action with flash effect
   const executeAction = useCallback((index: number) => {
     const item = menuItems[index];
-    if (item?.action) {
-      setFlashIndex(index);
-      setTimeout(() => {
-        setFlashIndex(null);
+    if (!item?.action) return;
+    setFlashIndex(index);
+    setTimeout(() => {
+      setFlashIndex(null);
+      if (item.id === 'resume') {
+        handleClose();
+      } else {
         item.action?.();
-      }, 150);
-    }
-  }, [menuItems]);
+      }
+    }, 150);
+  }, [menuItems, handleClose]);
 
   // Keyboard navigation
   useEffect(() => {
@@ -98,7 +109,7 @@ export function PauseMenu({
           executeAction(selectedIndex);
           break;
         case 'Escape':
-          onClose();
+          handleClose();
           break;
         // Keyboard shortcuts
         case 't':
@@ -157,13 +168,14 @@ export function PauseMenu({
     return () => window.removeEventListener('keydown', handleKeyDown, true);
   }, [selectedIndex, menuItems, executeAction, onClose, onTeamManagement, onInventory, onDjinnCollection, onSaveGame, onSettings, onHowToPlay, onReturnToTitle]);
 
-  // Focus management
+  // Focus management and capture opener for focus restore
   useEffect(() => {
+    openerRef.current = document.activeElement as HTMLElement | null;
     menuRef.current?.focus();
   }, []);
 
   return (
-    <div class="pause-overlay" role="dialog" aria-modal="true" aria-label="Pause Menu">
+    <div class="pause-overlay" role="dialog" aria-modal="true" aria-label="Pause Menu" data-testid="pause-modal">
       {/* Status Bar */}
       <div class="pause-status-bar">
         <div class="status-item">
@@ -181,7 +193,7 @@ export function PauseMenu({
       </div>
 
       {/* Pause Menu Container */}
-      <div class="pause-menu" ref={menuRef} tabIndex={-1}>
+      <div class="pause-menu" ref={menuRef} tabIndex={-1} data-testid="pause-menu">
         <h1 class="pause-title">PAUSED</h1>
 
         <div class="menu-options" role="menu">
@@ -189,6 +201,7 @@ export function PauseMenu({
             <div key={item.id}>
               <button
                 class={`menu-option ${selectedIndex === index ? 'selected' : ''} ${flashIndex === index ? 'flash' : ''}`}
+                data-testid={`pause-option-${item.id}`}
                 onClick={() => {
                   setSelectedIndex(index);
                   executeAction(index);
