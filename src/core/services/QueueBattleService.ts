@@ -731,11 +731,21 @@ function resolveValidTargets(
 ): readonly string[] {
   const allUnits = [...state.playerTeam.units, ...state.enemies];
   const actor = allUnits.find(u => u.id === action.unitId);
-  
-  // Filter out KO'd targets
+
+  // Resolve ability early to know if KO targets are allowed (revival abilities)
+  let ability;
+  if (actor && action.abilityId) {
+    ability = actor.abilities.find(a => a.id === action.abilityId);
+  }
+  if (!ability && action.abilityId) {
+    ability = ABILITIES[action.abilityId];
+  }
+  const canTargetKO = Boolean((ability as any)?.revivesFallen || (ability as any)?.revive);
+
+  // Filter out KO'd targets unless ability revives fallen units
   const validTargets = action.targetIds.filter(id => {
     const unit = allUnits.find(u => u.id === id);
-    return unit && !isUnitKO(unit);
+    return unit && (canTargetKO || !isUnitKO(unit));
   });
 
   // If we have valid targets, return them
@@ -753,13 +763,10 @@ function resolveValidTargets(
   const isPlayerAction = state.playerTeam.units.some(u => u.id === action.unitId);
 
   if (actor && action.abilityId) {
-    // First try to find ability in actor's abilities array
-    let ability = actor.abilities.find(a => a.id === action.abilityId);
-
-    // Fallback to global ABILITIES record if not found in actor's abilities
-    // (This handles cases where ability is from Djinn or temporary effects)
+    // ability variable already resolved above (actor abilities or global ABILITIES)
     if (!ability) {
-      ability = ABILITIES[action.abilityId];
+      // Fallback to find ability in actor abilities or global ABILITIES
+      ability = actor.abilities.find(a => a.id === action.abilityId) ?? ABILITIES[action.abilityId];
     }
 
     if (ability) {
@@ -807,8 +814,8 @@ function resolveValidTargets(
   if (targetSide === 'ally') {
     // Ability targets allies - retarget to actor's allies
     const allies = isPlayerAction
-      ? state.playerTeam.units.filter(u => !isUnitKO(u))
-      : state.enemies.filter(e => !isUnitKO(e));
+      ? state.playerTeam.units.filter(u => canTargetKO || !isUnitKO(u))
+      : state.enemies.filter(e => canTargetKO || !isUnitKO(e));
 
     if (allies.length === 0) {
       return [];
@@ -824,8 +831,8 @@ function resolveValidTargets(
   } else {
     // Ability targets enemies - retarget to actor's enemies
     const enemies = isPlayerAction
-      ? state.enemies.filter(e => !isUnitKO(e))
-      : state.playerTeam.units.filter(u => !isUnitKO(u));
+      ? state.enemies.filter(e => canTargetKO || !isUnitKO(e))
+      : state.playerTeam.units.filter(u => canTargetKO || !isUnitKO(u));
 
     if (enemies.length === 0) {
       return [];
