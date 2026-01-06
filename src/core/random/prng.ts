@@ -15,6 +15,7 @@ export interface SerializedPRNG {
 /**
  * Seeded PRNG interface for deterministic randomness
  */
+import { PRNG_WARMUP_ITERATIONS } from '../constants';
 export interface PRNG {
   /**
    * Returns next random number in [0, 1)
@@ -64,7 +65,7 @@ export class XorShiftPRNG implements PRNG {
     this.draws = 0;
 
     // Warm up the generator
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < PRNG_WARMUP_ITERATIONS; i++) {
       this.stepInternal();
     }
   }
@@ -164,7 +165,19 @@ export function prngFromSnapshot(snapshot: SerializedPRNG): PRNG {
  * logic should receive a seeded PRNG created via `makePRNG` instead.
  */
 export function makeRandomPRNG(): PRNG {
-  return new XorShiftPRNG(Date.now());
+  // Use crypto when available for better entropy, fallback to Date.now()
+  let seed = Date.now() >>> 0;
+  try {
+    if (typeof crypto !== 'undefined' && typeof (crypto as any).getRandomValues === 'function') {
+      seed = (crypto as any).getRandomValues(new Uint32Array(1))[0] >>> 0;
+    } else if (typeof require === 'function') {
+      // Node environment
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const nodeCrypto = require('crypto');
+      seed = nodeCrypto.randomBytes(4).readUInt32BE(0) >>> 0;
+    }
+  } catch (_) {}
+  return new XorShiftPRNG(seed);
 }
 
 /**
