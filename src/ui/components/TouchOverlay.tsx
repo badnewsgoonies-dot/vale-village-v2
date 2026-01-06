@@ -1,5 +1,6 @@
 import { useRef, useEffect, useCallback } from 'preact/hooks';
 import './TouchOverlay.css';
+import { JOYSTICK_DEAD_ZONE, JOYSTICK_INSET } from '../../constants/input';
 
 interface TouchOverlayProps {
   onMove: (horizontal: number, vertical: number) => void;
@@ -10,7 +11,7 @@ export function TouchOverlay({ onMove, onAction }: TouchOverlayProps) {
   const dpadRef = useRef<HTMLDivElement | null>(null);
   const activeId = useRef<number | null>(null);
 
-  const DEAD_ZONE = 0.15;
+
 
   const update = useCallback((clientX: number, clientY: number) => {
     const el = dpadRef.current;
@@ -21,15 +22,15 @@ export function TouchOverlay({ onMove, onAction }: TouchOverlayProps) {
     const dx = clientX - (rect.left + rect.width / 2);
     const dy = clientY - (rect.top + rect.height / 2);
     const dist = Math.sqrt(dx * dx + dy * dy);
-    const max = radius * 0.9;
+    const max = radius * JOYSTICK_INSET;
     const clampedX = dist > max ? (dx * max) / dist : dx;
     const clampedY = dist > max ? (dy * max) / dist : dy;
 
     const nx = clampedX / max;
     const ny = clampedY / max;
 
-    const horizontal = Math.abs(nx) > DEAD_ZONE ? nx : 0;
-    const vertical = Math.abs(ny) > DEAD_ZONE ? ny : 0;
+    const horizontal = Math.abs(nx) > JOYSTICK_DEAD_ZONE ? nx : 0;
+    const vertical = Math.abs(ny) > JOYSTICK_DEAD_ZONE ? ny : 0;
 
     onMove(horizontal, vertical);
   }, [onMove]);
@@ -46,7 +47,7 @@ export function TouchOverlay({ onMove, onAction }: TouchOverlayProps) {
     const onPointerDown = (e: PointerEvent) => {
       if (activeId.current !== null) return;
       activeId.current = e.pointerId;
-      (e.target as Element).setPointerCapture(e.pointerId);
+      try { (e.target as Element).setPointerCapture(e.pointerId); } catch (_) {}
       update(e.clientX, e.clientY);
       e.preventDefault();
     };
@@ -63,9 +64,9 @@ export function TouchOverlay({ onMove, onAction }: TouchOverlayProps) {
       try { (e.target as Element).releasePointerCapture(e.pointerId); } catch (_) {}
     };
 
-    el.addEventListener('pointerdown', onPointerDown as any, { passive: false });
-    window.addEventListener('pointermove', onPointerMove as any, { passive: false });
-    window.addEventListener('pointerup', onPointerUp as any, { passive: false });
+    el.addEventListener('pointerdown', onPointerDown, { passive: false });
+    window.addEventListener('pointermove', onPointerMove, { passive: false });
+    window.addEventListener('pointerup', onPointerUp, { passive: false });
 
     // fallback touch
     const onTouchStart = (ev: TouchEvent) => {
@@ -97,9 +98,9 @@ export function TouchOverlay({ onMove, onAction }: TouchOverlayProps) {
     el.addEventListener('touchcancel', onTouchEnd, { passive: false });
 
     return () => {
-      el.removeEventListener('pointerdown', onPointerDown as any);
-      window.removeEventListener('pointermove', onPointerMove as any);
-      window.removeEventListener('pointerup', onPointerUp as any);
+      el.removeEventListener('pointerdown', onPointerDown);
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', onPointerUp);
 
       el.removeEventListener('touchstart', onTouchStart);
       el.removeEventListener('touchmove', onTouchMove);
@@ -108,12 +109,12 @@ export function TouchOverlay({ onMove, onAction }: TouchOverlayProps) {
     };
   }, [update, reset]);
 
-  const handleActionDown = (e: PointerEvent | TouchEvent) => {
-    (e as Event).preventDefault();
+  const handleActionDown = (e: Event) => {
+    e.preventDefault();
     onAction(true);
   };
-  const handleActionUp = (e: PointerEvent | TouchEvent) => {
-    (e as Event).preventDefault();
+  const handleActionUp = (e: Event) => {
+    e.preventDefault();
     onAction(false);
   };
 

@@ -6,6 +6,7 @@
 
 import { useRef, useEffect, useCallback } from 'preact/hooks';
 import { useStore } from '../../state/store';
+import type { Store } from '../../state/store';
 import { useGameStore } from '../../../store/gameStore';
 import { OverworldEngine, type SceneBuilding } from './engine/OverworldEngine';
 import { MAPS } from '../../../data/definitions/maps';
@@ -17,16 +18,13 @@ import type { OverworldSlice } from '../../state/overworldSlice';
 import type { GameStore } from '../../../store/gameStore';
 import type { Position } from '../../../core/models/overworld';
 import './OverworldCanvas.css';
+import { BUILDING_GROUND_Y, TILE_SIZE, HOUSE_START_TILE_X, HOUSE_TILE_SPACING, HOUSE_COUNT, DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT, SYNC_INTERVAL_MS } from '../../../constants/overworld';
 
 /**
  * Vale Village scene buildings - aligned to the world ground line
  * Buildings anchor at Y=420 so doors sit on the road band.
  */
-const BUILDING_GROUND_Y = 420;
-const TILE_SIZE = 32;
-const HOUSE_START_TILE_X = 7;
-const HOUSE_TILE_SPACING = 4;
-const HOUSE_COUNT = 30;
+
 
 type HouseProfile = { id?: string; spritePath: string; width: number; height: number };
 
@@ -103,8 +101,8 @@ interface OverworldCanvasProps {
 }
 
 export function OverworldCanvas({
-  width = 960,
-  height = 640
+  width = DEFAULT_CANVAS_WIDTH,
+  height = DEFAULT_CANVAS_HEIGHT
 }: OverworldCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<OverworldEngine | null>(null);
@@ -114,15 +112,11 @@ export function OverworldCanvas({
   const currentMapId = useStore((s: OverworldSlice) => s.currentMapId);
   const playerPosition = useStore((s: OverworldSlice) => s.playerPosition);
   const facing = useStore((s: OverworldSlice) => s.facing);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const team = useStore((s: any) => s.team);
+  const team = useStore((s: Store) => s.team);
   const movePlayer = useStore((s: OverworldSlice) => s.movePlayer);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const story = useStore((s: any) => s.story);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleTrigger = useStore((s: any) => s.handleTrigger);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const teleportPlayer = useStore((s: any) => s.teleportPlayer);
+  const story = useStore((s: Store) => s.story);
+  const handleTrigger = useStore((s: Store) => s.handleTrigger);
+  const teleportPlayer = useStore((s: Store) => s.teleportPlayer);
 
   // Subscribe to game flow store
   const screen = useGameStore((s: GameStore) => s.flow.screen);
@@ -329,7 +323,7 @@ export function OverworldCanvas({
         movePlayer(direction);
         lastTileRef.current = currentTile;
       }
-    }, 100); // Check every 100ms
+    }, SYNC_INTERVAL_MS); // Check interval
 
     return () => clearInterval(syncInterval);
   }, [isActive, movePlayer]);

@@ -37,6 +37,11 @@ export const RNG_STREAMS = {
 export const RNG_STREAM_BASE_MULTIPLIER = 1_000_000;
 
 /**
+ * Default RNG seed used when none provided by caller
+ */
+export const DEFAULT_RNG_SEED = 1337;
+
+/**
  * Battle calculation constants
  */
 export const BATTLE_CONSTANTS = {

@@ -6,6 +6,7 @@
 import { useRef, useEffect, useCallback } from 'preact/hooks';
 import type { InputSystem } from './overworld-v2/systems/InputSystem';
 import './VirtualJoystick.css';
+import { JOYSTICK_DEAD_ZONE } from '../../constants/input';
 
 interface VirtualJoystickProps {
   inputSystem?: InputSystem | null;
@@ -20,7 +21,7 @@ export function VirtualJoystick({ inputSystem, onMove, onAction }: VirtualJoysti
   const centerRef = useRef({ x: 0, y: 0 });
 
   // Dead zone threshold for the virtual joystick (named constant to avoid magic numbers)
-  const DEAD_ZONE = 0.15;
+
 
   const emitMove = useCallback((horizontal: number, vertical: number) => {
     if (inputSystem) {
@@ -72,8 +73,8 @@ export function VirtualJoystick({ inputSystem, onMove, onAction }: VirtualJoysti
     const normalizedY = clampedY / maxDistance;
 
     // Apply dead zone
-    const horizontal = Math.abs(normalizedX) > DEAD_ZONE ? normalizedX : 0;
-    const vertical = Math.abs(normalizedY) > DEAD_ZONE ? normalizedY : 0;
+    const horizontal = Math.abs(normalizedX) > JOYSTICK_DEAD_ZONE ? normalizedX : 0;
+    const vertical = Math.abs(normalizedY) > JOYSTICK_DEAD_ZONE ? normalizedY : 0;
 
     emitMove(horizontal, vertical);
   }, [emitMove]);
@@ -145,34 +146,34 @@ export function VirtualJoystick({ inputSystem, onMove, onAction }: VirtualJoysti
     };
 
     // Use pointerId for tracking
-    (e as PointerEvent).preventDefault();
-    activeTouchId.current = (e as PointerEvent).pointerId;
+    e.preventDefault();
+    activeTouchId.current = e.pointerId;
     // capture so we continue receiving moves even if pointer leaves element
-    (e.target as Element).setPointerCapture((e as PointerEvent).pointerId);
-    updateJoystick((e as PointerEvent).clientX, (e as PointerEvent).clientY);
+    try { (e.target as Element).setPointerCapture(e.pointerId); } catch (_) {}
+    updateJoystick(e.clientX, e.clientY);
   }, [updateJoystick]);
 
   const handlePointerMove = useCallback((e: PointerEvent) => {
-    if (activeTouchId.current === null || activeTouchId.current !== (e as PointerEvent).pointerId) return;
+    if (activeTouchId.current === null || activeTouchId.current !== e.pointerId) return;
     e.preventDefault();
-    updateJoystick((e as PointerEvent).clientX, (e as PointerEvent).clientY);
+    updateJoystick(e.clientX, e.clientY);
   }, [updateJoystick]);
 
   const handlePointerUp = useCallback((e: PointerEvent) => {
     if (activeTouchId.current === null) return;
-    if (activeTouchId.current === (e as PointerEvent).pointerId) {
+    if (activeTouchId.current === e.pointerId) {
       resetJoystick();
     }
   }, [resetJoystick]);
 
-  const handleActionStart = useCallback((e: TouchEvent | PointerEvent) => {
+  const handleActionStart = useCallback((e: Event) => {
     // Prevent default to stop inadvertent clicks/scrolls
-    (e as Event).preventDefault();
+    e.preventDefault();
     emitAction(true);
   }, [emitAction]);
 
-  const handleActionEnd = useCallback((e: TouchEvent | PointerEvent) => {
-    (e as Event).preventDefault();
+  const handleActionEnd = useCallback((e: Event) => {
+    e.preventDefault();
     emitAction(false);
   }, [emitAction]);
 
@@ -181,9 +182,9 @@ export function VirtualJoystick({ inputSystem, onMove, onAction }: VirtualJoysti
     if (!joystick) return;
 
     // Pointer events for unified mouse/touch behaviour
-    joystick.addEventListener('pointerdown', handlePointerDown as any, { passive: false });
-    window.addEventListener('pointermove', handlePointerMove as any, { passive: false });
-    window.addEventListener('pointerup', handlePointerUp as any, { passive: false });
+    joystick.addEventListener('pointerdown', handlePointerDown, { passive: false });
+    window.addEventListener('pointermove', handlePointerMove, { passive: false });
+    window.addEventListener('pointerup', handlePointerUp, { passive: false });
 
     // Fallback touch listeners for older platforms
     joystick.addEventListener('touchstart', handleTouchStart, { passive: false });
@@ -192,9 +193,9 @@ export function VirtualJoystick({ inputSystem, onMove, onAction }: VirtualJoysti
     joystick.addEventListener('touchcancel', handleTouchEnd, { passive: false });
 
     return () => {
-      joystick.removeEventListener('pointerdown', handlePointerDown as any);
-      window.removeEventListener('pointermove', handlePointerMove as any);
-      window.removeEventListener('pointerup', handlePointerUp as any);
+      joystick.removeEventListener('pointerdown', handlePointerDown);
+      window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('pointerup', handlePointerUp);
 
       joystick.removeEventListener('touchstart', handleTouchStart);
       joystick.removeEventListener('touchmove', handleTouchMove);

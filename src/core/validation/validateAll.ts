@@ -18,7 +18,7 @@ import { SHOPS } from '../../data/definitions/shops';
 import { STARTER_KITS } from '../../data/definitions/starterKits';
 import { STORY_FLAG_TO_UNIT, STORY_FLAG_TO_DJINN } from '../../data/definitions/storyFlags';
 import { ENCOUNTER_TO_RECRUITMENT_DIALOGUE } from '../../data/definitions/recruitmentData';
-import { validateContentBalance, formatBalanceWarnings } from './balanceValidation';
+import { validateContentBalance } from './balanceValidation';
 
 export function validateAllGameData(): void {
   const errors: string[] = [];

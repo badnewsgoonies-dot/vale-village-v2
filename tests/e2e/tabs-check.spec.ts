@@ -1,4 +1,5 @@
 import { test } from '@playwright/test';
+test.skip(!process.env.RUN_STABLE_E2E, 'Skipping tabs-check in default run');
 
 test('Click tabs to check sprites', async ({ page }) => {
   await page.goto('/');

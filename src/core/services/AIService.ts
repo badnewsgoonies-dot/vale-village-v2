@@ -63,6 +63,7 @@ function scoreAbility(
   state: BattleState
 ): number {
   let score = ability.aiHints?.priority ?? 1.0;
+  const abilityTargets = ability.targets as unknown as string;
 
   // Build lightweight teams for effective stat calculations
   const playerTeam = state.playerTeam;
@@ -92,8 +93,9 @@ function scoreAbility(
     return -1000; // No valid targets
   }
 
-  if (ability.targets === 'all-enemies' || ability.targets === 'all-allies') {
-    return validTargets.map(t => t.id);
+  if (abilityTargets === 'all-enemies' || abilityTargets === 'all-allies') {
+    // AoE ability: return a numeric score proportional to number of targets
+    return validTargets.length;
   }
 
   // Estimate damage/healing value
@@ -131,7 +133,7 @@ function scoreAbility(
     }
 
     // Multi-target bonus
-    if (ability.targets === 'all-enemies' || ability.targets === 'all-allies') {
+    if (abilityTargets === 'all-enemies' || abilityTargets === 'all-allies') {
       estimatedValue *= aliveTargets.length;
     }
   } else if (ability.type === 'healing') {
@@ -154,7 +156,7 @@ function scoreAbility(
     }
 
     // Multi-target bonus
-    if (ability.targets === 'all-allies') {
+    if (abilityTargets === 'all-allies') {
       estimatedValue *= validTargets.length;
     }
   } else if (ability.type === 'buff' || ability.type === 'debuff') {
@@ -207,7 +209,8 @@ function selectTargets(
     return [];
   }
 
-  if (ability.targets === 'all-enemies' || ability.targets === 'all-allies') {
+  const abilityTargets = ability.targets as unknown as string;
+  if (abilityTargets === 'all-enemies' || abilityTargets === 'all-allies') {
     return validTargets.map(t => t.id);
   }
 
@@ -215,7 +218,7 @@ function selectTargets(
   if (canTargetKO) {
     const koTargets = validTargets.filter(isUnitKO);
     if (koTargets.length > 0) {
-      if (ability.targets === 'all-enemies' || ability.targets === 'all-allies') {
+      if (abilityTargets === 'all-enemies' || abilityTargets === 'all-allies') {
         return koTargets.map(t => t.id);
       }
       // Pick first KO'd unit (could be randomized)
@@ -260,7 +263,7 @@ function selectTargets(
 
         if (nonOverkill.length > 0) {
           // Length check guarantees [0] exists
-          if (ability.targets === 'all-enemies' || ability.targets === 'all-allies') {
+          if (abilityTargets === 'all-enemies' || abilityTargets === 'all-allies') {
             return scored.map(s => s.target.id);
           }
           return [nonOverkill[0]!.target.id];
@@ -268,7 +271,7 @@ function selectTargets(
       }
 
       // Return weakest target(s)
-      if (ability.targets === 'all-enemies' || ability.targets === 'all-allies') {
+      if (abilityTargets === 'all-enemies' || abilityTargets === 'all-allies') {
         return scored.map(s => s.target.id);
       }
       if (scored.length > 0) {
@@ -325,11 +328,11 @@ function selectTargets(
         return [];
       }
 
-  if (ability.targets === 'all-enemies' || ability.targets === 'all-allies') {
+  if (abilityTargets === 'all-enemies' || abilityTargets === 'all-allies') {
     return validTargets.map(t => t.id);
   }
       // AoE abilities ignore random single-target selection and hit everyone
-      if (ability.targets === 'all-enemies' || ability.targets === 'all-allies') {
+      if (abilityTargets === 'all-enemies' || abilityTargets === 'all-allies') {
         return validTargets.map(t => t.id);
       }
       const index = Math.floor(rng.next() * validTargets.length);

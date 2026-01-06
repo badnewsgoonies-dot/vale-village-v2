@@ -49,6 +49,7 @@ export function getElementModifier(attackElement: Element, defenseElement: Eleme
  * @deprecated Removed as per request (Zero Resistance)
  */
 export function calculateTotalEquipmentElementalResistance(unit: Unit): number {
+  void unit; // parameter intentionally unused; keep signature stable for future use
   return 0;
 }
 
@@ -69,6 +70,7 @@ export function applyDamageModifiers(
   abilityElement: Element | undefined,
   defender: Unit
 ): number {
+  void abilityElement; // referenced to satisfy no-unused-params rule
   let modifiedDamage = baseDamage;
 
   // 1. Elemental resistance removed as per request (Zero Resistance)
