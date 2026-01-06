@@ -251,3 +251,69 @@ Below are concise reproduction steps and priority for the most critical and high
 
 
 These steps should be sufficient for engineers to reproduce and write unit tests or Playwright scenarios to validate fixes.
+
+## Additional Findings (2026-01-06 audit pass 2)
+
+1) queuedActions / team size edge cases
+- Files: src/core/models/BattleState.ts, src/core/services/QueueBattleService.ts, src/core/validation/battleStateInvariants.ts, src/ui/state/queueBattleSlice.ts
+- Description: Multiple places assume queuedActions length equals team size and adjust the array (pad/truncate) when sizes differ. If team composition changes mid-battle (summons, recruitment, or unit death/resurrection), queuedActions may be trimmed or re-indexed, causing queued actions to shift between units or be lost.
+- Reproduction steps: 1) Start a battle with 3-player team. 2) Queue actions for all units. 3) During execution, add/remove a unit (simulate by a summon or forced roster change) or revive a unit mid-round and observe queuedActions mapping after transitionToPlanningPhase; if actions are missing or assigned to wrong units, issue reproduces.
+- Severity: High
+
+2) queuedActions null-handling inconsistencies
+- Files: src/core/services/QueueBattleService.ts, src/core/algorithms/mana.ts, src/ui/components/QueueBattleView.tsx
+- Description: Some algorithms filter null entries (aliveUnitActions) while UI components and mana calculations assume non-null entries in certain places, causing potential runtime errors or incorrect mana totals when nulls are present for dead units.
+- Reproduction steps: 1) KO a unit in the middle of queueing. 2) Inspect QueueBattleView mana totals and try to interact with the queue UI; if NaN/undefined or mismatched totals appear, the issue reproduces.
+- Severity: Medium
+
+3) OverworldV2 player layer / double-render risk
+- Files: src/ui/components/overworld/layers/InteriorFurnitureLayer.ts, src/ui/components/overworld-v2/OverworldV2.tsx
+- Description: OverworldV2 provides its own PlayerLayer and some legacy layers disable their player drawing with comments. This mixed rendering approach risks double-rendering or missing draw-order/invalidation when swapping between V1/V2 components during transitions (e.g., entering/exiting interiors).
+- Reproduction steps: 1) Enter an interior using OverworldV2 active. 2) Trigger a map transition that swaps layers (enter/exit). 3) Observe sprite/player draw glitches or z-order flicker; if double-drawing or missing player sprite occurs, issue reproduces.
+- Severity: Medium
+
+4) Zod BattleState schema strictness vs runtime adjustments
+- Files: src/data/schemas/BattleStateSchema.ts, src/ui/state/queueBattleSlice.ts
+- Description: Zod schema enforces queuedActions length min/max relative to constants; runtime code adjusts queuedActions length dynamically which can produce states that pass runtime adjustments but fail schema validation on serialization/deserialization boundaries.
+- Reproduction steps: 1) Create a battle state object in-memory then programmatically mutate team size and queuedActions length without using store helpers. 2) Attempt to persist/validate via schema; if validation fails despite runtime code having adjusted arrays, the mismatch reproduces.
+- Severity: Low/Medium
+
+These additions are recorded to ensure triage includes queue/queuedActions stability and overworld render transition risks alongside the previously listed critical bugs. Prioritize queuedActions/team-size issues as part of the P0/P1 list.
+
+
+## AUDIT: Round 1 (2026-01-06T19:32:07Z) — Initial findings
+
+Summary: Automated scan of state slices, queue/battle code, and overworld/input subsystems. These are prioritized for follow-up debugging and reproducible tests.
+
+1) queuedActions / Battle queue invariants (Severity: P1)
+- Finding: queuedActions is central to battle flow and is validated in schemas (data/schemas/BattleStateSchema.ts) and services, but multiple UI components directly index into battle.queuedActions (ActionBar, BattleActionMenu, QueueBattleView). There are places that copy/trim or regenerate the queue (queueBattleSlice, QueueBattleService).
+- Risk: race or mismatch when team size changes (KO, revive) can produce index errors or stale actions remaining after team updates.
+- Repro steps:
+  1. Start battle with full party (4 units).
+  2. Queue actions for each slot, then KO a unit (enemy attack) reducing team size or change party via service that regenerates queue.
+  3. Observe UI components and console for out-of-bounds access or mismatched UI state.
+- Suggested triage: add defensive guards in UI accessors and a canonical single-source-of-truth reset path that clears queuedActions on encounter end or team size change.
+
+2) Revival targeting / target filtering (Severity: P0 referenced)
+- Finding: BUG-011 in current report notes revival abilities cannot target KO'd units due to filtering logic. Confirmed presence in targeting code paths used by QueueBattleService and validation layers.
+- Repro steps: Use a revival Ability on a KO'd ally; confirm target list excludes KO'd units.
+- Suggested triage: fix target filtering to allow 'revive' type effects to include KO'd units while maintaining other filters.
+
+3) InputLock / scene-scoped locks (Severity: P2)
+- Finding: InputLock implementation is reference-counted and supports scoped locks (game/systems/InputLock.ts). UI and menu routers wire into InputLock (MenuStackRouter, PauseMenu, SettingsHowToPlayMenu) and OverworldV2 consults gameplay lock before processing input.
+- Risk: potential for lingering scoped locks if a scene does not reliably release on error path; could produce permanent input disable until reload.
+- Repro steps:
+  1. Open Settings/HowToPlay and trigger an error or abrupt unmount (devtools detach) before unlocking.
+  2. Attempt normal gameplay input; check inputLock.getLockCount(scene) and whether menus have cleared their handles.
+- Suggested triage: add unit tests around scoped lock acquire/release and instrument logging on register/unregister to detect leaks.
+
+4) OverworldV2 input gating (Severity: P2)
+- Finding: OverworldV2 gates input using modeRef and activeModalRef. There are early-return checks in key handlers; ensure no path sets mode but forgets to update refs causing input to be dropped.
+- Repro steps: Rapidly transition scenes (menu open -> close -> immediate map change) and assert input responsiveness.
+- Suggested triage: add e2e test for rapid scene transitions and ensure input enabled state is deterministic.
+
+Next steps:
+- Triage P0/P1 items with unit/e2e tests that reproduce the conditions.
+- Instrument battle end and team-size-change paths to enforce a canonical queue reset.
+- Run targeted tests around InputLock scoped acquisition/release.
+
