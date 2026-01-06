@@ -3,6 +3,8 @@
  * Centralized magic numbers and configuration values
  */
 
+import { MAX_LEVEL as GAME_MAX_LEVEL } from '../constants/game';
+
 /**
  * Minimum party size - minimum number of units in player team
  */
@@ -12,6 +14,11 @@ export const MIN_PARTY_SIZE = 1;
  * Maximum party size - maximum number of units in player team
  */
 export const MAX_PARTY_SIZE = 4;
+
+/**
+ * Maximum unit level supported by XP curve / normalization
+ */
+export const MAX_LEVEL = GAME_MAX_LEVEL;
 
 /**
  * RNG stream offsets for deterministic battle RNG
@@ -25,7 +32,7 @@ export const RNG_STREAMS = {
   /** Victory reward calculation */
   VICTORY: 999,
   /** End turn processing */
-  END_TURN: 0,
+  END_TURN: 1,
   /** Queue battle round execution */
   QUEUE_ROUND: 1000,
 } as const;
@@ -37,9 +44,28 @@ export const RNG_STREAMS = {
 export const RNG_STREAM_BASE_MULTIPLIER = 1_000_000;
 
 /**
+ * Number of warmup iterations performed by PRNG implementations to avoid
+ * trivial early-state correlations. Centralized here to avoid magic numbers
+ * spread across the codebase.
+ */
+export const PRNG_WARMUP_ITERATIONS = 10;
+
+
+
+/**
  * Default RNG seed used when none provided by caller
  */
 export const DEFAULT_RNG_SEED = 1337;
+
+/**
+ * Default critical hit threshold used by UI crit counters
+ */
+export const DEFAULT_CRIT_THRESHOLD = 10;
+
+/**
+ * Duration (ms) for crit flash visual effect
+ */
+export const CRIT_FLASH_DURATION_MS = 200;
 
 /**
  * Battle calculation constants
@@ -63,6 +89,17 @@ export const BATTLE_CONSTANTS = {
   MINIMUM_DAMAGE: 1,
   /** Minimum healing amount (all heals restore at least this much if basePower > 0) */
   MINIMUM_HEALING: 1,
+} as const;
+
+export const STATUS_CONSTANTS = {
+  POISON_PERCENT: 0.08,
+  BURN_PERCENT: 0.10,
+  FREEZE_BREAK_CHANCE: 0.3,
+  PARALYZE_FAIL_CHANCE: 0.25,
+} as const;
+
+export const TOWER_CONSTANTS = {
+  HARD_DIFFICULTY_BONUS: 0.25,
 } as const;
 
 /**
