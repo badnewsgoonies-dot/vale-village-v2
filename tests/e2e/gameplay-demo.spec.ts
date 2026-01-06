@@ -1,5 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
-test.skip(!process.env.RUN_STABLE_E2E, 'Skipping heavy e2e tests by default');
+test.skip(!process.env.RUN_HEAVY, 'Skipping heavy e2e tests by default');
 
 // DEMO MODE: Slower, more visual-friendly timings for watching the game play
 const DEMO_MODE = process.env.DEMO_MODE === 'true';

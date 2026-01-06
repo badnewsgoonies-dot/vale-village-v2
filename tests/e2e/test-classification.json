@@ -1,0 +1,25 @@
+{
+  "stable": [
+    "enemy-animations-simple.spec.ts",
+    "gameplay-all-houses.spec.ts",
+    "gameplay-demo.spec.ts",
+    "gameplay-full-game.spec.ts",
+    "gameplay-full-tower.spec.ts",
+    "gameplay-graybox.spec.ts",
+    "gameplay-journey.spec.ts"
+  ],
+  "heavy": [
+    "battle-animations.spec.ts",
+    "compendium-djinn.spec.ts",
+    "djinn-sprites-simple.spec.ts",
+    "djinn-sprites.spec.ts",
+    "enemy-animations.spec.ts",
+    "equip-check.spec.ts",
+    "gameplay-tour.spec.ts",
+    "smoke.spec.ts",
+    "tabs-check.spec.ts",
+    "visual-check.spec.ts",
+    "visual-verify.spec.ts"
+  ],
+  "generatedAt": "2026-01-06T20:20:44.912Z"
+}

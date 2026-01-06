@@ -1,0 +1,22 @@
+{
+  "stable": [
+    "tests/e2e/smoke.spec.ts",
+    "tests/e2e/gameplay-demo.spec.ts",
+    "tests/e2e/gameplay-tour.spec.ts",
+    "tests/e2e/gameplay-graybox.spec.ts",
+    "tests/e2e/tabs-check.spec.ts",
+    "tests/e2e/equip-check.spec.ts",
+    "tests/e2e/compendium-djinn.spec.ts"
+  ],
+  "heavy": [
+    "tests/e2e/visual-check.spec.ts",
+    "tests/e2e/visual-verify.spec.ts",
+    "tests/e2e/battle-animations.spec.ts",
+    "tests/e2e/enemy-animations.spec.ts",
+    "tests/e2e/enemy-animations-simple.spec.ts",
+    "tests/e2e/djinn-sprites.spec.ts",
+    "tests/e2e/djinn-sprites-simple.spec.ts",
+    "tests/e2e/gameplay-full-game.spec.ts",
+    "tests/e2e/gameplay-full-tower.spec.ts"
+  ]
+}

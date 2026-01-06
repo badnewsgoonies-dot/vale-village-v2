@@ -3,7 +3,7 @@
  */
 
 import { test, expect } from '@playwright/test';
-test.skip(!process.env.RUN_STABLE_E2E, 'Skipping visual-verify in default run');
+test.skip(!process.env.RUN_HEAVY, 'Skipping visual-verify in default run');
 import * as fs from 'fs';
 import * as path from 'path';
 
