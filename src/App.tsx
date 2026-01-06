@@ -425,9 +425,10 @@ const App: FunctionComponent = () => {
   // Sync V1 store mode to V2 gameStore screen
   useStoreSync();
 
-  const { showCredits, setShowCredits } = useStore((s) => ({
+  const { showCredits, setShowCredits, setMode } = useStore((s) => ({
     showCredits: s.showCredits,
     setShowCredits: s.setShowCredits,
+    setMode: s.setMode,
   }));
   const { screen, modal, isTransitioning, setScreen, startTransition, openModal, closeModal, closeCompendium } = useGameStore(
     (state: GameStore) => ({

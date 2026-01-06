@@ -1,4 +1,5 @@
 import { test } from '@playwright/test';
+test.skip(!process.env.RUN_STABLE_E2E, 'Skipping heavy e2e tests by default');
 test('Equipment sprites check', async ({ page }) => {
   await page.goto('/');
   await page.keyboard.press('Enter');

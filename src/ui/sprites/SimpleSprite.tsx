@@ -210,22 +210,9 @@ export function SimpleSprite({
     setIsLoaded(false);
     
     if (debug && result.entry) {
-      // eslint-disable-next-line no-console
-      // [REMOVED] console.log(`[SimpleSprite] Found sprite`, {
-        id,
-        method: result.method,
-        name: result.entry.name,
-        path: result.entry.path,
-        category: result.entry.category,
-      });
+      // Debug: sprite found (details removed)
     } else if (debug && !result.entry) {
-      // [REMOVED] console.warn(`[SimpleSprite] Sprite not found:`, {
-        id,
-        method: result.method,
-        suggestion: id.includes('-') 
-          ? `Try searching catalog for: ${id.split('-').join(' ')}`
-          : `Try using direct path or check catalog`,
-      });
+      // Debug: sprite not found
     }
   }, [id, debug]);
   

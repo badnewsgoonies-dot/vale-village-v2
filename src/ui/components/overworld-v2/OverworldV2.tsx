@@ -64,7 +64,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
   const interiorFurnitureRef = useRef<InteriorFurnitureLayer | null>(null);
   const interiorNpcRef = useRef<InteriorNpcLayer | null>(null);
   const interiorBattleTriggeredRef = useRef(false);
-  const pendingIntroHouseEntryRef = useRef(false);
+
   const keysRef = useRef<Set<string>>(new Set());
   const touchInputRef = useRef<{ h: number; v: number; action: boolean }>({ h: 0, v: 0, action: false });
   const lastGamepadStartRef = useRef(false);
@@ -136,7 +136,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
     currentMode === 'compendium' ||
     currentMode === 'tower';
 
-  const djinnIntroStartedRef = useRef(false);
+
 
   // Detect scene type from map ID
   const getSceneTypeFromMapId = useCallback((mapId: string): SceneType => {

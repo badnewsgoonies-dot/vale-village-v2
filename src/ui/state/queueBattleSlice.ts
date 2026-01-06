@@ -65,7 +65,7 @@ function sumBattleStat(units: readonly Unit[], key: 'damageDealt' | 'damageTaken
   return units.reduce((total, unit) => total + (unit.battleStats?.[key] ?? 0), 0);
 }
 
-function normalizeBattleState(battle: BattleState): BattleState | null {
+export function normalizeBattleState(battle: BattleState): BattleState | null {
   if (!battle.playerTeam || !Array.isArray(battle.playerTeam.units) || !Array.isArray(battle.enemies)) {
     console.error('Invalid battle state: missing player team or enemies');
     return null;
@@ -450,11 +450,11 @@ export const createQueueBattleSlice: StateCreator<
 
       // Auto-save after battle victory
       try {
-        void Promise.resolve(get().autoSave()).catch((error) => {
-          // [REMOVED] console.warn('Auto-save failed after battle victory:', error);
+        void Promise.resolve(get().autoSave()).catch(() => {
+          // auto-save failure ignored
         });
       } catch (error) {
-        // [REMOVED] console.warn('Auto-save failed after battle victory:', error);
+        // auto-save failure ignored
       }
 
       const encounterId = getEncounterId(healedState);

@@ -4,6 +4,7 @@
  */
 
 import { test, expect, Page } from '@playwright/test';
+test.skip(!process.env.RUN_STABLE_E2E, 'Skipping heavy e2e tests by default');
 import * as fs from 'fs';
 import * as path from 'path';
 

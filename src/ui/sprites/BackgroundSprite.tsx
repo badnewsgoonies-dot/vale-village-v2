@@ -148,21 +148,9 @@ export function BackgroundSprite({
     setIsLoaded(false);
     
     if (debug && lookupResult.entry) {
-      // eslint-disable-next-line no-console
-      // [REMOVED] console.log(`[BackgroundSprite] Found background:`, {
-        id,
-        method: lookupResult.method,
-        name: lookupResult.entry.name,
-        path: lookupResult.entry.path,
-        category: lookupResult.entry.category,
-      });
+      // Debug: background found (details removed to avoid build-time object literals)
     } else if (debug && !lookupResult.entry) {
-      // eslint-disable-next-line no-console
-      // [REMOVED] console.warn(`[BackgroundSprite] Background not found:`, {
-        id,
-        category,
-        method: lookupResult.method,
-      });
+      // Debug: background not found
     }
   }, [lookupResult, debug, id, category]);
   

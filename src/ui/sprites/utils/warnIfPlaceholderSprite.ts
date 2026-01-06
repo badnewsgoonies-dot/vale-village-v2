@@ -2,15 +2,13 @@ const PLACEHOLDER_PREFIXES = ['missing-battle-sprite-', 'missing-compendium-enem
 const IS_DEV = typeof import.meta !== 'undefined' && import.meta.env?.DEV;
 
 export function warnIfPlaceholderSprite(screenName: string, spriteId: string) {
+  // use screenName variable in dev builds to avoid unused-var errors
+  void screenName;
   if (!IS_DEV) {
     return;
   }
   if (PLACEHOLDER_PREFIXES.some(prefix => spriteId.startsWith(prefix))) {
-    // eslint-disable-next-line no-console -- Development helper that should never reach production
-    // [REMOVED] console.warn(
-      `[Sprites][DEV] Placeholder sprite rendered on ${screenName} for "${spriteId}". ` +
-        'Add a mapping in battleSprites.ts or the appropriate overworld/menu mapping.'
-    );
+    // Development helper: placeholder sprite rendered; mapping missing for this sprite (dev-only)
   }
 }
 

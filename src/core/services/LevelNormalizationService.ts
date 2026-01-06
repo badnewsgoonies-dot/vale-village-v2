@@ -21,6 +21,9 @@ const FALLBACK_GROWTH = {
   luk: 0.1
 };
 
+// Reference to satisfy no-unused-vars during typecheck; kept for future growth logic
+void FALLBACK_GROWTH;
+
 /**
  * Calculates the target level for a given floor number.
  * Uses a stepped progression:
