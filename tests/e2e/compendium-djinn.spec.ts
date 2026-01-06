@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
-test.skip(!process.env.RUN_STABLE_E2E, 'Skipping heavy e2e tests by default');
+import { shot } from './helpers/screenshots';
+test.skip(!process.env.RUN_HEAVY, 'Skipping heavy e2e tests by default');
 
 test('Compendium Djinn Section has sprites', async ({ page }) => {
   await page.goto('/');
@@ -13,7 +14,7 @@ test('Compendium Djinn Section has sprites', async ({ page }) => {
   await page.keyboard.press('Enter');
 
   await page.waitForTimeout(1000);
-  await page.screenshot({ path: '/tmp/vv2-screenshots/compendium-main.png' });
+  await shot(page, '/tmp/vv2-screenshots', 'compendium-main.png');
 
   // Look for Djinn tab/section
   const djinnTab = page.locator('button, [role="tab"], a, .tab, .nav-item').filter({ hasText: /djinn/i });
@@ -25,7 +26,7 @@ test('Compendium Djinn Section has sprites', async ({ page }) => {
     await page.waitForTimeout(1000);
   }
 
-  await page.screenshot({ path: '/tmp/vv2-screenshots/compendium-djinn.png' });
+  await shot(page, '/tmp/vv2-screenshots', 'compendium-djinn.png');
 
   // Check for images
   const images = await page.locator('img').evaluateAll(imgs =>

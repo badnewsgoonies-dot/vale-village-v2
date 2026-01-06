@@ -9,7 +9,7 @@
  */
 
 import { test, expect } from '@playwright/test';
-test.skip(!process.env.RUN_STABLE_E2E, 'Skipping heavy e2e tests by default');
+test.skip(!process.env.RUN_HEAVY, 'Skipping heavy e2e tests by default');
 
 test.describe('Djinn Sprites Rendering', () => {
   test('should render Djinn sprites in DjinnCollectionScreen', async ({ page }) => {
