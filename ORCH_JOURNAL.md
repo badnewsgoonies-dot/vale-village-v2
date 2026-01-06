@@ -122,3 +122,29 @@
 **Summary:** 5/5 phases, 20 batches
 **Knowledge accumulated:** 13 items
 **Lessons learned:** 9
+
+## [SESSION START] 2026-01-06 11:17
+**Goal:** Using ENCYCLOPEDIA.md and docs/encyclopedia/ as reference, analyze unfinished game features, map completion requirements, and implement missing functionality to produce a complete playable Vale Villag...
+**Target repo:** /home/geni/Documents/vale-village-v2
+**Source repo:** N/A
+**Session ID:** strat-68ac5fd7
+
+## [PHASE DONE] 2026-01-06 11:18
+**Phase:** phase-1-gap-analysis
+**Outcome:** DONE
+**Key learnings:**
+- Identifying 'queue invariants' as a specific focus area early helps prevent complex state leakage bugs in later phases.
+- Created ROADMAP_IMPLEMENTATION.md with prioritized tasks.
+- Identified specific technical debt in QueueBattleService and SaveService.
+- Mapped queue normalization and type-safety as critical functional requirements.
+- Defined clear next steps for hardening game mechanics.
+
+## [PHASE DONE] 2026-01-06 11:22
+**Phase:** phase-2-core-mechanics
+**Outcome:** DONE
+**Key learnings:**
+- Using canonical helpers like calculateMaxHp during normalization prevents stat drift and logic inconsistencies between different services.
+- Core logic verification is as valuable as implementation when existing codebases have undocumented features.
+- Verified and refined Tower normalization logic using canonical model helpers.
+- Integrated floor-based normalized levels into core scaling algorithms.
+- Identified and addressed inconsistencies in unit HP normalization.
