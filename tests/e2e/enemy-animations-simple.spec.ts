@@ -4,7 +4,7 @@
  */
 
 import { test, expect } from '@playwright/test';
-test.skip(!process.env.RUN_STABLE_E2E, 'Skipping heavy e2e tests by default');
+test.skip(!process.env.RUN_HEAVY, 'Skipping heavy e2e tests by default');
 
 test.describe('Enemy Animations (Simplified Verification)', () => {
   test('should load battle and verify enemy sprites are rendered', async ({ page }) => {

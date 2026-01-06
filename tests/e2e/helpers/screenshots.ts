@@ -9,6 +9,12 @@ export function ensureDir(dirPath: string) {
 }
 
 export async function shot(page: Page, dirPath: string, filename: string) {
+  // Only write screenshots when running heavy visual tests.
+  // Set RUN_HEAVY=1 to enable (CI can opt-in).
+  const ENABLE_HEAVY = !!process.env.RUN_HEAVY;
+  if (!ENABLE_HEAVY) return;
+
+  ensureDir(dirPath);
   await page.screenshot({
     path: path.join(dirPath, filename),
     fullPage: true,
