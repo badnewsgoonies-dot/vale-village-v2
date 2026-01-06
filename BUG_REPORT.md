@@ -107,3 +107,47 @@ This report documents bugs and technical debt found in the codebase. Audit round
 - **Description:** `performAction` only emits `status-applied` events if `ability.statusEffect` is present. It misses statuses applied via `ability.debuffEffect` and `ability.buffEffect`. Additionally, it only emits events for "new" status types, so refreshing an existing status doesn't trigger UI feedback.
 - **Impact:** Debuffs and repeated status applications are "silent" in the UI (no animations or log events), leading to player confusion.
 - **Severity:** Medium
+
+---
+
+## Changes made 2026-01-06 (this audit)
+
+Small, targeted fixes applied to address correctness issues discovered during the audit below.
+
+1) Fix: encounter-finished emitted with post-action state
+   - File modified: src/ui/state/battleSlice.ts
+   - Problem: encounter-finished events were built using the pre-action battle state which could omit or misreport the encounterId.
+   - Resolution: use getEncounterId(result.value.state) (the post-action state) when creating encounter-finished; this ensures story slice notifications reflect the actual ended battle.
+
+2) Fix: preview() edge cases and sample count
+   - File modified: src/ui/state/battleSlice.ts
+   - Problems: preview used a hard-coded sample count (16) and returned min as Infinity if all trials failed.
+   - Resolution: preview now uses PREVIEW_SAMPLES and tracks successful samples; returns safe defaults {avg:0,min:0,max:0} if no previews succeed.
+
+Files changed in this pass
+- src/ui/state/battleSlice.ts (minor fixes described above)
+
+Recommended immediate next steps
+- Add unit tests that validate: encounter-finished uses post-action state; preview returns safe defaults and uses PREVIEW_SAMPLES.
+- Run a small integration that executes a final action on an encounter-bound battle and assert the onBattleEvents/onEncounter handlers are invoked with the correct encounterId.
+
+If more detail or a dedicated changelog entry is needed, indicate and it will be created.
+
+---
+
+## FINAL AUDIT SUMMARY
+
+- Reviewed audit rounds 1–5 and consolidated findings above. Targeted, surgical fixes were applied during this pass (see "Changes made 2026-01-06").
+- Remaining critical risks (require follow-up fixes or design decisions):
+  1) BUG-011 Revival Target Filtering — targeting logic must allow revive-capable abilities to select KO'd units.
+  2) BUG-012 Immunity Blocking Positive Effects — immunity semantics should distinguish positive vs negative statuses.
+  3) BUG-002 AoE Damage Reporting — per-target damage values must be emitted, not summed totals.
+  4) BUG-003 Mana Generation Loss — ensure generated mana persists into the next planning phase rather than being clobbered.
+  5) BUG-013 Equipment Resistances — unify equipment resistance checks across all equipment slots and attack types.
+
+- Recommended next actions:
+  1) Add unit tests covering revival targeting, immunity semantics (positive vs negative), AoE damage event payloads, and mana persistence across phases.
+  2) Address the five critical risks above in prioritized order (BUG-011, BUG-012, BUG-002, BUG-003, BUG-013).
+  3) Run the Playwright E2E suite (focused subset) after each targeted fix to catch UI sync regressions early.
+
+If any additional detail or a dedicated changelog entry is needed, indicate and it will be created.
