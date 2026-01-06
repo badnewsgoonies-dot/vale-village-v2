@@ -13,6 +13,7 @@ export const TOWER_FLOORS: TowerFloor[] = [
     type: 'normal',
     encounterId: 'vs1-garet',
     difficultyTier: 1,
+    normalizedLevel: 5,
     tags: ['tutorial'],
   },
   {
@@ -21,6 +22,7 @@ export const TOWER_FLOORS: TowerFloor[] = [
     type: 'normal',
     encounterId: 'house-02',
     difficultyTier: 1,
+    normalizedLevel: 5,
     tags: [],
   },
   {
@@ -29,6 +31,7 @@ export const TOWER_FLOORS: TowerFloor[] = [
     type: 'normal',
     encounterId: 'house-03',
     difficultyTier: 1,
+    normalizedLevel: 5,
     tags: [],
   },
   {
@@ -36,6 +39,7 @@ export const TOWER_FLOORS: TowerFloor[] = [
     floorNumber: 4,
     type: 'rest',
     difficultyTier: 1,
+    normalizedLevel: 5,
     tags: [],
     rest: {
       allowLoadoutChange: true,
@@ -47,7 +51,8 @@ export const TOWER_FLOORS: TowerFloor[] = [
     type: 'normal',
     encounterId: 'house-04',
     difficultyTier: 2,
-    tags: [],
+    normalizedLevel: 5,
+    tags: ['milestone'],
   },
   {
     id: 'tower-floor-006',
@@ -55,6 +60,7 @@ export const TOWER_FLOORS: TowerFloor[] = [
     type: 'boss',
     encounterId: 'house-05',
     difficultyTier: 2,
+    normalizedLevel: 10,
     tags: ['blaze'],
   },
   {
@@ -63,6 +69,7 @@ export const TOWER_FLOORS: TowerFloor[] = [
     type: 'normal',
     encounterId: 'house-06',
     difficultyTier: 2,
+    normalizedLevel: 10,
     tags: [],
   },
   {
@@ -70,6 +77,7 @@ export const TOWER_FLOORS: TowerFloor[] = [
     floorNumber: 8,
     type: 'rest',
     difficultyTier: 2,
+    normalizedLevel: 10,
     tags: [],
     rest: {
       allowLoadoutChange: true,
@@ -81,6 +89,7 @@ export const TOWER_FLOORS: TowerFloor[] = [
     type: 'normal',
     encounterId: 'house-07',
     difficultyTier: 3,
+    normalizedLevel: 10,
     tags: [],
   },
   {
@@ -89,7 +98,8 @@ export const TOWER_FLOORS: TowerFloor[] = [
     type: 'boss',
     encounterId: 'house-08',
     difficultyTier: 3,
-    tags: ['sentinel', 'djinn'],
+    normalizedLevel: 10,
+    tags: ['sentinel', 'djinn', 'milestone'],
   },
   {
     id: 'tower-floor-011',
@@ -97,6 +107,7 @@ export const TOWER_FLOORS: TowerFloor[] = [
     type: 'normal',
     encounterId: 'house-09',
     difficultyTier: 3,
+    normalizedLevel: 15,
     tags: [],
   },
   {
@@ -104,6 +115,7 @@ export const TOWER_FLOORS: TowerFloor[] = [
     floorNumber: 12,
     type: 'rest',
     difficultyTier: 3,
+    normalizedLevel: 15,
     tags: [],
     rest: {
       allowLoadoutChange: true,
@@ -115,6 +127,7 @@ export const TOWER_FLOORS: TowerFloor[] = [
     type: 'normal',
     encounterId: 'house-10',
     difficultyTier: 4,
+    normalizedLevel: 15,
     tags: [],
   },
   {
@@ -123,6 +136,7 @@ export const TOWER_FLOORS: TowerFloor[] = [
     type: 'normal',
     encounterId: 'house-11',
     difficultyTier: 4,
+    normalizedLevel: 15,
     tags: [],
   },
   {
@@ -131,13 +145,15 @@ export const TOWER_FLOORS: TowerFloor[] = [
     type: 'boss',
     encounterId: 'house-12',
     difficultyTier: 4,
-    tags: ['granite', 'djinn'],
+    normalizedLevel: 15,
+    tags: ['granite', 'djinn', 'milestone'],
   },
   {
     id: 'tower-floor-016',
     floorNumber: 16,
     type: 'rest',
     difficultyTier: 4,
+    normalizedLevel: 20,
     tags: [],
     rest: {
       allowLoadoutChange: true,
@@ -149,6 +165,7 @@ export const TOWER_FLOORS: TowerFloor[] = [
     type: 'normal',
     encounterId: 'house-13',
     difficultyTier: 5,
+    normalizedLevel: 20,
     tags: [],
   },
   {
@@ -157,6 +174,7 @@ export const TOWER_FLOORS: TowerFloor[] = [
     type: 'normal',
     encounterId: 'house-14',
     difficultyTier: 5,
+    normalizedLevel: 20,
     tags: [],
   },
   {
@@ -165,6 +183,7 @@ export const TOWER_FLOORS: TowerFloor[] = [
     type: 'normal',
     encounterId: 'house-15',
     difficultyTier: 5,
+    normalizedLevel: 20,
     tags: [],
   },
   {
@@ -173,7 +192,8 @@ export const TOWER_FLOORS: TowerFloor[] = [
     type: 'boss',
     encounterId: 'house-20',
     difficultyTier: 5,
-    tags: ['overseer', 'finale'],
+    normalizedLevel: 20,
+    tags: ['overseer', 'finale', 'milestone'],
   },
   {
     id: 'tower-floor-021',
@@ -181,6 +201,7 @@ export const TOWER_FLOORS: TowerFloor[] = [
     type: 'normal',
     encounterId: 'house-21',
     difficultyTier: 6,
+    normalizedLevel: 25,
     tags: [],
   },
   {
@@ -189,6 +210,7 @@ export const TOWER_FLOORS: TowerFloor[] = [
     type: 'normal',
     encounterId: 'house-22',
     difficultyTier: 6,
+    normalizedLevel: 25,
     tags: [],
   },
   {
@@ -197,6 +219,7 @@ export const TOWER_FLOORS: TowerFloor[] = [
     type: 'normal',
     encounterId: 'house-23',
     difficultyTier: 6,
+    normalizedLevel: 25,
     tags: [],
   },
   {
@@ -204,6 +227,7 @@ export const TOWER_FLOORS: TowerFloor[] = [
     floorNumber: 24,
     type: 'rest',
     difficultyTier: 6,
+    normalizedLevel: 25,
     tags: [],
     rest: {
       allowLoadoutChange: true,
@@ -215,7 +239,8 @@ export const TOWER_FLOORS: TowerFloor[] = [
     type: 'boss',
     encounterId: 'house-25',
     difficultyTier: 7,
-    tags: ['neptune', 'sovereign'],
+    normalizedLevel: 25,
+    tags: ['neptune', 'sovereign', 'milestone'],
   },
   {
     id: 'tower-floor-026',
@@ -223,6 +248,7 @@ export const TOWER_FLOORS: TowerFloor[] = [
     type: 'normal',
     encounterId: 'house-26',
     difficultyTier: 7,
+    normalizedLevel: 30,
     tags: [],
   },
   {
@@ -231,6 +257,7 @@ export const TOWER_FLOORS: TowerFloor[] = [
     type: 'normal',
     encounterId: 'house-27',
     difficultyTier: 7,
+    normalizedLevel: 30,
     tags: [],
   },
   {
@@ -238,6 +265,7 @@ export const TOWER_FLOORS: TowerFloor[] = [
     floorNumber: 28,
     type: 'rest',
     difficultyTier: 7,
+    normalizedLevel: 30,
     tags: [],
     rest: {
       allowLoadoutChange: true,
@@ -249,6 +277,7 @@ export const TOWER_FLOORS: TowerFloor[] = [
     type: 'normal',
     encounterId: 'house-29',
     difficultyTier: 8,
+    normalizedLevel: 30,
     tags: [],
   },
   {
@@ -257,7 +286,7 @@ export const TOWER_FLOORS: TowerFloor[] = [
     type: 'boss',
     encounterId: 'house-30',
     difficultyTier: 8,
-    tags: ['celestial', 'zeus', 'finale'],
+    normalizedLevel: 30,
+    tags: ['celestial', 'zeus', 'finale', 'milestone'],
   },
 ] as const;
-

@@ -87,6 +87,8 @@ function saveLog() {
 
 test('Full Tower Run - Complete all 30 floors', async ({ page }) => {
   test.setTimeout(1800_000); // 30 minutes for full tower
+  page.on('console', msg => console.log('BROWSER: ' + msg.text()));
+  page.on('pageerror', err => console.log('BROWSER_ERROR: ' + err.message));
 
   logFloor('🏰 Starting Full Tower Run...');
   if (DEMO_MODE) {
@@ -128,7 +130,7 @@ test('Full Tower Run - Complete all 30 floors', async ({ page }) => {
       logFloor(`  Action taken: ${action}`);
 
       // Check if this is a rest floor
-      const restIndicator = page.locator('text=/rest|heal|restore/i');
+      const restIndicator = page.locator('h2:has-text("Rest Floor")');
       if (await restIndicator.isVisible({ timeout: 1_000 }).catch(() => false)) {
         floorLog.type = 'rest';
         logFloor(`  🛏️ Rest floor - skipping`);
@@ -145,14 +147,14 @@ test('Full Tower Run - Complete all 30 floors', async ({ page }) => {
       const teamSelect = page.locator('.prebattle-v2-overlay');
       const battleView = page.locator('[data-testid="battle-view"]');
       
-      if (await teamSelect.isVisible({ timeout: 3_000 }).catch(() => false)) {
+      if (await teamSelect.waitFor({ state: "visible", timeout: 10_000 }).then(() => true).catch(() => false)) {
         logFloor(`  👥 Team select screen - confirming`);
         await page.keyboard.press('Enter');
         await delay(page, 1000);
       }
 
       // Check if battle started
-      if (await battleView.isVisible({ timeout: 5_000 }).catch(() => false)) {
+      if (await battleView.waitFor({ state: "visible", timeout: 15_000 }).then(() => true).catch(() => false)) {
         logFloor(`  ⚔️ Battle started`);
         
         // Determine if boss floor
@@ -165,7 +167,7 @@ test('Full Tower Run - Complete all 30 floors', async ({ page }) => {
           delay,
           maxRounds: MAX_ROUNDS,
           forceClicks: true,
-          actionTimeoutMs: DEFAULT_TIMEOUT,
+          actionTimeoutMs: DEFAULT_TIMEOUT, waitTimeoutMs: 120_000,
           onRoundExecuted: (round) => logFloor(`  Floor ${floor} - Round ${round} executed`),
         });
         floorLog.result = battleResult.result;

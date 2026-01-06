@@ -1,0 +1,54 @@
+
+Running 1 test using 1 worker
+
+🚀 Starting Full Game E2E...
+BROWSER: [vite] connecting...
+BROWSER: [vite] connected.
+BROWSER: [vite] connecting...
+BROWSER: [vite] connected.
+  ✘  1 [chromium] › tests/e2e/gameplay-full-game.spec.ts:13:1 › Full Game Flow - Prototype Milestone (2.7m)
+
+
+  1) [chromium] › tests/e2e/gameplay-full-game.spec.ts:13:1 › Full Game Flow - Prototype Milestone ─
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('.prebattle-v2-overlay')
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('.prebattle-v2-overlay')[22m
+
+
+      51 |   await dismissDialogueIfPresent(page);
+      52 |   
+    > 53 |   await expect(page.locator('.prebattle-v2-overlay')).toBeVisible({ timeout: 15000 });
+         |                                                       ^
+      54 |   await page.keyboard.press('Enter');
+      55 |
+      56 |   await expect(page.locator('[data-testid="battle-view"]')).toBeVisible({ timeout: 20000 });
+        at /home/geni/Documents/vale-village-v2/tests/e2e/gameplay-full-game.spec.ts:53:55
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/gameplay-full-game-Full-Game-Flow---Prototype-Milestone-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/gameplay-full-game-Full-Game-Flow---Prototype-Milestone-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/gameplay-full-game-Full-Game-Flow---Prototype-Milestone-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/gameplay-full-game-Full-Game-Flow---Prototype-Milestone-chromium/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/gameplay-full-game-Full-Game-Flow---Prototype-Milestone-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › tests/e2e/gameplay-full-game.spec.ts:13:1 › Full Game Flow - Prototype Milestone ──

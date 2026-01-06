@@ -129,7 +129,7 @@ export function SettingsScreen({ onClose }: SettingsScreenProps) {
                       max="100"
                       value={masterVolume}
                       onInput={(e) => setMasterVolume(Number.parseInt((e.target as HTMLInputElement).value, 10))}
-                      style={{ '--value': `${masterVolume}%` } as any}
+                      style={{ '--value': `${masterVolume}%` } as React.CSSProperties}
                     />
                     <span class="slider-value">{masterVolume}%</span>
                   </div>
@@ -148,7 +148,7 @@ export function SettingsScreen({ onClose }: SettingsScreenProps) {
                       max="100"
                       value={musicVolume}
                       onInput={(e) => setMusicVolume(Number.parseInt((e.target as HTMLInputElement).value, 10))}
-                      style={{ '--value': `${musicVolume}%` } as any}
+                      style={{ '--value': `${musicVolume}%` } as React.CSSProperties}
                     />
                     <span class="slider-value">{musicVolume}%</span>
                   </div>
@@ -167,7 +167,7 @@ export function SettingsScreen({ onClose }: SettingsScreenProps) {
                       max="100"
                       value={sfxVolume}
                       onInput={(e) => setSfxVolume(Number.parseInt((e.target as HTMLInputElement).value, 10))}
-                      style={{ '--value': `${sfxVolume}%` } as any}
+                      style={{ '--value': `${sfxVolume}%` } as React.CSSProperties}
                     />
                     <span class="slider-value">{sfxVolume}%</span>
                   </div>

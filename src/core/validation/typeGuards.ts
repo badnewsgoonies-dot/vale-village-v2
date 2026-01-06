@@ -217,10 +217,10 @@ export function validateLocalStorageData<T>(
       return result.value;
     }
 
-    console.warn(`Invalid localStorage data for key "${key}":`, result.error);
+    // [REMOVED] console.warn(`Invalid localStorage data for key "${key}":`, result.error);
     return null;
   } catch (error) {
-    console.warn(`Failed to load localStorage data for key "${key}":`, error);
+    // [REMOVED] console.warn(`Failed to load localStorage data for key "${key}":`, error);
     return null;
   }
 }

@@ -31,7 +31,7 @@ function VictorySparkles(): JSX.Element {
   return (
     <div class="victory-sparkles" aria-hidden="true">
       {[...Array(12)].map((_, i) => (
-        <div key={i} class="sparkle" style={{ '--delay': `${i * 0.25}s`, '--left': `${5 + i * 8}%` } as any} />
+        <div key={i} class="sparkle" style={{ '--delay': `${i * 0.25}s`, '--left': `${5 + i * 8}%` } as React.CSSProperties} />
       ))}
     </div>
   );
@@ -156,7 +156,7 @@ export function RewardsScreen({
         {/* Party Display - Bouncing sprites */}
         <div class="party-display" aria-label="Victorious party members">
           {partyMembers.map((unit, index) => (
-            <div key={unit.id} class="party-member" style={{ '--index': index } as any}>
+            <div key={unit.id} class="party-member" style={{ '--index': index } as React.CSSProperties}>
               <div class="party-sprite">
                 <SimpleSprite
                   id={getPortraitSprite(unit.id)}

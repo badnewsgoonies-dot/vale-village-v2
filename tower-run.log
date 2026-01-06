@@ -1,113 +1,70 @@
 
-> vale-village-v2@0.1.0 test:e2e:tower /home/geni/Documents/vale-village-v2
-> playwright test --headed tests/e2e/gameplay-full-tower.spec.ts
-
-
 Running 1 test using 1 worker
 
-[2026-01-02T07:05:35.580Z] 🏰 Starting Full Tower Run...
-[2026-01-02T07:05:50.371Z] 
+[2026-01-02T11:49:44.561Z] 🏰 Starting Full Tower Run...
+[2026-01-02T11:49:54.658Z] 
 🏢 === FLOOR 1/30 ===
-[2026-01-02T07:05:52.332Z]   Action taken: battle
-[2026-01-02T07:05:52.697Z]   👥 Team select screen - confirming
-[2026-01-02T07:05:56.997Z]   ⚔️ Battle started
-[2026-01-02T07:06:06.874Z]   Floor 1 - Round 1 executed
-[2026-01-02T07:06:21.808Z]   Floor 1 - Round 2 executed
-[2026-01-02T07:06:36.809Z]   Floor 1 - Round 3 executed
-[2026-01-02T07:06:51.895Z]   Floor 1 - Round 4 executed
-[2026-01-02T07:07:06.822Z]   Floor 1 - Round 5 executed
-[2026-01-02T07:07:36.069Z]   ✅ Victory! (5 rounds)
-[2026-01-02T07:07:36.444Z] 
+[2026-01-02T11:49:54.814Z]   Action taken: battle
+[2026-01-02T11:49:54.988Z]   👥 Team select screen - confirming
+[2026-01-02T11:49:55.355Z]   ⚔️ Battle started
+[2026-01-02T11:49:56.301Z]   Floor 1 - Round 1 executed
+[2026-01-02T11:50:05.136Z]   Floor 1 - Round 2 executed
+[2026-01-02T11:50:13.753Z]   Floor 1 - Round 3 executed
+[2026-01-02T11:50:22.579Z]   Floor 1 - Round 4 executed
+[2026-01-02T11:50:31.427Z]   Floor 1 - Round 5 executed
+[2026-01-02T11:50:45.108Z]   ✅ Victory! (5 rounds)
+[2026-01-02T11:50:45.489Z] 
 🏢 === FLOOR 2/30 ===
-[2026-01-02T07:07:37.915Z]   Action taken: battle
-[2026-01-02T07:07:38.028Z]   ⏭️ Floor skipped (no battle view)
-[2026-01-02T07:07:38.540Z] 
-🏢 === FLOOR 3/30 ===
-[2026-01-02T07:07:38.786Z]   Action taken: enter
-[2026-01-02T07:07:38.845Z]   ⚔️ Battle started
+[2026-01-02T11:50:45.722Z]   Action taken: battle
+[2026-01-02T11:50:45.792Z]   👥 Team select screen - confirming
+[2026-01-02T11:50:46.009Z]   ⚔️ Battle started
+[2026-01-02T11:50:46.549Z]   Floor 2 - Round 1 executed
+[2026-01-02T11:50:58.802Z]   Floor 2 - Round 2 executed
+[2026-01-02T11:51:21.213Z]   ❌ DEFEATED on floor 2!
 
-📊 Log saved to: test-results/tower-run-2026-01-02T07-07-50-883Z.json
-📝 Summary saved to: test-results/tower-run-summary-2026-01-02T07-07-50-884Z.txt
+📊 Log saved to: test-results/tower-run-2026-01-02T11-51-21-214Z.json
+📝 Summary saved to: test-results/tower-run-summary-2026-01-02T11-51-21-217Z.txt
 === TOWER RUN SUMMARY ===
-Start: 2026-01-02T07:05:32.755Z
-End: 2026-01-02T07:07:50.882Z
-Total Duration: 138s
-Floors Completed: 2/30
-Final Result: error
-Error: locator.click: Timeout 10000ms exceeded.
-Call log:
-[2m  - waiting for locator('[data-testid^="battle-enemy-"]').first()[22m
-[2m    - locator resolved to <div data-testid="battle-enemy-earth-scout_0">…</div>[22m
-[2m  - attempting click action[22m
-[2m    2 × waiting for element to be visible, enabled and stable[22m
-[2m      - element is visible, enabled and stable[22m
-[2m      - scrolling into view if needed[22m
-[2m      - done scrolling[22m
-[2m      - <div>…</div> from <div data-testid="battle-enemy-venus-wolf_1">…</div> subtree intercepts pointer events[22m
-[2m    - retrying click action[22m
-[2m    - waiting 20ms[22m
-[2m    2 × waiting for element to be visible, enabled and stable[22m
-[2m      - element is visible, enabled and stable[22m
-[2m      - scrolling into view if needed[22m
-[2m      - done scrolling[22m
-[2m      - <div>…</div> from <div data-testid="battle-enemy-venus-wolf_1">…</div> subtree intercepts pointer events[22m
-[2m    - retrying click action[22m
-[2m      - waiting 100ms[22m
-[2m    - waiting for element to be visible, enabled and stable[22m
-[2m    - element is visible, enabled and stable[22m
-[2m    - scrolling into view if needed[22m
-[2m    - done scrolling[22m
-[2m    - <div>…</div> from <div data-testid="battle-enemy-venus-wolf_1">…</div> subtree intercepts pointer events[22m
-[2m  - retrying click action[22m
-[2m    - waiting 500ms[22m
-
+Start: 2026-01-02T11:49:43.578Z
+End: 2026-01-02T11:51:21.214Z
+Total Duration: 98s
+Floors Completed: 1/30
+Final Result: defeat
 
 === FLOOR DETAILS ===
-Floor 1 (battle): victory - 106s (5 rounds)
-Floor 2 (battle): skipped - 2s
-
-  ✘  1 [chromium] › tests/e2e/gameplay-full-tower.spec.ts:328:1 › Full Tower Run - Complete all 30 floors (2.4m)
+Floor 1 (battle): victory - 51s (5 rounds)
+Floor 2 (battle): defeat - 36s (2 rounds)
 
 
-  1) [chromium] › tests/e2e/gameplay-full-tower.spec.ts:328:1 › Full Tower Run - Complete all 30 floors 
+📊 Log saved to: test-results/tower-run-2026-01-02T11-51-21-217Z.json
+📝 Summary saved to: test-results/tower-run-summary-2026-01-02T11-51-21-218Z.txt
+=== TOWER RUN SUMMARY ===
+Start: 2026-01-02T11:49:43.578Z
+End: 2026-01-02T11:51:21.217Z
+Total Duration: 98s
+Floors Completed: 1/30
+Final Result: defeat
+Error: Defeated on floor 2
 
-    TimeoutError: locator.click: Timeout 10000ms exceeded.
-    Call log:
-    [2m  - waiting for locator('[data-testid^="battle-enemy-"]').first()[22m
-    [2m    - locator resolved to <div data-testid="battle-enemy-earth-scout_0">…</div>[22m
-    [2m  - attempting click action[22m
-    [2m    2 × waiting for element to be visible, enabled and stable[22m
-    [2m      - element is visible, enabled and stable[22m
-    [2m      - scrolling into view if needed[22m
-    [2m      - done scrolling[22m
-    [2m      - <div>…</div> from <div data-testid="battle-enemy-venus-wolf_1">…</div> subtree intercepts pointer events[22m
-    [2m    - retrying click action[22m
-    [2m    - waiting 20ms[22m
-    [2m    2 × waiting for element to be visible, enabled and stable[22m
-    [2m      - element is visible, enabled and stable[22m
-    [2m      - scrolling into view if needed[22m
-    [2m      - done scrolling[22m
-    [2m      - <div>…</div> from <div data-testid="battle-enemy-venus-wolf_1">…</div> subtree intercepts pointer events[22m
-    [2m    - retrying click action[22m
-    [2m      - waiting 100ms[22m
-    [2m    - waiting for element to be visible, enabled and stable[22m
-    [2m    - element is visible, enabled and stable[22m
-    [2m    - scrolling into view if needed[22m
-    [2m    - done scrolling[22m
-    [2m    - <div>…</div> from <div data-testid="battle-enemy-venus-wolf_1">…</div> subtree intercepts pointer events[22m
-    [2m  - retrying click action[22m
-    [2m    - waiting 500ms[22m
+=== FLOOR DETAILS ===
+Floor 1 (battle): victory - 51s (5 rounds)
+Floor 2 (battle): defeat - 36s (2 rounds)
+
+  ✘  1 [chromium] › tests/e2e/gameplay-full-tower.spec.ts:88:1 › Full Tower Run - Complete all 30 floors (1.8m)
 
 
-      204 |       await attackButton.click();
-      205 |       await demoDelay(page, 100);
-    > 206 |       await firstEnemy.click();
-          |                        ^
-      207 |       await demoDelay(page, 100);
-      208 |     }
-      209 |
-        at runBattle (/home/geni/Documents/vale-village-v2/tests/e2e/gameplay-full-tower.spec.ts:206:24)
-        at /home/geni/Documents/vale-village-v2/tests/e2e/gameplay-full-tower.spec.ts:408:30
+  1) [chromium] › tests/e2e/gameplay-full-tower.spec.ts:88:1 › Full Tower Run - Complete all 30 floors 
+
+    Error: Defeated on floor 2
+
+      179 |           runLog.finalResult = 'defeat';
+      180 |           saveLog();
+    > 181 |           throw new Error(`Defeated on floor ${floor}`);
+          |                 ^
+      182 |         }
+      183 |         
+      184 |         logFloor(`  ✅ Victory! (${battleResult.rounds} rounds)`);
+        at /home/geni/Documents/vale-village-v2/tests/e2e/gameplay-full-tower.spec.ts:181:17
 
     attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
     test-results/gameplay-full-tower-Full-Tower-Run---Complete-all-30-floors-chromium/test-failed-1.png
@@ -128,10 +85,4 @@ Floor 2 (battle): skipped - 2s
     ────────────────────────────────────────────────────────────────────────────────────────────────
 
   1 failed
-    [chromium] › tests/e2e/gameplay-full-tower.spec.ts:328:1 › Full Tower Run - Complete all 30 floors 
-
-To open last HTML report run:
-[36m[39m
-[36m  pnpm exec playwright show-report[39m
-[36m[39m
- ELIFECYCLE  Command failed with exit code 1.
+    [chromium] › tests/e2e/gameplay-full-tower.spec.ts:88:1 › Full Tower Run - Complete all 30 floors 

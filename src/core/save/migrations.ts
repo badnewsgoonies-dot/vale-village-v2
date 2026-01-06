@@ -136,7 +136,7 @@ export function migrateSave(envelope: SaveEnvelope): SaveEnvelope {
 
   // Future version (shouldn't happen, but handle gracefully)
   if (compareVersions(saved, current) > 0) {
-    console.warn(`Save version ${saved.major}.${saved.minor} is newer than current ${current.major}.${current.minor}`);
+    // [REMOVED] console.warn(`Save version ${saved.major}.${saved.minor} is newer than current ${current.major}.${current.minor}`);
     return envelope; // Return as-is, may break but better than crashing
   }
 
@@ -170,7 +170,7 @@ export function migrateSave(envelope: SaveEnvelope): SaveEnvelope {
     } else {
       // No migration found - try to jump to current version
       // This is a fallback for missing migrations
-      console.warn(`No migration found for ${migrationKey}, attempting direct upgrade`);
+      // [REMOVED] console.warn(`No migration found for ${migrationKey}, attempting direct upgrade`);
       migrated = {
         ...migrated,
         version: current,

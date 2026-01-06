@@ -416,7 +416,7 @@ export function executeRound(
     // In development, surface a warning but do not throw to avoid crashing the UI
     if (process.env.NODE_ENV !== 'production') {
       // eslint-disable-next-line no-console
-      console.warn(validation.error);
+      // [REMOVED] console.warn(validation.error);
     }
     return { state, events: [] };
   }
@@ -802,7 +802,7 @@ function resolveValidTargets(
         targetSide = 'ally';
       }
 
-      console.warn(`[QueueBattle] Ability ${action.abilityId} not found for actor ${actor.id}`);
+      // [REMOVED] console.warn(`[QueueBattle] Ability ${action.abilityId} not found for actor ${actor.id}`);
     }
   } else if (action.abilityId === null) {
     // Basic attack is always single-target enemy
@@ -873,7 +873,7 @@ function generateEnemyActions(
       }
     } catch (error) {
       // Fallback to basic attack if AI decision fails (e.g., no usable abilities)
-      console.warn(`AI decision failed for enemy ${enemy.id}, using basic attack:`, error);
+      // [REMOVED] console.warn(`AI decision failed for enemy ${enemy.id}, using basic attack:`, error);
       const alivePlayers = state.playerTeam.units.filter(u => !isUnitKO(u));
       if (alivePlayers.length > 0) {
         actions.push({
@@ -912,7 +912,7 @@ function checkBattleEnd(state: BattleState): 'PLAYER_VICTORY' | 'PLAYER_DEFEAT' 
   // this indicates a bug - log and return null to prevent incorrect defeat
   const aliveUnits = state.playerTeam.units.filter(u => !isUnitKO(u));
   if (allPlayersKO && aliveUnits.length > 0) {
-    console.warn('[QueueBattle] BUG: checkBattleEnd detected all players KO but some units are alive!', {
+    // [REMOVED] console.warn('[QueueBattle] BUG: checkBattleEnd detected all players KO but some units are alive!', {
       units: state.playerTeam.units.map(u => ({ id: u.id, currentHp: u.currentHp, isKO: isUnitKO(u) })),
       aliveUnits: aliveUnits.map(u => ({ id: u.id, currentHp: u.currentHp })),
       allPlayersKO,

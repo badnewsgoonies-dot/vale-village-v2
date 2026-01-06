@@ -99,7 +99,7 @@ export const OverworldMapV4: FunctionComponent = () => {
           resolve();
         };
         img.onerror = () => {
-          console.warn(`Failed to load tile sprite: ${path}`);
+          // [REMOVED] console.warn(`Failed to load tile sprite: ${path}`);
           // Create colored placeholder
           const canvas = document.createElement('canvas');
           canvas.width = MAP_DATA.tileSize;
@@ -131,7 +131,7 @@ export const OverworldMapV4: FunctionComponent = () => {
           resolve();
         };
         img.onerror = () => {
-          console.warn(`Failed to load building sprite: ${building.spritePath}`);
+          // [REMOVED] console.warn(`Failed to load building sprite: ${building.spritePath}`);
           // Create placeholder
           const canvas = document.createElement('canvas');
           canvas.width = building.width * MAP_DATA.tileSize;

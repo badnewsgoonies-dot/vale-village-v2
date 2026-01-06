@@ -368,7 +368,7 @@ export class OverworldEngine {
   setSceneType(type: 'overworld' | 'interior'): void {
     // Guard: Don't switch scene type during active transition
     if (this.sceneTransition.isTransitioning()) {
-      console.warn('Cannot setSceneType during active transition');
+      // [REMOVED] console.warn('Cannot setSceneType during active transition');
       return;
     }
 

@@ -20,6 +20,8 @@ import type { TowerSlice } from './towerSlice';
 import { MIN_PARTY_SIZE } from '@/core/constants';
 import type { BattleConfig } from './battleConfig';
 import { buildBattleConfigForNextBattle, cloneEquipmentLoadout, updateDjinnSlots, validateBattleConfig } from './battleConfig';
+import { prepareFloorBattle } from '@/core/services/TowerService';
+import { TOWER_FLOORS } from '@/data/definitions/towerFloors';
 
 export interface GameFlowSlice {
   mode:
@@ -193,7 +195,7 @@ export const createGameFlowSlice: StateCreator<
       if (npcId && DIALOGUES[npcId]) {
         get().startDialogueTree(DIALOGUES[npcId]);
       } else if (npcId) {
-        console.warn(`Dialogue ${npcId} not found`);
+        // [REMOVED] console.warn(`Dialogue ${npcId} not found`);
       }
 
       set({ lastTrigger: trigger });
@@ -208,7 +210,7 @@ export const createGameFlowSlice: StateCreator<
       if (storyId && DIALOGUES[storyId]) {
         get().startDialogueTree(DIALOGUES[storyId]);
       } else if (storyId) {
-        console.warn(`Story dialogue ${storyId} not found`);
+        // [REMOVED] console.warn(`Story dialogue ${storyId} not found`);
       }
 
       set({ lastTrigger: trigger });
@@ -349,6 +351,18 @@ export const createGameFlowSlice: StateCreator<
       return;
     }
 
+    let finalTeam = selectedTeam;
+    // TOWER NORMALIZATION
+    const towerRun = get().towerRun;
+    if (get().towerStatus === 'in-run' && towerRun) {
+      try {
+        const { normalizedParty } = prepareFloorBattle(towerRun, TOWER_FLOORS, selectedTeam.units);
+        finalTeam = updateTeam(selectedTeam, { units: normalizedParty });
+      } catch (e) {
+        console.error('Failed to normalize tower team', e);
+      }
+    }
+
     const preBattlePosition = {
       mapId: currentMapId,
       position: { x: playerPosition.x, y: playerPosition.y },
@@ -359,14 +373,14 @@ export const createGameFlowSlice: StateCreator<
     const rng = makePRNG(seed);
 
     try {
-      const result = createBattleFromEncounter(pendingBattleEncounterId, selectedTeam, rng);
+      const result = createBattleFromEncounter(pendingBattleEncounterId, finalTeam, rng);
       if (!result || !result.battle) {
         console.error(`Failed to create battle from encounter ${pendingBattleEncounterId}`);
         return;
       }
 
       get().setBattle(result.battle, seed);
-      get().setTeam(selectedTeam);
+      get().setTeam(finalTeam);
 
       set({
         currentEncounter: encounter,
@@ -428,7 +442,7 @@ export const createGameFlowSlice: StateCreator<
           index !== slotIndex && existingId === normalizedDjinnId
         )
       ) {
-        console.warn('Cannot equip the same Djinn more than once', normalizedDjinnId);
+        // [REMOVED] console.warn('Cannot equip the same Djinn more than once', normalizedDjinnId);
         return state;
       }
 

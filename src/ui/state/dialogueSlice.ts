@@ -174,7 +174,7 @@ export const createDialogueSlice: StateCreator<
     }
 
     const nextMode = prevMode === 'dialogue' ? returnMode : prevMode;
-    console.warn(`[endDialogue] prevMode=${prevMode}, returnMode=${returnMode}, nextMode=${nextMode}`);
+    // [REMOVED] console.warn(`[endDialogue] prevMode=${prevMode}, returnMode=${returnMode}, nextMode=${nextMode}`);
     set({
       currentDialogueTree: null,
       currentDialogueState: null,
@@ -266,9 +266,9 @@ function applyDialogueEvents(
       case 'quest-accepted': {
         if (canSetStoryFlag) {
           store.setStoryFlag('questAccepted', true);
-          console.warn('Quest accepted!');
+          // [REMOVED] console.warn('Quest accepted!');
         } else {
-          console.warn('setStoryFlag not available - quest flag not saved');
+          // [REMOVED] console.warn('setStoryFlag not available - quest flag not saved');
         }
         break;
       }
@@ -284,7 +284,7 @@ function applyDialogueEvents(
       }
       case 'start-battle': {
         const { encounterId, skipPreBattleDialogue } = event;
-        console.warn(`Starting battle from dialogue: ${encounterId}`);
+        // [REMOVED] console.warn(`Starting battle from dialogue: ${encounterId}`);
         store.handleTrigger(
           {
             id: 'dialogue-battle',
@@ -315,7 +315,7 @@ function applyDialogueEvents(
           if (store.setRecruitmentFlag) {
             store.setRecruitmentFlag(unitId, true);
           }
-          console.warn(`🎉 Recruited ${newUnit.name} via dialogue effect!`);
+          // [REMOVED] console.warn(`🎉 Recruited ${newUnit.name} via dialogue effect!`);
         } else {
           console.error(`Failed to recruit unit: ${unitId} (definition not found or no team)`);
         }
@@ -334,29 +334,29 @@ function applyDialogueEvents(
             const finalTeam = equipResult.ok ? equipResult.value : collectedTeam;
 
             store.updateTeam(finalTeam);
-            console.warn(`🎉 Granted Djinn ${djinnId} via dialogue effect!`);
+            // [REMOVED] console.warn(`🎉 Granted Djinn ${djinnId} via dialogue effect!`);
 
             if (!equipResult.ok) {
-              console.warn(`Failed to auto-equip Djinn ${djinnId}: ${equipResult.error}`);
+              // [REMOVED] console.warn(`Failed to auto-equip Djinn ${djinnId}: ${equipResult.error}`);
             }
           } else {
-            console.warn(`Failed to grant Djinn ${djinnId}: ${collectResult.error}`);
+            // [REMOVED] console.warn(`Failed to grant Djinn ${djinnId}: ${collectResult.error}`);
           }
         } else {
-          console.warn(`Cannot grant Djinn ${djinnId}: no team available`);
+          // [REMOVED] console.warn(`Cannot grant Djinn ${djinnId}: no team available`);
         }
         break;
       }
       case 'set-story-flag': {
         if (canSetStoryFlag) {
           store.setStoryFlag(event.key, event.value);
-          console.warn(`Story flag set via dialogue: ${event.key} = ${event.value}`);
+          // [REMOVED] console.warn(`Story flag set via dialogue: ${event.key} = ${event.value}`);
         }
         break;
       }
       case 'remove-npc': {
         const npcId = event.npcId;
-        console.warn();
+        // [REMOVED] console.warn();
         // We don't have a dedicated NPC removal slice yet, 
         // but we can set a story flag that the map definition respects.
         if (canSetStoryFlag) {
@@ -371,7 +371,7 @@ function applyDialogueEvents(
             saveSlice.autoSave();
           }
         } catch (error) {
-          console.warn('Auto-save failed after dialogue:', error);
+          // [REMOVED] console.warn('Auto-save failed after dialogue:', error);
         }
         break;
       }

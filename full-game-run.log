@@ -1,0 +1,50 @@
+
+Running 1 test using 1 worker
+
+🚀 Starting Full Game E2E...
+BROWSER: [vite] connecting...
+BROWSER: [vite] connected.
+BROWSER: Set battleSpeed to instant in localStorage
+  ✘  1 [chromium] › tests/e2e/gameplay-full-game.spec.ts:22:1 › Full Game Flow - Prototype Milestone (16.1s)
+
+
+  1) [chromium] › tests/e2e/gameplay-full-game.spec.ts:22:1 › Full Game Flow - Prototype Milestone ─
+
+    TimeoutError: locator.click: Timeout 10000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('.main-menu-option').filter({ hasText: /^New Game$/i })[22m
+    [2m    - locator resolved to <button class="main-menu-option selected ">New Game</button>[22m
+    [2m  - attempting click action[22m
+    [2m    - waiting for element to be visible, enabled and stable[22m
+    [2m  - element was detached from the DOM, retrying[22m
+
+
+      45 |   const newGameOption = page.locator('.main-menu-option').filter({ hasText: /^New Game$/i });
+      46 |   await expect(newGameOption).toBeVisible();
+    > 47 |   await newGameOption.click();
+         |                       ^
+      48 |
+      49 |   await expect(page.locator('.overworld-shell')).toBeVisible({ timeout: 15_000 });
+      50 |   console.log('🌍 Spawned in Overworld');
+        at /home/geni/Documents/vale-village-v2/tests/e2e/gameplay-full-game.spec.ts:47:23
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/gameplay-full-game-Full-Game-Flow---Prototype-Milestone-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/gameplay-full-game-Full-Game-Flow---Prototype-Milestone-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/gameplay-full-game-Full-Game-Flow---Prototype-Milestone-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/gameplay-full-game-Full-Game-Flow---Prototype-Milestone-chromium/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/gameplay-full-game-Full-Game-Flow---Prototype-Milestone-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › tests/e2e/gameplay-full-game.spec.ts:22:1 › Full Game Flow - Prototype Milestone ──
