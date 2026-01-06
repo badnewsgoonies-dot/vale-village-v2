@@ -1,6 +1,6 @@
 # Codebase Bug Report - Vale Village V2
 
-This report documents bugs and technical debt found in the codebase as of December 25, 2025.
+This report documents bugs and technical debt found in the codebase. Audit rounds 1–5 were reviewed on 2026-01-06 UTC; the findings below consolidate prior reports (BUGS.md, BUGS_NEW.md, LANE_BUGS.md) and validated reproductions in tests/unit/*. Repro tests and fix skeletons live under docs/fixes/ and tests/unit/bugs/.
 
 ## Summary Table
 
