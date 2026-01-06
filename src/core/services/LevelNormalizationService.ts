@@ -1,4 +1,5 @@
 import type { Unit } from '../../core/models/Unit';
+import { calculateMaxHp } from '../../core/models/Unit';
 import type { TowerFloor } from '../../data/schemas/TowerFloorSchema';
 import { produce } from 'immer';
 import { getXpForLevel } from '../algorithms/xp';
@@ -47,18 +48,14 @@ export function calculateLevelScaledStats(unit: Unit, targetLevel: number): Norm
   return produce(unit as NormalizedUnit, draft => {
     draft.originalLevel = unit.level;
     draft.isNormalized = true;
-    draft.level = targetLevel;
 
-    // Recalculate derived current stats if needed
-    // For now, we assume full heal on normalization to avoid 'current > max' issues
-    const growth = unit.growthRates || FALLBACK_GROWTH;
-    
-    // Calculate new Max HP
-    const newMaxHp = unit.baseStats.hp + (targetLevel - 1) * growth.hp;
-    draft.currentHp = Math.floor(newMaxHp);
-    
-    // Use canonical XP for level
+    // Set the normalized level and canonical XP
+    draft.level = targetLevel;
     draft.xp = getXpForLevel(targetLevel);
+
+    // Recalculate derived current stats using canonical helper so equipment/status are respected
+    const maxHp = calculateMaxHp(draft as unknown as Unit);
+    draft.currentHp = Math.max(1, Math.floor(maxHp));
   });
 }
 
@@ -72,6 +69,6 @@ export function normalizePartyForFloor(
 ): NormalizedUnit[] {
   // Currently we only support stepped curve logic embedded in calculateFloorTargetLevel
   // Future expansion: use 'curve' param to switch logic
-  const targetLevel = calculateFloorTargetLevel(floor.floorNumber);
+  const targetLevel = floor.normalizedLevel ?? calculateFloorTargetLevel(floor.floorNumber);
   return party.map(unit => calculateLevelScaledStats(unit, targetLevel));
 }
