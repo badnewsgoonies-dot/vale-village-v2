@@ -912,11 +912,7 @@ function checkBattleEnd(state: BattleState): 'PLAYER_VICTORY' | 'PLAYER_DEFEAT' 
   // this indicates a bug - log and return null to prevent incorrect defeat
   const aliveUnits = state.playerTeam.units.filter(u => !isUnitKO(u));
   if (allPlayersKO && aliveUnits.length > 0) {
-    // [REMOVED] console.warn('[QueueBattle] BUG: checkBattleEnd detected all players KO but some units are alive!', {
-      units: state.playerTeam.units.map(u => ({ id: u.id, currentHp: u.currentHp, isKO: isUnitKO(u) })),
-      aliveUnits: aliveUnits.map(u => ({ id: u.id, currentHp: u.currentHp })),
-      allPlayersKO,
-    });
+    // Inconsistent KO state detected; skipping false-positive defeat (development-only diagnostic removed).
     return null; // Continue battle - this is a false positive
   }
 

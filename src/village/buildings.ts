@@ -1,4 +1,4 @@
-import { BUILDING_GROUND_Y, VIEWPORT_WIDTH } from './constants';
+import { BUILDING_GROUND_Y } from '../constants';
 
 export type BuildingKind = 'house' | 'tower' | 'shop';
 

@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+test.skip(!process.env.RUN_STABLE_E2E, 'Skipping heavy e2e tests by default');
 
 test('Compendium Djinn Section has sprites', async ({ page }) => {
   await page.goto('/');

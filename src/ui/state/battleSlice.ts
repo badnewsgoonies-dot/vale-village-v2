@@ -10,9 +10,10 @@ import type { BattleEvent } from '../../core/services/types';
 import { performAction, endTurn, checkBattleEnd, startTurnTick as battleServiceStartTurnTick } from '../../core/services/BattleService';
 import { makeAIDecision } from '../../core/services/AIService';
 import { makePRNG } from '../../core/random/prng';
-import { createRNGStream, RNG_STREAMS } from '../../core/constants';
+import { createRNGStream, RNG_STREAMS, DEFAULT_RNG_SEED } from '../../core/constants';
 import type { RewardsSlice } from './rewardsSlice';
 import type { StorySlice } from './storySlice';
+import { normalizeBattleState } from './queueBattleSlice';
 
 export interface BattleSlice {
   battle: BattleState | null;
@@ -33,6 +34,8 @@ export interface BattleSlice {
   ) => { avg: number; min: number; max: number };
 }
 
+const PREVIEW_SAMPLES = 16;
+
 export const createBattleSlice: StateCreator<
   BattleSlice & RewardsSlice & StorySlice,
   [['zustand/devtools', never]],
@@ -41,11 +44,13 @@ export const createBattleSlice: StateCreator<
 > = (set, get) => ({
   battle: null,
   events: [],
-  rngSeed: 1337,
+  rngSeed: DEFAULT_RNG_SEED,
   turnNumber: 0,
 
-  setBattle: (battle, seed) =>
-    set({ battle, rngSeed: seed, turnNumber: 0, events: [] }),
+  setBattle: (battle, seed) => {
+      const normalized = battle ? normalizeBattleState(battle) ?? battle : null;
+      set({ battle: normalized, rngSeed: seed, turnNumber: 0, events: [] });
+    },
 
   startTurnTick: () => {
     const { battle, rngSeed, turnNumber } = get();
@@ -90,7 +95,7 @@ export const createBattleSlice: StateCreator<
 
       // Emit encounter-finished event if we have an encounterId
       // This is a story-specific event, emitted alongside battle-end for story progression
-      const encounterId = getEncounterId(battle);
+      const encounterId = getEncounterId(result.value.state);
       if (encounterId) {
         newEvents.push({
           type: 'encounter-finished',
@@ -118,11 +123,14 @@ export const createBattleSlice: StateCreator<
         console.error('endTurn failed:', endResult.error);
         return;
       }
-      set((state) => ({
-        battle: endResult.value,
-        events: [...state.events, ...newEvents],
-        turnNumber: turnNumber + 1,
-      }));
+      {
+        const normalizedEnd = normalizeBattleState(endResult.value) ?? endResult.value;
+        set((state) => ({
+          battle: normalizedEnd,
+          events: [...state.events, ...newEvents],
+          turnNumber: turnNumber + 1,
+        }));
+      }
     }
   },
 
@@ -136,7 +144,10 @@ export const createBattleSlice: StateCreator<
       console.error('endTurn failed:', result.error);
       return;
     }
-    set({ battle: result.value, turnNumber: turnNumber + 1 });
+    {
+      const normalized = normalizeBattleState(result.value) ?? result.value;
+      set({ battle: normalized, turnNumber: turnNumber + 1 });
+    }
   },
 
   performAIAction: () => {
@@ -182,7 +193,7 @@ export const createBattleSlice: StateCreator<
         }
 
         // Emit encounter-finished event for story progression
-        const encounterId = getEncounterId(battle);
+        const encounterId = getEncounterId(result.value.state);
         if (encounterId) {
           newEvents.push({
             type: 'encounter-finished',
@@ -202,17 +213,20 @@ export const createBattleSlice: StateCreator<
         }
       } else {
         // Battle continues - advance to next turn
-        const rngEndTurn = makePRNG(rngSeed + turnNumber * 1_000_000);
+        const rngEndTurn = makePRNG(createRNGStream(rngSeed, turnNumber, RNG_STREAMS.END_TURN));
         const endResult = endTurn(result.value.state, rngEndTurn);
         if (!endResult.ok) {
           console.error('AI endTurn failed:', endResult.error);
           return;
         }
-        set((state) => ({
-          battle: endResult.value,
-          events: [...state.events, ...newEvents],
-          turnNumber: turnNumber + 1,
-        }));
+        {
+          const normalizedEnd = normalizeBattleState(endResult.value) ?? endResult.value;
+          set((state) => ({
+            battle: normalizedEnd,
+            events: [...state.events, ...newEvents],
+            turnNumber: turnNumber + 1,
+          }));
+        }
       }
     } catch (error) {
       console.error('AI decision failed:', error);
@@ -220,7 +234,10 @@ export const createBattleSlice: StateCreator<
       const rngFallback = makePRNG(createRNGStream(rngSeed, turnNumber, RNG_STREAMS.END_TURN));
       const fallbackResult = endTurn(battle, rngFallback);
       if (fallbackResult.ok) {
-        set({ battle: fallbackResult.value, turnNumber: turnNumber + 1 });
+        {
+        const normalized = normalizeBattleState(fallbackResult.value) ?? fallbackResult.value;
+        set({ battle: normalized, turnNumber: turnNumber + 1 });
+      }
       }
     }
   },
@@ -251,10 +268,11 @@ export const createBattleSlice: StateCreator<
     const baseRng = makePRNG(previewSeed);
 
     // Run N deterministic samples
-    const N = 16;
+    const N = PREVIEW_SAMPLES;
     let sum = 0;
     let min = Number.POSITIVE_INFINITY;
     let max = 0;
+    let successes = 0;
 
     for (let i = 0; i < N; i++) {
       const r = baseRng.clone();
@@ -262,6 +280,7 @@ export const createBattleSlice: StateCreator<
       if (!result.ok) {
         continue; // Skip failed previews
       }
+      successes += 1;
       const totalDamage = result.value.events
         .filter((e): e is Extract<BattleEvent, { type: 'hit' }> => e.type === 'hit')
         .reduce((acc, ev) => acc + ev.amount, 0);
@@ -271,6 +290,7 @@ export const createBattleSlice: StateCreator<
       max = Math.max(max, totalDamage);
     }
 
-    return { avg: Math.round(sum / N), min, max };
+    if (successes === 0) return { avg: 0, min: 0, max: 0 };
+    return { avg: Math.round(sum / successes), min, max };
   },
 });

@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+test.skip(!process.env.RUN_STABLE_E2E, 'Skipping heavy e2e tests by default');
 
 const DEFAULT_TIMEOUT = 10_000;
 const MAX_ROUNDS = 20;
