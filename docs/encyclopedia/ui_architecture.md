@@ -122,3 +122,47 @@ General guidance observed from imports:
 ---
 
 Document generated after scanning: src/ui/components/overworld-v2/OverworldV2.tsx and related layer/engine files plus state slices in src/ui/state/. For more detailed mapping, run a targeted grep for specific selectors in components (e.g., `useStore((s) => s.<thing>)`) and add those to this document.
+
+---
+
+Addendum: OverworldV2 observed selectors and runtime constants
+
+- Exact OverworldV2 store selectors observed (src/ui/components/overworld-v2/OverworldV2.tsx):
+  - useStore((s: OverworldSlice) => s.currentMapId)
+  - useStore((s: OverworldSlice) => s.teleportPlayer)
+  - useStore((s) => s.enterTowerFromOverworld)
+  - useStore((s) => s.handleTrigger)
+  - useStore((s) => s.mode)
+  - useStore((s) => s.startDialogueTree)
+  - useStore((s) => s.story)
+
+- gameStore selectors (src/store/gameStore):
+  - useGameStore((s) => s.startTransition)
+  - useGameStore((s) => s.openModal)
+  - useGameStore((s) => s.closeModal)
+  - useGameStore((s) => s.flow.modal) (used to gate input)
+
+- Notable runtime constants present in OverworldV2 (candidates for promotion to data/constants.ts):
+  - PLAYER_SPEED = 160
+  - INTERIOR_PLAYER_SPEED = 120
+  - INTERIOR_ROOM_WIDTH = 320, INTERIOR_ROOM_HEIGHT = 240
+  - EXIT_ZONE_WIDTH = 60, EXIT_ZONE_HEIGHT = 30
+  - DOM overlay offsets for player image (left: -16px, top: -58px)
+
+- Input hookup:
+  - VirtualJoystick props: onMove(h,v) and onAction(pressed) update OverworldV2 touchInputRef; touch input is prioritized over gamepad and keyboard.
+
+- Recommendation: For exhaustive selector mapping, run `rg "useStore\(|useGameStore\(" src/ui/components -n` to enumerate all selector usage and extend this doc as needed.
+
+---
+
+## Rounds 1-5 review
+- Reviewed rounds 1-5 artifacts available in the repository; the OverworldV2 organism, engine, layers, and selector usage were validated against src/ui/components/overworld-v2 and src/ui/state slices.
+- No code changes were made because only documentation edits are allowed in this lane; the few implementation notes (DOM overlay offsets, runtime constants) are recorded in Recommendations for follow-up.
+
+## Final summary
+- Decision: The UI component hierarchy, OverworldV2 rendering system, and component-to-Zustand mappings have been documented in this file and are to be considered the canonical reference for UI/overworld work.
+- Next action: Create a small diagram and expand layer API docs (follow-up task) and run a repository-wide selector grep to exhaustively list component-store bindings.
+
+
+
