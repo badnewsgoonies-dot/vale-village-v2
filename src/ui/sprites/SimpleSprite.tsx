@@ -211,7 +211,7 @@ export function SimpleSprite({
     
     if (debug && result.entry) {
       // eslint-disable-next-line no-console
-      console.log(`[SimpleSprite] Found sprite`, {
+      // [REMOVED] console.log(`[SimpleSprite] Found sprite`, {
         id,
         method: result.method,
         name: result.entry.name,
@@ -219,7 +219,7 @@ export function SimpleSprite({
         category: result.entry.category,
       });
     } else if (debug && !result.entry) {
-      console.warn(`[SimpleSprite] Sprite not found:`, {
+      // [REMOVED] console.warn(`[SimpleSprite] Sprite not found:`, {
         id,
         method: result.method,
         suggestion: id.includes('-') 

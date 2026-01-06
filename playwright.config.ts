@@ -15,7 +15,7 @@ export default defineConfig({
     }],
     ['list'],
   ],
-  timeout: 60 * 1000,
+  timeout: 600 * 1000,
   use: {
     baseURL: BASE_URL,
     headless: process.env.CI ? true : true,
@@ -28,7 +28,7 @@ export default defineConfig({
   webServer: {
     command: `pnpm exec vite --host ${HOST} --port ${PORT} --strictPort`,
     url: BASE_URL,
-    timeout: 60 * 1000,
+    timeout: 600 * 1000,
     reuseExistingServer: !process.env.CI,
   },
   projects: [

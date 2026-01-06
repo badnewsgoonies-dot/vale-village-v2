@@ -2,7 +2,27 @@ import { render } from 'preact';
 import { App } from './App';
 import { ErrorBoundary } from './ui/components/ErrorBoundary';
 import { validateGameData, formatValidationResult } from './data/validateData';
+import { useGameStore } from './store/gameStore';
+import { makePRNG } from './core/random/prng';
+import { createTeam } from './core/models/Team';
+import { createUnit } from './core/models/Unit';
+import { UNIT_DEFINITIONS } from './data/definitions/units';
+import { ENCOUNTERS } from './data/definitions/encounters';
+import { createBattleFromEncounter } from './core/services/EncounterService';
+import { store as v1Store } from './ui/state/store';
 import './index.css';
+
+// Expose store for testing/debugging
+if (import.meta.env.DEV || import.meta.env.MODE === 'test') {
+  (window as any).gameStore = useGameStore;
+  (window as any).v1Store = v1Store;
+  (window as any).createBattleFromEncounter = createBattleFromEncounter;
+  (window as any).makePRNG = makePRNG;
+  (window as any).createTeam = createTeam;
+  (window as any).createUnit = createUnit;
+  (window as any).UNIT_DEFINITIONS = UNIT_DEFINITIONS;
+  (window as any).ENCOUNTERS = ENCOUNTERS;
+}
 
 // Bootstrap the game
 const rootElement = document.getElementById('root');

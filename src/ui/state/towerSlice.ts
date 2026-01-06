@@ -379,7 +379,7 @@ function grantTowerMilestoneRewards(
           if (!def) continue;
 
           if (state.roster.length >= 10) {
-            console.warn('Roster full (10 units max), cannot add unit');
+            // [REMOVED] console.warn('Roster full (10 units max), cannot add unit');
             break;
           }
 

@@ -2,7 +2,7 @@
 
 import type { TowerFloor } from '../../data/schemas/TowerFloorSchema';
 import type { TowerRewardEntry } from '../../data/schemas/TowerRewardSchema';
-import type { Unit } from '../../data/schemas/UnitSchema';
+import type { Unit } from '../../core/models/Unit';
 import {
   DEFAULT_TOWER_CONFIG,
   type TowerConfig,
@@ -323,4 +323,3 @@ export function prepareFloorBattle(
 
   return { normalizedParty, floor };
 }
-

@@ -43,7 +43,7 @@ export const OverworldMapV3: FunctionComponent = () => {
           resolve();
         };
         img.onerror = () => {
-          console.warn(`Failed to load sprite: ${path}`);
+          // [REMOVED] console.warn(`Failed to load sprite: ${path}`);
           // Create placeholder
           const canvas = document.createElement('canvas');
           canvas.width = MAP_DATA.tileSize;

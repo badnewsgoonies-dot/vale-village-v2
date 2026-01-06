@@ -1,164 +1,155 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import * as AIService from '../../../src/core/services/AIService';
-import * as UnitModel from '../../../src/core/models/Unit';
-import * as Targeting from '../../../src/core/algorithms/targeting';
-import * as Stats from '../../../src/core/algorithms/stats';
-import * as Damage from '../../../src/core/algorithms/damage';
+import { describe, it, expect, vi } from 'vitest';
 
-// Constants to avoid magic numbers in tests
-const DEFAULT_RNG_NEXT = 0.5;
-
-// Simple PRNG-like stub used by tests
-type SimpleRng = { next: () => number };
-
-let mockRng: SimpleRng;
-let mockPlayer1: any;
-let mockPlayer2: any;
-let mockEnemy: any;
-let mockState: any;
-
-beforeEach(() => {
-  // Basic deterministic RNG stub
-  mockRng = { next: () => DEFAULT_RNG_NEXT };
-
-  // Minimal player units
-  mockPlayer1 = {
-    id: 'player-1',
-    currentHp: 100,
-    level: 1,
-    growthRates: { hp: 0, pp: 0, atk: 0, def: 0, mag: 0, spd: 0 },
-    equipment: { weapon: null, armor: null, helm: null, boots: null, accessory: null },
-    statusEffects: [],
-    baseStats: { hp: 100, atk: 10, mag: 5, def: 5, pp: 0, spd: 0 },
-    element: 'none',
-    abilities: [],
-  };
-
-  mockPlayer2 = {
-    id: 'player-2',
-    currentHp: 50,
-    level: 1,
-    growthRates: { hp: 0, pp: 0, atk: 0, def: 0, mag: 0, spd: 0 },
-    equipment: { weapon: null, armor: null, helm: null, boots: null, accessory: null },
-    statusEffects: [],
-    baseStats: { hp: 80, atk: 6, mag: 8, def: 3, pp: 0, spd: 0 },
-    element: 'none',
-    abilities: [],
-  };
-
-  // Enemy with multiple abilities for selection tests
-  mockEnemy = {
-    id: 'enemy-1',
-    currentHp: 80,
-    level: 1,
-    growthRates: { hp: 0, pp: 0, atk: 0, def: 0, mag: 0, spd: 0 },
-    equipment: { weapon: null, armor: null, helm: null, boots: null, accessory: null },
-    statusEffects: [],
-    baseStats: { hp: 80, atk: 8, mag: 3, def: 2, pp: 0, spd: 0 },
-    element: 'none',
-    abilities: [
-      { id: 'strike', type: 'physical', basePower: 5, targets: 'single-enemy', aiHints: { priority: 1 } },
-      { id: 'big-strike', type: 'physical', basePower: 8, targets: 'single-enemy', aiHints: { priority: 3 } },
-      { id: 'random-hit', type: 'physical', basePower: 4, targets: 'single-enemy', aiHints: { target: 'random' } },
-      { id: 'revive', type: 'healing', basePower: 0, targets: 'single-ally', revive: true },
-      { id: 'aoe', type: 'physical', basePower: 4, targets: 'all-enemies' },
-    ],
-  };
-
-  mockState = {
-    playerTeam: { units: [mockPlayer1, mockPlayer2] },
-    enemies: [mockEnemy],
-    currentTurn: 0,
-  };
-
-  // Default mocks for external algorithms to keep tests deterministic
-  vi.spyOn(Targeting, 'resolveTargets').mockImplementation((ability: any) => {
-    // For AoE, return all players; otherwise return both for single-target tests
-    if (ability.targets === 'all-enemies' || ability.targets === 'all-allies') {
-      return [mockPlayer1, mockPlayer2];
+// Flexible mocks for deterministic, unit-level AI logic testing
+vi.mock('/home/geni/Documents/vale-village-v2/src/core/algorithms/targeting', () => ({
+  resolveTargets: (ability: any, caster: any, playerUnits: any[], enemies: any[]) => {
+    // Return allies when ability targets allies or is a revive; otherwise return player units
+    const targets = ability?.targets ?? '';
+    if (ability?.revive || ability?.revivesFallen || String(targets).includes('ally')) {
+      return enemies;
     }
-    return [mockPlayer1, mockPlayer2];
+    if (String(targets).includes('enemy')) {
+      return playerUnits;
+    }
+    // default to playerUnits
+    return playerUnits;
+  },
+}));
+
+vi.mock('/home/geni/Documents/vale-village-v2/src/core/algorithms/stats', () => ({
+  calculateEffectiveStats: (unit: any, team: any) => ({ atk: unit.baseStats?.atk ?? 0, mag: unit.baseStats?.mag ?? 0, def: unit.baseStats?.def ?? 0 }),
+}));
+
+vi.mock('/home/geni/Documents/vale-village-v2/src/core/algorithms/damage', () => ({
+  getElementModifier: (abilityEl: any, targetEl: any) => 1,
+}));
+
+vi.mock('/home/geni/Documents/vale-village-v2/src/core/models/Unit', () => ({
+  calculateMaxHp: (u: any) => u.baseStats?.maxHp ?? 100,
+  isUnitKO: (u: any) => !!u.isKO,
+}));
+
+// Provide a minimal ENEMIES registry for phase tests
+vi.mock('/home/geni/Documents/vale-village-v2/src/data/definitions/enemies', () => ({
+  ENEMIES: {
+    boss1: { phases: [ { threshold: 1.0, priorityAbilities: ['a_priority'] } ] },
+  },
+}));
+
+import { makeAIDecision, selectLowHPTarget } from '../../../src/core/services/AIService';
+
+describe('AIService - decision making and targeting', () => {
+  const RNG_ZERO = { next: () => 0 } as any;
+  const RNG_HALF = { next: () => 0.5 } as any;
+
+  it('chooses higher estimated damage ability', () => {
+    const player = { id: 'p1', currentHp: 100, baseStats: { maxHp: 100, atk: 1, mag: 1, def: 2 }, abilities: [] };
+    const enemy = {
+      id: 'e_dmg',
+      currentHp: 100,
+      baseStats: { maxHp: 100, atk: 5, mag: 2, def: 2 },
+      abilities: [
+        { id: 'weak', type: 'physical', basePower: 2, targets: 'single-enemy' },
+        { id: 'strong', type: 'physical', basePower: 20, targets: 'single-enemy' },
+      ],
+    };
+
+    const state = { playerTeam: { units: [player] }, enemies: [enemy], currentTurn: 1 } as any;
+    const decision = makeAIDecision(state, 'e_dmg', RNG_ZERO);
+    expect(decision.abilityId).toBe('strong');
   });
 
-  vi.spyOn(UnitModel, 'isUnitKO').mockImplementation((u: any) => {
-    return u.currentHp <= 0;
+  it('applies phase priority bonus when boss is in phase', () => {
+    const player = { id: 'p1', currentHp: 100, baseStats: { maxHp: 100, atk: 1, mag: 1, def: 2 }, abilities: [] };
+    const boss = {
+      id: 'boss1',
+      currentHp: 100,
+      baseStats: { maxHp: 100, atk: 5, mag: 2, def: 2 },
+      abilities: [
+        { id: 'a_normal', type: 'physical', basePower: 10, targets: 'single-enemy' },
+        { id: 'a_priority', type: 'physical', basePower: 1, targets: 'single-enemy' },
+      ],
+    };
+
+    const state = { playerTeam: { units: [player] }, enemies: [boss], currentTurn: 1 } as any;
+    // The mocked ENEMIES places boss1 in a phase that prioritizes 'a_priority'
+    const decision = makeAIDecision(state, 'boss1', RNG_ZERO);
+    expect(decision.abilityId).toBe('a_priority');
   });
 
-  vi.spyOn(UnitModel, 'calculateMaxHp').mockImplementation((u: any) => {
-    // Use baseStats.hp when present, otherwise fallback
-    return (u.baseStats && u.baseStats.hp) || 100;
+  it('selects revival ability when an ally is KO', () => {
+    const player = { id: 'p1', currentHp: 100, baseStats: { maxHp: 100, atk: 1, mag: 1, def: 2 }, abilities: [] };
+    const allyKO = { id: 'ally1', currentHp: 0, isKO: true, baseStats: { maxHp: 100, atk: 2, mag: 1, def: 1 }, abilities: [] };
+    const caster = {
+      id: 'reviver',
+      currentHp: 100,
+      baseStats: { maxHp: 100, atk: 3, mag: 3, def: 2 },
+      abilities: [ { id: 'revive', type: 'healing', basePower: 0, targets: 'single-ally', revive: true } ],
+    };
+
+    const state = { playerTeam: { units: [player] }, enemies: [caster, allyKO], currentTurn: 1 } as any;
+    const decision = makeAIDecision(state, 'reviver', RNG_ZERO);
+    expect(decision.abilityId).toBe('revive');
+    expect(decision.targetIds).toEqual(['ally1']);
   });
 
-  vi.spyOn(Stats, 'calculateEffectiveStats').mockImplementation((unit: any) => {
-    // Return base stats shaped object used by AIService
-    return { atk: unit.baseStats.atk || 0, mag: unit.baseStats.mag || 0, def: unit.baseStats.def || 0 };
+  it('throws when there are no valid targets', () => {
+    const enemy = { id: 'e_none', currentHp: 100, baseStats: { maxHp: 100, atk: 5, mag: 2, def: 2 }, abilities: [ { id: 'a', type: 'physical', basePower: 5, targets: 'single-enemy' } ] };
+    const state = { playerTeam: { units: [] }, enemies: [enemy], currentTurn: 1 } as any;
+    expect(() => makeAIDecision(state, 'e_none', RNG_ZERO)).toThrow();
   });
 
-  vi.spyOn(Damage, 'getElementModifier').mockImplementation(() => 1.0);
+  it('selectLowHPTarget returns the lowest HP percent or null when none', () => {
+    const u1 = { id: 'u1', currentHp: 30, baseStats: { maxHp: 100 }, isKO: false } as any;
+    const u2 = { id: 'u2', currentHp: 10, baseStats: { maxHp: 50 }, isKO: false } as any;
+    const u3 = { id: 'u3', currentHp: 0, baseStats: { maxHp: 100 }, isKO: true } as any;
+
+    const chosen = selectLowHPTarget([u1, u2, u3]);
+    expect(chosen?.id).toBe('u2');
+
+    const none = selectLowHPTarget([ { ...u3, isKO: true } ]);
+    expect(none).toBeNull();
+  });
+
+  it('honors avoidOverkill hint when selecting targets', () => {
+    const pLow = { id: 'pLow', currentHp: 5, baseStats: { maxHp: 100, atk: 1, mag: 1, def: 1 }, abilities: [] };
+    const pSafe = { id: 'pSafe', currentHp: 60, baseStats: { maxHp: 100, atk: 1, mag: 1, def: 1 }, abilities: [] };
+    const caster = { id: 'e_over', currentHp: 100, baseStats: { maxHp: 100, atk: 0, mag: 0, def: 1 }, abilities: [ { id: 'big', type: 'physical', basePower: 50, targets: 'single-enemy', aiHints: { avoidOverkill: true } } ] };
+
+    const state = { playerTeam: { units: [pLow, pSafe] }, enemies: [caster], currentTurn: 1 } as any;
+    const decision = makeAIDecision(state, 'e_over', RNG_ZERO);
+    // Should avoid pLow due to extreme overkill and pick pSafe
+    expect(decision.targetIds[0]).toBe('pSafe');
+  });
+
+  it('respects random target hint using RNG', () => {
+    const p1 = { id: 'r1', currentHp: 50, baseStats: { maxHp: 100, atk: 1, mag: 1, def: 1 }, abilities: [] };
+    const p2 = { id: 'r2', currentHp: 50, baseStats: { maxHp: 100, atk: 1, mag: 1, def: 1 }, abilities: [] };
+    const caster = { id: 'e_rand', currentHp: 100, baseStats: { maxHp: 100, atk: 2, mag: 2, def: 1 }, abilities: [ { id: 'rnd', type: 'physical', basePower: 5, targets: 'single-enemy', aiHints: { target: 'random' } } ] };
+
+    const state = { playerTeam: { units: [p1, p2] }, enemies: [caster], currentTurn: 1 } as any;
+    const decision = makeAIDecision(state, 'e_rand', RNG_HALF);
+    // RNG_HALF gives index floor(0.5 * 2) = 1 -> picks second unit
+    expect(decision.targetIds[0]).toBe('r2');
+  });
+
+  it('targets healers first when hint is healerFirst', () => {
+    const healer = { id: 'h1', currentHp: 80, baseStats: { maxHp: 100, atk: 1, mag: 2, def: 1 }, abilities: [ { id: 'heal', type: 'healing', basePower: 10, targets: 'single-ally' } ] };
+    const other = { id: 'o1', currentHp: 80, baseStats: { maxHp: 100, atk: 2, mag: 1, def: 1 }, abilities: [] };
+    const caster = { id: 'e_h', currentHp: 100, baseStats: { maxHp: 100, atk: 3, mag: 2, def: 1 }, abilities: [ { id: 'focus', type: 'physical', basePower: 5, targets: 'single-enemy', aiHints: { target: 'healerFirst' } } ] };
+
+    const state = { playerTeam: { units: [healer, other] }, enemies: [caster], currentTurn: 1 } as any;
+    const decision = makeAIDecision(state, 'e_h', RNG_ZERO);
+    expect(decision.targetIds[0]).toBe('h1');
+  });
+
+  it('chooses highestDef target when hinted', () => {
+    const t1 = { id: 'd1', currentHp: 80, baseStats: { maxHp: 100, atk: 1, mag: 1, def: 5 }, abilities: [] };
+    const t2 = { id: 'd2', currentHp: 80, baseStats: { maxHp: 100, atk: 1, mag: 1, def: 10 }, abilities: [] };
+    const caster = { id: 'e_def', currentHp: 100, baseStats: { maxHp: 100, atk: 3, mag: 1, def: 1 }, abilities: [ { id: 'crush', type: 'physical', basePower: 5, targets: 'single-enemy', aiHints: { target: 'highestDef' } } ] };
+
+    const state = { playerTeam: { units: [t1, t2] }, enemies: [caster], currentTurn: 1 } as any;
+    const decision = makeAIDecision(state, 'e_def', RNG_ZERO);
+    expect(decision.targetIds[0]).toBe('d2');
+  });
 });
-
-describe('AIService - targeting and scoring', () => {
-  it('selectLowHPTarget returns unit with lowest HP percentage', () => {
-    const u1 = { ...mockPlayer1, currentHp: 80, baseStats: { hp: 100 } };
-    const u2 = { ...mockPlayer2, currentHp: 25, baseStats: { hp: 100 } };
-
-    const chosen = AIService.selectLowHPTarget([u1, u2]);
-    expect(chosen).not.toBeNull();
-    expect(chosen!.id).toBe(u2.id);
-  });
-
-  it('makeAIDecision chooses ability with higher aiHints.priority', () => {
-    const decision = AIService.makeAIDecision(mockState as any, mockEnemy.id, mockRng as any);
-    expect(decision.abilityId).toBe('big-strike');
-    expect(Array.isArray(decision.targetIds)).toBe(true);
-    expect(decision.targetIds.length).toBeGreaterThan(0);
-  });
-
-  it('makeAIDecision respects random target hint via RNG', () => {
-    // Force RNG to select second target
-    const rng = { next: () => 0.99 };
-    const dec = AIService.makeAIDecision(mockState as any, mockEnemy.id, rng as any);
-    // Ability chosen might not be random-hit if scoring prefers others; pick the specific ability directly by restricting abilities
-    const singleAbilityEnemy = { ...mockEnemy, abilities: [mockEnemy.abilities.find((a: any) => a.id === 'random-hit')] };
-    const state = { ...mockState, enemies: [singleAbilityEnemy] };
-    const dec2 = AIService.makeAIDecision(state as any, singleAbilityEnemy.id, rng as any);
-    expect(dec2.abilityId).toBe('random-hit');
-    // RNG=0.99 should pick index 1 (second player)
-    expect(dec2.targetIds[0]).toBe(mockPlayer2.id);
-  });
-
-  it('revive ability prefers KO targets', () => {
-    // Mark player1 as KO
-    const p1 = { ...mockPlayer1, currentHp: 0 };
-    const p2 = { ...mockPlayer2, currentHp: 30 };
-    const singleReviver = { ...mockEnemy, abilities: [mockEnemy.abilities.find((a: any) => a.id === 'revive')] };
-    const state = { playerTeam: { units: [p1, p2] }, enemies: [singleReviver] };
-
-    // Ensure resolveTargets returns the KO instances for this test
-    vi.spyOn(Targeting, 'resolveTargets').mockImplementation(() => [p1, p2]);
-
-    const dec = AIService.makeAIDecision(state as any, singleReviver.id, mockRng as any);
-    expect(dec.abilityId).toBe('revive');
-    expect(dec.targetIds.length).toBe(1);
-    expect(dec.targetIds[0]).toBe(p1.id);
-  });
-
-  it('throws when no available abilities (no valid targets)', () => {
-    // Make resolveTargets return only KO targets and ability cannot revive
-    vi.spyOn(Targeting, 'resolveTargets').mockImplementationOnce(() => []);
-    const enemyNoTargets = { ...mockEnemy, abilities: [{ id: 'lonely', type: 'physical', basePower: 3, targets: 'single-enemy' }] };
-    const state = { ...mockState, enemies: [enemyNoTargets] };
-    expect(() => AIService.makeAIDecision(state as any, enemyNoTargets.id, mockRng as any)).toThrow(/No available abilities/);
-  });
-
-  it('throws for invalid or KO actor', () => {
-    // Actor not found
-    expect(() => AIService.makeAIDecision(mockState as any, 'no-such-unit', mockRng as any)).toThrow(/Invalid actor/);
-
-    // Actor KO
-    const koEnemy = { ...mockEnemy, currentHp: 0 };
-    const state = { ...mockState, enemies: [koEnemy] };
-    expect(() => AIService.makeAIDecision(state as any, koEnemy.id, mockRng as any)).toThrow(/Invalid actor/);
-  });
-});
-

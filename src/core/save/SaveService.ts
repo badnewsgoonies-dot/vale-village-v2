@@ -107,7 +107,7 @@ export async function saveReplay(
       localStorage.setItem('vale:replay:tape', tapeJson);
     } catch (storageError) {
       // Storage quota exceeded or other localStorage error
-      console.warn('Failed to store replay tape:', storageError);
+      // [REMOVED] console.warn('Failed to store replay tape:', storageError);
     }
     
     return { ok: true, value: undefined };

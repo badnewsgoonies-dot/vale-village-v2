@@ -54,3 +54,27 @@ The asset library is extensive and well-organized:
 
 ## 4. Conclusion
 The game features a deep, "Golden Sun"-inspired RPG system. The mechanics are not just "foundation" but fully fleshed out with complex data relationships (Djinn class changes). The visual assets support this depth with a massive library of sprites. The "House" progression is the primary content spine, while the "Tower" (Sanctum) serves as a replayable challenge mode.
+
+## 5. Post-Implementation Audit: Zero Elemental Resistance
+**Date:** 2026-01-02
+**Status:** Implementation Complete, Cleanup Required
+
+The removal of Elemental Resistance logic and the neutralization of damage multipliers (1.0x) has been verified in `damage.ts`. However, significant artifacts remain in the codebase that require cleanup to avoid confusion and "dead" gameplay elements.
+
+### **Dead Data & Schema**
+- **Schemas:** `UnitSchema.ts` and `AbilitySchema.ts` still contain `elementalResistance` field definitions.
+- **Abilities:** Many abilities in `abilities.ts` and `djinnAbilities.ts` still retain `elementalResistance` modifier fields.
+    - *Example:* `Earthen Wall`, `Dragon Scales`.
+- **Descriptions:** Ability descriptions incorrectly promise resistance gains (e.g., "Boosts Fire Res").
+
+### **UI Artifacts**
+- **BattlePortraitRow.tsx:** Still attempts to map `elementalResistance` to a `Venus_Star.gif` icon.
+- **DevModeOverlay.tsx:** References "Act 2: Resistance", which is now obsolete.
+
+### **Gameplay Effectiveness**
+- **Useless Abilities:** Defensive abilities that solely granted resistance are now functionally useless.
+    - *Action Required:* These must be reworked to provide other benefits (e.g., Defense boost, Shield HP) or removed.
+- **Items:** Equipment that previously granted resistance (if any) now provides no benefit in that slot.
+
+### **Code Cleanup**
+- **`damage.ts`:** `calculateTotalEquipmentElementalResistance` exists but returns 0. It should be removed entirely once call sites are cleared.
