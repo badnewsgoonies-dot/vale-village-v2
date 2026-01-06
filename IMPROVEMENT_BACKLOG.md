@@ -62,31 +62,31 @@ This is an AI-generated backlog of bugs, improvements, and technical debt identi
 
 Console statements to remove before production:
 
-- [ ] `src/main.tsx:39` - remove console statement
-- [ ] `src/ui/utils/text.ts:64` - remove console statement
-- [ ] `src/ui/state/teamSlice.ts:71` - remove console statement
-- [ ] `src/ui/state/teamSlice.ts:132` - remove console statement
-- [ ] `src/ui/state/queueBattleSlice.ts:70` - remove console statement
-- [ ] `src/ui/state/queueBattleSlice.ts:301` - remove console statement
-- [ ] `src/ui/state/queueBattleSlice.ts:328` - remove console statement
-- [ ] `src/ui/state/queueBattleSlice.ts:354` - remove console statement
-- [ ] `src/ui/state/queueBattleSlice.ts:371` - remove console statement
-- [ ] `src/ui/state/queueBattleSlice.ts:454` - remove console statement
-- [ ] `src/ui/state/queueBattleSlice.ts:457` - remove console statement
-- [ ] `src/ui/state/dialogueSlice.ts:177` - remove console statement
-- [ ] `src/ui/state/dialogueSlice.ts:269` - remove console statement
-- [ ] `src/ui/state/dialogueSlice.ts:271` - remove console statement
-- [ ] `src/ui/state/dialogueSlice.ts:287` - remove console statement
-- [ ] `src/ui/state/dialogueSlice.ts:318` - remove console statement
-- [ ] `src/ui/state/dialogueSlice.ts:320` - remove console statement
-- [ ] `src/ui/state/dialogueSlice.ts:337` - remove console statement
-- [ ] `src/ui/state/dialogueSlice.ts:340` - remove console statement
-- [ ] `src/ui/state/dialogueSlice.ts:343` - remove console statement
-- [ ] `src/ui/state/dialogueSlice.ts:346` - remove console statement
-- [ ] `src/ui/state/dialogueSlice.ts:353` - remove console statement
-- [ ] `src/ui/state/dialogueSlice.ts:359` - remove console statement
-- [ ] `src/ui/state/dialogueSlice.ts:374` - remove console statement
-- [ ] `src/ui/state/saveSlice.ts:186` - remove console statement
+- [x] `src/main.tsx:39` - remove console statement (AUTO-FIXED)
+- [x] `src/ui/utils/text.ts:64` - remove console statement (AUTO-FIXED)
+- [x] `src/ui/state/teamSlice.ts:71` - remove console statement (AUTO-FIXED)
+- [x] `src/ui/state/teamSlice.ts:132` - remove console statement (AUTO-FIXED)
+- [x] `src/ui/state/queueBattleSlice.ts:70` - remove console statement (AUTO-FIXED)
+- [x] `src/ui/state/queueBattleSlice.ts:301` - remove console statement (AUTO-FIXED)
+- [x] `src/ui/state/queueBattleSlice.ts:328` - remove console statement (AUTO-FIXED)
+- [x] `src/ui/state/queueBattleSlice.ts:354` - remove console statement (AUTO-FIXED)
+- [x] `src/ui/state/queueBattleSlice.ts:371` - remove console statement (AUTO-FIXED)
+- [x] `src/ui/state/queueBattleSlice.ts:454` - remove console statement (AUTO-FIXED)
+- [x] `src/ui/state/queueBattleSlice.ts:457` - remove console statement (AUTO-FIXED)
+- [x] `src/ui/state/dialogueSlice.ts:177` - remove console statement (AUTO-FIXED)
+- [x] `src/ui/state/dialogueSlice.ts:269` - remove console statement (AUTO-FIXED)
+- [x] `src/ui/state/dialogueSlice.ts:271` - remove console statement (AUTO-FIXED)
+- [x] `src/ui/state/dialogueSlice.ts:287` - remove console statement (AUTO-FIXED)
+- [x] `src/ui/state/dialogueSlice.ts:318` - remove console statement (AUTO-FIXED)
+- [x] `src/ui/state/dialogueSlice.ts:320` - remove console statement (AUTO-FIXED)
+- [x] `src/ui/state/dialogueSlice.ts:337` - remove console statement (AUTO-FIXED)
+- [x] `src/ui/state/dialogueSlice.ts:340` - remove console statement (AUTO-FIXED)
+- [x] `src/ui/state/dialogueSlice.ts:343` - remove console statement (AUTO-FIXED)
+- [x] `src/ui/state/dialogueSlice.ts:346` - remove console statement (AUTO-FIXED)
+- [x] `src/ui/state/dialogueSlice.ts:353` - remove console statement (AUTO-FIXED)
+- [x] `src/ui/state/dialogueSlice.ts:359` - remove console statement (AUTO-FIXED)
+- [x] `src/ui/state/dialogueSlice.ts:374` - remove console statement (AUTO-FIXED)
+- [x] `src/ui/state/saveSlice.ts:186` - remove console statement (AUTO-FIXED)
 
 ## 🔴 ERROR HANDLING: Silent Failures
 
