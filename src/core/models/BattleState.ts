@@ -245,7 +245,7 @@ export function updateBattleState(state: BattleState, updates: Partial<BattleSta
       }
       // Ignore module loading errors (validation module might not exist in some builds)
       if (error instanceof Error && !error.message.includes('Cannot find module') && !error.message.includes('require is not defined')) {
-        console.warn('Battle state validation failed:', error);
+        // [REMOVED] console.warn('Battle state validation failed:', error);
       }
     }
   }

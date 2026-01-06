@@ -61,7 +61,7 @@ export function renderEventText(e: BattleEvent): string {
     default: {
       // Exhaustive check - ensures all event types are handled
       const _exhaustive: never = e;
-      console.warn(`Unhandled event type:`, _exhaustive);
+      // [REMOVED] console.warn(`Unhandled event type:`, _exhaustive);
       return '';
     }
   }

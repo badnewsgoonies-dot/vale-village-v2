@@ -91,13 +91,13 @@ function findBackgroundSprite(
   // Random selection
   if (id.toLowerCase() === 'random') {
     if (!category) {
-      console.warn('[BackgroundSprite] Random selection requires category prop');
+      // [REMOVED] console.warn('[BackgroundSprite] Random selection requires category prop');
       return { entry: null, method: 'none' };
     }
     
     const sprites = getSpritesByCategory(category);
     if (sprites.length === 0) {
-      console.warn(`[BackgroundSprite] No sprites found in category: ${category}`);
+      // [REMOVED] console.warn(`[BackgroundSprite] No sprites found in category: ${category}`);
       return { entry: null, method: 'none' };
     }
     
@@ -149,7 +149,7 @@ export function BackgroundSprite({
     
     if (debug && lookupResult.entry) {
       // eslint-disable-next-line no-console
-      console.log(`[BackgroundSprite] Found background:`, {
+      // [REMOVED] console.log(`[BackgroundSprite] Found background:`, {
         id,
         method: lookupResult.method,
         name: lookupResult.entry.name,
@@ -158,7 +158,7 @@ export function BackgroundSprite({
       });
     } else if (debug && !lookupResult.entry) {
       // eslint-disable-next-line no-console
-      console.warn(`[BackgroundSprite] Background not found:`, {
+      // [REMOVED] console.warn(`[BackgroundSprite] Background not found:`, {
         id,
         category,
         method: lookupResult.method,

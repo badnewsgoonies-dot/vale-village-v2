@@ -1,0 +1,148 @@
+
+Running 1 test using 1 worker
+
+[2026-01-02T12:40:41.447Z] 🏰 Starting Full Tower Run...
+BROWSER: [vite] connecting...
+BROWSER: [vite] connected.
+[2026-01-02T12:40:53.493Z] 
+🏢 === FLOOR 1/30 ===
+[2026-01-02T12:40:53.700Z]   Action taken: battle
+[2026-01-02T12:40:53.943Z]   👥 Team select screen - confirming
+BROWSER: Tower Battle: Normalized team to level 5
+[2026-01-02T12:40:54.267Z]   ⚔️ Battle started
+[2026-01-02T12:40:55.094Z]   Floor 1 - Round 1 executed
+[2026-01-02T12:41:03.846Z]   Floor 1 - Round 2 executed
+[2026-01-02T12:41:12.769Z]   Floor 1 - Round 3 executed
+[2026-01-02T12:41:23.023Z]   ✅ Victory! (3 rounds)
+[2026-01-02T12:41:23.432Z] 
+🏢 === FLOOR 2/30 ===
+[2026-01-02T12:41:23.654Z]   Action taken: battle
+[2026-01-02T12:41:23.796Z]   👥 Team select screen - confirming
+BROWSER: Tower Battle: Normalized team to level 5
+[2026-01-02T12:41:24.037Z]   ⚔️ Battle started
+[2026-01-02T12:41:24.581Z]   Floor 2 - Round 1 executed
+[2026-01-02T12:41:34.594Z]   Floor 2 - Round 2 executed
+[2026-01-02T12:41:44.618Z]   ✅ Victory! (2 rounds)
+BROWSER: 🎉 Recruited Mystic via dialogue effect!
+BROWSER: [endDialogue] prevMode=tower, returnMode=rewards, nextMode=tower
+[2026-01-02T12:41:46.521Z] 
+🏢 === FLOOR 3/30 ===
+[2026-01-02T12:41:46.738Z]   Action taken: battle
+[2026-01-02T12:41:46.914Z]   👥 Team select screen - confirming
+BROWSER: Tower Battle: Normalized team to level 5
+[2026-01-02T12:41:47.179Z]   ⚔️ Battle started
+[2026-01-02T12:41:47.743Z]   Floor 3 - Round 1 executed
+[2026-01-02T12:41:57.741Z]   Floor 3 - Round 2 executed
+[2026-01-02T12:42:07.762Z]   ✅ Victory! (2 rounds)
+BROWSER: 🎉 Recruited Ranger via dialogue effect!
+BROWSER: [endDialogue] prevMode=tower, returnMode=rewards, nextMode=tower
+[2026-01-02T12:42:09.410Z] 
+🏢 === FLOOR 4/30 ===
+[2026-01-02T12:42:09.560Z]   Action taken: rest
+[2026-01-02T12:42:34.618Z]   ⏭️ Floor skipped (no battle view)
+[2026-01-02T12:42:34.763Z] 
+🏢 === FLOOR 5/30 ===
+[2026-01-02T12:42:34.945Z]   Action taken: rest
+[2026-01-02T12:42:59.990Z]   ⏭️ Floor skipped (no battle view)
+[2026-01-02T12:43:00.135Z] 
+🏢 === FLOOR 6/30 ===
+[2026-01-02T12:43:00.316Z]   Action taken: rest
+[2026-01-02T12:43:25.374Z]   ⏭️ Floor skipped (no battle view)
+[2026-01-02T12:43:25.554Z] 
+🏢 === FLOOR 7/30 ===
+[2026-01-02T12:43:25.833Z]   Action taken: rest
+[2026-01-02T12:43:50.944Z]   ⏭️ Floor skipped (no battle view)
+[2026-01-02T12:43:51.097Z] 
+🏢 === FLOOR 8/30 ===
+[2026-01-02T12:43:51.280Z]   Action taken: rest
+[2026-01-02T12:44:16.348Z]   ⏭️ Floor skipped (no battle view)
+[2026-01-02T12:44:16.522Z] 
+🏢 === FLOOR 9/30 ===
+[2026-01-02T12:44:16.737Z]   Action taken: rest
+[2026-01-02T12:44:41.830Z]   ⏭️ Floor skipped (no battle view)
+[2026-01-02T12:44:41.967Z] 
+🏢 === FLOOR 10/30 ===
+[2026-01-02T12:44:42.144Z]   Action taken: rest
+[2026-01-02T12:45:07.201Z]   ⏭️ Floor skipped (no battle view)
+[2026-01-02T12:45:07.381Z] 
+🏢 === FLOOR 11/30 ===
+[2026-01-02T12:45:07.599Z]   Action taken: rest
+BROWSER: [vite] connecting...
+BROWSER: [vite] connected.
+[2026-01-02T12:45:32.712Z]   ⏭️ Floor skipped (no battle view)
+
+📊 Log saved to: test-results/tower-run-2026-01-02T12-45-52-797Z.json
+📝 Summary saved to: test-results/tower-run-summary-2026-01-02T12-45-52-797Z.txt
+=== TOWER RUN SUMMARY ===
+Start: 2026-01-02T12:40:40.686Z
+End: 2026-01-02T12:45:52.790Z
+Total Duration: 312s
+Floors Completed: 11/30
+Final Result: error
+Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+Locator: locator('.tower-hub')
+Expected: visible
+Timeout: 20000ms
+Error: element(s) not found
+
+Call log:
+[2m  - Expect "toBeVisible" with timeout 20000ms[22m
+[2m  - waiting for locator('.tower-hub')[22m
+
+
+=== FLOOR DETAILS ===
+Floor 1 (battle): victory - 30s (3 rounds)
+Floor 2 (battle): victory - 21s (2 rounds)
+Floor 3 (battle): victory - 21s (2 rounds)
+Floor 4 (battle): skipped - 25s
+Floor 5 (battle): skipped - 25s
+Floor 6 (battle): skipped - 25s
+Floor 7 (battle): skipped - 25s
+Floor 8 (battle): skipped - 25s
+Floor 9 (battle): skipped - 25s
+Floor 10 (battle): skipped - 25s
+Floor 11 (battle): skipped - 25s
+
+  ✘  1 [chromium] › tests/e2e/gameplay-full-tower.spec.ts:88:1 › Full Tower Run - Complete all 30 floors (5.2m)
+
+
+  1) [chromium] › tests/e2e/gameplay-full-tower.spec.ts:88:1 › Full Tower Run - Complete all 30 floors 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('.tower-hub')
+    Expected: visible
+    Timeout: 20000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 20000ms[22m
+    [2m  - waiting for locator('.tower-hub')[22m
+
+
+      200 |
+      201 |       // Wait for tower hub
+    > 202 |       await expect(towerHub).toBeVisible({ timeout: 20_000 });
+          |                              ^
+      203 |       await dismissDialogueIfPresent(page, {
+      204 |         delay,
+      205 |         overlayTimeoutMs: 500,
+        at /home/geni/Documents/vale-village-v2/tests/e2e/gameplay-full-tower.spec.ts:202:30
+
+    Error: apiRequestContext._wrapApiCall: ENOENT: no such file or directory, open '/home/geni/Documents/vale-village-v2/test-results/.playwright-artifacts-0/traces/b0240a665a2398b70455-ae382a1c02582e88363d.trace'
+
+    Error: ENOENT: no such file or directory, open '/home/geni/Documents/vale-village-v2/test-results/.playwright-artifacts-0/38be28c2945bfc96cdb6e912b5dba874.zip'
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/gameplay-full-tower-Full-Tower-Run---Complete-all-30-floors-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/gameplay-full-tower-Full-Tower-Run---Complete-all-30-floors-chromium/error-context.md
+
+  Slow test file: [chromium] › tests/e2e/gameplay-full-tower.spec.ts (5.2m)
+  Consider running tests from slow files in parallel. See: https://playwright.dev/docs/test-parallel
+  1 failed
+    [chromium] › tests/e2e/gameplay-full-tower.spec.ts:88:1 › Full Tower Run - Complete all 30 floors 

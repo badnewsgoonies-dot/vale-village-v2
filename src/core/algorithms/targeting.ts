@@ -19,7 +19,7 @@ export function resolveTargets(
   enemyUnits: readonly Unit[]
 ): readonly Unit[] {
   const isPlayerUnit = playerUnits.some(u => u.id === caster.id);
-  const canTargetKO = ability.revive || ability.revivesFallen;
+  const canTargetKO = Boolean((ability as any).revivesFallen || (ability as any).revive);
 
   switch (ability.targets) {
     case 'single-enemy':
@@ -57,7 +57,7 @@ export function filterValidTargets(
   targets: readonly Unit[],
   ability: Ability
 ): readonly Unit[] {
-  const canTargetKO = ability.revive || ability.revivesFallen;
+  const canTargetKO = Boolean((ability as any).revivesFallen || (ability as any).revive);
 
   if (ability.type === 'healing' && !canTargetKO) {
     // Healing only works on alive units (unless it revives)
@@ -88,20 +88,35 @@ export function getValidTargets(
   playerTeam: { units: readonly Unit[] },
   enemies: readonly Unit[]
 ): readonly Unit[] {
+  const isPlayerUnit = playerTeam.units.some(u => u.id === caster.id);
+  const allies = isPlayerUnit ? playerTeam.units : enemies;
+  const foes = isPlayerUnit ? enemies : playerTeam.units;
+
   if (!ability) {
-    // Basic attack targets enemies
-    return enemies.filter(e => !isUnitKO(e));
+    // Basic attack targets foes
+    return foes.filter(u => !isUnitKO(u));
   }
 
-  const canTargetKO = ability.revive || ability.revivesFallen;
+  const canTargetKO = Boolean((ability as any).revivesFallen || (ability as any).revive);
+
+  // When ability can target KO'd units (revival), make those units selectable
+  // by clearing UI-level isKo flags so UI layers that rely on that flag allow clicks.
+  // This mutates unit objects deliberately to keep UI & core in sync for selection.
+  if (canTargetKO) {
+    for (const u of [...allies, ...foes]) {
+      if ((u as any)?.isKo) {
+        (u as any).isKo = false;
+      }
+    }
+  }
 
   switch (ability.targets) {
     case 'single-enemy':
     case 'all-enemies':
-      return enemies.filter(e => canTargetKO || !isUnitKO(e));
+      return foes.filter(u => canTargetKO || !isUnitKO(u));
     case 'single-ally':
     case 'all-allies':
-      return playerTeam.units.filter(u => canTargetKO || !isUnitKO(u));
+      return allies.filter(u => canTargetKO || !isUnitKO(u));
     case 'self':
       return [caster];
     default:

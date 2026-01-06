@@ -254,6 +254,28 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
   const transitionToScene = useCallback((targetScene: SceneType, houseNum: number = 1, teleportTo?: { mapId: string; position?: { x: number; y: number } }) => {
     if (isTransitioningRef.current) return;
 
+    const isInstant = typeof localStorage !== "undefined" && localStorage.getItem("battleSpeed") === "instant";
+    if (isInstant) {
+      const engine = engineRef.current;
+      if (engine) {
+        sceneTypeRef.current = targetScene;
+        currentHouseNumRef.current = houseNum;
+        if (teleportTo) {
+          try { teleportPlayer(teleportTo.mapId, teleportTo.position ?? { x: 5, y: 7 }); } catch (err) { console.error("Failed to teleport", err); }
+        }
+        if (targetScene === "interior") {
+          engine.setLayers(createInteriorLayers(houseNum));
+          engine.getCamera().setTarget(VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2);
+          engine.getCamera().snapToTarget();
+        } else {
+          engine.setLayers(createOverworldLayers());
+          const pos = playerLayerRef.current?.getPosition();
+          if (pos) { engine.getCamera().setTarget(pos.x, pos.y); engine.getCamera().snapToTarget(); }
+        }
+      }
+      return;
+    }
+
     isTransitioningRef.current = true;
     setIsTransitioning(true);
     transitionTargetRef.current = targetScene;
@@ -680,8 +702,8 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
 
 
 
-  const sceneName = sceneTypeRef.current === 'interior'
-    ? `House ${currentHouseNumRef.current} Interior`
+  const computedSceneType = getSceneTypeFromMapId(currentMapId); const computedHouseNum = getHouseNumberFromMapId(currentMapId); const sceneName = computedSceneType === "interior"
+    ? `House ${computedHouseNum} Interior`
     : 'Vale Village';
 
   return (

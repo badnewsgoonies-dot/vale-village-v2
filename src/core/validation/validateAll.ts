@@ -170,7 +170,7 @@ export function validateAllGameData(): void {
   }
 
   // Use console.warn instead of console.log (allowed in validation)
-  console.warn('✅ All game data validated successfully');
+  // [REMOVED] console.warn('✅ All game data validated successfully');
 
   // Validate content balance (warnings, not errors)
   const balanceWarnings = validateContentBalance({
@@ -180,10 +180,10 @@ export function validateAllGameData(): void {
   });
 
   if (balanceWarnings.length > 0) {
-    console.warn('⚠️  Balance warnings detected:');
-    console.warn(formatBalanceWarnings(balanceWarnings));
+    // [REMOVED] console.warn('⚠️  Balance warnings detected:');
+    // [REMOVED] console.warn(formatBalanceWarnings(balanceWarnings));
   } else {
-    console.warn('✅ No balance issues detected');
+    // [REMOVED] console.warn('✅ No balance issues detected');
   }
 }
 

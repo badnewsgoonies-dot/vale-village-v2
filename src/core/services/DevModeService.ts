@@ -44,7 +44,7 @@ export function getAllHousesMetadata(): HouseMetadata[] {
     const encounter = ENCOUNTERS[houseId];
 
     if (!encounter) {
-      console.warn(`House ${houseId} not found in ENCOUNTERS`);
+      // [REMOVED] console.warn(`House ${houseId} not found in ENCOUNTERS`);
       continue;
     }
 

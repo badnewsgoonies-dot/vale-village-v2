@@ -13,6 +13,11 @@ export default defineConfig({
       '@state': resolve(__dirname, 'src/state')
     }
   },
+  server: {
+    watch: {
+      ignored: ['**/playwright-report/**', '**/test-results/**']
+    }
+  },
   build: {
     target: 'ES2022',
     sourcemap: true

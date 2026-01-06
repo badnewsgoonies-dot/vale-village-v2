@@ -298,7 +298,7 @@ export const createQueueBattleSlice: StateCreator<
     const result = queueAction(battle, unit.id, abilityId, targetIds, ability);
     if (!result.ok) {
       // Log error for UI feedback (could be enhanced with toast notifications)
-      console.warn(`Failed to queue action: ${result.error}`);
+      // [REMOVED] console.warn(`Failed to queue action: ${result.error}`);
       set({ lastError: `Failed to queue action: ${result.error}` });
       return false;
     }
@@ -325,7 +325,7 @@ export const createQueueBattleSlice: StateCreator<
 
     const result = clearQueuedAction(battle, unitIndex);
     if (!result.ok) {
-      console.warn(`Failed to clear action: ${result.error}`);
+      // [REMOVED] console.warn(`Failed to clear action: ${result.error}`);
       set({ lastError: `Failed to clear action: ${result.error}` });
       return;
     }
@@ -351,7 +351,7 @@ export const createQueueBattleSlice: StateCreator<
 
     const result = queueDjinn(battle, djinnId);
     if (!result.ok) {
-      console.warn(`Failed to queue Djinn: ${result.error}`);
+      // [REMOVED] console.warn(`Failed to queue Djinn: ${result.error}`);
       set({ lastError: `Failed to queue Djinn: ${result.error}` });
       return;
     }
@@ -368,7 +368,7 @@ export const createQueueBattleSlice: StateCreator<
 
     const result = unqueueDjinn(battle, djinnId);
     if (!result.ok) {
-      console.warn(`Failed to unqueue Djinn: ${result.error}`);
+      // [REMOVED] console.warn(`Failed to unqueue Djinn: ${result.error}`);
       set({ lastError: `Failed to unqueue Djinn: ${result.error}` });
       return;
     }
@@ -451,10 +451,10 @@ export const createQueueBattleSlice: StateCreator<
       // Auto-save after battle victory
       try {
         void Promise.resolve(get().autoSave()).catch((error) => {
-          console.warn('Auto-save failed after battle victory:', error);
+          // [REMOVED] console.warn('Auto-save failed after battle victory:', error);
         });
       } catch (error) {
-        console.warn('Auto-save failed after battle victory:', error);
+        // [REMOVED] console.warn('Auto-save failed after battle victory:', error);
       }
 
       const encounterId = getEncounterId(healedState);

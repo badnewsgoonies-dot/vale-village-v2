@@ -68,7 +68,7 @@ export const createTeamSlice: StateCreator<
       }
       // Add new unit (max 10)
       if (state.roster.length >= 10) {
-        console.warn('Roster full (10 units max), cannot add unit');
+        // [REMOVED] console.warn('Roster full (10 units max), cannot add unit');
         return state;
       }
       return {

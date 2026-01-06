@@ -7,6 +7,16 @@ import type { TowerReward } from '../schemas/TowerRewardSchema';
  */
 export const TOWER_REWARDS: readonly TowerReward[] = [
   {
+    floorNumber: 5,
+    rewards: [
+      {
+        type: 'equipment',
+        ids: ['iron-sword'],
+        notes: 'Early milestone reward',
+      },
+    ],
+  },
+  {
     floorNumber: 6,
     rewards: [
       {
@@ -33,6 +43,16 @@ export const TOWER_REWARDS: readonly TowerReward[] = [
         type: 'recruit',
         ids: ['tower-champion'],
         notes: 'Tower-exclusive recruit unlocked after boss floor',
+      },
+    ],
+  },
+  {
+    floorNumber: 15,
+    rewards: [
+      {
+        type: 'equipment',
+        ids: ['silver-blade'],
+        notes: 'Mid-tier artifact reward',
       },
     ],
   },
