@@ -14,22 +14,15 @@ export const LUMEN_FAWN: Enemy = {
     pp: 10,
     atk: 14,
     def: 8,
-    agi: 12,
-    luk: 15,
+    mag: 6,
+    spd: 12,
   },
+
   abilities: [
-    { ...STRIKE, probability: 0.7 },
-    { ...QUAKE, probability: 0.3 },
+    { ...STRIKE },
+    { ...QUAKE },
   ],
-  xpReward: 12,
-  goldReward: 6,
-  dropTable: [],
-  visuals: {
-    spriteId: "enemy-fawn-venus",
-    scale: 0.9,
-    tint: "#aaff88", // Venus-ish tint
-  },
-  ai: {
-    pattern: "random",
-  }
+  baseXp: 12,
+  baseGold: 6,
+  drops: [],
 };

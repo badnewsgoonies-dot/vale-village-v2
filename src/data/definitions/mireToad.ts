@@ -14,22 +14,15 @@ export const MIRE_TOAD: Enemy = {
     pp: 15,
     atk: 18,
     def: 12,
-    agi: 10,
-    luk: 5,
+    mag: 4,
+    spd: 10,
   },
+
   abilities: [
-    { ...STRIKE, probability: 0.6 },
-    { ...ICE_SHARD, probability: 0.4 },
+    { ...STRIKE },
+    { ...ICE_SHARD },
   ],
-  xpReward: 15,
-  goldReward: 8,
-  dropTable: [],
-  visuals: {
-    spriteId: 'enemy-toad-mercury', // Placeholder or reused sprite
-    scale: 1.0,
-    tint: '#88aaff', // Mercury-ish tint
-  },
-  ai: {
-    pattern: 'random',
-  }
+  baseXp: 15,
+  baseGold: 8,
+  drops: [],
 };
