@@ -28,6 +28,7 @@ import type { Layer } from './engine/types';
 import '../overworld/OverworldCanvas.css';
 import { VirtualJoystick } from '../VirtualJoystick';
 import { getPlayerSprite } from '../../sprites/mappings/overworldSprites';
+import { TelemetryService } from '../../../core/services/TelemetryService';
 
 
 /** Movement speed in world pixels per second */
@@ -426,11 +427,20 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
 
-    engine.onUpdate((dtMs, eng) => {
+    engine.onUpdate((dtMs: number, eng: OverworldEngineV2) => {
       const dt = dtMs / 1000;
 
       const player = playerLayerRef.current;
       const village = villageLayerRef.current;
+
+      // Update telemetry each frame with lightweight navigation assist data
+      try {
+        const nearestDoor = village?.getNearestDoor ? village.getNearestDoor() : null;
+        TelemetryService.updateFrame({ navigationAssist: { nearestDoorId: nearestDoor?.id ?? null } });
+      } catch (e) {
+        // swallow telemetry errors
+      }
+
       if (!player || isTransitioningRef.current) return;
 
       // Sync DOM player position
@@ -650,6 +660,8 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
 
     // Render transition overlay
     const renderOverlay = () => {
+      // Publish sanitized telemetry each frame (Navigation Assist)
+      try { TelemetryService.updateFrame(); } catch (e) { /* ignore telemetry errors */ }
       if (transitionAlphaRef.current > 0) {
         const ctx = canvas.getContext('2d');
         if (ctx) {
@@ -742,7 +754,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
           >
             <img 
               ref={playerDomRef}
-              src="/sprites/overworld/protagonists/Isaac.gif"
+              src={getPlayerSprite('adept', 'right', false)}
               style={{
                 position: 'absolute',
                 left: '-16px', // -width/2
