@@ -1,104 +1,139 @@
-ROADMAP: Implementation & Gap Analysis
-=====================================
+ROADMAP: Prioritized Implementation Backlog
+==========================================
 
-Scope
------
-Audit of rounds 1-5 against ENCYCLOPEDIA.md and GAME_MECHANICS.md focusing on: missing mechanics, TODO/GOTCHA comments in src/, type-safety issues, and state-leakage points (priority + next actions).
+Purpose
+-------
+This document is the prioritized implementation backlog derived from the rounds 1-5 audit and subsequent analysis. Each item is prioritized (P0, P1, P2) and contains a clear Definition of Done (DoD) so work can be handed off, implemented, and verified with measurable acceptance criteria.
 
-Executive summary
------------------
-- Core gameplay systems (queue-based battle, tower, rewards, save/replay) are implemented and documented in ENCYCLOPEDIA.md and GAME_MECHANICS.md.
-- Remaining work: stabilize queue invariants, implement missing tests and error formatting, tighten type-safety, and harden save/replay contracts.
-- Priorities focus on correctness (invariants/tests), determinism (RNG/replay), and UX safety (defensive normalization in UI slices).
+Memory check
+------------
+- Memory briefing run before this update and previous audit artifacts (phase-1 content-audit, rounds 1-5) were referenced and incorporated. Key findings (queue invariants, Save/Replay TODOs, RNG determinism, schema drift) are included below.
+- Prototype content piece present:
+  - src/data/definitions/mireToad.ts — Mire Toad enemy data (prototype enemy).
+  - src/data/definitions/enemies.ts — ENEMIES registry updated to include Mire Toad.
+  - tests/unit/lumen_fawn.test.ts — Lumen-Fawn test scaffold exists.
+- Memory verification: prototype locations and names recorded in swarm memory (mireToad at src/data/definitions/mireToad.ts, test at tests/unit/lumen_fawn.test.ts).
 
-Prioritized list of missing mechanics / gaps (with rationale)
------------------------------------------------------------
-1) Unit tests for QueueBattleService edge cases (HIGH)
-   - Rationale: queue invariants are central; bugs here cause gameplay corruption and state leakage.
-   - Files of concern: src/core/services/QueueBattleService.ts, src/core/validation/battleStateInvariants.ts, src/core/models/BattleState.ts
-   - Next action: add focused unit tests for partial queues, dead-unit queue entries, mana overflow/rounding, and replay determinism.
-
-2) Save/Replay API hardening & error UX (HIGH)
-   - Rationale: TODOs indicate incomplete validation/error formatting and a missing ReplayPort abstraction.
-   - TODOs found: src/core/validation/saveFileValidation.ts (format validation error), src/core/services/SaveService.ts (create ReplayPort), src/core/services/SaveService.ts (schema TODO: add chapter to SaveV1Schema)
-   - Next action: implement ReplayPort interface, ensure SaveService returns structured Err/Ok with user-friendly messages, and add schema fields with constants.
-
-3) Implement test stubs across core services (MEDIUM)
-   - TODO test stubs found in many files under src/core/services/*.test.ts
-   - Files: BattleService.test.ts, SaveService.test.ts, QueueBattleService.test.ts, LevelNormalizationService.test.ts, AIService.test.ts, TowerService.test.ts, StoryService.test.ts, ShopService.test.ts, DevModeService.test.ts, RngService.test.ts
-   - Next action: prioritize QueueBattleService & SaveService tests first, then implement remaining service tests.
-
-4) Remove magic numbers and centralize constants (MEDIUM)
-   - Rationale: documents recommend named constants; several numeric literals exist in algorithms and data schemas.
-   - Next action: add constants file(s) (e.g., core/constants.ts or data/constants.ts) and refactor MIN_PARTY_SIZE / MAX_PARTY_SIZE usage where missing.
-
-5) Defensive UI normalization & clone-on-write enforcement (HIGH)
-   - Rationale: UI slices and components copy/adjust queuedActions length in multiple places leading to potential state leakage if not normalized consistently.
-   - Files: src/ui/state/queueBattleSlice.ts (lines adjusting queuedActions), src/ui/components/QueueBattleView.tsx and ActionQueuePanel, BattleActionMenu, ActionBar
-   - Next action: centralize normalization in queueBattleSlice.normalizeBattleState and ensure selectors/components treat queuedActions as readonly; avoid in-place mutation.
-
-Mapping of TODO / GOTCHA comments -> functional requirement
----------------------------------------------------------
-- src/ui/components/RewardsScreen.tsx:84 - TODO: Add proper error logging for missing unit
-  -> Requirement: Rewards UI must display recoverable errors and log missing unit references; implement guard & user message.
-
-- src/core/validation/saveFileValidation.ts:340 - TODO: Format validation error for user display
-  -> Requirement: Save loading must report structured human-friendly errors per schema failure (field, reason, remediation).
-
-- src/core/services/SaveService.ts:104 & 536 - TODO: Create separate ReplayPort interface; add chapter to SaveV1Schema
-  -> Requirement: Clear Replay abstraction for replay playback/recording; Save schema must include explicit metadata fields (chapter, version constants).
-
-- Multiple test stubs under src/core/services/*.test.ts
-  -> Requirement: Unit tests covering core behaviors; CI should fail if core invariants regress.
-
-Type-safety issues and contract mismatches (specific)
-----------------------------------------------------
-- Schema vs TS model drift: Some zod schemas (src/data/schemas/BattleStateSchema.ts) carry validation messages and field shapes that must remain synchronized with TypeScript models in src/core/models/BattleState.ts. Add a CI check to assert schema <-> type compatibility where possible.
-
-- Missing explicit readonly/mutable separation: core models use readonly arrays (e.g., queuedActions: readonly (QueuedAction|null)[]) while UI slices often clone to mutable arrays; recommend using types that express intent (ReadonlyArray vs Array) and helper routines to cast safely.
-
-- Implicit "any" and unhandled Err/Ok shapes: ensure service return types are strongly typed (Result<T, E>) and avoid leaking 'any' to UI layers.
-
-State leakage points (observed) and remediation
------------------------------------------------
-1) queuedActions length adjustments in UI slices
-   - Observed at src/ui/state/queueBattleSlice.ts lines where queuedActions is extended/truncated.
-   - Risk: UI may accidentally persist mutated arrays or mismatched lengths across renders.
-   - Remediation: Always normalize via a canonical createEmptyQueue(teamSize) factory and store/read only immutable copies in global state; ensure change events produce fresh objects.
-
-2) Multiple normalization sites
-   - Several files perform local normalization/defensive checks (battleStateInvariants.ts, BattleStateSchema, queueBattleSlice.normalizeBattleState). Consolidate normalization to one canonical entrypoint when setting battle state in slices and keep validation-only in validators.
-
-3) RNG/replay stream offsets
-   - Determinism relies on RNG streams and offsets (GAME_MECHANICS notes). Ensure ReplayService and BattleService consistently consume stream offsets and that tests assert stream position after each round.
-
-Action plan (concrete, prioritized)
------------------------------------
-1) (Immediate) Add unit tests for QueueBattleService edge cases; block deploy until passing. (owner: core/battle team)
-2) (Immediate) Implement SaveService ReplayPort and improve validation error formatting for Save load UX. (owner: core/persistence)
-3) (Next) Harden queue normalization: one canonical normalization call in queueBattleSlice.setBattle + enforce readonly queuedActions in selectors. (owner: ui/state)
-4) (Next) Implement missing tests across services; prioritize tests flagged in TODOs. (owner: core/testing team)
-5) (Ongoing) Replace magic numbers with named constants and add schema-type sync checks in CI. (owner: core/design)
-
-Estimated risks
+Priority legend
 ---------------
-- Risk: refactoring queuedActions shape without simultaneous UI updates may cause transient UI failures; mitigate by feature-flagging normalization changes and adding screenshots/playwright checks.
-- Risk: schema changes to SaveV1 may break existing save files; add migration path and versioned schema with explicit compatibility handling.
+- P0: Blockers for correctness, determinism, or user data integrity; must be fixed before release.
+- P1: Important improvements that reduce technical debt and improve reliability/maintainability.
+- P2: Nice-to-have features and refactors; schedule after P0/P1 velocity completes.
 
-Files & TODOs discovered (non-exhaustive)
------------------------------------------
-- src/ui/components/RewardsScreen.tsx:84
-- src/core/validation/saveFileValidation.ts:340
-- src/core/services/SaveService.ts:104, 536
-- src/core/services/*/*.test.ts (multiple TODO stubs)
+Implementation order (refined)
+----------------------------
+Based on dependency analysis, execute P0 items in this order:
+  1) RNG determinism & stream consolidation — centralize RNG streams and eliminate duplicated offsets.
+  2) Battle invariants & queuedActions normalization — ensure canonical battle state shape and no in-place mutations.
+  3) Save/Replay hardening and ReplayPort implementation — implement ReplayPort and schema versioning once deterministic behavior is established.
+
+This ordering minimizes rework: consolidate RNG first so replay and battle tests rely on a single source of truth for random streams.
+
+Backlog (by priority)
+---------------------
+P0 - Core correctness & determinism
+  1) Battle v2 / Queue invariants (owner: core/battle)
+     - Summary: Fix state-leakage and invariants around queuedActions and core battle queue processing.
+     - DoD:
+       - canonical normalizeBattleState(battleState) exists and is the only routine that adjusts queuedActions length/shape.
+       - queuedActions is represented as a ReadonlyArray in core logic and a canonical fixed-length vector is stored in state.
+       - Unit tests added: partial queues, dead-unit queued entries, mana overflow/underflow, normalization after UI write-back.
+       - CI: all relevant tests pass and coverage for core/battle increases by >=10%.
+  2) Save/Replay hardening (owner: core/persistence)
+     - Summary: Implement a ReplayPort abstraction, ensure save schema versioning, and produce structured user-facing validation errors.
+     - DoD:
+       - ReplayPort interface added and used by SaveService/ReplayService for record/playback.
+       - SaveV1Schema includes SAVE_SCHEMA_VERSION and migration metadata; migrations exist for older versions or clear rejection with remediation.
+       - Save load errors return structured {field, reason, remediation} and surfaced in UI; unit tests cover common schema failures.
+       - Determinism tests: record-and-replay for a 3-round battle assert identical final states and RNG stream offsets.
+  3) RNG determinism & Replay tests (owner: core/rng)
+     - Summary: Ensure RNG streams, offsets and replay metadata are consistent and covered by tests.
+     - DoD:
+       - RNG stream constants centralized and documented; duplicated stream offsets eliminated.
+       - Replay metadata includes explicit streamOffset and tests assert streamOffset equality at round boundaries.
+       - Unit/integration tests validate deterministic replay for recorded battles.
+
+P1 - Reliability, tests, and UX
+  4) UI normalization & clone-on-write enforcement (owner: ui/state)
+     - Summary: Centralize normalization and prevent in-place mutations in UI slices.
+     - DoD:
+       - queueBattleSlice exposes normalizeBattleState and is the canonical setter for battle state.
+       - Selectors return ReadonlyArray for queuedActions; components handle them without mutating.
+       - Playwright screenshot/regression tests added to assert no visual regressions after change.
+  5) Tests for core services (owner: core/testing)
+     - Summary: Implement TODO test stubs prioritized by risk (QueueBattleService, SaveService first).
+     - DoD:
+       - QueueBattleService.test.ts and SaveService.test.ts implemented and passing.
+       - At least 50% of remaining test stubs under src/core/services/ are implemented or triaged with owners.
+       - CI requires tests to pass before merging changes touching core services.
+  6) Constants & magic-number removal (owner: core/design)
+     - Summary: Introduce central constants and replace top magic numbers.
+     - DoD:
+       - src/core/constants.ts (or equivalent) added with MIN_PARTY_SIZE, MAX_PARTY_SIZE, SAVE_SCHEMA_VERSION, PRNG_WARMUP_ITERATIONS, RNG_STREAM_* constants.
+       - Top 10 magic numbers in core algorithms replaced and code passes pnpm typecheck.
+
+P2 - Improvements and documentation
+  7) Shop System & UX polish (owner: gameplay/shop)
+     - Summary: Complete shop workflows, error handling, and tests.
+     - DoD:
+       - Shop purchase flow covered by unit tests and one Playwright end-to-end scenario.
+       - Edge-cases (insufficient funds, inventory limits) produce structured, localized error messages.
+  8) Tower features and normalization (owner: gameplay/tower)
+     - Summary: Hardening of tower progression, rewards, and RNG interactions.
+     - DoD:
+       - TowerService uses centralized RNG and constants; difficulty scaling constants documented.
+       - Integration tests for tower runs added; no flaky behavior in CI.
+  9) Developer productivity (docs, PR templates, CI) (owner: infra)
+     - Summary: Add PR checklist, CI steps for schema/type sync, tests and typecheck gating.
+     - DoD:
+       - PR template includes required items (run pnpm test, pnpm typecheck, Schema/Type check script).
+       - CI job added for schema <-> type compatibility assertion.
+
+Technical debt (Cleanse run integration)
+----------------------------------------
+Items uncovered or reiterated by the recent 'Cleanse' audits have been integrated into the backlog above and include:
+- Duplicate RNG stream offsets and magic numbers (PRNG warmup iterations, denominators) → P0/P1 depending on risk.
+- Save schema drift and missing ReplayPort abstraction → P0 Save/Replay hardening.
+- queuedActions normalization spread across UI and core → P0 UI normalization & Battle invariants.
+- Numerous test stubs and TODO comments across core services → P1 Tests prioritization and implementation.
+- Missing constants and magic numbers in core algorithms → P1 Constants consolidation.
+
+Cross-cutting acceptance criteria
+--------------------------------
+- All P0 items must have passing unit tests and deterministic replay tests before release.
+- Schema changes must include migration strategies and explicit schema versioning.
+- No in-place mutations in global state: enforce via readonly types and cloning factories where appropriate.
+- CI adds checks: pnpm typecheck, unit tests, schema<->type sync, and a reproducible replay test job.
+
+Files & TODOs mapped (short list)
+--------------------------------
+- src/core/services/QueueBattleService.ts (tests: QueueBattleService.test.ts)
+- src/core/services/SaveService.ts (implement ReplayPort; SaveV1Schema updates)
+- src/core/validation/saveFileValidation.ts (structured error output)
+- src/ui/state/queueBattleSlice.ts (normalizeBattleState API)
 - src/data/schemas/BattleStateSchema.ts (queuedActions validation)
-- src/ui/state/queueBattleSlice.ts (queue length adjustments)
+- src/ui/components/RewardsScreen.tsx (error guards)
 
-Final notes / next actions for worker
-------------------------------------
-- Create unit test tasks and assign top priority to QueueBattleService and SaveService tests.
-- Start a small refactor to centralize queue normalization in queueBattleSlice and prepare a migration plan for save schema changes.
-- Add CI checks: (1) pnpm typecheck, (2) unit tests for QueueBattleService, (3) schema <-> type compatibility assertions.
+Next actions (immediate)
+------------------------
+1) Create issues/tasks and assign owners for the top P0 items: Battle invariants, Save/Replay hardening, and RNG determinism. Include DoD and CI gating in each issue.
+2) Implement minimal ReplayPort and record/replay deterministic test (small PR); run in CI.
+3) Implement QueueBattleService unit tests covering the DoD cases.
 
----
-Generated by audit run (rounds 1-5 review) on 2026-01-06T16:17:46Z
+Risks
+-----
+- Schema changes without migration can break existing user saves; provide clear migration scripts or transparent rejection with remediation.
+- Large refactors of queuedActions require staged rollouts and Playwright checks to avoid UX regressions.
+
+Lesson
+------
+Centralizing normalization and treating queuedActions as canonical fixed-length vectors significantly reduces the surface area for state leakage and simplifies deterministic replay testing.
+
+Change log
+----------
+- This file was restructured into a prioritized backlog with explicit Definition of Done entries and Cleanse-run technical debt integrated (2026-01-06).
+
+Finalization
+------------
+- Roadmap finalized and verified against repository on 2026-01-06T21:46:28Z. Prototype enemy verified in repo at src/data/definitions/mireToad.ts and referenced in src/data/definitions/enemies.ts (id: 'mire-toad'); lumen-fawn test scaffold present at tests/unit/lumen_fawn.test.ts.
+- Top P0 items prioritized with DoD; next step is creating tracked issues and minimal PRs for ReplayPort, QueueBattleService tests, and RNG stream centralization.

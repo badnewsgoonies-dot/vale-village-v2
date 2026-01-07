@@ -14,6 +14,8 @@
 import type { Enemy } from '../schemas/EnemySchema';
 import { unitDefinitionToEnemy } from '../../core/utils/unitToEnemy';
 import { UNIT_DEFINITIONS } from './units';
+import { MIRE_TOAD } from './mireToad';
+import { LUMEN_FAWN } from './lumenFawn';
 import {
   STRIKE,
   HEAVY_STRIKE,
@@ -2715,4 +2717,7 @@ export const ENEMIES: Record<string, Enemy> = {
   'garet-enemy': GARET_ENEMY,
   'sentinel-enemy': SENTINEL_ENEMY,
   'stormcaller-enemy': STORMCALLER_ENEMY,
+  // Restored Content
+  "mire-toad": MIRE_TOAD,
+  "lumen-fawn": LUMEN_FAWN,
 };

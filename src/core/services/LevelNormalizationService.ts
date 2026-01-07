@@ -23,6 +23,9 @@ const FALLBACK_GROWTH = {
 
 // Reference to satisfy no-unused-vars during typecheck; kept for future growth logic
 void FALLBACK_GROWTH;
+const FLOOR_BRACKET_SIZE = 5;
+const MAX_NORMALIZED_LEVEL = 20;
+
 
 /**
  * Calculates the target level for a given floor number.
@@ -34,8 +37,8 @@ void FALLBACK_GROWTH;
  */
 export function calculateFloorTargetLevel(floorNumber: number): number {
   if (floorNumber <= 0) return 1;
-  const bracket = Math.ceil(floorNumber / 5);
-  return Math.min(bracket * 5, 20); // Clamped to 20 per XP_CURVE limits
+  const bracket = Math.ceil(floorNumber / FLOOR_BRACKET_SIZE);
+  return Math.min(bracket * FLOOR_BRACKET_SIZE, MAX_NORMALIZED_LEVEL);
 }
 
 /**
