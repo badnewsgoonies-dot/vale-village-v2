@@ -8,6 +8,7 @@ import type { BattleState } from '../models/BattleState';
 import { getEncounterId } from '../models/BattleState';
 import type { PRNG } from '../random/prng';
 import { makePRNG } from '../random/prng';
+import { createRNGStream, RNG_STREAMS } from '../constants';
 import { performAction, endTurn, checkBattleEnd } from '../services/BattleService';
 import { processStatusEffectTick } from '../algorithms/status';
 import type { BattleEvent } from '../services/types';
@@ -183,8 +184,20 @@ export function playReplay(tape: ReplayTape): ReplayResult {
 
     // Process each input
     for (const input of tape.inputs) {
-      // Use deterministic per-turn RNG substream
-      const turnRng = makePRNG(tape.seed + input.turn * 1_000_000);
+      // Use deterministic per-turn RNG substream using centralized constants
+      let streamOffset: number;
+      if (input.type === 'status-tick') {
+        streamOffset = RNG_STREAMS.STATUS_EFFECTS;
+      } else if (input.type === 'ai-action') {
+        streamOffset = RNG_STREAMS.ACTIONS;
+      } else if (input.type === 'ability') {
+        streamOffset = RNG_STREAMS.ACTIONS;
+      } else {
+        // end-turn and other player-driven offsets
+        streamOffset = RNG_STREAMS.END_TURN;
+      }
+      const turnSeed = createRNGStream(tape.seed, input.turn, streamOffset);
+      const turnRng = makePRNG(turnSeed);
 
       if (input.type === 'ability' || input.type === 'end-turn') {
         const result = applyPlayerCommand(battleState, input as PlayerCommand, turnRng);

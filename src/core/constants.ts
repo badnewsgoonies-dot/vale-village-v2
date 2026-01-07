@@ -29,6 +29,8 @@ export const RNG_STREAMS = {
   STATUS_EFFECTS: 0,
   /** Player/enemy actions */
   ACTIONS: 7,
+  /** Per-turn stream used for general per-input RNG (replays, turn-scoped) */
+  TURN: 2,
   /** Victory reward calculation */
   VICTORY: 999,
   /** End turn processing */
