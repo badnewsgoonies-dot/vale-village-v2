@@ -66,7 +66,7 @@ export interface BattleQueue {
   /** Which unit we're currently selecting action for (0 to teamSize-1) */
   currentQueueIndex: number;
   /** Queued actions for each unit (null if not queued yet). Array length matches team size (1-4) */
-  queuedActions: readonly (QueuedAction | null)[];
+  queuedActions: ReadonlyArray<QueuedAction | null>;
   /** Djinn IDs marked for activation this round */
   queuedDjinn: readonly string[];
   /** Index of action currently executing (during execution phase) */
