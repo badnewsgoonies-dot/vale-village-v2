@@ -46,11 +46,22 @@ export function getElementModifier(attackElement: Element, defenseElement: Eleme
 /**
  * Sum elemental resistance from all defensive equipment
  * (Armor, Helm, Boots, Accessory)
- * @deprecated Removed as per request (Zero Resistance)
  */
 export function calculateTotalEquipmentElementalResistance(unit: Unit): number {
-  void unit; // parameter intentionally unused; keep signature stable for future use
-  return 0;
+  if (!unit || !unit.equipment) return 0;
+
+  const slots = ['armor', 'helm', 'boots', 'accessory'] as const;
+  let total = 0;
+
+  for (const slot of slots) {
+    const item = unit.equipment[slot];
+    if (item && typeof (item as any).elementalResist === 'number') {
+      total += (item as any).elementalResist || 0;
+    }
+  }
+
+  // Clamp to reasonable bounds to avoid full immunity
+  return Math.max(0, Math.min(0.9, total));
 }
 
 /**
@@ -73,8 +84,12 @@ export function applyDamageModifiers(
   void abilityElement; // referenced to satisfy no-unused-params rule
   let modifiedDamage = baseDamage;
 
-  // 1. Elemental resistance removed as per request (Zero Resistance)
-  // Logic cleared.
+  // 1. Elemental resistance from equipment (armor/helm/boots/accessory)
+  if (abilityElement) {
+    const equipResist = calculateTotalEquipmentElementalResistance(defender);
+    const clampedEquipResist = Math.min(0.9, Math.max(0, equipResist)); // prevent full immunity
+    modifiedDamage *= (1 - clampedEquipResist);
+  }
 
   // 2. Apply damage reduction from status effects
   const damageReductionEffects = defender.statusEffects.filter(

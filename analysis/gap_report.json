@@ -1,0 +1,47 @@
+[
+  {
+    "id": "GAP-001",
+    "feature": "Fix battle queuedActions leakage",
+    "description": "Queued actions sometimes persist across battles leading to incorrect action resolution.",
+    "priority_lane": "P0",
+    "estimated_hours": 8,
+    "files_candidate": ["src/ui/state/battleSlice.ts", "src/core/battle/*"],
+    "notes": "Write unit tests reproducing leak, implement deterministic clear on battle end, add regression e2e."
+  },
+  {
+    "id": "GAP-002",
+    "feature": "Menu focus-restore and e2e coverage",
+    "description": "Focus restore hook lacks deterministic e2e tests; some flows lose keyboard focus when closing modals.",
+    "priority_lane": "P0",
+    "estimated_hours": 6,
+    "files_candidate": ["src/game/menus/MenuStackRouter.ts", "src/game/menus/PauseMenu.ts", "src/ui/hooks/*"],
+    "notes": "Add focused Playwright test and small hook fixes."
+  },
+  {
+    "id": "GAP-003",
+    "feature": "Accessory effect implementations and registry",
+    "description": "New accessories declared but some effects and equipment registry entries are missing.",
+    "priority_lane": "P0",
+    "estimated_hours": 10,
+    "files_candidate": ["new_accessories.ts", "src/core/items/*", "src/ui/state/*"],
+    "notes": "Complete effect wiring, add unit tests and update used_* lists."
+  },
+  {
+    "id": "GAP-004",
+    "feature": "Replay/read-write end-to-end validation",
+    "description": "Replay persistence has stubs; requires end-to-end validation to ensure deterministic playback.",
+    "priority_lane": "P1",
+    "estimated_hours": 12,
+    "files_candidate": ["src/core/save/*", "tests/e2e/replay.spec.ts"],
+    "notes": "Create smoke e2e that records and plays back short sequences."
+  },
+  {
+    "id": "GAP-005",
+    "feature": "CI gating for heavy visual tests",
+    "description": "Ensure heavy/visual Playwright tests are opt-in and gated in CI to avoid flakiness.",
+    "priority_lane": "P1",
+    "estimated_hours": 4,
+    "files_candidate": ["playwright.config.ts", ".github/workflows/*"],
+    "notes": "Add RUN_HEAVY gating and documentation for maintainers."
+  }
+]

@@ -25,3 +25,7 @@ Attachments
 
 Recorded by: Round 1, Lane 1, Worker a
 
+Memory links
+- Kickoff decision: id: 16412
+- Relevant lessons (semantic search): 11335, 14333, 14498, 14544, 14332
+
