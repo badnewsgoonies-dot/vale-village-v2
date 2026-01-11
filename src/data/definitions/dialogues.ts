@@ -894,6 +894,112 @@ export const MYSTERIOUS_STRANGER: DialogueTree = {
 // ADDITIONAL RECRUITMENT DIALOGUES - Missing houses
 // ============================================================================
 
+export const HOUSE_01_POST_BATTLE: DialogueTree = {
+  id: 'house-01-post',
+  name: 'House 01: Aftermath',
+  startNodeId: 'victory',
+  nodes: [
+    {
+      id: 'victory',
+      speaker: 'Isaac',
+      text: 'We freed the first house. One life at a time, Vale will breathe again.',
+      portrait: 'isaac',
+      nextNodeId: 'garet-comment',
+    },
+    {
+      id: 'garet-comment',
+      speaker: 'Garet',
+      text: "Good fight. You kept your head — that's what matters when the dust settles.",
+      portrait: 'garet',
+    },
+  ],
+};
+
+export const HOUSE_02_POST_BATTLE: DialogueTree = {
+  id: 'house-02-post',
+  name: 'House 02: The Brave Few',
+  startNodeId: 'thanks',
+  nodes: [
+    {
+      id: 'thanks',
+      speaker: 'Villager',
+      text: 'You came for us when no one else would. We owe you our lives.',
+      portrait: 'villager',
+      nextNodeId: 'isaac-responds',
+    },
+    {
+      id: 'isaac-responds',
+      speaker: 'Isaac',
+      text: 'Stay hidden for now. We will return for the others.',
+      portrait: 'isaac',
+    },
+  ],
+};
+
+export const HOUSE_03_POST_BATTLE: DialogueTree = {
+  id: 'house-03-post',
+  name: 'House 03: Small Victories',
+  startNodeId: 'murmur',
+  nodes: [
+    {
+      id: 'murmur',
+      speaker: 'Ranger',
+      text: 'They fought hard for their captors. But courage is contagious. You reminded them of that.',
+      portrait: 'ranger',
+      nextNodeId: 'encourage',
+    },
+    {
+      id: 'encourage',
+      speaker: 'Isaac',
+      text: 'Every person we free is a seed of resistance. Tend it well.',
+      portrait: 'isaac',
+    },
+  ],
+};
+
+export const HOUSE_04_POST_BATTLE: DialogueTree = {
+  id: 'house-04-post',
+  name: 'House 04: Quiet Resolve',
+  startNodeId: 'relief',
+  nodes: [
+    {
+      id: 'relief',
+      speaker: 'Healer',
+      text: 'The wounds will heal. It is the fears that take time. But hope travels faster than pain.',
+      portrait: 'healer',
+      nextNodeId: 'murmur',
+    },
+    {
+      id: 'murmur',
+      speaker: 'Isaac',
+      text: 'Rest now. Tomorrow we push deeper.',
+      portrait: 'isaac',
+    },
+  ],
+};
+
+export const HOUSE_05_POST_BATTLE: DialogueTree = {
+  id: 'house-05-post',
+  name: 'House 05: Ember of Rebellion',
+  startNodeId: 'celebrate',
+  nodes: [
+    {
+      id: 'celebrate',
+      speaker: 'Villager',
+      text: "They said we'd never resist. Look at us now—smoke and courage and songs again.",
+      portrait: 'villager',
+      nextNodeId: 'blaze-boast',
+    },
+    {
+      id: 'blaze-boast',
+      speaker: 'Blaze',
+      text: "Heh. Give me a target and I'll make sure they remember Vale's name.",
+      portrait: 'garet',
+    },
+  ],
+};
+
+
 export const HOUSE_06_POST_BATTLE: DialogueTree = {
   id: 'house-06-post-battle',
   name: 'House 06: Victory',
@@ -1844,6 +1950,11 @@ export const DIALOGUES: Record<string, DialogueTree> = {
   'boss-wind-assassin': MINIBOSS_WIND_ASSASSIN,
   'boss-frost-knight': MINIBOSS_FROST_KNIGHT,
   // Additional post-battle dialogues
+  'house-01-post': HOUSE_01_POST_BATTLE,
+  'house-02-post': HOUSE_02_POST_BATTLE,
+  'house-03-post': HOUSE_03_POST_BATTLE,
+  'house-04-post': HOUSE_04_POST_BATTLE,
+  'house-05-post': HOUSE_05_POST_BATTLE,
   'house-06-post': HOUSE_06_POST_BATTLE,
   'house-09-post': HOUSE_09_POST_BATTLE,
   'house-10-milestone': HOUSE_10_MILESTONE,

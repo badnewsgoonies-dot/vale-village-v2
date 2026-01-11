@@ -16,6 +16,7 @@ import { TerrainLayer } from './layers/TerrainLayer';
 import { TreeLayer } from './layers/TreeLayer';
 import { RoadLayer } from './layers/RoadLayer';
 import { VillageLayer } from './layers/VillageLayer';
+import { EncountersLayer } from './layers/encountersLayer';
 import { PlayerLayer } from './layers/PlayerLayer';
 import { InteriorNpcLayer } from './layers/InteriorNpcLayer';
 import { InteriorFloorLayer } from '../overworld/layers/InteriorFloorLayer';
@@ -65,6 +66,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
   const interiorFurnitureRef = useRef<InteriorFurnitureLayer | null>(null);
   const interiorNpcRef = useRef<InteriorNpcLayer | null>(null);
   const interiorBattleTriggeredRef = useRef(false);
+  const encountersLayerRef = useRef<any>(null);
 
   const keysRef = useRef<Set<string>>(new Set());
   const touchInputRef = useRef<{ h: number; v: number; action: boolean }>({ h: 0, v: 0, action: false });
@@ -178,6 +180,27 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
     villageLayerRef.current = villageLayer;
     villageLayer.setUnlockedHouses(getUnlockedBuildingIds());
 
+    const encountersLayer = new EncountersLayer({
+      buildings: VILLAGE_BUILDINGS,
+      getPlayerPosition: () => playerLayerRef.current?.getPosition() ?? null,
+      onTrigger: (buildingId: string) => {
+        handleTrigger({
+          id: `${buildingId}-symbol`,
+          type: 'battle',
+          position: { x: 0, y: 0 },
+          data: { encounterId: buildingId },
+        });
+      },
+      showPredicate: (b) => {
+        if (b.id && b.id.startsWith('house-')) {
+          const num = parseInt(b.id.split('-')[1], 10);
+          return num <= 20;
+        }
+        return false;
+      },
+    });
+    encountersLayerRef.current = encountersLayer;
+
     const playerLayer = new PlayerLayer({
       x: savedOverworldXRef.current,
       y: 450,
@@ -197,9 +220,10 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
       new TreeLayer(),
       new RoadLayer(),
       villageLayer,
+      encountersLayer,
       playerLayer,
     ];
-  }, [getUnlockedBuildingIds]);
+  }, [getUnlockedBuildingIds, handleTrigger]);
 
   // Keep house unlock visuals in sync with story flags (and ensure new VillageLayer instances inherit them).
   useEffect(() => {
@@ -626,6 +650,26 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
         eng.getCamera().setTarget(newX, newY);
         // Update village layer for door proximity
         village?.setPlayerPosition(newX, newY);
+        // Update encounters layer player position for proximity checks
+        encountersLayerRef.current?.setPlayerPosition(newX, newY);
+
+        // Check for nearby overworld symbol encounters and trigger battles
+        const encountersLayer = encountersLayerRef.current;
+        try {
+          const nearby = encountersLayer?.getNearbyEncounter(newX, newY, 32);
+          if (nearby && !encounterTriggeredRef.current[nearby.id]) {
+            // Mark as triggered to avoid repeat triggers until battle flow completes
+            encounterTriggeredRef.current[nearby.id] = true;
+            handleTrigger({
+              id: `${nearby.id}-overworld`,
+              type: 'battle',
+              position: { x: 0, y: 0 },
+              data: { encounterId: nearby.id },
+            });
+          }
+        } catch (e) {
+          // Layer may not be ready; ignore
+        }
       } else {
         // Update interior furniture layer with player position
         const state = player.getPlayerState();
@@ -700,6 +744,8 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
     } else if (mode === 'overworld') {
       // When returning to overworld (e.g., dialogue ends), ensure no stale modal is left open.
       closeModal();
+      // Reset per-overworld-touch trigger locks so encounters can retrigger after returning
+      encounterTriggeredRef.current = {};
     }
   }, [mode, startTransition, closeModal]);
 

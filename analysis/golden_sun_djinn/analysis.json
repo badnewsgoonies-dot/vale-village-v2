@@ -1,0 +1,12 @@
+{
+  "start_frame": 0,
+  "end_frame": 0,
+  "fps": 60,
+  "djinn_spin_start_frame": 0,
+  "djinn_spin_end_frame": 0,
+  "spin_duration_frames": 0,
+  "text_scroll_start_frame": 0,
+  "text_scroll_end_frame": 0,
+  "text_scroll_speed_chars_per_sec": 15.0,
+  "sound_to_visual_sync_ms": 0
+}

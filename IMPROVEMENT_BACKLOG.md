@@ -184,4 +184,48 @@ Empty or minimal catch blocks that swallow errors:
 | Console Statements | 113 |
 | Large Files (>300 lines) | 55 |
 
+
+
+## 🎯 Actionable UI fixes (from UI audit & memory)
+
+### Fix #1 — Menu focus & accessibility
+- [ ] Implement/use useFocusRestore(isOpen, fallbackRef) hook across modal/menus (PauseMenu, MainMenu, SaveMenu, InventoryModal) and guard restoration on DOM-connected targets.
+- [ ] Add scoped focus capture (save activeElement on open) and restore conditionally when target still attached to document.
+- [ ] Add small testids to toolbox/menu action buttons and add a Playwright smoke test validating focus returns after close.
+- [ ] Update MenuStackRouter / PauseMenu to use the hook and ensure Settings/How-To-Play navigation pushes/pops without losing focus.
+
+### Fix #2 — Fonts & JRPG textbox styling
+- [ ] Ensure Press Start 2P font is loaded in index.html (or via CSS @import) with a robust fallback stack and local-cache strategy.
+- [ ] Consolidate JRPG textbox CSS into a single GoldenSunTheme CSS module and apply to `.gs-window`; preserve high-contrast accessible sizes and line-height.
+- [ ] Add automated verification (unit/e2e) to assert `.gs-window` computed styles (font-family, line-height, padding) in CI.
+
+### Memory system startup steps (per CLAUDE.md) — include in any follow-up PR/README
+- Run: python3 /home/geni/swarm/memory/mem-briefing.py
+- Run: python3 /home/geni/swarm/memory/mem-semantic.py "UI audit fixes" --limit 10
+- Query decisions: /home/geni/swarm/memory/mem-db.sh query type=d recent=24h limit=10
+
+### Repo files likely to change (developer checklist)
+- CSS: src/index.css, src/styles/GoldenSunTheme.css, public/fonts/*
+- Components: src/ui/components/PauseMenu.tsx, MainMenu.tsx, SaveMenu.tsx, InventoryModal.tsx, DialogueBoxV2.tsx
+- Hooks/Utils: src/ui/hooks/useFocusRestore.ts, src/ui/utils/focus.ts
+- Public/HTML: index.html or public/index.html (font links)
+- Tests: tests/e2e/*.spec.ts (Playwright checks), tests/unit/* (style verifications)
+
+
+
+## ▶️ MENU UX PRIORITIZED (added 2026-01-11)
+
+Top-priority items extracted from memory briefing and UI audit:
+
+- P0: Focus-restore & SaveMenu integration — Estimate: 1-2 days
+  - Implement useFocusRestore(isOpen, fallbackRef) hook; apply to PauseMenu, SaveMenu, InventoryModal, and MenuStackRouter. Add Playwright smoke test asserting focus restoration.
+
+- P1: JRPG textbox & font consolidation — Estimate: 2 days
+  - Consolidate `.gs-window` rules into GoldenSunTheme CSS module; ensure Press Start 2P is loaded with fallback and add computed-style CI checks.
+
+- P2: Accessibility keyboard handlers & testids — Estimate: 2-3 days
+  - Add keyboard handlers to onClick-only controls, add stable data-testid attributes for E2E, and update tests.
+
+(References: mem-briefing.py snapshot; mem-semantic query for "menu UX")
+
 <!-- END BACKLOG -->

@@ -1,0 +1,152 @@
+
+> vale-village-v2@0.1.0 dev
+> vite --host 0.0.0.0 --port 3003
+
+
+  VITE v5.4.21  ready in 479 ms
+
+  ➜  Local:   http://localhost:3003/
+  ➜  Network: http://10.0.0.52:3003/
+  ➜  Network: http://100.77.95.110:3003/
+12:33:38 a.m. [vite] hmr update /src/index.css
+12:35:13 a.m. [vite] hmr update /src/index.css
+12:35:16 a.m. [vite] hmr update /src/ui/components/MainMenu.tsx
+12:35:19 a.m. [vite] hmr update /src/ui/components/PauseMenu.tsx
+12:35:22 a.m. [vite] hmr update /src/ui/components/PauseMenu.tsx
+12:35:31 a.m. [vite] hmr update /src/ui/components/SaveMenu.tsx
+12:35:44 a.m. [vite] hmr update /src/index.css
+12:35:55 a.m. [vite] hmr update /src/ui/components/SaveMenu.tsx
+12:36:01 a.m. [vite] hmr update /src/ui/components/SaveMenu.tsx
+12:36:02 a.m. [vite] hmr update /src/index.css
+12:36:04 a.m. [vite] hmr update /src/ui/components/DialogueChatOverlay.tsx
+12:36:17 a.m. [vite] hmr update /src/ui/components/ShopScreen.tsx
+12:36:20 a.m. [vite] hmr update /src/ui/components/ShopScreen.tsx
+12:36:23 a.m. [vite] hmr update /src/ui/components/ShopScreen.tsx
+12:36:26 a.m. [vite] hmr update /src/ui/components/ShopScreen.tsx
+12:36:30 a.m. [vite] hmr update /src/ui/components/ShopScreen.tsx
+12:36:33 a.m. [vite] hmr update /src/modals/InventoryModal.tsx
+12:36:36 a.m. [vite] hmr update /src/modals/InventoryModal.tsx
+12:36:46 a.m. [vite] hmr update /src/modals/InventoryModal.tsx
+12:36:54 a.m. [vite] hmr update /src/ui/components/BattleActionMenu.tsx
+12:36:57 a.m. [vite] hmr update /src/ui/components/BattleActionMenu.tsx
+12:37:00 a.m. [vite] hmr update /src/ui/components/BattleActionMenu.tsx
+12:37:03 a.m. [vite] hmr update /src/ui/components/BattleActionMenu.tsx
+1:06:57 a.m. [vite] page reload src/ui/state/store.ts
+7:33:47 a.m. [vite] hmr update /src/ui/components/SaveMenu.tsx
+7:33:51 a.m. [vite] hmr update /src/ui/components/SaveMenu.tsx
+7:33:54 a.m. [vite] hmr update /src/ui/components/SaveMenu.tsx
+7:33:57 a.m. [vite] hmr update /src/ui/components/SaveMenu.tsx
+7:34:00 a.m. [vite] hmr update /src/ui/components/SaveMenu.tsx
+7:34:02 a.m. [vite] hmr update /src/ui/components/SaveMenu.tsx
+7:34:07 a.m. [vite] hmr update /src/ui/components/PauseMenu.tsx
+7:34:10 a.m. [vite] hmr update /src/ui/components/PauseMenu.tsx
+7:34:13 a.m. [vite] hmr update /src/ui/components/PauseMenu.tsx
+7:35:32 a.m. [vite] hmr update /src/ui/components/SaveMenu.tsx
+7:35:37 a.m. [vite] hmr update /src/ui/components/SaveMenu.tsx
+7:35:40 a.m. [vite] hmr update /src/modals/InventoryModal.tsx
+7:35:44 a.m. [vite] hmr update /src/modals/InventoryModal.tsx
+7:35:47 a.m. [vite] hmr update /src/modals/InventoryModal.tsx
+7:35:50 a.m. [vite] hmr update /src/ui/components/ShopScreen.tsx
+7:35:54 a.m. [vite] hmr update /src/ui/components/ShopScreen.tsx
+7:35:57 a.m. [vite] hmr update /src/ui/components/ShopScreen.tsx
+7:36:00 a.m. [vite] hmr update /src/ui/components/MainMenu.tsx
+7:36:02 a.m. [vite] hmr update /src/ui/components/PauseMenu.tsx
+7:37:36 a.m. [vite] page reload src/store/gameStore.ts
+7:37:51 a.m. [vite] page reload src/store/gameStore.ts
+7:37:57 a.m. [vite] page reload src/store/gameStore.ts
+7:38:05 a.m. [vite] page reload src/store/gameStore.ts
+7:38:08 a.m. [vite] page reload src/store/gameStore.ts
+7:39:57 a.m. [vite] hmr update /src/App.tsx
+7:39:59 a.m. [vite] hmr update /src/App.tsx
+7:40:03 a.m. [vite] hmr update /src/App.tsx
+7:40:06 a.m. [vite] hmr update /src/App.tsx
+7:40:13 a.m. [vite] page reload src/core/services/BattleService.ts
+7:40:42 a.m. [vite] hmr update /src/App.tsx
+7:40:45 a.m. [vite] hmr update /src/App.tsx
+7:40:53 a.m. [vite] hmr update /src/App.tsx
+9:36:32 a.m. [vite] hmr update /src/ui/components/BattleActionMenu.tsx
+9:36:40 a.m. [vite] hmr update /src/ui/components/BattleActionMenu.tsx
+9:36:49 a.m. [vite] hmr update /src/ui/components/BattleActionMenu.tsx
+9:37:02 a.m. [vite] hmr update /src/ui/components/BattleActionMenu.tsx
+9:37:43 a.m. [vite] hmr update /src/ui/components/ShopEquipScreen.tsx
+9:38:03 a.m. [vite] hmr update /src/ui/components/ShopEquipScreen.tsx
+9:40:15 a.m. [vite] hmr update /src/ui/components/RewardsScreen.tsx
+1:28:29 p.m. [vite] page reload src/store/gameStore.ts
+1:29:05 p.m. [vite] hmr update /src/data/definitions/houseEnemyDialogues.ts
+1:29:15 p.m. [vite] hmr update /src/data/definitions/maps.ts
+1:31:35 p.m. [vite] hmr update /src/index.css
+2:29:14 p.m. [vite] page reload src/core/models/Unit.ts
+2:31:13 p.m. [vite] page reload src/core/services/BattleService.ts
+2:41:03 p.m. [vite] hmr update /src/ui/components/QueueBattleView.tsx
+2:44:30 p.m. [vite] hmr update /src/ui/components/overworld-v2/OverworldV2.tsx
+2:45:12 p.m. [vite] hmr update /src/ui/components/overworld-v2/OverworldV2.tsx
+2:45:12 p.m. [vite] Internal server error: /home/geni/Documents/vale-village-v2/src/ui/components/overworld-v2/OverworldV2.tsx: Identifier 'EncountersLayer' has already been declared. (20:9)
+
+  18 | import { VillageLayer } from './layers/VillageLayer';
+  19 | import { EncountersLayer } from './layers/encountersLayer';
+> 20 | import { EncountersLayer } from './layers/encountersLayer';
+     |          ^
+  21 | import { PlayerLayer } from './layers/PlayerLayer';
+  22 | import { InteriorNpcLayer } from './layers/InteriorNpcLayer';
+  23 | import { InteriorFloorLayer } from '../overworld/layers/InteriorFloorLayer';
+  Plugin: vite:preact-jsx
+  File: /home/geni/Documents/vale-village-v2/src/ui/components/overworld-v2/OverworldV2.tsx:20:9
+  18 |  import { VillageLayer } from './layers/VillageLayer';
+  19 |  import { EncountersLayer } from './layers/encountersLayer';
+  20 |  import { EncountersLayer } from './layers/encountersLayer';
+     |           ^
+  21 |  import { PlayerLayer } from './layers/PlayerLayer';
+  22 |  import { InteriorNpcLayer } from './layers/InteriorNpcLayer';
+      at constructor (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:367:19)
+      at TypeScriptParserMixin.raise (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:6624:19)
+      at TypeScriptScopeHandler.declareName (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:4895:21)
+      at TypeScriptParserMixin.declareNameFromIdentifier (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:7594:16)
+      at TypeScriptParserMixin.checkIdentifier (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:7590:12)
+      at TypeScriptParserMixin.checkLVal (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:7527:12)
+      at TypeScriptParserMixin.finishImportSpecifier (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14342:10)
+      at TypeScriptParserMixin.parseImportSpecifier (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14499:17)
+      at TypeScriptParserMixin.parseImportSpecifier (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10205:18)
+      at TypeScriptParserMixin.parseNamedImportSpecifiers (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14478:36)
+      at TypeScriptParserMixin.parseImportSpecifiersAndAfter (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14318:37)
+      at TypeScriptParserMixin.parseImport (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14311:17)
+      at TypeScriptParserMixin.parseImport (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9412:26)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12952:27)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseModuleItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12820:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13392:36)
+      at TypeScriptParserMixin.parseBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13385:10)
+      at TypeScriptParserMixin.parseProgram (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12698:10)
+      at TypeScriptParserMixin.parseTopLevel (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12688:25)
+      at TypeScriptParserMixin.parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14568:25)
+      at TypeScriptParserMixin.parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10183:18)
+      at parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14602:38)
+      at parser (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/parser/index.js:41:34)
+      at parser.next (<anonymous>)
+      at normalizeFile (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transformation/normalize-file.js:64:37)
+      at normalizeFile.next (<anonymous>)
+      at run (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transformation/index.js:22:50)
+      at run.next (<anonymous>)
+      at transform (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transform.js:22:33)
+      at transform.next (<anonymous>)
+      at step (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:261:32)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:273:13
+      at async.call.result.err.err (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:223:11)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:189:28
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/gensync-utils/async.js:67:7
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:113:33
+      at step (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:287:14)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:273:13
+      at async.call.result.err.err (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:223:11)
+2:45:23 p.m. [vite] hmr update /src/ui/components/overworld-v2/OverworldV2.tsx
+2:45:51 p.m. [vite] hmr update /src/ui/components/overworld-v2/OverworldV2.tsx
+2:45:57 p.m. [vite] hmr update /src/ui/components/overworld-v2/OverworldV2.tsx
+2:46:38 p.m. [vite] hmr update /src/ui/components/overworld-v2/layers/encountersLayer.tsx
+2:47:17 p.m. [vite] hmr update /src/ui/components/overworld-v2/OverworldV2.tsx
+2:47:36 p.m. [vite] hmr update /src/ui/components/overworld-v2/OverworldV2.tsx
+2:47:53 p.m. [vite] hmr update /src/ui/components/overworld-v2/layers/encountersLayer.tsx
+2:47:56 p.m. [vite] hmr update /src/ui/components/overworld-v2/OverworldV2.tsx
+2:48:24 p.m. [vite] hmr update /src/ui/components/overworld-v2/OverworldV2.tsx
+2:48:51 p.m. [vite] hmr update /src/ui/components/overworld-v2/OverworldV2.tsx
+2:49:07 p.m. [vite] hmr update /src/ui/components/overworld-v2/OverworldV2.tsx
+2:50:09 p.m. [vite] hmr update /src/ui/components/overworld-v2/OverworldV2.tsx

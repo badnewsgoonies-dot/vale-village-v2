@@ -15,6 +15,7 @@ import type { TeamSlice } from './teamSlice';
 import type { SaveSlice } from './saveSlice';
 import type { DialogueSlice } from './dialogueSlice';
 import type { TowerSlice } from './towerSlice';
+import type { DevModeSlice } from './devModeSlice';
 import {
   queueAction,
   clearQueuedAction,
@@ -168,7 +169,7 @@ export interface QueueBattleSlice {
 }
 
 export const createQueueBattleSlice: StateCreator<
-  QueueBattleSlice & GameFlowSlice & RewardsSlice & StorySlice & TeamSlice & SaveSlice & DialogueSlice & TowerSlice,
+  QueueBattleSlice & GameFlowSlice & RewardsSlice & StorySlice & TeamSlice & SaveSlice & DialogueSlice & TowerSlice & DevModeSlice,
   [['zustand/devtools', never]],
   [],
   QueueBattleSlice
@@ -377,14 +378,14 @@ export const createQueueBattleSlice: StateCreator<
   },
 
   executeQueuedRound: () => {
-    const { battle, rngSeed } = get();
+    const { battle, rngSeed, godMode } = get();
     if (!battle || battle.phase !== 'planning') {
       set({ lastError: 'Cannot execute round: battle not in planning phase.' });
       return;
     }
 
     const rng = makePRNG(createRNGStream(rngSeed, battle.roundNumber, RNG_STREAMS.QUEUE_ROUND));
-    const result = executeRound(battle, rng);
+    const result = executeRound(battle, rng, { godMode });
     if (result.state === battle && result.events.length === 0) {
       set({ lastError: 'Cannot execute round: queued actions are invalid for execution.' });
       return;

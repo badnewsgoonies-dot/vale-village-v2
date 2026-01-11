@@ -70,4 +70,37 @@ Appendix: Files reviewed (non-exhaustive)
 - tests/e2e/*
 
 
+Telemetry & Input Bridge Integration Plan
+----------------------------------------
+Goal: Provide a low-overhead, opt-in runtime telemetry surface and a minimal input bridge that enables external capture, replay, and deterministic debugging without coupling telemetry code into core game logic.
+
+Required runtime globals (explicit):
+- window.__TELEMETRY__ — object API: { send(event: TelemetryEvent): void, flush(): Promise<void> }. Default: noop implementation when not present.
+- window.__INPUT_BUFFER__ — minimal input buffer/ring API: { push(event), drain() } to capture raw input (keyboard/gamepad/touch) for recording or external inspection.
+- Time.timeScale — exposeable property from the core time module to allow playback speed control for replay/debugging.
+
+Recommended hook points (low-friction, read-only hooks into existing code):
+- src/App.tsx — initialize window.__TELEMETRY__ noop and attach opt-in loader; emit lifecycle events (app:start/app:stop, route:change).
+- src/ui/components/overworld-v2/OverworldV2.tsx — push raw input events into window.__INPUT_BUFFER__ and emit sampled input telemetry events.
+- Core game loop / Time module (e.g., src/core/Time.ts or equivalent) — ensure Time.timeScale is publicly accessible and emit tick telemetry (tick:delta) at a configurable sampling rate.
+- Core services (src/core/services/QueueBattleService.ts, src/core/services/SaveService.ts, ReplayPort) — emit deterministic markers (battle:roundStart, rngOffset, save:load) to telemetry; ReplayPort should accept/emit telemetry markers to validate replays.
+- UI state slices (src/ui/state/queueBattleSlice.ts, src/ui/state/devModeSlice.ts) — emit higher-level events (battle:queue:enqueue, battle:round:resolve, dev:telemetry:toggle) through window.__TELEMETRY__.send.
+
+Data & privacy constraints:
+- Telemetry events must be minimal JSON objects: { ts, eventType, payload } and MUST NOT contain PII. Provide schemaVersion on events for forward compatibility.
+- Default behavior must be a no-op implementation so there is zero runtime overhead when telemetry is not enabled; employ sampling to limit performance and storage impact.
+
+Minimal API surface (suggested):
+- window.__TELEMETRY__ = { send: (event)=>void, flush: ()=>Promise<void> }
+- window.__INPUT_BUFFER__ = { push(event), drain(): event[] }
+
+Implementation notes and non-goals:
+- Keep telemetry code decoupled from core logic; emit events from existing slices/services rather than importing telemetry into core algorithms.
+- Do not record raw player-identifying information; keep events focused on deterministic markers, timing, and non-sensitive state.
+
+Risks & mitigations:
+- Performance: mitigate by providing sampled events and a noop default implementation. Measure overhead in a dev build before shipping.
+- Privacy/PII: enforce schema and review events to ensure no user-identifying data is emitted.
+- Determinism drift: Telemetry should record RNG stream offsets and deterministic markers to help diagnose drift rather than altering determinism.
+
 -- End of analysis

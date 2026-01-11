@@ -1,0 +1,25 @@
+{
+  "generated_at": "2026-01-11T05:51:58.843Z",
+  "sequences": [
+    {
+      "id": "golden_sun_djinn",
+      "preferred_filename_patterns": ["*golden_sun_djinn*.mp4","*golden_sun_djinn*.mkv"],
+      "container": "mp4/mkv",
+      "video_codec": "H.264 (avc1)",
+      "resolution": "1920x1080",
+      "frame_rate": "60fps (preferred)",
+      "audio": { "codec": "AAC LC", "channels": "stereo", "bitrate":"128kbps" }
+    },
+    {
+      "id": "ffvi_intros",
+      "preferred_filename_patterns": ["*ffvi_intros*.mp4","*ffvi_intros*.mkv"],
+      "container": "mp4/mkv",
+      "video_codec": "H.264 (avc1)",
+      "resolution": "1280x720",
+      "frame_rate": "60fps (preferred)",
+      "audio": { "codec": "AAC LC", "channels": "stereo" }
+    }
+  ],
+  "notes": "If no media files are present under analysis/media_metadata/, run the recorder per asset_inventory.json and place files matching preferred_filename_patterns into analysis/media_metadata/ before re-running scripts/extract_frames.sh. The script supports --native to extract at source frame rate. Extracted frames manifests are written as frames-sha256.txt in each frames directory.",
+  "tool": "extract_frames.sh"
+}

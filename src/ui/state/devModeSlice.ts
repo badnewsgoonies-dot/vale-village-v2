@@ -10,16 +10,21 @@ import type { StateCreator } from 'zustand';
 export interface DevModeSlice {
   /** Whether dev mode overlay is visible */
   devModeEnabled: boolean;
-
-  /** Currently selected house for inspection (not used for now, future feature) */
+  /** God Mode: Infinite HP/MP, 1-hit kills */
+  godMode: boolean;
+  /** Skip Animations: Instant battle actions, fast movement */
+  skipAnimations: boolean;
+  /** Currently selected house for inspection */
   selectedHouseId: string | null;
 
   /** Toggle dev mode overlay on/off */
   toggleDevMode: () => void;
-
   /** Set dev mode enabled state */
   setDevModeEnabled: (enabled: boolean) => void;
-
+  /** Toggle God Mode */
+  toggleGodMode: () => void;
+  /** Toggle Skip Animations */
+  toggleSkipAnimations: () => void;
   /** Set selected house */
   setSelectedHouse: (houseId: string | null) => void;
 }
@@ -31,6 +36,8 @@ export const createDevModeSlice: StateCreator<
   DevModeSlice
 > = (set) => ({
   devModeEnabled: false,
+  godMode: false,
+  skipAnimations: false,
   selectedHouseId: null,
 
   toggleDevMode: () => set((state) => ({
@@ -38,6 +45,10 @@ export const createDevModeSlice: StateCreator<
   })),
 
   setDevModeEnabled: (enabled) => set({ devModeEnabled: enabled }),
+
+  toggleGodMode: () => set((state) => ({ godMode: !state.godMode })),
+
+  toggleSkipAnimations: () => set((state) => ({ skipAnimations: !state.skipAnimations })),
 
   setSelectedHouse: (houseId) => set({ selectedHouseId: houseId }),
 });

@@ -1,4 +1,3 @@
-import inputManager from "../input/InputManager";
 
 // Milliseconds fallback for environments without RAF (approx 60 FPS)
 const FRAME_TIMEOUT_MS = 16;

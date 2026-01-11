@@ -1,0 +1,63 @@
+/* Acquisition fanfare styles */
+.acq-fanfare {
+  position: fixed;
+  left: 50%;
+  top: 20%;
+  transform: translateX(-50%);
+  z-index: 10000;
+  pointer-events: none;
+}
+
+.fanfare-card {
+  background: rgba(10,10,12,0.95);
+  color: #fff;
+  padding: 18px 26px;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.6), 0 0 30px rgba(255,215,120,0.06) inset;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transform-origin: center;
+  animation: acq-pop 420ms cubic-bezier(.16,.9,.3,1);
+}
+
+.fanfare-sparkles {
+  width: 40px;
+  height: 40px;
+  background: radial-gradient(circle at 30% 30%, #fff8 0%, #fff0 20%), linear-gradient(45deg,#ffd27a44 0%, transparent 60%);
+  border-radius: 8px;
+  filter: drop-shadow(0 6px 12px rgba(255,200,110,0.08));
+  animation: sparkle 1000ms linear infinite;
+}
+
+.fanfare-content {
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+}
+
+.fanfare-title {
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.6px;
+  color: #fff;
+}
+
+.fanfare-name {
+  font-weight: 600;
+  font-size: 18px;
+  color: #ffd27a;
+  text-shadow: 0 2px 0 rgba(0,0,0,0.5);
+}
+
+@keyframes acq-pop {
+  0% { transform: translateY(-8px) scale(0.92); opacity: 0 }
+  60% { transform: translateY(0) scale(1.04); opacity: 1 }
+  100% { transform: translateY(0) scale(1); }
+}
+
+@keyframes sparkle {
+  0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 0.9 }
+  50% { transform: translateY(-4px) rotate(18deg) scale(1.05); opacity: 1 }
+  100% { transform: translateY(0) rotate(36deg) scale(1); opacity: 0.9 }
+}

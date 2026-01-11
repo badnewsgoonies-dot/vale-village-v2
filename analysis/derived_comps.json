@@ -1,0 +1,52 @@
+[
+  {
+    "component": "Queue-based Battle UI",
+    "why": "Allows players to plan actions ahead and visualize the queuedActions that drive deterministic battle execution.",
+    "profile_keys": ["battle_system_queue", "ui_player_flow"]
+  },
+  {
+    "component": "BattleState Normalizer",
+    "why": "Enforces invariants and sanitizes battle state coming from saves or external inputs to prevent UI/runtime errors.",
+    "profile_keys": ["battle_state_validation"]
+  },
+  {
+    "component": "Deterministic RNG & Replay",
+    "why": "Provides seeded PRNG streams and replay hooks so battles are reproducible for testing and debugging.",
+    "profile_keys": ["rng_determinism", "e2e_and_testing_gates"]
+  },
+  {
+    "component": "Combat Algorithms Module",
+    "why": "Centralizes damage, mana, and reward formulas to avoid duplicated magic numbers and enable balanced tuning.",
+    "profile_keys": ["combat_algorithms"]
+  },
+  {
+    "component": "Rewards & Progression UI",
+    "why": "Presents XP, level-ups, djinn/equipment changes and applies progression logic after victory.",
+    "profile_keys": ["progression_leveling", "save_persistence"]
+  },
+  {
+    "component": "Save / Persistence Layer",
+    "why": "Handles serialization, validation, and autosave policies to maintain campaign continuity and safe restores.",
+    "profile_keys": ["save_persistence"]
+  },
+  {
+    "component": "Tower/Floor Normalization",
+    "why": "Applies level and equipment normalization for gauntlet/tower runs so rules are consistent across floors.",
+    "profile_keys": ["tower_mode", "level_normalization"]
+  },
+  {
+    "component": "Menu Focus & Input Locking",
+    "why": "Restores focus when menus close and uses reference-counted input locks to prevent input leakage during modal overlays.",
+    "profile_keys": ["menus_focus_and_input"]
+  },
+  {
+    "component": "Overworld → Battle Flow Controller",
+    "why": "Wires encounter triggers through pre-battle and into the planning UI, ensuring a cohesive player flow between exploration and combat.",
+    "profile_keys": ["ui_player_flow"]
+  },
+  {
+    "component": "E2E & CI Testing Gate",
+    "why": "Gates heavy visual tests and provides deterministic hooks (replay, RNG) so CI remains stable while exercising critical flows.",
+    "profile_keys": ["e2e_and_testing_gates", "rng_determinism"]
+  }
+]

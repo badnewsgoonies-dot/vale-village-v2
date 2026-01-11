@@ -1,0 +1,9 @@
+.hit-popup-layer{position:absolute;left:0;top:0;pointer-events:none}
+.hit-popup{position:absolute;transform:translateY(0);animation:popupRise 600ms cubic-bezier(.22,.9,.3,1) forwards;font-weight:700;color:#fff;text-shadow:0 1px 0 rgba(0,0,0,.6)}
+.hit-popup.critical{color:#ffd36b;text-shadow:0 2px 4px rgba(0,0,0,.7);font-size:1.1em}
+
+@keyframes popupRise{
+  0%{opacity:1;transform:translateY(0) scale(1)}
+  70%{opacity:1;transform:translateY(-26px) scale(1.02)}
+  100%{opacity:0;transform:translateY(-40px) scale(.98)}
+}

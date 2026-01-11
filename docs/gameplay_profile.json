@@ -1,0 +1,176 @@
+{
+  "status": "complete-draft",
+  "memory_summary": "See ../gameplay_profile.md for summarized swarm memory and recent decisions.",
+  "generated_at": "2026-01-11T15:12:20Z",
+  "entries": [
+    {
+      "id": "battle_system_queue",
+      "title": "Queue-based Battle System",
+      "description": "Core player planning + deterministic execution engine using queuedActions arrays, seeded RNG streams, and immutable state updates.",
+      "triggers": ["enter_battle", "execute_round", "unit_death", "battle_end"],
+      "inputs": ["BattleConfig (party, enemies)", "player queuedActions", "rngSeed"],
+      "outputs": ["new BattleState", "EventQueue (for UI)", "reward bundle on victory"],
+      "related_ui": ["QueueBattleView", "BattleActionMenu", "ActionQueuePanel"],
+      "sources": [
+        {"path": "/home/geni/Documents/vale-village-v2/src/core/models/BattleState.ts", "lines": [1, -1]},
+        {"path": "/home/geni/Documents/vale-village-v2/src/core/services/QueueBattleService.ts", "lines": [1, -1]},
+        {"path": "/home/geni/Documents/vale-village-v2/src/core/services/BattleService.ts", "lines": [1, -1]},
+        {"path": "/home/geni/Documents/vale-village-v2/src/ui/state/queueBattleSlice.ts", "lines": [1, -1]}
+      ],
+      "owner": null,
+      "status": "open"
+    },
+    {
+      "id": "battle_state_validation",
+      "title": "BattleState Invariants & Normalization",
+      "description": "Normalization and zod/schema validation applied at slice boundaries to guarantee UI-safe BattleState shapes (queuedActions length, numeric finiteness, indices).",
+      "triggers": ["setBattle","loadSave","normalizeBattleState"],
+      "inputs": ["raw BattleState object"],
+      "outputs": ["normalized BattleState","validation errors (Err)"] ,
+      "related_ui": ["queueBattleSlice normalization consumers"],
+      "sources": [
+        {"path": "/home/geni/Documents/vale-village-v2/src/core/validation/battleStateInvariants.ts", "lines": [1, -1]},
+        {"path": "/home/geni/Documents/vale-village-v2/src/data/schemas/BattleStateSchema.ts", "lines": [1, -1]}
+      ],
+      "owner": null,
+      "status": "open"
+    },
+    {
+      "id": "rng_determinism",
+      "title": "Deterministic RNG Streams & Replay",
+      "description": "RNG seeding per-battle and isolated streams per round enable deterministic execution and replay via ReplayService.",
+      "triggers": ["createBattle","executeRound","replay"],
+      "inputs": ["rngSeed","stream offsets"],
+      "outputs": ["deterministic action resolution","replay tape validation"],
+      "related_ui": ["debug/replay controls","testing harness"],
+      "sources": [
+        {"path": "/home/geni/Documents/vale-village-v2/src/core/random/prng.ts", "lines": [1, -1]},
+        {"path": "/home/geni/Documents/vale-village-v2/src/core/services/ReplayService.ts", "lines": [1, -1]}
+      ],
+      "owner": null,
+      "status": "open"
+    },
+    {
+      "id": "combat_algorithms",
+      "title": "Damage / Mana / Rewards Algorithms",
+      "description": "Encapsulated numeric formulas (damage, healing, mana cost, rewards) living in core/algorithms to centralize balance and invariants.",
+      "triggers": ["performAction","applyEffect","processVictory"],
+      "inputs": ["ability definitions","unit stats","battle modifiers"],
+      "outputs": ["HP changes","status effects","XP/gold drops"],
+      "related_ui": ["Battle overlays","RewardsScreen"],
+      "sources": [
+        {"path": "/home/geni/Documents/vale-village-v2/src/core/algorithms/damage.ts", "lines": [1, -1]},
+        {"path": "/home/geni/Documents/vale-village-v2/src/core/algorithms/mana.ts", "lines": [1, -1]},
+        {"path": "/home/geni/Documents/vale-village-v2/src/core/algorithms/rewards.ts", "lines": [1, -1]}
+      ],
+      "owner": null,
+      "status": "open"
+    },
+    {
+      "id": "ui_player_flow",
+      "title": "UI Player Flow: Overworld → PreBattle → Planning → Execution → Rewards",
+      "description": "High-level flow wiring across slices and screens: encounters trigger battle creation; player queues actions in planning; execution feeds animated UI; victory flows to rewards and post-battle dialogues.",
+      "triggers": ["encounter_trigger","start_battle","execute_round","post_battle"],
+      "inputs": ["encounter id","player choices","queuedActions"],
+      "outputs": ["BattleState transitions","UI event queue","reward screen"],
+      "related_ui": ["OverworldV2","PreBattleTeamSelectScreen","QueueBattleView","RewardsScreen","DialogueChatOverlay"],
+      "sources": [
+        {"path": "/home/geni/Documents/vale-village-v2/src/ui/components/overworld-v2/OverworldV2.tsx", "lines": [1, -1]},
+        {"path": "/home/geni/Documents/vale-village-v2/src/ui/components/QueueBattleView.tsx", "lines": [1, -1]},
+        {"path": "/home/geni/Documents/vale-village-v2/src/ui/components/RewardsScreen.tsx", "lines": [1, -1]}
+      ],
+      "owner": null,
+      "status": "open"
+    },
+    {
+      "id": "progression_leveling",
+      "title": "Progression: XP, Level-Ups, Djinn, Equipment",
+      "description": "Reward processing distributes XP, computes level-ups, and mutates persistent unit state (djinn/equipment) subject to tower/floor rules.",
+      "triggers": ["processVictory","applyRewards","levelUp"],
+      "inputs": ["enemy defs","party state","reward rules"],
+      "outputs": ["updated unit stats","items/unlocks","notifications"],
+      "related_ui": ["RewardsScreen","SaveMenu"],
+      "sources": [
+        {"path": "/home/geni/Documents/vale-village-v2/src/core/services/RewardsService.ts", "lines": [1, -1]},
+        {"path": "/home/geni/Documents/vale-village-v2/src/core/services/TowerService.ts", "lines": [1, -1]}
+      ],
+      "owner": null,
+      "status": "open"
+    },
+    {
+      "id": "save_persistence",
+      "title": "Save & Persistence",
+      "description": "SaveService and saveSlice handle serialization, validation on load, and autosave policies for campaign and battle snapshots.",
+      "triggers": ["autosave","manual_save","load_save"],
+      "inputs": ["current campaign state","BattleState snapshot"],
+      "outputs": ["slot payload","validation result (Ok/Err)"],
+      "related_ui": ["SaveMenu","MainMenu"],
+      "sources": [
+        {"path": "/home/geni/Documents/vale-village-v2/src/core/services/SaveService.ts", "lines": [1, -1]},
+        {"path": "/home/geni/Documents/vale-village-v2/src/ui/components/SaveMenu.tsx", "lines": [1, -1]}
+      ],
+      "owner": null,
+      "status": "open"
+    },
+    {
+      "id": "tower_mode",
+      "title": "Tower / Gauntlet Mode",
+      "description": "Prepare floor battles by normalizing party levels and equipment via LevelNormalizationService; optional persistence rules determine djinn/equipment retention.",
+      "triggers": ["start_floor","floor_victory","floor_defeat"],
+      "inputs": ["tower options","party state"],
+      "outputs": ["normalized BattleState","tower progression update"],
+      "related_ui": ["towerSlice","Tower UI overlays"],
+      "sources": [
+        {"path": "/home/geni/Documents/vale-village-v2/src/core/services/LevelNormalizationService.ts", "lines": [1, -1]},
+        {"path": "/home/geni/Documents/vale-village-v2/src/core/services/TowerService.ts", "lines": [1, -1]}
+      ],
+      "owner": null,
+      "status": "open"
+    },
+    {
+      "id": "menus_focus_and_input",
+      "title": "Menu Focus Restore & Input Locking",
+      "description": "Focus restoration for menus and a reference-counted InputLock are applied to avoid input leakage and maintain accessibility when modal overlays open/close.",
+      "triggers": ["open_menu","close_menu","acquire_input_lock","release_input_lock"],
+      "inputs": ["isOpen","fallbackRef"],
+      "outputs": ["restored focus","locked input state"],
+      "related_ui": ["PauseMenu","SaveMenu","SettingsScreen"],
+      "sources": [
+        {"path": "/home/geni/Documents/vale-village-v2/src/game/systems/InputLock.ts", "lines": [1, -1]},
+        {"path": "/home/geni/Documents/vale-village-v2/src/ui/components/PauseMenu.tsx", "lines": [1, -1]},
+        {"path": "/home/geni/Documents/vale-village-v2/src/ui/components/SaveMenu.tsx", "lines": [1, -1]}
+      ],
+      "owner": null,
+      "status": "open"
+    },
+    {
+      "id": "e2e_and_testing_gates",
+      "title": "E2E / Deterministic Testing Gate",
+      "description": "Gate heavy visual/e2e tests and provide deterministic PRNG + replay hooks for stable acceptance tests; recommend gating with RUN_HEAVY / RUN_STABLE_E2E flags.",
+      "triggers": ["ci_run","replay_test"],
+      "inputs": ["recorded tapes","rngSeed"],
+      "outputs": ["test pass/fail","artifacts (replay log)"],
+      "related_ui": ["playwright tests","dev-mode overlays"],
+      "sources": [
+        {"path": "/home/geni/Documents/vale-village-v2/tests/e2e/","lines": [1, -1]},
+        {"path": "/home/geni/Documents/vale-village-v2/src/core/services/ReplayService.ts", "lines": [1, -1]}
+      ],
+      "owner": null,
+      "status": "open"
+    }
+  ],
+  "audit_checklist": {
+    "battle_state_invariants": "referenced",
+    "rng_determinism": "referenced",
+    "save_load_consistency": "referenced",
+    "overworld_rendering": "referenced",
+    "menu_focus_restore": "referenced",
+    "input_locking": "referenced",
+    "encounter_data_validation": "referenced",
+    "e2e_tests_gate": "referenced"
+  },
+  "decision": "Assign P0 owners for battle_state_validation and menus_focus_and_input; schedule deterministic replay tests.",
+  "next_action": "Create tickets, assign owners, and update statuses in this JSON; add replay tests for revive/immunity/AoE.",
+  "risk": "",
+  "lesson": "Keep the JSON as the canonical checklist and update it on owner/status changes."
+}
