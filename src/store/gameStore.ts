@@ -163,6 +163,7 @@ const initialPlayerData: PlayerData = {
 let transitionId = 0;
 
 const createGameSlice = (set: GameStoreSetState, get: GameStoreGetState): GameSlice => ({
+
     flow: initialFlowState,
     shopEntryContext: initialFlowState.shopEntryContext,
     setScreen: (screen) =>
@@ -184,7 +185,7 @@ const createGameSlice = (set: GameStoreSetState, get: GameStoreGetState): GameSl
             state.flow.modalReturnTo = null;
         });
 
-        // Wait 150ms, change screen at peak darkness
+        // Smoother 350ms transition for Golden Sun feel
         setTimeout(() => {
             // Check if this transition was cancelled by a newer one
             if (currentTransitionId !== transitionId) {
@@ -195,9 +196,8 @@ const createGameSlice = (set: GameStoreSetState, get: GameStoreGetState): GameSl
                 state.flow.screen = screen;
             });
 
-            // Wait another 150ms, then fade back in
+            // Wait for new screen to mount then fade back in
             setTimeout(() => {
-                // Check again before completing
                 if (currentTransitionId !== transitionId) {
                     return;
                 }
@@ -205,8 +205,8 @@ const createGameSlice = (set: GameStoreSetState, get: GameStoreGetState): GameSl
                 set((state) => {
                     state.flow.isTransitioning = false;
                 });
-            }, 150);
-        }, 150);
+            }, 350);
+        }, 350);
     },
     openModal: (modal) =>
         set((state) => {
@@ -214,7 +214,6 @@ const createGameSlice = (set: GameStoreSetState, get: GameStoreGetState): GameSl
                 return;
             }
             
-            // Support nesting: if a modal is already open, save it to return to later
             if (state.flow.modal && state.flow.modal !== modal) {
                 state.flow.modalReturnTo = state.flow.modal;
             }
@@ -288,6 +287,7 @@ const createGameSlice = (set: GameStoreSetState, get: GameStoreGetState): GameSl
 });
 
 const createBattleSlice = (set: GameStoreSetState, _get: GameStoreGetState): BattleSlice => ({
+
     battleSession: null,
     startBattle: ({ enemyId, rngSeed }) =>
         set((state) => {
@@ -344,6 +344,7 @@ const createBattleSlice = (set: GameStoreSetState, _get: GameStoreGetState): Bat
 });
 
 const createTeamSlice = (set: GameStoreSetState, _get: GameStoreGetState): TeamSlice => ({
+
     playerData: initialPlayerData,
     setTeam: (team) =>
         set((state) => {
@@ -412,10 +413,6 @@ export const useGameStore = createWithEqualityFn<GameStore>()(
     })),
 );
 
-/**
- * Extract GameSlice properties from full state
- * This ensures selectors only receive the slice they expect
- */
 const extractGameSlice = (state: GameStore): GameSlice => ({
     flow: state.flow,
     shopEntryContext: state.shopEntryContext,

@@ -1,8 +1,8 @@
 import { FunctionComponent, JSX } from 'preact';
-import { useState, useEffect } from 'preact/hooks';
+import { useEffect } from 'preact/hooks';
 import { shallow } from 'zustand/shallow';
 
-import { useGameStore, ScreenType, ModalType, GameStore } from './store/gameStore';
+import { useGameStore, ScreenType, GameStore } from './store/gameStore';
 
 import { TitleScreen } from './screens/TitleScreen';
 import { OverworldMap } from './screens/OverworldMap';
@@ -18,7 +18,8 @@ import { useStore, store } from './ui/state/store';
 import { DIALOGUES } from '@/data/definitions/dialogues';
 import { ENCOUNTER_TO_POST_BATTLE_DIALOGUE } from '@/data/definitions/postBattleDialogues';
 import type { GameFlowSlice } from './ui/state/gameFlowSlice';
-import { ToolboxHelpers } from './ui/components/debug/ToolboxHelpers';
+import { TransitionSpiral } from './ui/components/TransitionSpiral';
+import { DevModeOverlay } from './ui/components/debug/DevModeOverlay';
 
 // Wrapper that reads team-select props from V1 store
 const TeamSelectWrapper: FunctionComponent = () => {
@@ -51,7 +52,6 @@ const TeamSelectWrapper: FunctionComponent = () => {
   };
 
   if (!pendingBattleEncounterId) {
-    // No pending battle, show explicit return action instead of auto-redirecting
     return (
       <div style={{ color: '#fff', textAlign: 'center', padding: '2rem' }}>
         <div style={{ marginBottom: '1rem' }}>No battle pending...</div>
@@ -65,14 +65,8 @@ const TeamSelectWrapper: FunctionComponent = () => {
               startTransition('overworld');
             }
           }}
-          style={{
-            padding: '0.6rem 1.2rem',
-            borderRadius: 8,
-            border: '1px solid rgba(255,255,255,0.2)',
-            background: 'rgba(255,255,255,0.08)',
-            color: '#fff',
-            cursor: 'pointer',
-          }}
+          class="gs-button"
+          style={{ margin: '0 auto' }}
         >
           Return
         </button>
@@ -143,25 +137,20 @@ const RewardsWrapper: FunctionComponent = () => {
 
     const encounterId = lastBattleEncounterId;
 
-    // If a post-battle dialogue exists for this encounter, start it and consume the stored encounterId
     if (encounterId) {
       const postId = ENCOUNTER_TO_POST_BATTLE_DIALOGUE[encounterId] ?? null;
       if (postId && DIALOGUES[postId]) {
-        // Clear stored encounterId so it doesn't replay later
         store.setState({ lastBattleEncounterId: null });
         startDialogueTree(DIALOGUES[postId]);
-        return; // Dialogue flow will handle returning to overworld when complete
+        return;
       }
-      // No dialogue found - clear the stored id to avoid replay
       store.setState({ lastBattleEncounterId: null });
     }
 
-    // Check if we're in tower mode - if so, return to tower hub instead of overworld
     if (towerStatus === 'in-run' || towerStatus === 'completed') {
       setMode('tower');
       startTransition('tower');
     } else {
-      // Return to overworld for normal battles
       returnToOverworld();
       startTransition('overworld');
     }
@@ -216,7 +205,6 @@ const ShopWrapper: FunctionComponent = () => {
   }, [currentShopId, shopEntryContext, setMode, startTransition]);
 
   if (!currentShopId) {
-    // No shop ID, redirect to overworld
     return <div style={{ color: '#fff', textAlign: 'center', padding: '2rem' }}>No shop available...</div>;
   }
 
@@ -236,8 +224,6 @@ import { EpilogueScreen } from './ui/components/EpilogueScreen';
 
 import './index.css';
 
-// Global sync: V1 store mode → V2 gameStore screen
-// This ensures tower battles return to tower hub correctly
 function useStoreSync() {
   const mode = useStore((s) => s.mode);
   const setMode = useStore((s) => s.setMode);
@@ -252,8 +238,6 @@ function useStoreSync() {
   const closeModal = useGameStore((s) => s.closeModal);
 
   useEffect(() => {
-    // Don't trigger new transitions while one is in progress - this prevents
-    // the sync from cancelling an ongoing transition
     if (isTransitioning) {
       return;
     }
@@ -347,7 +331,6 @@ function useStoreSync() {
     }
   }, [mode, towerStatus, currentScreen, activeModal, isTransitioning, startTransition, openModal, closeModal]);
 
-  // Keep the legacy V1 store's mode aligned when navigation is driven by the new gameStore.
   useEffect(() => {
     if (isTransitioning) {
       return;
@@ -388,54 +371,16 @@ function useStoreSync() {
   }, [activeModal, currentScreen, isDialogueActive, isTransitioning, pendingBattleEncounterId, setMode, closeModal]);
 }
 
-type DevOverlayProps = {
-  screen: ScreenType;
-  modal: ModalType | null;
-};
-
-const DevOverlay: FunctionComponent<DevOverlayProps> = ({ screen, modal }) => (
-  <div className="dev-overlay">
-    <div className="dev-overlay__panel">
-      <div className="dev-overlay__header">Dev Mode</div>
-      <div className="dev-overlay__row">
-        <span>Screen: {screen}</span>
-        <span>Modal: {modal ?? 'none'}</span>
-      </div>
-      <div className="dev-overlay__row">
-        <span>F1</span>
-        <span>Toggle dev overlay</span>
-      </div>
-      <div className="dev-overlay__row">
-        <span>1 / 2 / 3 / 4</span>
-        <span>title / overworld / battle / menu</span>
-      </div>
-      <div className="dev-overlay__row">
-        <span>I / O / P / D</span>
-        <span>inventory / settings / pause / dialogue modal</span>
-      </div>
-      <div className="dev-overlay__row">
-        <span>Esc</span>
-        <span>Close active modal</span>
-      </div>
-    </div>
-  </div>
-);
-
 const App: FunctionComponent = () => {
-  // Sync V1 store mode to V2 gameStore screen
   useStoreSync();
 
-  const { showCredits, setShowCredits, setMode } = useStore((s) => ({
-    showCredits: s.showCredits,
-    setShowCredits: s.setShowCredits,
-    setMode: s.setMode,
-  }));
-  const { screen, modal, isTransitioning, setScreen, startTransition, openModal, closeModal, closeCompendium } = useGameStore(
+  const setMode = useStore((s) => s.setMode);
+
+  const { screen, modal, isTransitioning, startTransition, openModal, closeModal, closeCompendium } = useGameStore(
     (state: GameStore) => ({
       screen: state.flow.screen,
       modal: state.flow.modal,
       isTransitioning: state.flow.isTransitioning,
-      setScreen: state.setScreen,
       startTransition: state.startTransition,
       openModal: state.openModal,
       closeModal: state.closeModal,
@@ -445,202 +390,58 @@ const App: FunctionComponent = () => {
   );
   const closeCompendiumFlow = useStore((state) => state.closeCompendium);
 
-  const setModal = (m: ModalType | null) => {
-    if (m === null) {
-      closeModal();
-    } else {
-      openModal(m);
-    }
-  };
-
-  const [isDevMode, setIsDevMode] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (!showCredits) {
-      return;
-    }
-    setShowCredits(false);
-    startTransition('credits');
-  }, [showCredits, setShowCredits, startTransition]);
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent): void => {
-      if (event.key === 'F1') {
-        event.preventDefault();
-        setIsDevMode((value) => !value);
-        return;
-      }
-
-      if (!isDevMode) {
-        return;
-      }
-
-      switch (event.code) {
-        case 'Digit1':
-          startTransition('title');
-          break;
-        case 'Digit2':
-          startTransition('overworld');
-          break;
-        case 'Digit3':
-          startTransition('battle');
-          break;
-        case 'Digit4':
-          startTransition('menu');
-          break;
-        case 'KeyI':
-          setModal('inventory');
-          break;
-        case 'KeyO':
-          setModal('settings');
-          break;
-        case 'KeyP':
-          setModal('pause');
-          break;
-        case 'KeyD':
-          setModal('dialogue');
-          break;
-        case 'Escape':
-          setModal(null);
-          break;
-        default:
-          break;
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isDevMode, setScreen, setModal]);
 
   const renderScreen = (): JSX.Element => {
     switch (screen) {
-      case 'title':
-        return <TitleScreen />;
-      case 'intro':
-        return <IntroScreen />;
-      case 'overworld':
-        return <OverworldMap />;
-      case 'battle':
-        return <QueueBattleView />;
-      case 'menu':
-        return <MainMenu />;
-      case 'compendium':
-        return (
-          <CompendiumScreen
-            onClose={() => {
-              closeCompendiumFlow();
-              closeCompendium();
-            }}
-          />
-        );
-      case 'team-select':
-        return <TeamSelectWrapper />;
-      case 'rewards':
-        return <RewardsWrapper />;
-      case 'shop':
-        return <ShopWrapper />;
-      case 'team-management':
-        return <PartyManagementScreen onClose={() => startTransition('overworld')} />;
-      case 'djinn-collection':
-        return <DjinnCollectionScreen onClose={() => startTransition('overworld')} />;
-      case 'tower':
-        return <TowerHubScreen />;
-      case 'credits':
-        return <CreditsScreen onExit={() => startTransition('epilogue')} />;
-      case 'epilogue':
-        return <EpilogueScreen onComplete={() => startTransition('title')} />;
-      default:
-        return <TitleScreen />;
+      case 'title': return <TitleScreen />;
+      case 'intro': return <IntroScreen />;
+      case 'overworld': return <OverworldMap />;
+      case 'battle': return <QueueBattleView />;
+      case 'menu': return <MainMenu />;
+      case 'compendium': return <CompendiumScreen onClose={() => { closeCompendiumFlow(); closeCompendium(); }} />;
+      case 'team-select': return <TeamSelectWrapper />;
+      case 'rewards': return <RewardsWrapper />;
+      case 'shop': return <ShopWrapper />;
+      case 'team-management': return <PartyManagementScreen onClose={() => startTransition('overworld')} />;
+      case 'djinn-collection': return <DjinnCollectionScreen onClose={() => startTransition('overworld')} />;
+      case 'tower': return <TowerHubScreen />;
+      case 'credits': return <CreditsScreen onExit={() => startTransition('epilogue')} />;
+      case 'epilogue': return <EpilogueScreen onComplete={() => startTransition('title')} />;
+      default: return <TitleScreen />;
     }
   };
 
   const renderModal = (): JSX.Element | null => {
-    if (!modal) {
-      return null;
-    }
-
+    if (!modal) return null;
     switch (modal) {
-      case 'inventory':
-        return <InventoryModal onClose={closeModal} />;
-      case 'settings':
-        return <SettingsModal onClose={closeModal} />;
-      // 'dialogue' case removed - dialogue is rendered via DialogueChatOverlay (portal) and self-manages visibility
-      case 'save':
-        return <SaveMenu onClose={closeModal} />;
-      case 'help':
-        return <HowToPlay onClose={closeModal} />;
+      case 'inventory': return <InventoryModal onClose={closeModal} />;
+      case 'settings': return <SettingsModal onClose={closeModal} />;
+      case 'save': return <SaveMenu onClose={closeModal} />;
+      case 'help': return <HowToPlay onClose={closeModal} />;
       case 'pause':
         return <PauseMenu
           onClose={closeModal}
-          onTeamManagement={() => {
-            setMode('team-management');
-            startTransition('team-management');
-          }}
-          onInventory={() => {
-            openModal('inventory');
-          }}
-          onDjinnCollection={() => {
-            setMode('djinn-collection');
-            startTransition('djinn-collection');
-          }}
-          onSaveGame={() => {
-            openModal('save');
-          }}
-          onSettings={() => {
-            openModal('settings');
-          }}
-          onHowToPlay={() => {
-            openModal('help');
-          }}
-          onReturnToTitle={() => {
-            startTransition('title');
-          }}
+          onTeamManagement={() => { setMode('team-management'); startTransition('team-management'); }}
+          onInventory={() => openModal('inventory')}
+          onDjinnCollection={() => { setMode('djinn-collection'); startTransition('djinn-collection'); }}
+          onSaveGame={() => openModal('save')}
+          onSettings={() => openModal('settings')}
+          onHowToPlay={() => openModal('help')}
+          onReturnToTitle={() => startTransition('title')}
         />;
-      default:
-        return null;
+      default: return null;
     }
   };
 
-  const toolboxActions = [
-    {
-      id: 'toggle-dev',
-      label: isDevMode ? 'Hide Dev Overlay' : 'Show Dev Overlay',
-      tooltip: 'Alt+T also toggles the toolbox; Ctrl+D still toggles dev overlay',
-      onClick: () => setIsDevMode((prev) => !prev),
-    },
-    {
-      id: 'open-settings',
-      label: 'Settings',
-      tooltip: 'Open settings modal',
-      onClick: () => openModal('settings'),
-    },
-    {
-      id: 'open-help',
-      label: 'How to Play',
-      tooltip: 'Open how-to-play modal',
-      onClick: () => openModal('help'),
-    },
-    {
-      id: 'return-title',
-      label: 'Return to Title',
-      tooltip: 'Jump back to title screen',
-      onClick: () => startTransition('title'),
-    },
-  ];
+
 
   return (
     <div className={`app-root${isTransitioning ? ' app-root--transitioning' : ''}`}>
       {renderScreen()}
       {renderModal()}
-      {/* DialogueChatOverlay always rendered - uses portal and self-manages visibility */}
+      <TransitionSpiral isVisible={isTransitioning && screen === 'battle'} />
       <DialogueChatOverlay />
-      <ToolboxHelpers
-        title="Toolbox"
-        actions={toolboxActions}
-        position="top-right"
-        initiallyOpen={false}
-      />
-      {isDevMode && <DevOverlay screen={screen} modal={modal} />}
+      <DevModeOverlay />
     </div>
   );
 };

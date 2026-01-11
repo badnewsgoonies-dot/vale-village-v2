@@ -1,0 +1,8 @@
+{
+  "status": "ok",
+  "verification_time": "2026-01-11T06:13:28Z",
+  "marker_token": "VV2-PERSISTENCE-TEST",
+  "marker_timestamp": "2026-01-11T06:12:22Z",
+  "exit_code": 0,
+  "source": "analysis/persistence-test/verification.log"
+}

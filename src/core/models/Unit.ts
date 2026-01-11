@@ -60,6 +60,11 @@ export interface Unit {
     damageDealt: number;
     damageTaken: number;
   };
+
+  // Break/Stagger System (Gap 1)
+  breakGauge?: number;       // Current break points (0 = broken)
+  breakThreshold?: number;   // Max break points
+  isBroken?: boolean;        // True if currently broken (stunned + extra dmg)
 }
 
 /**
@@ -133,6 +138,10 @@ export function createUnit(
       damageDealt: 0,
       damageTaken: 0,
     },
+    // Default break stats (can be overridden by enemy definitions)
+    breakGauge: 100,
+    breakThreshold: 100,
+    isBroken: false,
   };
 }
 

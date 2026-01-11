@@ -46,6 +46,9 @@ const ENEMY_PHASES: EnemyPhase[] = [
   },
 ];
 
+// Total number of houses in the village; extracted constant to avoid magic numbers
+const TOTAL_HOUSES = 20;
+
 const padHouseNum = (houseNum: number): string => String(houseNum).padStart(2, '0');
 
 const getPhaseConfig = (houseNum: number): EnemyPhase => {
@@ -84,7 +87,7 @@ const createEnemyDialogue = (houseNum: number): DialogueTree => {
   };
 };
 
-export const HOUSE_ENEMY_DIALOGUES: Record<string, DialogueTree> = Array.from({ length: 20 }, (_, index) => index + 1)
+export const HOUSE_ENEMY_DIALOGUES: Record<string, DialogueTree> = Array.from({ length: TOTAL_HOUSES }, (_, index) => index + 1)
   .map(createEnemyDialogue)
   .reduce<Record<string, DialogueTree>>((map, dialogue) => {
     map[dialogue.id] = dialogue;

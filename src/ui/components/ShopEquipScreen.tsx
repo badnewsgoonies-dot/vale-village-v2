@@ -477,7 +477,7 @@ export function ShopEquipScreen({ shopId, onClose }: ShopEquipScreenProps): JSX.
                         )}
                       </div>
 
-                      <div class="equipment-inventory-section">
+                      <div class="equipment-inventory-section" role="region" aria-label="Equipment Inventory" data-testid="equipment-inventory">
                         {selectedSlot ? (
                           <>
                             <div class="slot-indicator">
@@ -493,7 +493,11 @@ export function ShopEquipScreen({ shopId, onClose }: ShopEquipScreenProps): JSX.
                                   <div
                                     key={item.id}
                                     class="inventory-item"
+                                    role="button"
+                                    tabIndex={0}
+                                    data-testid={`inventory-item-${item.id}`}
                                     onClick={() => handleEquip(item)}
+                                    onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleEquip(item)}
                                   >
                                     <div class="inventory-item-icon">
                                       <EquipmentIcon equipment={item} />
