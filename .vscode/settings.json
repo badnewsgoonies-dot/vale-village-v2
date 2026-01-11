@@ -1,0 +1,36 @@
+{
+    // Project-specific settings
+    "typescript.tsdk": "node_modules/typescript/lib",
+
+    // Browser preview
+    "liveServer.settings.port": 5173,
+    "liveServer.settings.donotShowInfoMsg": true,
+    "browse-lite.startUrl": "http://localhost:5173",
+
+    // Terminal layout for multi-agent
+    "terminal.integrated.tabs.enabled": true,
+    "terminal.integrated.tabs.location": "left",
+    "terminal.integrated.defaultProfile.linux": "bash",
+
+    // Auto-save for live reload
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 500,
+
+    // MCP memory server
+    "mcp": {
+        "servers": {
+            "memory": {
+                "type": "stdio",
+                "command": "python3",
+                "args": ["/home/geni/swarm/memory/mcp_memory_server.py"],
+                "env": {
+                    "MEMORY_DB": "/home/geni/swarm/memory/memory.db"
+                }
+            }
+        }
+    },
+
+    // Recommended extensions
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+}

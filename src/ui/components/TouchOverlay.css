@@ -1,0 +1,52 @@
+.touch-overlay {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 16px;
+  pointer-events: none;
+  z-index: 1200;
+  touch-action: none;
+}
+
+.dpad {
+  pointer-events: auto;
+  width: calc(var(--button-size-lg) * 2);
+  height: calc(var(--button-size-lg) * 2);
+  min-width: calc(var(--button-size-md) * 2);
+  min-height: calc(var(--button-size-md) * 2);
+  border-radius: 50%;
+  background: rgba(0,0,0,0.25);
+  border: 2px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.touch-action {
+  pointer-events: auto;
+  width: var(--button-size-xl);
+  height: var(--button-size-xl);
+  min-width: var(--button-size-md);
+  min-height: var(--button-size-md);
+  border-radius: 50%;
+  background: linear-gradient(145deg, rgba(255, 216, 127, 0.95), rgba(242, 197, 114, 0.95));
+  border: 2px solid rgba(255,255,255,0.6);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .touch-overlay { display: none; }
+}

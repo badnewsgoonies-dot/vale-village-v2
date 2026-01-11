@@ -1,0 +1,12 @@
+{
+    "recommendations": [
+        "anthropic.claude-code",
+        "github.copilot",
+        "github.copilot-chat",
+        "antfu.browse-lite",
+        "ms-vscode.live-server",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "usernamehw.errorlens"
+    ]
+}

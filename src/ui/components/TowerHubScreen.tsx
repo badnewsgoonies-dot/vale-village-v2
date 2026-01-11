@@ -1,0 +1,474 @@
+import { JSX } from 'preact';
+import { useMemo, useState, useEffect } from 'preact/hooks';
+import { useGameStore } from '../../store/gameStore';
+import './TowerHubScreen.css';
+import { useStore } from '../state/store';
+import type { Store } from '../state/store';
+import type { TowerFloor } from '@/data/schemas/TowerFloorSchema';
+import type { TowerRewardEntry } from '@/data/schemas/TowerRewardSchema';
+import type { TowerRunState } from '@/core/services/TowerService';
+import { DEFAULT_TOWER_CONFIG } from '@/core/config/towerConfig';
+import { TOWER_REWARDS } from '@/data/definitions/towerRewards';
+import { DIALOGUES } from '@/data/definitions/dialogues';
+import { calculateEffectiveStats } from '@/core/algorithms/stats';
+import { DJINN } from '@/data/definitions/djinn';
+import { EQUIPMENT } from '@/data/definitions/equipment';
+import { UNIT_DEFINITIONS } from '@/data/definitions/units';
+import { PartyManagementScreen } from './PartyManagementScreen';
+import { ShopEquipScreen } from './ShopEquipScreen';
+import { DjinnCollectionScreen } from './DjinnCollectionScreen';
+
+// Helper for touch-friendly button props
+function touchButton(handler: () => void) {
+  return {
+    onClick: handler,
+    onTouchEnd: (e: TouchEvent) => {
+      e.preventDefault();
+      handler();
+    },
+  };
+}
+
+type ConfirmAction = 'quit' | 'restart' | null;
+type LoadoutPanel = 'party' | 'equipment' | 'djinn' | null;
+
+export function TowerHubScreen(): JSX.Element {
+  const startTransition = useGameStore((s) => s.startTransition);
+
+  const {
+    towerRun,
+    towerStatus,
+    towerRecord,
+    getCurrentTowerFloor,
+    startTowerRun,
+    beginTowerFloorBattle,
+    applyTowerRest,
+    quitTowerRun,
+    exitTowerMode,
+    towerEntryContext,
+    team,
+    mode,
+    startDialogueTree,
+  } = useStore((state) => ({
+    towerRun: state.towerRun,
+    towerStatus: state.towerStatus,
+    towerRecord: state.towerRecord,
+    getCurrentTowerFloor: state.getCurrentTowerFloor,
+    startTowerRun: state.startTowerRun,
+    beginTowerFloorBattle: state.beginTowerFloorBattle,
+    applyTowerRest: state.applyTowerRest,
+    quitTowerRun: state.quitTowerRun,
+    exitTowerMode: state.exitTowerMode,
+    towerEntryContext: state.towerEntryContext,
+    team: state.team,
+    mode: state.mode,
+    startDialogueTree: state.startDialogueTree,
+  }));
+
+  const handleExitTower = () => {
+    const context = towerEntryContext;
+    exitTowerMode();
+    startTransition(context?.type === 'overworld' ? 'overworld' : 'menu');
+  };
+
+  const handleTalkToGuide = () => {
+    const guide = DIALOGUES['tutorial:tower-guide'];
+    if (guide) {
+      startDialogueTree(guide);
+    }
+  };
+
+  // Sync V1 store mode to V2 gameStore screen (for battle transitions from tower)
+  useEffect(() => {
+    if (mode === 'team-select') {
+      startTransition('team-select');
+    } else if (mode === 'battle') {
+      startTransition('battle');
+    } else if (mode === 'rewards') {
+      startTransition('rewards');
+    }
+  }, [mode, startTransition]);
+
+  const currentFloor = getCurrentTowerFloor();
+  const isRestFloor = currentFloor?.type === 'rest';
+  const isCompleted = towerStatus === 'completed';
+  const upcomingReward = useMemo(
+    () => getNextReward(towerRun, towerRecord.highestFloorEver),
+    [towerRun, towerRecord.highestFloorEver]
+  );
+  const partySummary = useMemo(() => buildPartySummary(team), [team]);
+  const djinnStatus = useMemo(() => buildDjinnStatus(team), [team]);
+  const [confirmAction, setConfirmAction] = useState<ConfirmAction>(null);
+  const [loadoutPanel, setLoadoutPanel] = useState<LoadoutPanel>(null);
+
+  const handleStartRun = () => {
+    if (towerStatus === 'idle' || !towerRun) {
+      startTowerRun({ difficulty: 'normal' });
+      return;
+    }
+    setConfirmAction('restart');
+  };
+
+  const handleConfirmAction = () => {
+    if (confirmAction === 'quit') {
+      quitTowerRun();
+    } else if (confirmAction === 'restart') {
+      startTowerRun({ difficulty: towerRun?.difficulty ?? 'normal' });
+    }
+    setConfirmAction(null);
+  };
+
+  const handleQuitRun = () => {
+    setConfirmAction('quit');
+  };
+
+  const closeLoadoutPanel = () => setLoadoutPanel(null);
+
+  if (towerStatus === 'idle' || !towerRun) {
+    return (
+      <div class="tower-hub">
+        <section class="tower-card intro">
+          <h1>Battle Tower</h1>
+          <p>
+            Step into an optional gauntlet built on the queue battle engine. Use your current campaign party, keep HP and Djinn states
+            between fights, and earn XP + gold to catch up when the main story gets tough (encounter equipment drops are disabled). Beat
+            your personal-best floor to claim milestone rewards like Djinn, recruits, and equipment.
+          </p>
+          <div class="tower-actions">
+            <button class="primary" {...touchButton(handleStartRun)}>
+              Start Tower Run
+            </button>
+            <button class="ghost" {...touchButton(handleTalkToGuide)}>
+              Talk to Guide
+            </button>
+            <button {...touchButton(handleExitTower)}>
+              {towerEntryContext?.type === 'overworld' ? 'Return to Vale' : 'Back to Menu'}
+            </button>
+          </div>
+        </section>
+        <TowerRecords towerRecord={towerRecord} />
+      </div>
+    );
+  }
+
+  const stats = towerRun.stats;
+
+  return (
+    <div class="tower-hub">
+      <section class="tower-card status">
+        <header>
+          <div>
+            <p class="label">Difficulty</p>
+            <p class="value">{towerRun.difficulty}</p>
+          </div>
+          <div>
+            <p class="label">Highest Floor</p>
+            <p class="value">{stats.highestFloor}</p>
+          </div>
+          <div>
+            <p class="label">Battles Won</p>
+            <p class="value">{stats.victories}</p>
+          </div>
+        </header>
+        <div class="timeline">
+          <p class="label">Current Floor</p>
+          {renderFloor(currentFloor)}
+        </div>
+        <div class="next-reward" data-testid="tower-next-reward">
+          <p class="label">Next Reward Floor</p>
+          {upcomingReward ? (
+            <div class="reward-row">
+              <span class={`floor-pill reward`}>{`Floor ${upcomingReward.floorNumber}`}</span>
+              <span>{describeRewardBundle(upcomingReward.rewards)}</span>
+            </div>
+          ) : (
+            <span class="value">All milestone rewards claimed</span>
+          )}
+        </div>
+      </section>
+
+      <section class="tower-card actions">
+        {isCompleted ? (
+          <>
+            <h2>Run Complete</h2>
+            <p>
+              {towerRun.isFailed
+                ? 'The party fell, but their record stands in the archive.'
+                : 'You cleared every defined floor for this phase.'}
+            </p>
+            <div class="tower-actions">
+              <button class="primary" {...touchButton(handleStartRun)}>
+                Start New Run
+              </button>
+              <button class="ghost" {...touchButton(handleTalkToGuide)}>
+                Talk to Guide
+              </button>
+              <button {...touchButton(handleExitTower)}>
+                {towerEntryContext?.type === 'overworld' ? 'Return to Vale' : 'Back to Menu'}
+              </button>
+            </div>
+          </>
+        ) : isRestFloor ? (
+          <>
+            <h2>Rest Floor</h2>
+            <p>Restore {Math.round(REST_HEAL * 100)}% HP and reset Djinn before the next stretch.</p>
+            <div class="tower-actions">
+              <button class="primary" {...touchButton(applyTowerRest)}>
+                Take Rest
+              </button>
+              <button {...touchButton(beginTowerFloorBattle)}>Skip Rest</button>
+              <button class="ghost" {...touchButton(handleTalkToGuide)}>
+                Talk to Guide
+              </button>
+              <button class="ghost" {...touchButton(handleQuitRun)}>
+                Quit Run
+              </button>
+            </div>
+            <div class="tower-loadout-actions">
+              <span>Adjust loadouts:</span>
+              <div class="tower-rest-buttons">
+                <button {...touchButton(() => setLoadoutPanel('party'))}>Party</button>
+                <button {...touchButton(() => setLoadoutPanel('equipment'))}>Equipment</button>
+                <button {...touchButton(() => setLoadoutPanel('djinn'))}>Djinn</button>
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            <h2>{currentFloor ? `Floor ${currentFloor.floorNumber}` : 'All Floors Cleared'}</h2>
+            <p>
+              {currentFloor
+                ? `Encounter: ${currentFloor.encounterId}`
+                : 'There are no more encounters defined for this build.'}
+            </p>
+            <div class="tower-actions">
+              <button
+                class="primary"
+                disabled={!currentFloor || isRestFloor}
+                {...touchButton(beginTowerFloorBattle)}
+              >
+                Begin Battle
+              </button>
+              <button class="ghost" {...touchButton(handleQuitRun)}>
+                Quit Run
+              </button>
+              <button class="ghost" {...touchButton(handleTalkToGuide)}>
+                Talk to Guide
+              </button>
+              <button {...touchButton(handleExitTower)}>
+                {towerEntryContext?.type === 'overworld' ? 'Return to Vale' : 'Back to Menu'}
+              </button>
+            </div>
+          </>
+        )}
+      </section>
+
+      <section class="tower-card stats">
+        <h3>Run Stats</h3>
+        <ul>
+          <li>
+            <span>Turns Taken</span>
+            <span>{stats.turnsTaken}</span>
+          </li>
+          <li>
+            <span>Total Damage Dealt</span>
+            <span>{stats.totalDamageDealt}</span>
+          </li>
+          <li>
+            <span>Total Damage Taken</span>
+            <span>{stats.totalDamageTaken}</span>
+          </li>
+          <li>
+            <span>Retreats</span>
+            <span>{stats.retreats}</span>
+          </li>
+        </ul>
+      </section>
+
+      <section class="tower-card party" data-testid="tower-party-summary">
+        <h3>Party Status</h3>
+        {partySummary.length === 0 ? (
+          <p class="value">No party data available.</p>
+        ) : (
+          <div class="party-grid">
+            {partySummary.map((unit) => (
+              <div key={unit.id} class="party-unit">
+                <div class="unit-header">
+                  <span>{unit.name}</span>
+                  <span>
+                    {unit.currentHp} / {unit.maxHp}
+                  </span>
+                </div>
+                <div class="hp-bar">
+                  <div style={{ width: `${unit.hpPercent}%` }} />
+                </div>
+                {unit.djinn.length > 0 && (
+                  <div class="djinn-badges">
+                    {unit.djinn.map((djinnId) => {
+                      const tracker = djinnStatus[djinnId];
+                      return (
+                        <span key={djinnId} class={`djinn-pill state-${tracker?.state ?? 'Set'}`}>
+                          {tracker?.name ?? djinnId} · {tracker?.state ?? 'Set'}
+                        </span>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+      <TowerRecords towerRecord={towerRecord} />
+
+      {confirmAction && (
+        <div class="tower-modal" role="dialog" aria-modal="true">
+          <div class="tower-modal-content">
+            <p>
+              {confirmAction === 'quit'
+                ? 'Are you sure? This will end the current Tower run.'
+                : 'Start a new run? Your existing Tower progress will be lost.'}
+            </p>
+            <div class="tower-modal-actions">
+              <button class="primary" {...touchButton(handleConfirmAction)}>
+                {confirmAction === 'quit' ? 'Confirm Quit' : 'Start New Run'}
+              </button>
+              <button {...touchButton(() => setConfirmAction(null))}>Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {loadoutPanel === 'party' && <PartyManagementScreen onClose={closeLoadoutPanel} />}
+      {loadoutPanel === 'equipment' && <ShopEquipScreen shopId="vale-armory" onClose={closeLoadoutPanel} />}
+      {loadoutPanel === 'djinn' && <DjinnCollectionScreen onClose={closeLoadoutPanel} />}
+    </div>
+  );
+}
+
+const REST_HEAL = DEFAULT_TOWER_CONFIG.healFractionAtRest;
+
+function renderFloor(floor: TowerFloor | null): JSX.Element {
+  if (!floor) {
+    return <p class="value">No remaining floors</p>;
+  }
+
+  const badgeClass = floor.type === 'boss' ? 'boss' : floor.type === 'rest' ? 'rest' : 'normal';
+  const badgeLabel = floor.type === 'boss' ? 'Boss' : floor.type === 'rest' ? 'Rest' : 'Battle';
+
+  return (
+    <div class="floor-display" data-testid="tower-current-floor">
+      <span class={`floor-pill ${badgeClass}`}>{badgeLabel}</span>
+      {floor.type === 'rest' ? (
+        <p class="value rest">Floor {floor.floorNumber} · Heal & Regroup</p>
+      ) : (
+        <p class={`value ${badgeClass}`}>
+          Floor {floor.floorNumber} · {floor.encounterId}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function describeRewardBundle(rewards: readonly TowerRewardEntry[]): string {
+  return rewards
+    .map((reward) => {
+      switch (reward.type) {
+        case 'equipment':
+          return `Equipment: ${reward.ids.map((id) => EQUIPMENT[id]?.name ?? id).join(', ')}`;
+        case 'djinn':
+          return `Djinn: ${reward.ids.map((id) => DJINN[id]?.name ?? id).join(', ')}`;
+        case 'recruit':
+          return `Recruit: ${reward.ids.map((id) => UNIT_DEFINITIONS[id]?.name ?? id).join(', ')}`;
+        default:
+          return reward.ids.join(', ');
+      }
+    })
+    .join(' · ');
+}
+
+function getNextReward(
+  run: TowerRunState | null,
+  highestFloorEver: number
+): { floorNumber: number; rewards: TowerRewardEntry[] } | null {
+  const pivotFloor = (() => {
+    if (!run) return 1;
+    const currentEntry = run.history[run.floorIndex];
+    return (
+      currentEntry?.floorNumber ??
+      ((run.history[run.history.length - 1]?.floorNumber ?? 0) + (run.isCompleted ? 0 : 1))
+    );
+  })();
+
+  const minFloor = Math.max(pivotFloor, highestFloorEver + 1);
+  return TOWER_REWARDS.find((reward) => reward.floorNumber >= minFloor) ?? null;
+}
+
+function buildPartySummary(team: Store['team']) {
+  if (!team) {
+    return [];
+  }
+
+  return team.units.map((unit) => {
+    const { hp: maxHp } = calculateEffectiveStats(unit, team);
+    const percent = maxHp > 0 ? Math.round((Math.max(unit.currentHp, 0) / maxHp) * 100) : 0;
+    return {
+      id: unit.id,
+      name: unit.name,
+      currentHp: unit.currentHp,
+      maxHp,
+      hpPercent: Math.max(0, Math.min(100, percent)),
+      djinn: unit.djinn,
+    };
+  });
+}
+
+function buildDjinnStatus(team: Store['team']) {
+  if (!team) {
+    return {};
+  }
+
+  const entries: Record<
+    string,
+    {
+      name: string;
+      state: 'Set' | 'Standby' | 'Recovery';
+    }
+  > = {};
+
+  for (const [djinnId, tracker] of Object.entries(team.djinnTrackers)) {
+    entries[djinnId] = {
+      name: DJINN[djinnId]?.name ?? djinnId,
+      state: tracker.state,
+    };
+  }
+
+  return entries;
+}
+
+function TowerRecords({ towerRecord }: { towerRecord: Store['towerRecord'] }): JSX.Element {
+  return (
+    <section class="tower-card record" data-testid="tower-record-panel">
+      <h3>Tower Record</h3>
+      <div class="record-grid">
+        <div>
+          <span class="label">Highest Floor Ever</span>
+          <span class="value">{towerRecord.highestFloorEver}</span>
+        </div>
+        <div>
+          <span class="label">Total Runs</span>
+          <span class="value">{towerRecord.totalRuns}</span>
+        </div>
+        <div>
+          <span class="label">Best Run (Turns)</span>
+          <span class="value">{towerRecord.bestRunTurns ?? '—'}</span>
+        </div>
+        <div>
+          <span class="label">Best Run (Damage)</span>
+          <span class="value">{towerRecord.bestRunDamageDealt ?? '—'}</span>
+        </div>
+      </div>
+    </section>
+  );
+}
