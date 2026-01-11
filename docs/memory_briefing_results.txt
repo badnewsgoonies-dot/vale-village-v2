@@ -1,0 +1,37 @@
+Memory Briefing - recent highlights
+Generated: 2026-01-11T18:32:21Z
+
+Summary:
+- Recent work preserved a "memory-first" workflow: many artifacts and scripts were created under /home/geni/swarm/memory and left read-only in the repo.
+- Key decisions: centralize RNG/MAX_LEVEL constants, prefer deterministic tooling and instrumentation, and gate heavy visual tests behind RUN_HEAVY flags.
+- P0 priorities surfaced: battle_state_validation, menus_focus_restore (focus-restore hook + test-ids), and revival targeting/ immunity semantics (BUG-011).
+- Useful artifacts and sources: docs/gameplay_profile.md, docs/market_research.md, docs/video_inspiration.md, docs/video_inspiration_sources.json, plus /home/geni/swarm/memory (mem-briefing, mem-semantic, mem-db.sh).
+- Lessons: prefer non-disruptive, append-only edits; avoid creating duplicates; run mem-briefing and mem-db queries to reproduce context.
+
+Source documents for everyone to read (validated list):
+- docs/gameplay_profile.md
+- docs/market_research.md
+- docs/video_inspiration.md
+- docs/video_inspiration_sources.json
+- /home/geni/swarm/memory (mem-briefing.py, mem-semantic.py, mem-db.sh)
+
+Target games for research (validated list):
+- Golden Sun (inspiration)
+- Final Fantasy VI
+- Chrono Trigger
+- Secret of Mana
+- The Legend of Zelda: A Link to the Past
+
+Recommended next steps:
+1) Run the helper script scripts/memory_query_run.sh to regenerate the briefing and recent decisions locally.
+2) Assign P0 owners for battle_state_validation and menus_focus_restore and create small actionable tickets.
+
+Facts:
+- Multiple tooling artifacts exist under /home/geni/swarm/memory used by the team for briefings and semantic search.
+
+End of briefing.
+
+[LANE-2-R1] Review: Completed doc audit — Decision: Prototype Gap 1 (weakness/break) and Gap 2 (visual layering) first. Next: create small PRs adding VISUAL_LAYERS constant and event.visualPriority, and prototype core/algorithms/weakness.ts with unit tests; then run scripts/verify_research.py and record results in memory. Risk: ensure extraExecutionToken is deterministic and serialized into replay streams.
+
+35. Action: Ran mem-briefing and scripts/verify_research.py locally; verification passed. Summary: Reviewed rounds 1-5, no edits to src required under current allowlist — remaining work is P0 owner assignments and targeted PRs for visual layering and weakness prototype.
+
