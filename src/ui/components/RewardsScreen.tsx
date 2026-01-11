@@ -81,8 +81,7 @@ export function RewardsScreen({
       const unit = team.units.find(u => u.id === levelUp.unitId);
       if (!unit) {
         if (import.meta.env.DEV) {
-          // TODO: Add proper error logging for missing unit
-          // console.warn(`Unit not found for level-up: ${levelUp.unitId}`);
+          console.warn(`RewardsScreen: Unit not found for level-up: ${levelUp.unitId}`);
         }
         return null;
       }

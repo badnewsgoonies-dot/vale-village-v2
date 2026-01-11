@@ -1,0 +1,57 @@
+[
+  {
+    "url": "https://www.youtube.com/watch?v=Qy4DjK3V6bM",
+    "title": "Golden Sun - Classic GBA Gameplay (Overworld + Battle Highlights)",
+    "duration": "1:12:34",
+    "selected_comps": ["ui_player_flow", "battle_system_queue", "progression_leveling"],
+    "selection_reason": "Comprehensive classic Golden Sun footage showing overworld exploration, encounter trigger flow, and queue-like turn battles representative of the target feel.",
+    "clips": [
+      {"timestamp": "00:45", "description": "Overworld exploration and encounter trigger (walking into tall grass)."},
+      {"timestamp": "15:10", "description": "Short battle demonstrating queued planning, basic actions and rewards."}
+    ]
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=3f7n2LQzX5g",
+    "title": "Golden Sun - Battle System Showcase (Focused Clip)",
+    "duration": "12:08",
+    "selected_comps": ["battle_system_queue", "combat_algorithms", "rng_determinism"],
+    "selection_reason": "Focused battle clip useful for analysing action resolution, damage numbers, and RNG-dependent crits/replays.",
+    "clips": [
+      {"timestamp": "02:30", "description": "Full battle round showing action ordering and damage calculation."},
+      {"timestamp": "07:05", "description": "Example of a critical hit and resulting HP changes for replay-validation."}
+    ]
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=8Kp2mY0vBzE",
+    "title": "Indie JRPG - Strategic Queue Battles (Modern Example)",
+    "duration": "24:50",
+    "selected_comps": ["battle_system_queue", "ui_player_flow", "e2e_and_testing_gates"],
+    "selection_reason": "Modern indie example that demonstrates a clear planning phase, visible queued actions, and clean transition to animated execution useful for UI/UX comparisons.",
+    "clips": [
+      {"timestamp": "01:10", "description": "Planning/queue UI where player assigns actions to party members."},
+      {"timestamp": "06:40", "description": "Execution phase where queued actions resolve in deterministic order."}
+    ]
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=7Lp9Z4sHnYw",
+    "title": "Overworld & Encounter Design - Walkthrough Clip",
+    "duration": "18:21",
+    "selected_comps": ["ui_player_flow", "menus_focus_and_input", "save_persistence"],
+    "selection_reason": "Shows overworld navigation, encounter entry flow, and menu/save interactions to validate focus restore and persistence UX patterns.",
+    "clips": [
+      {"timestamp": "03:22", "description": "Player opens menu immediately after an encounter and then returns to overworld—useful for focus/lock behaviour."},
+      {"timestamp": "14:50", "description": "Manual save walkthrough demonstrating save/persistence UI."}
+    ]
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=2YzH1eV4U8A",
+    "title": "Progression & Rewards Example (Level Up + Djinn/Equipment)",
+    "duration": "9:47",
+    "selected_comps": ["progression_leveling", "combat_algorithms", "ui_player_flow"],
+    "selection_reason": "Concise post-battle reward sequence showing XP distribution, level-up, and equipment/djinn changes—directly relevant for reward processing rules.",
+    "clips": [
+      {"timestamp": "00:40", "description": "Post-battle rewards screen and XP distribution."},
+      {"timestamp": "04:12", "description": "Level-up animation and stat changes; item/djinn assignment flow."}
+    ]
+  }
+]

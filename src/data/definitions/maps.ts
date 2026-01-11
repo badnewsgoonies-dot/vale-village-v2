@@ -7,18 +7,18 @@ const createTile = (type: TileType, walkableOverride?: boolean): { type: TileTyp
   walkable: typeof walkableOverride === 'boolean' ? walkableOverride : type !== 'wall' && type !== 'water',
 });
 
-const VALLE_VILLAGE_WIDTH = 140;
+const VALLE_VILLAGE_WIDTH = 250;
 const VALLE_VILLAGE_HEIGHT = 20;
 // Single horizontal road row; houses and any building entrances sit one tile above this
 const ROAD_ROW = 13;
-const HOUSE_COUNT = 30;
+const HOUSE_COUNT = 50;
 const HOUSE_WIDTH = 11;
 const HOUSE_HEIGHT = 9;
 const HOUSE_CENTER_X = Math.floor(HOUSE_WIDTH / 2);
 const HOUSE_ENEMY_Y = 3;
 const HOUSE_EXIT_Y = HOUSE_HEIGHT - 2;
 
-const HOUSE_IDS = Array.from({ length: HOUSE_COUNT }, (_, index) => String(index + 1).padStart(2, '0'));
+export const HOUSE_IDS = Array.from({ length: HOUSE_COUNT }, (_, index) => String(index + 1).padStart(2, '0'));
 const HOUSE_POSITIONS = HOUSE_IDS.map((houseNum, index) => ({
   houseNum,
   overworldX: 7 + index * 4,
@@ -143,28 +143,20 @@ const createHouseInteriorTiles = (): GameMap['tiles'] => {
 };
 
 // Map house numbers to character sprites (using protagonists as placeholders until enemy sprites are added)
-const HOUSE_ENEMY_SPRITES = [
-  '/sprites/overworld/protagonists/Garet.gif',      // House 1 - Garet recruit
-  '/sprites/overworld/protagonists/Ivan.gif',       // House 2 - Mystic
-  '/sprites/overworld/protagonists/Mia.gif',        // House 3 - Ranger
-  '/sprites/overworld/protagonists/Isaac.gif',      // House 4
-  '/sprites/overworld/protagonists/Felix.gif',      // House 5 - Blaze
-  '/sprites/overworld/protagonists/Jenna.gif',      // House 6
-  '/sprites/overworld/protagonists/Sheba.gif',      // House 7
-  '/sprites/overworld/protagonists/Piers.gif',      // House 8 - Sentinel
-  '/sprites/overworld/protagonists/Kraden.gif',     // House 9
-  '/sprites/overworld/protagonists/Garet.gif',      // House 10
-  '/sprites/overworld/protagonists/Ivan.gif',       // House 11 - Karis
-  '/sprites/overworld/protagonists/Mia.gif',        // House 12
-  '/sprites/overworld/protagonists/Isaac.gif',      // House 13
-  '/sprites/overworld/protagonists/Felix.gif',      // House 14 - Tyrell
-  '/sprites/overworld/protagonists/Jenna.gif',      // House 15 - Stormcaller
-  '/sprites/overworld/protagonists/Sheba.gif',      // House 16
-  '/sprites/overworld/protagonists/Piers.gif',      // House 17 - Felix recruit
-  '/sprites/overworld/protagonists/Kraden.gif',     // House 18
-  '/sprites/overworld/protagonists/Garet.gif',      // House 19
-  '/sprites/overworld/protagonists/Ivan.gif',       // House 20 - Overseer
+const DEFAULT_PROTAG_SPRITES = [
+  '/sprites/overworld/protagonists/Garet.gif',
+  '/sprites/overworld/protagonists/Ivan.gif',
+  '/sprites/overworld/protagonists/Mia.gif',
+  '/sprites/overworld/protagonists/Isaac.gif',
+  '/sprites/overworld/protagonists/Felix.gif',
+  '/sprites/overworld/protagonists/Jenna.gif',
+  '/sprites/overworld/protagonists/Sheba.gif',
+  '/sprites/overworld/protagonists/Piers.gif',
+  '/sprites/overworld/protagonists/Kraden.gif',
 ];
+
+// Generate a sprite list for houses dynamically to avoid hardcoded length limits.
+const HOUSE_ENEMY_SPRITES = HOUSE_IDS.map((_, i) => DEFAULT_PROTAG_SPRITES[i % DEFAULT_PROTAG_SPRITES.length]);
 
 const createHouseInterior = (
   houseId: string,

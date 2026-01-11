@@ -1,5 +1,13 @@
 # Codebase Bug Report - Vale Village V2
 
+## Boot Regression: Blank Purple Page (root cause & fix)
+- **Symptoms:** On some CI and developer environments the app would load to a blank purple page and never render the UI; console output was minimal, making root-cause analysis harder.
+- **Root cause:** A validator/initialization module executed at import-time and threw an exception during module load (synchronous top-level throw in src/data/validateData.ts). Because the error occurred during module initialization it prevented the main bootstrap (src/main.tsx) from running, leaving the page blank.
+- **Fix applied:** Move heavy/throwing validation to a guarded bootstrap path (dynamic import inside try/catch) and add non-invasive boot logging (VV2_BOOT_LOG) to capture boot-time exceptions without blocking the UI. A minimal E2E boot test was added to prevent regressions.
+- **Prevention:** Avoid throwing work at module top-level; prefer dynamic imports and guarded initialization in bootstrap paths. Add CI E2E check for basic boot so early regressions are caught.
+
+
+
 This report documents bugs and technical debt found in the codebase. Audit rounds 1–5 were reviewed on 2026-01-06 UTC; the findings below consolidate prior reports (BUGS.md, BUGS_NEW.md, LANE_BUGS.md) and validated reproductions in tests/unit/*. Repro tests and fix skeletons live under docs/fixes/ and tests/unit/bugs/.
 
 ## Summary Table

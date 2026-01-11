@@ -13,7 +13,7 @@ import { makePRNG } from '../../core/random/prng';
 import { createRNGStream, RNG_STREAMS, DEFAULT_RNG_SEED } from '../../core/constants';
 import type { RewardsSlice } from './rewardsSlice';
 import type { StorySlice } from './storySlice';
-import { normalizeBattleState } from './queueBattleSlice';
+import { normalizeBattleState } from '../../core/battle/normalizeBattleState';
 
 export interface BattleSlice {
   battle: BattleState | null;
@@ -35,6 +35,9 @@ export interface BattleSlice {
 }
 
 const PREVIEW_SAMPLES = 16;
+const PREVIEW_SHIFT_TURN = 8;
+const PREVIEW_SHIFT_ABILITY_LEN = 16;
+const PREVIEW_SHIFT_CASTER_LEN = 24;
 
 export const createBattleSlice: StateCreator<
   BattleSlice & RewardsSlice & StorySlice,
@@ -87,15 +90,17 @@ export const createBattleSlice: StateCreator<
         result: battleEnd,
       });
 
+      const normalizedEnd = normalizeBattleState(result.value.state) ?? result.value.state;
+
       // If player victory, process rewards
       if (battleEnd === 'PLAYER_VICTORY') {
         const { processVictory } = get();
-        processVictory(result.value.state);
+        processVictory(normalizedEnd);
       }
 
       // Emit encounter-finished event if we have an encounterId
       // This is a story-specific event, emitted alongside battle-end for story progression
-      const encounterId = getEncounterId(result.value.state);
+      const encounterId = getEncounterId(normalizedEnd);
       if (encounterId) {
         newEvents.push({
           type: 'encounter-finished',
@@ -104,7 +109,7 @@ export const createBattleSlice: StateCreator<
         });
       }
 
-      set((state) => ({ battle: result.value.state, events: [...state.events, ...newEvents] }));
+      set((state) => ({ battle: normalizedEnd, events: [...state.events, ...newEvents] }));
 
       // Notify story slice of encounter completion if an encounterId exists
       // This mirrors the behavior performed in performAIAction and queue-based battles.
@@ -186,14 +191,16 @@ export const createBattleSlice: StateCreator<
           result: battleEnd,
         });
 
+        const normalizedEnd = normalizeBattleState(result.value.state) ?? result.value.state;
+
         // If player victory, process rewards
         if (battleEnd === 'PLAYER_VICTORY') {
           const { processVictory } = get();
-          processVictory(result.value.state);
+          processVictory(normalizedEnd);
         }
 
         // Emit encounter-finished event for story progression
-        const encounterId = getEncounterId(result.value.state);
+        const encounterId = getEncounterId(normalizedEnd);
         if (encounterId) {
           newEvents.push({
             type: 'encounter-finished',
@@ -202,7 +209,7 @@ export const createBattleSlice: StateCreator<
           });
         }
 
-        set((state) => ({ battle: result.value.state, events: [...state.events, ...newEvents] }));
+        set((state) => ({ battle: normalizedEnd, events: [...state.events, ...newEvents] }));
 
         // Notify story slice of encounter completion
         if (encounterId) {
@@ -262,9 +269,9 @@ export const createBattleSlice: StateCreator<
     // Use a cloned deterministic stream so hovers never consume the live RNG
     const previewSeed =
       rngSeed ^
-      (turnNumber << 8) ^
-      (abilityId.length << 16) ^
-      (casterId.length << 24);
+      (turnNumber << PREVIEW_SHIFT_TURN) ^
+      (abilityId.length << PREVIEW_SHIFT_ABILITY_LEN) ^
+      (casterId.length << PREVIEW_SHIFT_CASTER_LEN);
     const baseRng = makePRNG(previewSeed);
 
     // Run N deterministic samples

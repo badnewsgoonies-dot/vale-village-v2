@@ -1,0 +1,105 @@
+:root {
+  /* Golden Sun Color Palette */
+  --ui-font: 'Press Start 2P', monospace;
+  --gs-bg-dark: #2a1a0a;
+  --gs-bg-medium: #3a2a1a;
+  --gs-bg-light: #4a3a2a;
+  
+  --gs-border-dark: #6a5a4a;
+  --gs-border-light: #8b6a4a;
+  --gs-border-highlight: #FFD87F;
+
+  --gs-text-normal: #e8d8c8;
+  --gs-text-highlight: #FFD87F;
+  --gs-text-dim: #8a7a6a;
+
+  --gs-shadow-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Base Window Style (Classic JRPG) */
+.gs-window {
+  background-color: #2a1a0a;
+  border: 2px solid #e7d7a7;
+  outline: 2px solid #000;
+  outline-offset: -4px;
+  padding: 1rem;
+  color: var(--gs-text-normal);
+  image-rendering: pixelated;
+}
+
+/* Button / Menu Option Style */
+.gs-button {
+  background: #3a2a1a;
+  border: 2px solid #6a5a4a;
+  padding: 0.75rem 1.25rem;
+  color: var(--gs-text-normal);
+  font-family: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.gs-button:hover:not(:disabled),
+.gs-button.selected {
+  border-color: #FFD87F;
+  color: #FFD87F;
+}
+
+/* Cursor Indicator for Selection */
+.gs-button.selected::before {
+  content: '';
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  background-image: url('/sprites/icons/misc/cursor.gif');
+  background-size: contain;
+  background-repeat: no-repeat;
+  margin-right: 8px;
+  image-rendering: pixelated;
+}
+
+.gs-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(0.8);
+}
+
+/* Typography */
+.gs-title {
+  color: var(--gs-text-highlight);
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.1em;
+  font-size: 1.8rem;
+}
+
+.gs-label {
+  color: var(--gs-text-dim);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.gs-value {
+  color: var(--gs-text-highlight);
+  font-weight: bold;
+}
+
+/* Window Variants */
+.gs-window--layered {
+  background: linear-gradient(180deg, var(--gs-bg-light), var(--gs-bg-medium));
+  border: 2px solid var(--gs-border-dark);
+  box-shadow: 4px 4px 0 var(--gs-shadow-color);
+}
+
+.gs-window--solid {
+  background: var(--gs-bg-dark);
+  border: 2px solid var(--gs-border-light);
+  box-shadow: none;
+}

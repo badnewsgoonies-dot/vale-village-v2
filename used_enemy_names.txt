@@ -1,0 +1,118 @@
+Mercury Slime
+Earthbound Wolf
+Flame Bandit
+Wind Sprite
+Stone Beetle
+Flame Wolf
+Frost Wolf
+Frost Mystic
+Gale Priest
+Stone Guardian
+Ember Cleric
+Earth Shaman
+Tide Enchanter
+Frost Oracle
+Terra Warden
+Flame Herald
+Storm Wolf
+Mountain Bear
+Inferno Bear
+Glacier Bear
+Thunder Bear
+Earth Scout
+Flame Scout
+Frost Scout
+Gale Scout
+Terra Soldier
+Blaze Soldier
+Tide Soldier
+Wind Soldier
+Stone Captain
+Inferno Captain
+Glacier Captain
+Thunder Captain
+Mountain Commander
+Fire Commander
+Storm Commander
+Lightning Commander
+Granite Warlord
+Volcano Warlord
+Blizzard Warlord
+Tempest Warlord
+Rock Elemental
+Flame Elemental
+Ice Elemental
+Storm Elemental
+Basilisk
+Phoenix
+Leviathan
+Thunderbird
+Hydra
+Flame Sprite
+Frost Sprite
+Stone Sprite
+Chimera
+The Overseer
+Skeleton Warrior
+Ghost Wisp
+Zombie Hound
+Bone Mage
+Clay Golem
+Iron Golem
+Crystal Golem
+Storm Golem
+Frost Serpent
+Aqua Drake
+Tidal Wraith
+Glacier Wyrm
+Storm Raven
+Lightning Lynx
+Cyclone Djinni
+Tempest Dragon
+Alpha Phoenix
+Elder Basilisk
+Kraken
+Storm Titan
+Void Specter
+Frost Lich
+Magma Colossus
+Terra Guardian
+Wind Hawk
+Fire Eagle
+Ice Owl
+Stone Roc
+Arctic Sovereign
+Neptune Warden
+Abyssal Emperor
+Stratosphere Lord
+Zeus Avatar
+Celestial Fury
+Permafrost Golem
+Tundra Serpent
+Polar Guardian
+Voltage Chimera
+Monsoon Drake
+Aurora Elemental
+Vortex Sentinel
+Maelstrom Beast
+Thunderstorm Colossus
+Bandit
+Bandit Captain
+Road Bandit
+Scavenger
+Merchant Guard
+Wild Boar
+Carrion Bird
+Garet (Enemy)
+Sentinel (Enemy)
+Stormcaller (Enemy)
+Mistling
+Glacial Sprite
+Frost Hound
+Aquifer Imp
+Warder of the Tides
+Zephyr Imp
+Gale Moth
+Stormling
+Lightning Hopper
+Vortex Sentry

@@ -27,6 +27,7 @@ import {
   isNegativeStatus,
   applyStatusToUnit,
 } from '../algorithms/status';
+import { applyBreakDamage } from '../algorithms/weakness';
 import { resolveTargets, filterValidTargets } from '../algorithms/targeting';
 import { BATTLE_CONSTANTS } from '../constants';
 import type { BattleEvent } from './types';
@@ -85,7 +86,8 @@ export function performAction(
   actorId: string,
   abilityId: string,
   targetIds: readonly string[],
-  rng: PRNG
+  rng: PRNG,
+  options: { godMode?: boolean } = {}
 ): Result<{ state: BattleState; result: ActionResult; events: readonly BattleEvent[] }, string> {
   const transaction = new BattleTransaction();
   transaction.begin(state);
@@ -181,7 +183,7 @@ export function performAction(
   // Execute ability with validated targets
   // Pass team for effective stats calculation and RNG for status chance rolls
   const allUnits = [...state.playerTeam.units, ...state.enemies];
-  const abilityResult = executeAbility(actor, ability, finalTargets, allUnits, state.playerTeam, state.enemies, rng);
+  const abilityResult = executeAbility(actor, ability, finalTargets, allUnits, state.playerTeam, state.enemies, rng, options);
   if (!abilityResult.ok) {
     transaction.rollback();
     return Err(abilityResult.error);
@@ -402,7 +404,8 @@ export function executeAbility(
   allUnits: readonly Unit[],
   team: Team,
   enemies: readonly Unit[],
-  rng: PRNG
+  rng: PRNG,
+  options: { godMode?: boolean } = {}
 ): Result<ActionResult, string> {
   const targetIds = targets.map(t => t.id);
   let message = `${caster.name} uses ${ability.name}!`;
@@ -430,14 +433,31 @@ export function executeAbility(
         for (let hit = 0; hit < hitCount; hit++) {
           if (isUnitKO(currentTarget)) break; // Stop hitting if target is KO'd
 
-          const damage = ability.type === 'physical'
+          let damage = ability.type === 'physical'
             ? calculatePhysicalDamage(caster, currentTarget, team, ability)
             : calculatePsynergyDamage(caster, currentTarget, team, ability);
 
+          // God Mode Overrides
+          if (options.godMode) {
+            const isPlayerCaster = team.units.some(u => u.id === caster.id);
+            const isPlayerTarget = team.units.some(u => u.id === currentTarget!.id);
+            
+            if (isPlayerCaster && !isPlayerTarget) {
+              damage = 9999; // One-hit kill enemies
+            } else if (!isPlayerCaster && isPlayerTarget) {
+              damage = 0; // Invincible player
+            }
+          }
+
           // Phase 2: Apply damage with shield/invulnerability checks
-          const { updatedUnit, actualDamage } = applyDamageWithShields(currentTarget, damage);
-          currentTarget = updatedUnit;
-          targetDamage += actualDamage;
+          const { updatedUnit: shieldedUnit, actualDamage } = applyDamageWithShields(currentTarget, damage);
+          
+          // Gap 1: Break System
+          const breakRes = applyBreakDamage(shieldedUnit, ability.element);
+          currentTarget = breakRes.unit;
+          // Apply break multiplier (1.5x) if unit is broken
+          const finalDamage = Math.floor(actualDamage * breakRes.damageMultiplier);
+          targetDamage += finalDamage;
 
           // Update in the working set
           const existingIndex = updatedUnits.findIndex(u => u.id === currentTarget!.id);

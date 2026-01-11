@@ -1,0 +1,377 @@
+"use strict";
+/**
+ * AI Service
+ * Deterministic AI decision-making for enemy units
+ * Uses ability scoring and target selection based on tactical rules
+ * Supports phase-change bosses with HP-triggered behavior
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.selectLowHPTarget = selectLowHPTarget;
+exports.makeAIDecision = makeAIDecision;
+const Unit_1 = require("../models/Unit");
+const damage_1 = require("../algorithms/damage");
+const targeting_1 = require("../algorithms/targeting");
+const stats_1 = require("../algorithms/stats");
+const enemies_1 = require("../../data/definitions/enemies");
+/**
+ * Selects the living unit with the lowest HP percentage.
+ * Returns null if no valid units remain.
+ */
+function selectLowHPTarget(units) {
+    const livingUnits = units.filter(unit => !(0, Unit_1.isUnitKO)(unit));
+    if (livingUnits.length === 0) {
+        return null;
+    }
+    return livingUnits.reduce((lowest, unit) => {
+        const lowestHpPct = lowest.currentHp / (0, Unit_1.calculateMaxHp)(lowest);
+        const unitHpPct = unit.currentHp / (0, Unit_1.calculateMaxHp)(unit);
+        return unitHpPct < lowestHpPct ? unit : lowest;
+    }, livingUnits[0]);
+}
+/**
+ * Score an ability for use by an enemy unit
+ * Higher score = better choice
+ */
+function scoreAbility(ability, caster, state) {
+    let score = ability.aiHints?.priority ?? 1.0;
+    const abilityTargets = ability.targets;
+    // Build lightweight teams for effective stat calculations
+    const playerTeam = state.playerTeam;
+    const enemyTeam = {
+        equippedDjinn: [],
+        djinnTrackers: {},
+        units: state.enemies,
+        collectedDjinn: [],
+        currentTurn: state.currentTurn ?? 0,
+        activationsThisTurn: {},
+        djinnStates: {},
+    };
+    const casterTeam = { ...enemyTeam, units: [caster] };
+    const casterStats = (0, stats_1.calculateEffectiveStats)(caster, casterTeam);
+    // Get potential targets
+    const potentialTargets = (0, targeting_1.resolveTargets)(ability, caster, state.playerTeam.units, state.enemies);
+    const canTargetKO = ability.revive || ability.revivesFallen;
+    const validTargets = potentialTargets.filter(t => canTargetKO || !(0, Unit_1.isUnitKO)(t));
+    if (validTargets.length === 0) {
+        return -1000; // No valid targets
+    }
+    if (abilityTargets === 'all-enemies' || abilityTargets === 'all-allies') {
+        // AoE ability: return a numeric score proportional to number of targets
+        return validTargets.length;
+    }
+    // Estimate damage/healing value
+    let estimatedValue = 0;
+    if (ability.type === 'physical' || ability.type === 'psynergy') {
+        // Estimate damage using effective stats (includes equipment/Djinn/status)
+        const basePower = ability.basePower || 0;
+        const casterStat = ability.type === 'physical' ? casterStats.atk : casterStats.mag;
+        const aliveTargets = validTargets.filter(t => !(0, Unit_1.isUnitKO)(t));
+        if (aliveTargets.length === 0) {
+            return -1000;
+        }
+        const avgTargetDef = aliveTargets.reduce((sum, t) => {
+            const targetTeam = playerTeam.units.includes(t) ? playerTeam : enemyTeam;
+            const def = (0, stats_1.calculateEffectiveStats)(t, targetTeam).def;
+            return sum + def;
+        }, 0) / aliveTargets.length;
+        // Rough damage estimate (simplified formula)
+        // Note: This is approximate - actual damage uses effective stats in BattleService
+        const rawDamage = basePower + casterStat - avgTargetDef;
+        const avgDamage = Math.max(1, rawDamage);
+        // Apply element modifier if applicable
+        if (ability.element) {
+            const avgElementMod = aliveTargets.reduce((sum, t) => {
+                return sum + (0, damage_1.getElementModifier)(ability.element, t.element);
+            }, 0) / aliveTargets.length;
+            estimatedValue = avgDamage * avgElementMod;
+        }
+        else {
+            estimatedValue = avgDamage;
+        }
+        // Multi-target bonus
+        if (abilityTargets === 'all-enemies' || abilityTargets === 'all-allies') {
+            estimatedValue *= aliveTargets.length;
+        }
+    }
+    else if (ability.type === 'healing') {
+        // Estimate healing value
+        const baseHeal = ability.basePower || 0;
+        const casterMag = casterStats.mag;
+        const rawHeal = baseHeal + casterMag;
+        estimatedValue = Math.max(1, rawHeal);
+        // Revival bonus
+        if (canTargetKO) {
+            const koTargets = validTargets.filter(Unit_1.isUnitKO);
+            if (koTargets.length > 0) {
+                // High value for reviving units
+                estimatedValue += 100 * koTargets.length;
+            }
+            else if (ability.basePower === 0) {
+                // If it's a pure revival skill and no one is KO'd, it's useless
+                return -1000;
+            }
+        }
+        // Multi-target bonus
+        if (abilityTargets === 'all-allies') {
+            estimatedValue *= validTargets.length;
+        }
+    }
+    else if (ability.type === 'buff' || ability.type === 'debuff') {
+        if (ability.buffEffect) {
+            const statMods = Object.values(ability.buffEffect).filter(v => typeof v === 'number');
+            const totalMod = statMods.reduce((sum, mod) => sum + Math.abs(mod), 0);
+            estimatedValue += totalMod * 2;
+        }
+        if (ability.debuffEffect) {
+            const statMods = Object.values(ability.debuffEffect).filter(v => typeof v === 'number');
+            const totalMod = statMods.reduce((sum, mod) => sum + Math.abs(mod), 0);
+            estimatedValue += totalMod * 2;
+        }
+        // Status utility - value based on stat modifier
+    }
+    // Apply status utility weight
+    score += estimatedValue * 0.1;
+    // Opener bonus (prefer in early turns)
+    // Note: turnNumber tracking would need to be added to BattleState if needed
+    // For now, opener hint is ignored (can be added later)
+    if (ability.aiHints?.opener) {
+        score += 1.0; // Small bonus for opener abilities
+    }
+    return score;
+}
+/**
+ * Select targets for an ability
+ * Uses AI hints to choose optimal targets
+ */
+function selectTargets(ability, caster, state, rng) {
+    const potentialTargets = (0, targeting_1.resolveTargets)(ability, caster, state.playerTeam.units, state.enemies);
+    const canTargetKO = ability.revive || ability.revivesFallen;
+    const validTargets = potentialTargets.filter(t => canTargetKO || !(0, Unit_1.isUnitKO)(t));
+    if (validTargets.length === 0) {
+        return [];
+    }
+    const abilityTargets = ability.targets;
+    if (abilityTargets === 'all-enemies' || abilityTargets === 'all-allies') {
+        return validTargets.map(t => t.id);
+    }
+    // For revival abilities, prioritize KO'd units
+    if (canTargetKO) {
+        const koTargets = validTargets.filter(Unit_1.isUnitKO);
+        if (koTargets.length > 0) {
+            if (abilityTargets === 'all-enemies' || abilityTargets === 'all-allies') {
+                return koTargets.map(t => t.id);
+            }
+            // Pick first KO'd unit (could be randomized)
+            return [koTargets[0].id];
+        }
+    }
+    const targetHint = ability.aiHints?.target || 'weakest';
+    switch (targetHint) {
+        case 'weakest': {
+            // Find weakest effective HP (HP × resist multiplier)
+            const scored = validTargets.map(target => {
+                const maxHp = (0, Unit_1.calculateMaxHp)(target);
+                const currentHp = target.currentHp;
+                const hpRatio = currentHp / maxHp;
+                // Apply element resistance if ability has element
+                let effectiveHp = currentHp;
+                if (ability.element) {
+                    const resistMod = (0, damage_1.getElementModifier)(ability.element, target.element);
+                    effectiveHp = currentHp / resistMod; // Lower effective HP = weaker
+                }
+                return { target, effectiveHp, hpRatio };
+            });
+            // Sort by effective HP (lowest first)
+            scored.sort((a, b) => a.effectiveHp - b.effectiveHp);
+            // Avoid overkill if hint says so
+            if (ability.aiHints?.avoidOverkill) {
+                // Prefer targets that won't be overkilled by estimated damage
+                const estimatedDamage = (ability.basePower || 0) +
+                    (ability.type === 'physical' ? caster.baseStats.atk : caster.baseStats.mag);
+                // Filter out targets that would be overkilled by >50%
+                const nonOverkill = scored.filter(s => {
+                    const overkill = estimatedDamage - s.effectiveHp;
+                    return overkill < s.effectiveHp * 0.5; // Don't overkill by more than 50% of remaining HP
+                });
+                if (nonOverkill.length > 0) {
+                    // Length check guarantees [0] exists
+                    if (abilityTargets === 'all-enemies' || abilityTargets === 'all-allies') {
+                        return scored.map(s => s.target.id);
+                    }
+                    return [nonOverkill[0].target.id];
+                }
+            }
+            // Return weakest target(s)
+            if (abilityTargets === 'all-enemies' || abilityTargets === 'all-allies') {
+                return scored.map(s => s.target.id);
+            }
+            if (scored.length > 0) {
+                // Length check guarantees [0] exists
+                return [scored[0].target.id];
+            }
+            return [];
+        }
+        case 'lowestRes': {
+            // Find target with lowest resistance to ability element
+            if (!ability.element || validTargets.length === 0) {
+                if (validTargets.length > 0) {
+                    // Length check guarantees [0] exists
+                    return [validTargets[0].id];
+                }
+                return [];
+            }
+            // ability.element is guaranteed to be defined here
+            const abilityElement = ability.element;
+            const scored = validTargets.map(target => {
+                const resistMod = (0, damage_1.getElementModifier)(abilityElement, target.element);
+                return { target, resistMod };
+            });
+            scored.sort((a, b) => a.resistMod - b.resistMod); // Lower = weaker resistance
+            if (scored.length > 0) {
+                // Length check guarantees [0] exists
+                return [scored[0].target.id];
+            }
+            return [];
+        }
+        case 'healerFirst': {
+            // Target healers first (units with healing abilities)
+            const healers = validTargets.filter(t => t.abilities.some(a => a.type === 'healing'));
+            if (healers.length > 0) {
+                // Length check guarantees [0] exists
+                return [healers[0].id];
+            }
+            if (validTargets.length > 0) {
+                // Length check guarantees [0] exists
+                return [validTargets[0].id];
+            }
+            return [];
+        }
+        case 'random': {
+            // Random selection (deterministic via RNG)
+            if (validTargets.length === 0) {
+                return [];
+            }
+            if (abilityTargets === 'all-enemies' || abilityTargets === 'all-allies') {
+                return validTargets.map(t => t.id);
+            }
+            // AoE abilities ignore random single-target selection and hit everyone
+            if (abilityTargets === 'all-enemies' || abilityTargets === 'all-allies') {
+                return validTargets.map(t => t.id);
+            }
+            const index = Math.floor(rng.next() * validTargets.length);
+            // Index is guaranteed to be valid since 0 <= index < length
+            return [validTargets[index].id];
+        }
+        case 'highestDef': {
+            // Find target with highest DEF (single-target only)
+            if (validTargets.length === 0) {
+                return [];
+            }
+            if (ability.targets === 'all-enemies' || ability.targets === 'all-allies') {
+                return validTargets.map(t => t.id);
+            }
+            const scored = validTargets.map(target => {
+                // Use base DEF (AI doesn't have access to effective stats here)
+                // Could be enhanced later to use effective DEF if team is passed
+                const def = target.baseStats.def;
+                return { target, def };
+            });
+            scored.sort((a, b) => b.def - a.def); // Highest DEF first
+            if (scored.length > 0) {
+                // Length check guarantees [0] exists
+                return [scored[0].target.id];
+            }
+            return [];
+        }
+        default:
+            if (validTargets.length > 0) {
+                // Length check guarantees [0] exists
+                return [validTargets[0].id];
+            }
+            return [];
+    }
+}
+/**
+ * Get the current phase for a boss based on HP percentage
+ * Returns the active phase config or undefined if no phases defined
+ */
+function getCurrentPhase(actor) {
+    // Look up enemy definition to get phase config
+    const enemyDef = enemies_1.ENEMIES[actor.id];
+    if (!enemyDef?.phases || enemyDef.phases.length === 0) {
+        return undefined;
+    }
+    const maxHp = (0, Unit_1.calculateMaxHp)(actor);
+    const hpPercent = actor.currentHp / maxHp;
+    // Phases are sorted by threshold ascending
+    // Find the highest threshold that HP is below
+    // E.g., phases: [{threshold: 0.5}, {threshold: 0.25}]
+    // HP at 40% -> phase 0.5 active
+    // HP at 20% -> phase 0.25 active (most recent)
+    let activePhase;
+    for (const phase of enemyDef.phases) {
+        if (hpPercent <= phase.threshold) {
+            activePhase = phase;
+        }
+    }
+    return activePhase;
+}
+/**
+ * Make an AI decision for an enemy unit
+ * Returns the ability ID and target IDs to use
+ * Supports phase-change bosses with HP-triggered behavior
+ */
+function makeAIDecision(state, actorId, rng) {
+    // Find actor
+    const allUnits = [...state.playerTeam.units, ...state.enemies];
+    const actor = allUnits.find(u => u.id === actorId);
+    if (!actor || (0, Unit_1.isUnitKO)(actor)) {
+        throw new Error(`Invalid actor: ${actorId}`);
+    }
+    // Check for phase-change boss behavior
+    const currentPhase = getCurrentPhase(actor);
+    const priorityAbilityIds = currentPhase?.priorityAbilities ?? [];
+    // Get available abilities (unlocked and with valid targets)
+    const availableAbilities = actor.abilities.filter(ability => {
+        // Check if ability is unlocked (simplified - assume all are unlocked for enemies)
+        // In future, check unlockLevel vs actor.level
+        // Check if ability has valid targets
+        const potentialTargets = (0, targeting_1.resolveTargets)(ability, actor, state.playerTeam.units, state.enemies);
+        const canTargetKO = ability.revive || ability.revivesFallen;
+        const validTargets = potentialTargets.filter(t => canTargetKO || !(0, Unit_1.isUnitKO)(t));
+        return validTargets.length > 0;
+    });
+    if (availableAbilities.length === 0) {
+        // Fallback: use first ability (shouldn't happen)
+        throw new Error(`No available abilities for ${actorId}`);
+    }
+    // Score all abilities with phase bonus
+    const scored = availableAbilities.map(ability => {
+        let score = scoreAbility(ability, actor, state);
+        // Phase priority bonus: +10 to abilities in phase's priority list
+        if (priorityAbilityIds.includes(ability.id)) {
+            score += 10;
+        }
+        return { ability, score };
+    });
+    // Sort by score (highest first)
+    scored.sort((a, b) => b.score - a.score);
+    // Pick best ability (or randomize among top 2 if scores are close)
+    if (scored.length === 0) {
+        throw new Error(`No scored abilities for ${actorId}`);
+    }
+    // Length check guarantees [0] and potentially [1] exist
+    let chosenAbility = scored[0].ability;
+    if (scored.length > 1 && scored[0].score - scored[1].score < 2.0) {
+        // Scores are close - randomize between top 2
+        const topTwo = scored.slice(0, 2);
+        const index = Math.floor(rng.next() * topTwo.length);
+        chosenAbility = topTwo[index].ability;
+    }
+    // Select targets
+    const targetIds = selectTargets(chosenAbility, actor, state, rng);
+    return {
+        abilityId: chosenAbility.id,
+        targetIds,
+    };
+}

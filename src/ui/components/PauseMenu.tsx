@@ -1,13 +1,7 @@
 /**
  * PauseMenu Component
  *
- * Golden Sun-inspired pause menu with full keyboard navigation.
- * Features:
- * - Arrow key navigation (↑↓)
- * - Enter/Space to select
- * - Escape to resume
- * - Keyboard shortcuts for quick access (T, I, D, S, O, H, Q)
- * - Status bar showing game progress
+ * Redesigned with Golden Sun aesthetic
  */
 
 import { useState, useEffect, useCallback, useRef } from 'preact/hooks';
@@ -47,6 +41,23 @@ export function PauseMenu({
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [flashIndex, setFlashIndex] = useState<number | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const prevActiveRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      const el = document.activeElement;
+      prevActiveRef.current = el instanceof HTMLElement ? el : null;
+    }
+  }, []);
+
+  const closeWithRestore = () => {
+    try {
+      if (prevActiveRef.current && prevActiveRef.current.isConnected) prevActiveRef.current.focus();
+    } catch (e) {
+      // ignore
+    }
+    onClose();
+  };
 
   // Get game state for status bar
   const story = useStore((s) => s.story);
@@ -72,7 +83,12 @@ export function PauseMenu({
       setFlashIndex(index);
       setTimeout(() => {
         setFlashIndex(null);
-        item.action?.();
+        // If the selected action is resume, restore focus before closing
+        if (item.id === 'resume') {
+          closeWithRestore();
+        } else {
+          item.action?.();
+        }
       }, 150);
     }
   }, [menuItems]);
@@ -98,7 +114,7 @@ export function PauseMenu({
           executeAction(selectedIndex);
           break;
         case 'Escape':
-          onClose();
+          closeWithRestore();
           break;
         // Keyboard shortcuts
         case 't':
@@ -163,32 +179,32 @@ export function PauseMenu({
   }, []);
 
   return (
-    <div class="pause-overlay" role="dialog" aria-modal="true" aria-label="Pause Menu">
+    <div class="pause-overlay" role="dialog" aria-modal="true" aria-label="Pause Menu" data-testid="pause-menu">
       {/* Status Bar */}
-      <div class="pause-status-bar">
+      <div class="pause-status-bar gs-window gs-window--layered">
         <div class="status-item">
-          <span class="status-label">Chapter:</span>
-          <span class="status-value">{story.chapter}</span>
+          <span class="gs-label">Chapter:</span>
+          <span class="gs-value">{story.chapter}</span>
         </div>
         <div class="status-item">
-          <span class="status-label">Units:</span>
-          <span class="status-value">{roster.length}/10</span>
+          <span class="gs-label">Units:</span>
+          <span class="gs-value">{roster.length}/10</span>
         </div>
         <div class="status-item">
-          <span class="status-label">Gold:</span>
-          <span class="status-value">{gold.toLocaleString()}</span>
+          <span class="gs-label">Gold:</span>
+          <span class="gs-value">{gold.toLocaleString()}</span>
         </div>
       </div>
 
       {/* Pause Menu Container */}
-      <div class="pause-menu" ref={menuRef} tabIndex={-1}>
-        <h1 class="pause-title">PAUSED</h1>
+      <div class="pause-menu gs-window gs-window--layered" ref={menuRef} tabIndex={-1}>
+        <h1 class="gs-title">PAUSED</h1>
 
         <div class="menu-options" role="menu">
           {menuItems.map((item, index) => (
             <div key={item.id}>
               <button
-                class={`menu-option ${selectedIndex === index ? 'selected' : ''} ${flashIndex === index ? 'flash' : ''}`}
+                class={`gs-button ${selectedIndex === index ? 'selected' : ''} ${flashIndex === index ? 'flash' : ''}`}
                 onClick={() => {
                   setSelectedIndex(index);
                   executeAction(index);

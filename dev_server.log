@@ -1,0 +1,42 @@
+
+> vale-village-v2@0.1.0 dev
+> vite --host
+
+Port 5173 is in use, trying another one...
+
+  VITE v5.4.21  ready in 696 ms
+
+  ➜  Local:   http://localhost:5174/
+  ➜  Network: http://10.0.0.52:5174/
+  ➜  Network: http://100.77.95.110:5174/
+2:48:48 a.m. [vite] page reload src/main.tsx
+2:48:48 a.m. [vite] page reload src/main.tsx
+2:49:46 a.m. [vite] page reload src/main.tsx
+3:01:16 a.m. [vite] page reload src/main.tsx
+3:01:38 a.m. [vite] page reload src/data/validateData.ts
+3:04:25 a.m. [vite] page reload src/data/validateData.ts
+3:04:25 a.m. [vite] page reload src/main.tsx
+3:10:25 a.m. [vite] hmr update /src/ui/components/debug/DevModeOverlay.tsx
+3:10:27 a.m. [vite] hmr update /src/ui/components/BattleActionMenu.tsx
+3:10:30 a.m. [vite] hmr update /src/ui/components/DialogueChatOverlay.tsx
+3:10:33 a.m. [vite] hmr update /src/ui/components/SaveMenu.tsx
+3:10:35 a.m. [vite] hmr update /src/ui/components/ShopScreen.tsx
+3:32:20 a.m. [vite] page reload src/data/definitions/enemies.ts
+3:32:45 a.m. [vite] page reload src/data/definitions/encounters.ts
+3:32:49 a.m. [vite] page reload src/data/definitions/encounters.ts
+3:32:51 a.m. [vite] page reload src/data/definitions/encounters.ts
+3:33:05 a.m. [vite] page reload src/data/definitions/encounters.ts
+3:33:08 a.m. [vite] page reload src/data/definitions/encounters.ts
+3:33:11 a.m. [vite] page reload src/data/definitions/encounters.ts
+3:33:35 a.m. [vite] page reload src/data/definitions/encounters.ts
+3:33:38 a.m. [vite] page reload src/data/definitions/encounters.ts
+3:33:41 a.m. [vite] page reload src/data/definitions/encounters.ts
+3:33:44 a.m. [vite] page reload src/data/definitions/encounters.ts
+3:33:48 a.m. [vite] page reload src/data/definitions/encounters.ts
+3:33:51 a.m. [vite] page reload src/data/definitions/encounters.ts
+3:33:54 a.m. [vite] page reload src/data/definitions/encounters.ts
+3:33:57 a.m. [vite] page reload src/data/definitions/encounters.ts
+3:33:59 a.m. [vite] page reload src/data/definitions/encounters.ts
+3:34:02 a.m. [vite] page reload src/data/definitions/encounters.ts
+3:34:05 a.m. [vite] page reload src/data/definitions/encounters.ts
+3:34:08 a.m. [vite] page reload src/data/definitions/encounters.ts
