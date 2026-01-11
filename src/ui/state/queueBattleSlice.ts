@@ -34,6 +34,7 @@ import {
 } from '../../core/models/BattleState';
 import { createEmptyQueue, createRNGStream, MAX_PARTY_SIZE, MIN_PARTY_SIZE, RNG_STREAMS } from '../../core/constants';
 import { isUnitKO } from '../../core/models/Unit';
+import { normalizeBattleState as coreNormalizeBattleState } from '../../core/battle/normalizeBattleState';
 
 const critFlashTimeouts = new Map<string, ReturnType<typeof setTimeout>>();
 
@@ -42,7 +43,8 @@ function computePendingMana(battle: BattleState): { pendingThisRound: number; pe
   let pendingManaNextRound = 0;
 
   battle.queuedActions.forEach((action, index) => {
-    if (!action || action.abilityId !== null) {
+    // Only abilities (abilityId !== null) consume mana; skip null/basic attacks
+    if (!action || action.abilityId === null) {
       return;
     }
 
@@ -67,55 +69,7 @@ function sumBattleStat(units: readonly Unit[], key: 'damageDealt' | 'damageTaken
 }
 
 export function normalizeBattleState(battle: BattleState): BattleState | null {
-  if (!battle.playerTeam || !Array.isArray(battle.playerTeam.units) || !Array.isArray(battle.enemies)) {
-    console.error('Invalid battle state: missing player team or enemies');
-    return null;
-  }
-
-  const teamSize = battle.playerTeam.units.length;
-  const safeTeamSize = Math.min(Math.max(teamSize, MIN_PARTY_SIZE), MAX_PARTY_SIZE);
-  const baseQueue = createEmptyQueue(safeTeamSize) as BattleState['queuedActions'];
-
-  const queuedActions = Array.isArray(battle.queuedActions) ? [...battle.queuedActions] : [...baseQueue];
-  if (queuedActions.length < safeTeamSize) {
-    for (let i = queuedActions.length; i < safeTeamSize; i += 1) {
-      queuedActions.push(null);
-    }
-  } else if (queuedActions.length > safeTeamSize) {
-    queuedActions.length = safeTeamSize;
-  }
-
-  const maxMana = Number.isFinite(battle.maxMana) ? battle.maxMana : calculateTeamManaPool(battle.playerTeam);
-  const remainingMana = Number.isFinite(battle.remainingMana) ? battle.remainingMana : maxMana;
-  const currentTurn = Number.isFinite(battle.currentTurn) ? battle.currentTurn : 0;
-  const roundNumber = Number.isFinite(battle.roundNumber) ? battle.roundNumber : 1;
-  const currentQueueIndex = Number.isFinite(battle.currentQueueIndex) ? battle.currentQueueIndex : 0;
-  const executionIndex = Number.isFinite(battle.executionIndex) ? battle.executionIndex : 0;
-
-  const phase = ['planning', 'executing', 'victory', 'defeat'].includes(battle.phase ?? '')
-    ? battle.phase
-    : 'planning';
-  const status = battle.status ?? 'ongoing';
-
-  return {
-    ...battle,
-    queuedActions,
-    queuedDjinn: Array.isArray(battle.queuedDjinn) ? battle.queuedDjinn : [],
-    maxMana,
-    remainingMana,
-    currentTurn,
-    roundNumber,
-    currentQueueIndex,
-    executionIndex,
-    phase,
-    status,
-    log: Array.isArray(battle.log) ? battle.log : [],
-    turnOrder: Array.isArray(battle.turnOrder) ? battle.turnOrder : [],
-    djinnRecoveryTimers: battle.djinnRecoveryTimers ?? {},
-    unitById: battle.unitById instanceof Map
-      ? battle.unitById
-      : buildUnitIndex(battle.playerTeam.units, battle.enemies),
-  };
+  return coreNormalizeBattleState(battle);
 }
 
 export interface BattleStateUpdate {
@@ -199,11 +153,29 @@ export const createQueueBattleSlice: StateCreator<
     const critThresholds: Record<string, number> = {};
     const critCounters: Record<string, number> = {};
     const clonedBattle = battle ? structuredClone(battle) : null;
-    const battleState = clonedBattle ? normalizeBattleState(clonedBattle) : null;
-    const battleError = clonedBattle && !battleState
-      ? 'Battle data is missing required fields. Try starting a new battle.'
-      : null;
+    let battleState: BattleState | null = null;
+    let battleError: string | null = null;
+    if (clonedBattle) {
+      try {
+        battleState = coreNormalizeBattleState(clonedBattle);
+      } catch (err) {
+        // Normalization failed; mark error for UI and avoid throwing in slice
+        battleError = 'Battle data is missing required fields. Try starting a new battle.';
+      }
+    }
     if (battleState) {
+      // If encounter changed (or starting fresh), reset queued actions to avoid leakage
+      const prevBattle = get().battle;
+      const prevEncounterId = prevBattle ? getEncounterId(prevBattle) : undefined;
+      const newEncounterId = getEncounterId(battleState);
+      if (prevEncounterId !== newEncounterId || battleState.roundNumber === 1) {
+        const teamSize = battleState.playerTeam.units.length;
+        battleState.queuedActions = createEmptyQueue(teamSize) as typeof battleState.queuedActions;
+        // Reset queued djinn and mana to avoid carrying over state from previous battle
+        battleState.queuedDjinn = [];
+        battleState.remainingMana = battleState.maxMana;
+      }
+
       battleState.playerTeam.units.forEach((unit) => {
         critThresholds[unit.id] = critThresholds[unit.id] ?? 10;
         critCounters[unit.id] = 0;
