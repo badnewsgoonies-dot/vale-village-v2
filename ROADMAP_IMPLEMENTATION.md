@@ -133,7 +133,55 @@ Change log
 ----------
 - This file was restructured into a prioritized backlog with explicit Definition of Done entries and Cleanse-run technical debt integrated (2026-01-06).
 
+Telemetry & Input Bridge — Files to change
+-----------------------------------------
+Purpose: enumerate concrete files to patch to add an opt-in telemetry surface and input bridge with minimal invasive diffs. Each file entry lists the small change required and a short DoD.
+
+- src/App.tsx
+  - Change: initialize window.__TELEMETRY__ with a noop implementation on mount and wire a dev-mode opt-in toggle (devModeSlice) to enable a real telemetry loader.
+  - DoD: app mounts without telemetry present; enabling dev-mode installs a telemetry implementation exposing send/flush.
+
+- src/ui/components/overworld-v2/OverworldV2.tsx
+  - Change: forward raw input events (keydown/keyup/touch/gamepad) into window.__INPUT_BUFFER__ (push) and emit sampled input events via window.__TELEMETRY__.send.
+  - DoD: input events are captured into the buffer when UI is active; no-op default causes no errors.
+
+- src/core/Time.ts (or existing core timing module)
+  - Change: export Time.timeScale (get/set) and optionally emit a sampled tick telemetry event (tick:delta) when telemetry is enabled.
+  - DoD: Time.timeScale is readable/writable from outside and tick events are emitted only when telemetry is active.
+
+- src/core/services/SaveService.ts and src/core/services/ReplayPort.ts
+  - Change: emit save/load telemetry markers with schemaVersion and record RNG offsets; ReplayPort should accept telemetry markers for validation tooling.
+  - DoD: save/load operations include telemetry markers; ReplayPort can emit/consume markers without changing save format (markers are optional metadata).
+
+- src/core/services/QueueBattleService.ts
+  - Change: emit deterministic battle markers (battle:roundStart, battle:roundEnd, rngOffset) to help post-mortem replay debugging.
+  - DoD: markers are emitted at round boundaries and can be correlated with saved RNG offsets.
+
+- src/ui/state/queueBattleSlice.ts
+  - Change: call window.__TELEMETRY__.send for high-level queue events (enqueue/dequeue/roundResolved) and include minimal payloads.
+  - DoD: slice emits events without importing telemetry internals; tests mock window.__TELEMETRY__ to assert calls.
+
+- src/ui/state/devModeSlice.ts
+  - Change: add a telemetry toggle and controls for playback/timeScale (connects to Time.timeScale and window.__INPUT_BUFFER__).
+  - DoD: developer can enable telemetry and manipulate playback speed in dev mode.
+
+- tests/e2e/replay-telemetry.spec.ts (new)
+  - Change: add an E2E test that enables telemetry, runs a short recorded battle, and asserts that telemetry markers (roundStart, rngOffset) were emitted.
+  - DoD: test passes in CI using the noop telemetry stub that records to memory; verifies health of telemetry hooks.
+
+DoD for feature rollout
+- Non-breaking: default telemetry is noop; enabling telemetry is opt-in via devMode or runtime flag.
+- Minimal surface: no core logic imports telemetry; only emit events from slices/services.
+- Tests: at least one E2E/Integration test verifying telemetry markers and one unit test asserting slice emits.
+
+Risks
+- Performance overhead if telemetry is chatty; mitigate via sampling and a noop default implementation.
+- Schema drift for telemetry events; include schemaVersion on events and a migration/validation plan.
+
+Next action
+- Create small PRs that implement App.tsx noop telemetry and the window.__INPUT_BUFFER__ shim, then add Overworld input forwarding and one test.
+
 Finalization
 ------------
 - Roadmap finalized and verified against repository on 2026-01-06T21:46:28Z. Prototype enemy verified in repo at src/data/definitions/mireToad.ts and referenced in src/data/definitions/enemies.ts (id: 'mire-toad'); lumen-fawn test scaffold present at tests/unit/lumen_fawn.test.ts.
-- Top P0 items prioritized with DoD; next step is creating tracked issues and minimal PRs for ReplayPort, QueueBattleService tests, and RNG stream centralization.
+- Top P0 items prioritized with DoD; next step is creating tracked issues and minimal PRs for ReplayPort, QueueBattleService tests, RNG stream centralization, and the telemetry/input bridge incremental rollout.

@@ -1,0 +1,16 @@
+{
+  "agents": [
+    {
+      "id": 1,
+      "name": "Test Agent 1",
+      "description": "A test agent for navigation",
+      "status": "active"
+    },
+    {
+      "id": 2,
+      "name": "Test Agent 2",
+      "description": "Another test agent",
+      "status": "inactive"
+    }
+  ]
+}

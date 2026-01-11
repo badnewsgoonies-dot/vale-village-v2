@@ -818,6 +818,43 @@ export const TRAINING_DUMMY: Encounter = {
   },
 };
 
+// New small encounters added to populate world variety
+export const ROADSIDE_BANDITS: Encounter = {
+  id: 'roadside-bandits',
+  name: 'Roadside Bandits',
+  enemies: ['bandit', 'scavenger'],
+  difficulty: 'easy',
+  reward: {
+    xp: 25,
+    gold: 12,
+    equipment: { type: 'none' },
+  },
+};
+
+export const MERCHANT_GUARD: Encounter = {
+  id: 'merchant-guard',
+  name: 'Merchant Guard',
+  enemies: ['merchant-guard'],
+  difficulty: 'easy',
+  reward: {
+    xp: 40,
+    gold: 20,
+    equipment: { type: 'fixed', itemId: 'sol-blade' },
+  },
+};
+
+export const ABANDONED_FARM: Encounter = {
+  id: 'abandoned-farm',
+  name: 'Abandoned Farm',
+  enemies: ['wild-boar', 'carrion-bird'],
+  difficulty: 'easy',
+  reward: {
+    xp: 30,
+    gold: 15,
+    equipment: { type: 'none' },
+  },
+};
+
 // ============================================================================
 // Export all encounters
 // ============================================================================
@@ -872,6 +909,24 @@ export const ENCOUNTERS: Record<string, Encounter> = {
 
   // Bonus
   'training-dummy': TRAINING_DUMMY,
+  'roadside-bandits': ROADSIDE_BANDITS,
+  'merchant-guard': MERCHANT_GUARD,
+  'abandoned-farm': ABANDONED_FARM,
+  // ENDGAME: The Ascent (Houses 37-50)
+  'house-37': { id: 'house-37', name: 'House 37: Granite Guard', enemies: ['granite-warlord', 'granite-warlord'], difficulty: 'hard', backgroundId: 'gs1/Vale', reward: { xp: 3000, gold: 600, equipment: { type: 'none' } } },
+  'house-38': { id: 'house-38', name: 'House 38: Magma Twins', enemies: ['volcano-warlord', 'volcano-warlord'], difficulty: 'hard', backgroundId: 'gs1/Vale', reward: { xp: 3200, gold: 650, equipment: { type: 'none' } } },
+  'house-39': { id: 'house-39', name: 'House 39: Frozen Duo', enemies: ['blizzard-warlord', 'blizzard-warlord'], difficulty: 'hard', backgroundId: 'gs1/Vale', reward: { xp: 3400, gold: 700, equipment: { type: 'none' } } },
+  'house-40': { id: 'house-40', name: 'House 40: Storm Gate', enemies: ['tempest-warlord', 'tempest-dragon'], difficulty: 'boss', backgroundId: 'gs1/Vale', reward: { xp: 4000, gold: 1000, equipment: { type: 'none' } } },
+  'house-41': { id: 'house-41', name: 'House 41: Sky Breach', enemies: ['stratosphere-lord'], difficulty: 'hard', backgroundId: 'gs1/Vale', reward: { xp: 4200, gold: 800, equipment: { type: 'none' } } },
+  'house-42': { id: 'house-42', name: 'House 42: Cloud Walker', enemies: ['storm-titan'], difficulty: 'hard', backgroundId: 'gs1/Vale', reward: { xp: 4400, gold: 850, equipment: { type: 'none' } } },
+  'house-43': { id: 'house-43', name: 'House 43: Thunder Peak', enemies: ['tempest-dragon', 'storm-titan'], difficulty: 'hard', backgroundId: 'gs1/Vale', reward: { xp: 4600, gold: 900, equipment: { type: 'none' } } },
+  'house-44': { id: 'house-44', name: 'House 44: Gale Force', enemies: ['stratosphere-lord', 'jupiter-vortex-sentry'], difficulty: 'hard', backgroundId: 'gs1/Vale', reward: { xp: 4800, gold: 950, equipment: { type: 'none' } } },
+  'house-45': { id: 'house-45', name: 'House 45: The Eye', enemies: ['zeus-avatar'], difficulty: 'boss', backgroundId: 'gs1/Vale', reward: { xp: 5000, gold: 2000, equipment: { type: 'fixed', itemId: 'mythril-crown' } } },
+  'house-46': { id: 'house-46', name: 'House 46: Chaos 1', enemies: ['granite-warlord', 'tempest-warlord'], difficulty: 'hard', backgroundId: 'gs1/Vale', reward: { xp: 5500, gold: 1100, equipment: { type: 'none' } } },
+  'house-47': { id: 'house-47', name: 'House 47: Chaos 2', enemies: ['volcano-warlord', 'blizzard-warlord'], difficulty: 'hard', backgroundId: 'gs1/Vale', reward: { xp: 6000, gold: 1200, equipment: { type: 'none' } } },
+  'house-48': { id: 'house-48', name: 'House 48: Chaos 3', enemies: ['tempest-dragon', 'zeus-avatar'], difficulty: 'hard', backgroundId: 'gs1/Vale', reward: { xp: 7000, gold: 1500, equipment: { type: 'none' } } },
+  'house-49': { id: 'house-49', name: 'House 49: The Gatekeeper', enemies: ['celestial-fury', 'vortex-sentinel'], difficulty: 'boss', backgroundId: 'gs1/Vale', reward: { xp: 8000, gold: 2000, equipment: { type: 'none' } } },
+  'house-50': { id: 'house-50', name: 'House 50: Golden Sun', enemies: ['the-golden-sun'], difficulty: 'boss', backgroundId: 'gs1/Vale', reward: { xp: 99999, gold: 99999, equipment: { type: 'fixed', itemId: 'sol-blade' } } },
 };
 
 // ============================================================================

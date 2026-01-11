@@ -3,7 +3,7 @@
  * Golden Sun-inspired settings with tabs for Audio, Display, Controls, Gameplay
  */
 
-import { useState, useEffect, useCallback } from 'preact/hooks';
+import { useState, useEffect, useCallback, useRef } from 'preact/hooks';
 import './SettingsScreen.css';
 
 type Tab = 'audio' | 'display' | 'controls' | 'gameplay';
@@ -36,7 +36,17 @@ export function SettingsScreen({ onClose }: SettingsScreenProps) {
   const [battleTooltips, setBattleTooltips] = useState(true);
 
   // Keyboard navigation
+  const prevActiveRef = useRef<HTMLElement | null>(null);
   useEffect(() => {
+    if (typeof document !== 'undefined') {
+      const el = document.activeElement;
+      prevActiveRef.current = el instanceof HTMLElement ? el : null;
+
+      // focus active tab for keyboard users
+      const activeBtn = document.querySelector(`[data-testid="settings-tab-${activeTab}"]`) as HTMLElement | null;
+      if (activeBtn && typeof activeBtn.focus === 'function') activeBtn.focus();
+    }
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         e.preventDefault();
@@ -44,7 +54,14 @@ export function SettingsScreen({ onClose }: SettingsScreenProps) {
       }
     };
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      try {
+        if (prevActiveRef.current && prevActiveRef.current.isConnected) prevActiveRef.current.focus();
+      } catch (e) {
+        // ignore
+      }
+    };
   }, [onClose]);
 
   const handleResetDefaults = useCallback(() => {
@@ -81,7 +98,7 @@ export function SettingsScreen({ onClose }: SettingsScreenProps) {
   ];
 
   return (
-    <div class="settings-overlay">
+    <div class="settings-overlay" role="dialog" aria-modal="true" aria-label="Settings" data-testid="settings-modal">
       <div class="settings-container">
         {/* Header */}
         <div class="settings-header">
@@ -89,7 +106,7 @@ export function SettingsScreen({ onClose }: SettingsScreenProps) {
             <span>⚙️</span>
             <span>Settings</span>
           </h1>
-          <button class="settings-close-btn" onClick={onClose}>
+          <button class="settings-close-btn" onClick={onClose} aria-label="Close Settings" data-testid="settings-close">
             Close
           </button>
         </div>
@@ -99,8 +116,11 @@ export function SettingsScreen({ onClose }: SettingsScreenProps) {
           {tabs.map((tab) => (
             <button
               key={tab.id}
+              role="tab"
+              aria-selected={activeTab === tab.id}
               class={`settings-tab-btn ${activeTab === tab.id ? 'active' : ''}`}
               onClick={() => setActiveTab(tab.id)}
+              data-testid={`settings-tab-${tab.id}`}
             >
               <span>{tab.icon}</span>
               <span>{tab.label}</span>

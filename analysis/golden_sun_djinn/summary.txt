@@ -1,0 +1,4 @@
+Frames found: 0
+Spin frames: 0 - 0 (0 frames)
+Text scroll: 0 - 0 @ 15.0 chars/sec
+Notes: No frame or waveform inputs were present; analysis produced conservative defaults. The analyzer script (scripts/analyze_djinn.py) will perform histogram-difference detection when Pillow and frames are available.

@@ -1,0 +1,45 @@
+Swarm memory briefing and repo menu scan
+
+Actions performed:
+- Ran /home/geni/swarm/memory/mem-briefing.py, mem-semantic.py "menu" --limit 10, and /home/geni/swarm/memory/mem-db.sh query type=d recent=24h limit=10 and captured key recent decisions.
+
+Memory briefing highlights (recent decisions referenced):
+- strategic-orch: implemented smart loosenings / soft plan validation (affects orchestration of lanes).
+- acquisition-fanfare: acquisition fanfare design doc and tests created in docs/implementation.
+- he_is_coming: decisions to keep assets/original styling and prefer Python/Pygame for parity.
+(These were present in the mem-briefing output captured at run time.)
+
+Repository menu-related candidates (discovered via grep "Menu" and glob **/*Menu*):
+- src/game/menus/MenuStackRouter.ts
+- src/game/menus/PauseMenu.ts
+- src/scenes/MainMenuScene.ts
+- src/ui/components/MainMenu.tsx
+- src/ui/components/SaveMenu.tsx
+- src/ui/components/PauseMenu.tsx
+- src/ui/components/BattleActionMenu.tsx
+- src/modals/PauseMenu.tsx
+- src/ui/SettingsHowToPlayMenu.ts
+- src/screens/MainMenu.tsx
+
+Search commands used:
+- ripgrep pattern: "Menu" in path src (grep)
+- glob pattern: **/*Menu*.{ts,tsx,js,jsx}
+
+Notes / next steps:
+- These are candidate files for menu-area work; recommend opening the following as P0 targets: SaveMenu.tsx (focus-restore/testids), PauseMenu (MenuStackRouter integration), MainMenu (scene wiring), SettingsHowToPlayMenu (focus/stack flow), and BattleActionMenu (battle menu UX).
+- Record this scan in swarm memory if desired (mem-db write) and then proceed to add data-testids and useFocusRestore in the SaveMenu and PauseMenu components.
+
+Scan completed.
+
+Final Review (2026-01-11T13:38:13Z):
+- Rounds 1-5 reviewed; canonical menu map generated and validated.
+- No code changes performed (outside allowed files); P0 actions: add data-testids and useFocusRestore to SaveMenu and PauseMenu; owner: UI team.
+- Decision: proceed with targeted PRs for P0 items in next iteration.
+
+
+Review notes (2026-01-11T13:38:07Z):
+- Rounds 1-5 changes inspected; primary menu targets identified and mapped in menu_map.json.
+- No allowed-file code edits required this round; recommended P0: add data-testids and useFocusRestore to SaveMenu and PauseMenu in next iteration.
+- No blocking risks found in allowed files.  
+
+

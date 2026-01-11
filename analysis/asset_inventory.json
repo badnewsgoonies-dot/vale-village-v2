@@ -1,0 +1,53 @@
+{
+  "generated_at": "2026-01-11T05:50:56.571Z",
+  "memory_briefing_run": true,
+  "semantic_search_run": true,
+  "memory_briefing_summary": "mem-briefing executed; no assets/ or videos/ directories present in repository root. See mem-briefing log for details.",
+  "semantic_search_query": "asset inventory",
+  "semantic_search_results_count": 0,
+  "assets": [],
+  "videos": [],
+  "missing_captures": [
+    {
+      "id": "gameplay_video_1080p60",
+      "description": "Full gameplay capture of core overworld and battle sequences",
+      "required_format": {
+        "container": "mp4",
+        "video_codec": "H.264 (avc1)",
+        "resolution": "1920x1080",
+        "frame_rate": "60fps",
+        "audio_codec": "AAC LC",
+        "audio_bitrate": "128kbps",
+        "notes": "Record with a stable 60fps; include HUD and raw game audio on separate track if possible"
+      }
+    },
+    {
+      "id": "frame_exports_png_sequence",
+      "description": "High-quality frame exports for VFX and sprite captures",
+      "required_format": {
+        "format": "PNG sequence",
+        "naming": "frame_00001.png",
+        "bit_depth": "8-bit or 16-bit if HDR needed",
+        "alpha": "RGBA recommended for compositing"
+      }
+    },
+    {
+      "id": "audio_master_wav",
+      "description": "Master audio for music and SFX extracts",
+      "required_format": {
+        "format": "WAV",
+        "sample_rate": "48000Hz",
+        "bit_depth": "24-bit",
+        "channels": "stereo",
+        "alternatives": "FLAC lossless"
+      }
+    }
+  ],
+  "notes": "No captures found under assets/ or videos/. inventory file records required capture formats and next steps.",
+  "provenance": {
+    "mem_briefing_command": "python3 /home/geni/swarm/memory/mem-briefing.py",
+    "semantic_search_command": "python3 /home/geni/swarm/memory/mem-semantic.py \"asset inventory\" --limit 10",
+    "scan_command": "find assets -type f || true; find videos -type f || true",
+    "generated_by": "lane-1 worker-a"
+  }
+}

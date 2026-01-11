@@ -1,7 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import './ui/styles/GoldenSunTheme.css';
 @import './ui/styles/spacing-system.css';
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Press Start 2P', cursive;
   line-height: 1.5;
   font-weight: 400;
 
@@ -24,11 +26,13 @@ body {
   color: var(--color-text);
   min-width: 320px;
   min-height: 100vh;
+  image-rendering: pixelated;
 }
 
 #root {
   width: 100%;
   min-height: 100vh;
+  image-rendering: pixelated;
 }
 
 /* Utility classes */
@@ -77,7 +81,7 @@ button {
   background-color: #000;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 150ms ease-in-out;
+  transition: opacity 400ms ease-in-out;
   z-index: 9999;
 }
 

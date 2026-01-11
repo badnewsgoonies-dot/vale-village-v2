@@ -2496,56 +2496,156 @@ export const BANDIT_CAPTAIN: Enemy = {
   baseGold: 25,
 };
 
+// Lightweight aliases / small world enemies (missing from previous import)
+export const BANDIT: Enemy = {
+  id: 'bandit',
+  name: 'Road Bandit',
+  level: 3,
+  element: 'Mars',
+  stats: { hp: 50, pp: 0, atk: 12, def: 8, mag: 4, spd: 9 },
+  abilities: [{ ...STRIKE, unlockLevel: 1 }],
+  baseXp: 20,
+  baseGold: 12,
+};
+
+export const SCAVENGER: Enemy = {
+  id: 'scavenger',
+  name: 'Scavenger',
+  level: 2,
+  element: 'Venus',
+  stats: { hp: 38, pp: 0, atk: 8, def: 6, mag: 3, spd: 7 },
+  abilities: [{ ...STRIKE, unlockLevel: 1 }],
+  baseXp: 10,
+  baseGold: 6,
+};
+
+export const MERCHANT_GUARD_ENEMY: Enemy = {
+  id: 'merchant-guard',
+  name: 'Merchant Guard',
+  level: 2,
+  element: 'Venus',
+  stats: { hp: 60, pp: 0, atk: 10, def: 9, mag: 3, spd: 8 },
+  abilities: [{ ...STRIKE, unlockLevel: 1 }, { ...GUARD_BREAK, unlockLevel: 1 }],
+  baseXp: 22,
+  baseGold: 14,
+};
+
+export const WILD_BOAR: Enemy = {
+  id: 'wild-boar',
+  name: 'Wild Boar',
+  level: 1,
+  element: 'Venus',
+  stats: { hp: 36, pp: 0, atk: 10, def: 5, mag: 2, spd: 6 },
+  abilities: [{ ...STRIKE, unlockLevel: 1 }],
+  baseXp: 8,
+  baseGold: 5,
+};
+
+export const CARRION_BIRD: Enemy = {
+  id: 'carrion-bird',
+  name: 'Carrion Bird',
+  level: 1,
+  element: 'Jupiter',
+  stats: { hp: 28, pp: 0, atk: 6, def: 4, mag: 2, spd: 12 },
+  abilities: [{ ...STRIKE, unlockLevel: 1 }, { ...GUST, unlockLevel: 1 }],
+  baseXp: 9,
+  baseGold: 4,
+};
+
 // ============================================================================
 // Recruitable Unit Enemies (generated from unit definitions)
 // ============================================================================
 
 // VS1: Garet (War Mage) - Level 2
 const warMageDef = UNIT_DEFINITIONS['war-mage'];
-if (!warMageDef) throw new Error('war-mage unit definition not found');
-export const GARET_ENEMY: Enemy = {
-  ...unitDefinitionToEnemy(
-    warMageDef,
-    2, // Level 2 for VS1
-    60, // Base XP
-    19, // Base Gold
-    {
-      id: 'garet-enemy',
-      stats: {
-        // VS1 tutorial fight tuning:
-        // - Player starts with 1 mana circle, so they can only basic attack (plus Djinn stat bonuses).
-        // - Enemies ignore mana costs, so we keep this fight physical-only (see abilities override below).
-        // Goal: winnable with basic attacks, but not trivial.
-        hp: 135,
-        atk: 12,
-      },
-    }
-  ),
-  // VS1 tutorial: restrict to basic attack only so the first fight is beatable.
-  abilities: [{ ...STRIKE, unlockLevel: 1 }],
-};
+let _GARET_ENEMY: Enemy;
+if (warMageDef) {
+  _GARET_ENEMY = {
+    ...unitDefinitionToEnemy(
+      warMageDef,
+      2, // Level 2 for VS1
+      60, // Base XP
+      19, // Base Gold
+      {
+        id: 'garet-enemy',
+        stats: {
+          // VS1 tutorial fight tuning:
+          // - Player starts with 1 mana circle, so they can only basic attack (plus Djinn stat bonuses).
+          // - Enemies ignore mana costs, so we keep this fight physical-only (see abilities override below).
+          // Goal: winnable with basic attacks, but not trivial.
+          hp: 135,
+          atk: 12,
+        },
+      }
+    ),
+    // VS1 tutorial: restrict to basic attack only so the first fight is beatable.
+    abilities: [{ ...STRIKE, unlockLevel: 1 }],
+  };
+} else {
+  // Fallback minimal enemy so module load doesn't throw in environments where UNIT_DEFINITIONS
+  // may not be present (tests or partial builds). Keeps behavior predictable.
+  _GARET_ENEMY = {
+    id: 'garet-enemy',
+    name: 'Garet (Enemy)',
+    level: 2,
+    element: 'Mars',
+    stats: { hp: 135, pp: 0, atk: 12, def: 8, mag: 4, spd: 9 },
+    abilities: [{ ...STRIKE, unlockLevel: 1 }],
+    baseXp: 60,
+    baseGold: 19,
+  };
+}
+export const GARET_ENEMY: Enemy = _GARET_ENEMY;
 
 // Sentinel - Level 3 (example for future encounters)
 const sentinelDef = UNIT_DEFINITIONS['sentinel'];
-if (!sentinelDef) throw new Error('sentinel unit definition not found');
-export const SENTINEL_ENEMY = unitDefinitionToEnemy(
-  sentinelDef,
-  3, // Level 3
-  80, // Base XP
-  25, // Base Gold
-  { id: 'sentinel-enemy' }
-);
+let _SENTINEL_ENEMY: Enemy;
+if (sentinelDef) {
+  _SENTINEL_ENEMY = unitDefinitionToEnemy(
+    sentinelDef,
+    3, // Level 3
+    80, // Base XP
+    25, // Base Gold
+    { id: 'sentinel-enemy' }
+  );
+} else {
+  _SENTINEL_ENEMY = {
+    id: 'sentinel-enemy',
+    name: 'Sentinel (Enemy)',
+    level: 3,
+    element: 'Venus',
+    stats: { hp: 90, pp: 0, atk: 18, def: 12, mag: 6, spd: 9 },
+    abilities: [{ ...STRIKE, unlockLevel: 1 }, { ...HEAVY_STRIKE, unlockLevel: 1 }],
+    baseXp: 80,
+    baseGold: 25,
+  };
+}
+export const SENTINEL_ENEMY: Enemy = _SENTINEL_ENEMY;
 
 // Stormcaller - Level 3 (example for future encounters)
 const stormcallerDef = UNIT_DEFINITIONS['stormcaller'];
-if (!stormcallerDef) throw new Error('stormcaller unit definition not found');
-export const STORMCALLER_ENEMY = unitDefinitionToEnemy(
-  stormcallerDef,
-  3, // Level 3
-  80, // Base XP
-  25, // Base Gold
-  { id: 'stormcaller-enemy' }
-);
+let _STORMCALLER_ENEMY: Enemy;
+if (stormcallerDef) {
+  _STORMCALLER_ENEMY = unitDefinitionToEnemy(
+    stormcallerDef,
+    3, // Level 3
+    80, // Base XP
+    25, // Base Gold
+    { id: 'stormcaller-enemy' }
+  );
+} else {
+  _STORMCALLER_ENEMY = {
+    id: 'stormcaller-enemy',
+    name: 'Stormcaller (Enemy)',
+    level: 3,
+    element: 'Jupiter',
+    stats: { hp: 88, pp: 20, atk: 16, def: 10, mag: 14, spd: 12 },
+    abilities: [{ ...GUST, unlockLevel: 1 }, { ...CHAIN_LIGHTNING, unlockLevel: 1 }],
+    baseXp: 80,
+    baseGold: 25,
+  };
+}
+export const STORMCALLER_ENEMY: Enemy = _STORMCALLER_ENEMY;
 
 // Note: Starter units (adept, mystic, ranger) can also have enemy versions
 // if needed for story battles, but they're not typically recruited.
@@ -2712,12 +2812,131 @@ export const ENEMIES: Record<string, Enemy> = {
   // VS1 Demo
   'bandit-minion': BANDIT_MINION,
   'bandit-captain': BANDIT_CAPTAIN,
+  'bandit': BANDIT,
+  'scavenger': SCAVENGER,
+  'merchant-guard': MERCHANT_GUARD_ENEMY,
+  'wild-boar': WILD_BOAR,
+  'carrion-bird': CARRION_BIRD,
 
   // Recruitable Unit Enemies
   'garet-enemy': GARET_ENEMY,
   'sentinel-enemy': SENTINEL_ENEMY,
   'stormcaller-enemy': STORMCALLER_ENEMY,
+
+  // Injected Mercury & Jupiter themed enemies (inline definitions)
+  'mercury-mistling': {
+    id: 'mercury-mistling',
+    name: 'Mistling',
+    level: 3,
+    element: 'Mercury',
+    stats: { hp: 72, pp: 14, atk: 10, def: 8, mag: 18, spd: 13 },
+    abilities: [{ ...ICE_SHARD, unlockLevel: 1 }, { ...FREEZE_BLAST, unlockLevel: 1 }],
+    baseXp: 34,
+    baseGold: 16,
+  },
+  'mercury-glacial-sprite': {
+    id: 'mercury-glacial-sprite',
+    name: 'Glacial Sprite',
+    level: 4,
+    element: 'Mercury',
+    stats: { hp: 88, pp: 18, atk: 9, def: 10, mag: 22, spd: 15 },
+    abilities: [{ ...ICE_SHARD, unlockLevel: 1 }, { ...HEAL, unlockLevel: 1 }],
+    baseXp: 42,
+    baseGold: 22,
+  },
+  'mercury-frost-hound': {
+    id: 'mercury-frost-hound',
+    name: 'Frost Hound',
+    level: 5,
+    element: 'Mercury',
+    stats: { hp: 110, pp: 12, atk: 18, def: 12, mag: 16, spd: 17 },
+    abilities: [{ ...STRIKE, unlockLevel: 1 }, { ...FREEZE_BLAST, unlockLevel: 1 }],
+    baseXp: 56,
+    baseGold: 28,
+  },
+  'mercury-aquifer-imp': {
+    id: 'mercury-aquifer-imp',
+    name: 'Aquifer Imp',
+    level: 2,
+    element: 'Mercury',
+    stats: { hp: 46, pp: 16, atk: 7, def: 6, mag: 14, spd: 12 },
+    abilities: [{ ...ICE_SHARD, unlockLevel: 1 }],
+    baseXp: 20,
+    baseGold: 10,
+  },
+  'mercury-warder': {
+    id: 'mercury-warder',
+    name: 'Warder of the Tides',
+    level: 6,
+    element: 'Mercury',
+    stats: { hp: 150, pp: 30, atk: 20, def: 18, mag: 24, spd: 11 },
+    abilities: [{ ...FREEZE_BLAST, unlockLevel: 1 }, { ...HEAL, unlockLevel: 1 }],
+    baseXp: 80,
+    baseGold: 40,
+  },
+
+  'jupiter-zephyr-imp': {
+    id: 'jupiter-zephyr-imp',
+    name: 'Zephyr Imp',
+    level: 2,
+    element: 'Jupiter',
+    stats: { hp: 44, pp: 14, atk: 8, def: 6, mag: 13, spd: 16 },
+    abilities: [{ ...GUST, unlockLevel: 1 }],
+    baseXp: 18,
+    baseGold: 9,
+  },
+  'jupiter-gale-moth': {
+    id: 'jupiter-gale-moth',
+    name: 'Gale Moth',
+    level: 3,
+    element: 'Jupiter',
+    stats: { hp: 60, pp: 18, atk: 10, def: 8, mag: 18, spd: 20 },
+    abilities: [{ ...GUST, unlockLevel: 1 }, { ...BLIND, unlockLevel: 1 }],
+    baseXp: 32,
+    baseGold: 16,
+  },
+  'jupiter-stormling': {
+    id: 'jupiter-stormling',
+    name: 'Stormling',
+    level: 5,
+    element: 'Jupiter',
+    stats: { hp: 95, pp: 24, atk: 16, def: 12, mag: 26, spd: 22 },
+    abilities: [{ ...CHAIN_LIGHTNING, unlockLevel: 1 }, { ...PARALYZE_SHOCK, unlockLevel: 1 }],
+    baseXp: 72,
+    baseGold: 36,
+  },
+  'jupiter-lightning-hopper': {
+    id: 'jupiter-lightning-hopper',
+    name: 'Lightning Hopper',
+    level: 4,
+    element: 'Jupiter',
+    stats: { hp: 78, pp: 20, atk: 14, def: 10, mag: 20, spd: 24 },
+    abilities: [{ ...PARALYZE_SHOCK, unlockLevel: 1 }, { ...PRECISE_JAB, unlockLevel: 1 }],
+    baseXp: 46,
+    baseGold: 24,
+  },
+  'jupiter-vortex-sentry': {
+    id: 'jupiter-vortex-sentry',
+    name: 'Vortex Sentry',
+    level: 6,
+    element: 'Jupiter',
+    stats: { hp: 140, pp: 30, atk: 22, def: 18, mag: 30, spd: 18 },
+    abilities: [{ ...GUST, unlockLevel: 1 }, { ...CHAIN_LIGHTNING, unlockLevel: 1 }, { ...BOOST_DEF, unlockLevel: 1 }],
+    baseXp: 94,
+    baseGold: 48,
+  },
+
   // Restored Content
   "mire-toad": MIRE_TOAD,
   "lumen-fawn": LUMEN_FAWN,
+  'the-golden-sun': {
+    id: 'the-golden-sun',
+    name: 'The Golden Sun',
+    level: 20,
+    element: 'Jupiter',
+    stats: { hp: 5000, pp: 999, atk: 150, def: 120, mag: 200, spd: 80 },
+    abilities: [{ ...CHAIN_LIGHTNING, unlockLevel: 1 }, { ...BOOST_DEF, unlockLevel: 1 }],
+    baseXp: 50000,
+    baseGold: 99999,
+  },
 };

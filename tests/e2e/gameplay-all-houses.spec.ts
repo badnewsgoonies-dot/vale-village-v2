@@ -40,6 +40,21 @@ const HOUSE_ENCOUNTERS = [
   'house-34',
   'house-35',
   'house-36',
+  // Endgame (The Ascent)
+  'house-37',
+  'house-38',
+  'house-39',
+  'house-40',
+  'house-41',
+  'house-42',
+  'house-43',
+  'house-44',
+  'house-45',
+  'house-46',
+  'house-47',
+  'house-48',
+  'house-49',
+  'house-50',
 ];
 
 test('Gray-box: Play through all Houses', async ({ page }) => {

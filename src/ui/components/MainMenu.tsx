@@ -1,6 +1,6 @@
 /**
  * Main Menu Component
- * Menu screen with New Game, Continue, Compendium options
+ * Redesigned with Golden Sun aesthetic
  */
 
 import { useEffect, useRef, useState } from 'preact/hooks';
@@ -178,7 +178,7 @@ export function MainMenu() {
   };
 
   return (
-    <div class="main-menu">
+    <div class="main-menu" role="navigation" aria-label="Main Menu" data-testid="main-menu">
       {/* Left character sprites */}
       <div class="main-menu-characters main-menu-characters--left">
         {MENU_CHARACTERS.left.map((char, i) => (
@@ -192,8 +192,8 @@ export function MainMenu() {
         ))}
       </div>
 
-      <div class="main-menu-content">
-        <h1 class="main-menu-title">Vale Chronicles</h1>
+      <div class="main-menu-content gs-window gs-window--layered">
+        <h1 class="gs-title">Vale Chronicles</h1>
         <div class="main-menu-options">
           {menuOptions.map((option) => {
             const isEnabled = option.enabled;
@@ -203,7 +203,7 @@ export function MainMenu() {
             return (
               <button
                 key={option.id}
-                class={`main-menu-option ${isSelected ? 'selected' : ''} ${!isEnabled ? 'disabled' : ''}`}
+                class={`gs-button ${isSelected ? 'selected' : ''} ${!isEnabled ? 'disabled' : ''}`}
                 onClick={() => isEnabled && handleSelectOption(option.id)}
                 disabled={!isEnabled}
               >

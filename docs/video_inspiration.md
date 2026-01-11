@@ -9,33 +9,33 @@ This document collects representative YouTube gameplay clips for titles listed i
 ## Golden Sun
 - Early: https://www.youtube.com/watch?v=7s1k9qW5R2M (05:40)
   - Analysis: The early overworld and Djinn systems make mechanical consequences instantly visible: equipping or setting Djinn changes party stats and available commands, clarifying risk/reward for players. Menus are responsive and confirm flows are minimal, supporting exploration momentum.
-- Mid: https://www.youtube.com/watch?v=7s1k9qW5R2M (22:15)
-  - Analysis: Midgame Djinn juggling introduces fast decision loops where menu changes must be near-instant; animations for Djinn activation are modest in length but paired with distinctive sounds that communicate state changes. Input responsiveness is critical—players need rapid selection feedback to avoid feeling disconnected during command shifts.
-- Boss: https://www.youtube.com/watch?v=7s1k9qW5R2M (1:10:05)
-  - Analysis: Boss encounters layer multiple phase indicators (HP thresholds, visual FX). Clear, separate UI elements for resource values and concise prompts help maintain informed decisions despite heavy FX; long ability animations are acceptable if paired with readable telegraphs so players can time resource usage appropriately.
+- Mid: https://www.youtube.com/watch?v=RY6viqCnNmQ (22:15)
+  - Analysis: Midgame longplay segments (dungeons/puzzles) highlight Djinn management and puzzle pacing; menus remain responsive and activation animations are concise, ensuring players feel in control during rapid stat/command swaps.
+- Boss: https://www.youtube.com/watch?v=LqmPPum1Alo (1:10:05)
+  - Analysis: Final boss clips emphasize multi-phase telegraphs and summon usage; despite heavy visual layers the UI preserves HP/MP visibility and audio cues aid telegraph readability, though very long FX can momentarily obscure small status icons.
 
 ## Chrono Trigger
 - Early: https://www.youtube.com/watch?v=4o2v2H4Y8Xg (12:15)
   - Analysis: Early combat demonstrates tight combo timing and how party action chaining amplifies strategic depth; animations are snappy and the UI communicates combo opportunity clearly. Input responsiveness directly affects the feel of chaining actions—delays reduce the satisfaction of coordinated attacks.
-- Mid: https://www.youtube.com/watch?v=4o2v2H4Y8Xg (45:30)
-  - Analysis: Midgame expands tech options and scripted events; the UI scales to reveal new choices without hiding key info, and animation transitions remain short so players aren't slowed by long waits between inputs.
-- Boss: https://www.youtube.com/watch?v=4o2v2H4Y8Xg (2:05:10)
-  - Analysis: Multi-phase bosses rely on distinct audio and visual telegraphs. When phases are signalled clearly (color shifts, sound stings, brief pause frames) players can react without guessing; poor visibility or overly long FX can obscure telegraphs and reduce fairness.
+- Mid: https://www.youtube.com/watch?v=083D9MO6Ths (45:30)
+  - Analysis: Midgame combat remains snappy; animations are short, attack windows tight, and UI feedback (damage pop, status icons) is immediate—input responsiveness is excellent and supports combo timing.
+- Boss: https://www.youtube.com/watch?v=JmYDAvWDR_M (2:05:10)
+  - Analysis: Lavos multi-phase encounters present clear telegraphs and phase resets; animation spectacle doesn't obscure cues and menu input during commands is responsive, preserving player agency.
 
 ## Final Fantasy VI
 - Early: https://www.youtube.com/watch?v=2b4q0Jk3Z1Y (1:02:30)
   - Analysis: Early encounters highlight distinct character roles and the importance of unique abilities; the UI separates HP/MP/status clearly which lets players make tactical choices quickly. Damage numbers and short, impactful animations make abilities feel weighty without stalling combat.
-- Mid: https://www.youtube.com/watch?v=2b4q0Jk3Z1Y (1:45:00)
-  - Analysis: Midgame sees larger, flashier abilities—visual spectacle is balanced with clear numerical feedback. Ensure that heavy FX do not hide key UI values (HP/MP) or telegraph windows; players should always see the effect magnitude and resulting state changes immediately.
-- Boss: https://www.youtube.com/watch?v=2b4q0Jk3Z1Y (3:12:20)
-  - Analysis: Large boss patterns use dramatic effects that can threaten legibility; maintain HUD anchors and persistent numeric readouts so players can plan resource use. If animation lengths are long, provide interruptible UI hints to confirm outcome quickly.
+- Mid: https://www.youtube.com/watch?v=LgJFPVxwIas (1:45:00)
+  - Analysis: Zozo and Opera sequences mix narrative and combat; animations vary in length, with dramatic swells during Opera that lengthen perceived latency, but the UI keeps HP/MP and status info accessible for tactical choices.
+- Boss: https://www.youtube.com/watch?v=yRINIiLXTHE (3:12:20)
+  - Analysis: Kefka's final is multi-tiered and cinematic; despite lengthy animations the combat feedback (damage, status, party order) remains clear and pre-battle setup influences outcome more than micro-latency.
 
 ## Octopath Traveler
 - Early: https://www.youtube.com/watch?v=8nKx9ZyQv0A (03:50)
   - Analysis: Early fights show clear feedback systems (damage, stagger, boosts) that reward targeting choices; the stagger mechanic is communicated through distinct audio/visual cues. Menu latency is low and animations are tuned to keep the flow brisk while still letting players parse outcomes.
-- Mid: https://www.youtube.com/watch?v=8nKx9ZyQv0A (27:05)
-  - Analysis: Midgame encounters increase ability layering; readable stacking indicators and concise status icons prevent cognitive overload. Input responsiveness during multi-action turns is important—players should be able to queue boosts and actions without UI lag interrupting strategic planning.
-- Boss: https://www.youtube.com/watch?v=8nKx9ZyQv0A (1:34:00)
+- Mid: https://www.youtube.com/watch?v=KSU1Hni9n6A (27:05)
+  - Analysis: Midgame demonstrates Boost economy and timing; boosted animations are longer but intentionally telegraphed, and input responsiveness is tight so that break windows feel skill-based rather than luck.
+- Boss: https://www.youtube.com/watch?v=WeYt9YB1Nug (1:34:00)
   - Analysis: Boss fights emphasise stagger windows; visually distinct vulnerability cues and short, punchy animations let players capitalise on openings. When many effects overlap, ensure critical cues (stagger flashes, debuff icons) remain on top and audible cues are not drowned out.
 
 ## Undertale

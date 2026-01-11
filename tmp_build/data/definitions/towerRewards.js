@@ -1,0 +1,94 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.TOWER_REWARDS = void 0;
+/**
+ * Tower rewards are milestone-based and reference existing content IDs.
+ * These entries prove out tower-exclusive unlocks while keeping data-driven flow.
+ */
+exports.TOWER_REWARDS = [
+    {
+        floorNumber: 5,
+        rewards: [
+            {
+                type: 'equipment',
+                ids: ['iron-sword'],
+                notes: 'Early milestone reward',
+            },
+        ],
+    },
+    {
+        floorNumber: 6,
+        rewards: [
+            {
+                type: 'equipment',
+                ids: ['eclipse-blade'],
+                notes: 'Tower-exclusive artifact sword',
+            },
+        ],
+    },
+    {
+        floorNumber: 7,
+        rewards: [
+            {
+                type: 'djinn',
+                ids: ['nova'],
+                notes: 'Tower-exclusive Mars Djinn',
+            },
+        ],
+    },
+    {
+        floorNumber: 10,
+        rewards: [
+            {
+                type: 'recruit',
+                ids: ['tower-champion'],
+                notes: 'Tower-exclusive recruit unlocked after boss floor',
+            },
+        ],
+    },
+    {
+        floorNumber: 15,
+        rewards: [
+            {
+                type: 'equipment',
+                ids: ['silver-blade'],
+                notes: 'Mid-tier artifact reward',
+            },
+        ],
+    },
+    {
+        floorNumber: 25,
+        rewards: [
+            {
+                type: 'equipment',
+                ids: ['tower-champions-ring'],
+                notes: "Tower milestone accessory: Champion's Ring",
+            },
+            {
+                type: 'djinn',
+                ids: ['chill'],
+                notes: 'Mercury Djinn reward (tier 3)',
+            },
+        ],
+    },
+    {
+        floorNumber: 30,
+        rewards: [
+            {
+                type: 'equipment',
+                ids: ['tower-masters-medallion'],
+                notes: "Tower milestone accessory: Master's Medallion",
+            },
+            {
+                type: 'recruit',
+                ids: ['felix'],
+                notes: 'High-tier recruit reward',
+            },
+            {
+                type: 'djinn',
+                ids: ['tempest'],
+                notes: 'Tower-exclusive Jupiter Djinn',
+            },
+        ],
+    },
+];

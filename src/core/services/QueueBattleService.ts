@@ -249,7 +249,8 @@ function transitionToExecutingPhase(state: BattleState): BattleState {
  */
 function executeAllActionsPhase(
   state: BattleState,
-  rng: PRNG
+  rng: PRNG,
+  options: { godMode?: boolean }
 ): { state: BattleState; events: readonly BattleEvent[] } {
   // Gather player actions
   const playerActions = state.queuedActions.filter((a): a is QueuedAction => a !== null);
@@ -283,7 +284,8 @@ function executeAllActionsPhase(
       action.unitId,
       action.abilityId || 'strike',
       validTargets,
-      rng
+      rng,
+      options
     );
 
     if (!actionResult.ok) {
@@ -409,7 +411,8 @@ function transitionToPlanningPhase(state: BattleState): BattleState {
  */
 export function executeRound(
   state: BattleState,
-  rng: PRNG
+  rng: PRNG,
+  options: { godMode?: boolean } = {}
 ): { state: BattleState; events: readonly BattleEvent[] } {
   const validation = validateQueueForExecution(state);
   if (!validation.ok) {
@@ -431,7 +434,7 @@ export function executeRound(
   }
 
   // Execute all actions (player and enemy) interleaved by SPD
-  const actionsResult = executeAllActionsPhase(currentState, rng);
+  const actionsResult = executeAllActionsPhase(currentState, rng, options);
   currentState = actionsResult.state;
   allEvents.push(...actionsResult.events);
 
