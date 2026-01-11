@@ -10,7 +10,7 @@ import type { BattleEvent } from '../../core/services/types';
 import { performAction, endTurn, checkBattleEnd, startTurnTick as battleServiceStartTurnTick } from '../../core/services/BattleService';
 import { makeAIDecision } from '../../core/services/AIService';
 import { makePRNG } from '../../core/random/prng';
-import { createRNGStream, RNG_STREAMS, DEFAULT_RNG_SEED } from '../../core/constants';
+import { createRNGStream, RNG_STREAMS, DEFAULT_RNG_SEED, createEmptyQueue } from '../../core/constants';
 import type { RewardsSlice } from './rewardsSlice';
 import type { StorySlice } from './storySlice';
 import { normalizeBattleState } from '../../core/battle/normalizeBattleState';
@@ -52,6 +52,14 @@ export const createBattleSlice: StateCreator<
 
   setBattle: (battle, seed) => {
       const normalized = battle ? normalizeBattleState(battle) ?? battle : null;
+      if (normalized) {
+        const prevBattle = get().battle;
+        const prevEncounterId = prevBattle ? getEncounterId(prevBattle) : undefined;
+        const newEncounterId = getEncounterId(normalized);
+        if (prevEncounterId !== newEncounterId || normalized.roundNumber === 1) {
+          normalized.queuedActions = createEmptyQueue(normalized.playerTeam.units.length) as typeof normalized.queuedActions;
+        }
+      }
       set({ battle: normalized, rngSeed: seed, turnNumber: 0, events: [] });
     },
 
