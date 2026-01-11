@@ -533,7 +533,7 @@ export function getSaveSlotMetadata(slot: number): SaveSlotMetadata {
       playtime: typeof data.stats.playtime === 'number' ? data.stats.playtime : 0,
       teamLevel: avgLevel,
       gold: typeof data.playerData.gold === 'number' ? data.playerData.gold : 0,
-      chapter: 1, // TODO: Add chapter to SaveV1Schema
+      chapter: typeof data.chapter === 'number' ? data.chapter : 1,
       corrupted: false,
     };
   } catch {

@@ -1007,6 +1007,16 @@ export const AETHERIC_MANTLE: Equipment = {
   availableIn: ['tower'],
 };
 
+export const JESTERS_ARMLET: Equipment = {
+  id: 'jesters-armlet',
+  name: "Jester's Armlet",
+  slot: 'accessory',
+  tier: 'bronze',
+  cost: 240,
+  statBonus: { spd: 4, mag: 4 },
+  allowedElements: ['Jupiter', 'Mercury'],
+};
+
 // ========================================
 // EQUIPMENT REGISTRY
 // ========================================
@@ -1094,6 +1104,7 @@ export const EQUIPMENT: Record<string, Equipment> = {
   'mythril-gauntlets': MYTHRIL_GAUNTLETS,
   'earth-warden-shield': EARTH_WARDEN_SHIELD,
   'inferno-gauntlets': INFERNO_GAUNTLETS,
+  'jesters-armlet': JESTERS_ARMLET,
 
   // Element-specific weapons
   'flame-branded-axe': FLAME_BRANDED_AXE,

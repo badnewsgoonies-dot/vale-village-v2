@@ -64,5 +64,15 @@ Final summary:
 - Decision: No source changes applied in this round to avoid regressing stable tests; next work will focus on accessory content wiring and unskipping targeted E2E flows.
 - Next: Implement accessory item effects and verify sprites in a subsequent small PR; add focused E2E parity tests for menu and accessory flows.
 
-Recorded at: 2026-01-11T20:15:36Z
+Patch: Accessories wiring small change
+- Added JESTERS_ARMLET accessory definition and registered it in src/data/definitions/equipment.ts.
+- Added unit test tests/unit/parity/accessories_parity.test.ts asserting the registry contains 'jesters-armlet'.
+- Rationale: Provide a minimal, test-backed wiring example for new_accessories.ts items and unblock further bulk additions.
+
+Patch: SaveService metadata chapter handling
+- Replaced hardcoded chapter fallback with reading chapter from SaveV1 when present.
+- Added unit test src/core/services/SaveService.test.ts ensuring getSaveSlotMetadata reads chapter.
+Rationale: Remove TODO and ensure UI shows correct chapter metadata from saves.
+
+Recorded at: 2026-01-11T20:20:00Z
 
