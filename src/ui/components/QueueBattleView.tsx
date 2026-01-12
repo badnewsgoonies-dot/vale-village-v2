@@ -18,15 +18,13 @@ import { BattleManaBar } from './BattleManaBar';
 import { BattlePortraitRow } from './BattlePortraitRow';
 import { BattleActionMenu, type ActionMenuMode } from './BattleActionMenu';
 import { ModeLabel } from './ModeLabel';
+import { BattlefieldV2 } from './battle/BattlefieldV2';
+import { useBattleOrchestrator } from '../hooks/useBattleOrchestrator';
 import type { Ability } from '../../data/schemas/AbilitySchema';
 import type { Unit } from '../../core/models/Unit';
 import type { BattleEvent } from '../../core/services/types';
-import { getEnemyBattleSprite, getEnemyBattleSpriteWithOverride } from '../sprites/mappings/battleSprites';
-import { SimpleSprite } from '../sprites/SimpleSprite';
-import { BattleUnitSprite } from './BattleUnitSprite';
 import { ABILITIES } from '../../data/definitions/abilities';
 import { DJINN } from '../../data/definitions/djinn';
-// Direct ability→GIF mapping in ABILITY_FX_MAP below (only for existing GIFs)
 import { DIALOGUES } from '../../data/definitions/dialogues';
 import { VS1_ENCOUNTER_ID, VS1_SCENE_PRE } from '../../story/vs1Constants';
 import { type BattleUIPhase, deriveUIPhase } from '../types/BattleUIPhase';
@@ -46,8 +44,6 @@ function getElementColor(element?: string): string {
     default: return '#ffd87f'; // Golden default
   }
 }
-
-// Basic attack ability IDs provided by shared UI types.
 
 function isBasicAttackAbility(abilityId: string): boolean {
   return BASIC_ATTACK_IDS.includes(abilityId);
@@ -71,200 +67,17 @@ const DJINN_SPRITE_BY_ELEMENT: Record<string, string> = {
   Jupiter: '/sprites/battle/djinn/Jupiter_Djinn_Front.gif',
 };
 
-// --- CSS CONSTANTS ---
-// Unused - commented out to fix TypeScript warnings
-/*
-const STYLES = {
-  root: {
-    height: '100vh',
-    display: 'grid',
-    gridTemplateRows: 'auto 1fr auto',
-    backgroundColor: '#0a0b10',
-    color: '#fff',
-    fontFamily: '"Segoe UI", Tahoma, sans-serif',
-    overflow: 'hidden',
-  },
-  topHud: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '0.75rem 1.5rem',
-    background: 'linear-gradient(180deg, rgba(10,15,25,0.95) 0%, rgba(10,15,25,0.8) 100%)',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-    boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-    zIndex: 100,
-  },
-  battlefield: {
-    position: 'relative' as const,
-    display: 'flex',
-    flexDirection: 'column' as const,
-    justifyContent: 'center',
-    alignItems: 'center',
-    background: 'radial-gradient(circle at 50% 30%, #1a253a 0%, #050810 80%)',
-    perspective: '1000px',
-  },
-  enemyRow: {
-    display: 'flex',
-    gap: '2rem',
-    marginBottom: '4rem',
-    transform: 'scale(1.1)',
-  },
-  playerRow: {
-    display: 'flex',
-    gap: '3rem',
-    alignItems: 'flex-end',
-    zIndex: 10,
-  },
-  commandDeck: {
-    height: '280px',
-    background: 'linear-gradient(180deg, #1a202c 0%, #0f1218 100%)',
-    borderTop: '4px double #4a5568', // Double border for RPG feel
-    display: 'grid',
-    gridTemplateColumns: '260px 1fr',
-    zIndex: 20,
-    boxShadow: '0 -4px 20px rgba(0,0,0,0.6)',
-  },
-  deckLeft: {
-    borderRight: '2px solid #2d3748',
-    display: 'flex',
-    flexDirection: 'column' as const,
-    background: 'rgba(0,0,0,0.2)',
-  },
-  deckRight: {
-    position: 'relative' as const,
-    display: 'flex',
-    flexDirection: 'column' as const,
-    background: 'rgba(0,0,0,0.4)',
-    overflow: 'hidden',
-  },
-  abilityList: {
-    overflowY: 'auto' as const,
-    flex: 1,
-  },
-  abilityBtn: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '100%',
-    padding: '0.75rem 1rem',
-    background: 'transparent',
-    border: 'none',
-    borderBottom: '1px solid rgba(255,255,255,0.05)',
-    color: '#a0aec0',
-    cursor: 'pointer',
-    textAlign: 'left' as const,
-    transition: 'all 0.1s',
-    fontFamily: 'inherit', // Inherit font for consistent feel
-  },
-  abilityBtnSelected: {
-    background: 'linear-gradient(90deg, rgba(255, 215, 0, 0.15) 0%, rgba(255, 215, 0, 0) 100%)',
-    color: '#ffd700',
-    borderLeft: '4px solid #ffd700',
-    textShadow: '0 0 8px rgba(255, 215, 0, 0.3)',
-  },
-  abilityBtnHover: {
-    background: 'rgba(255,255,255,0.05)',
-    color: '#e2e8f0',
-  },
-  activeUnitIndicator: {
-    padding: '0.75rem 1rem',
-    background: 'linear-gradient(90deg, #2d3748 0%, #1a202c 100%)',
-    borderBottom: '1px solid #4a5568',
-    fontWeight: 'bold' as const,
-    color: '#ffd700',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    boxShadow: 'inset 0 -1px 0 rgba(0,0,0,0.2)',
-  },
-  detailsPanel: {
-    position: 'absolute' as const,
-    top: 0, left: 0, right: 0, bottom: 0,
-    padding: '1.5rem',
-    background: 'linear-gradient(135deg, rgba(26, 32, 44, 0.98) 0%, rgba(15, 20, 30, 0.98) 100%)',
-    zIndex: 5,
-    display: 'flex',
-    flexDirection: 'column' as const,
-    gap: '1rem',
-  },
-  detailsHeader: {
-    borderBottom: '1px solid #4a5568',
-    paddingBottom: '0.5rem',
-    marginBottom: '0.5rem',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'baseline',
-  },
-  detailsTitle: {
-    fontSize: '1.3rem',
-    fontWeight: 'bold' as const,
-    color: '#ffd700',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.5rem',
-    textShadow: '0 2px 4px rgba(0,0,0,0.5)',
-  },
-  detailsMeta: {
-    fontSize: '0.9rem',
-    color: '#63b3ed',
-    fontWeight: 500,
-  },
-  detailsBody: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: '2rem',
-  },
-  statBlock: {
-    display: 'flex',
-    flexDirection: 'column' as const,
-    gap: '0.25rem',
-    background: 'rgba(0,0,0,0.2)',
-    padding: '0.5rem',
-    borderRadius: '4px',
-    border: '1px solid rgba(255,255,255,0.05)',
-  },
-  statLabel: {
-    fontSize: '0.75rem',
-    color: '#718096',
-    textTransform: 'uppercase' as const,
-    letterSpacing: '1px',
-    fontWeight: 600,
-  },
-  statValue: {
-    fontSize: '1.1rem',
-    color: '#e2e8f0',
-    fontWeight: 500,
-  },
-  targetOverlay: {
-    position: 'absolute' as const,
-    bottom: '30px',
-    left: '50%',
-    transform: 'translateX(-50%)',
-    padding: '1rem 2rem',
-    background: 'rgba(15, 20, 30, 0.9)',
-    borderRadius: '8px',
-    border: '1px solid #ffd700',
-    zIndex: 50,
-    textAlign: 'center' as const,
-    boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
-    backdropFilter: 'blur(4px)',
-  },
-  executeBtn: {
-    padding: '1rem',
-    background: 'linear-gradient(180deg, #48bb78 0%, #2f855a 100%)',
-    color: '#fff',
-    border: 'none',
-    borderTop: '1px solid #68d391',
-    fontWeight: 'bold' as const,
-    cursor: 'pointer',
-    marginTop: 'auto',
-    textShadow: '0 1px 2px rgba(0,0,0,0.3)',
-    transition: 'all 0.2s',
-  }
-};
-*/
-
 export function QueueBattleView() {
+  // Use the orchestrator hook for battle logic
+  const { 
+    isExecuting, 
+    handleExecuteRound, 
+    queueUnitAction, 
+    clearUnitAction,
+    queueDjinnActivation,
+    unqueueDjinnActivation
+  } = useBattleOrchestrator();
+
   // V2 gameStore for screen navigation
   const setScreen = useGameStore((s) => s.setScreen);
   const openModal = useGameStore((s) => s.openModal);
@@ -274,9 +87,7 @@ export function QueueBattleView() {
   const events = useStore((s) => s.events) as BattleEvent[];
   const dequeue = useStore((s) => s.dequeueEvent);
   const setBattle = useStore((s) => s.setBattle);
-  const queueUnitAction = useStore((s) => s.queueUnitAction);
-  const clearUnitAction = useStore((s) => s.clearUnitAction);
-  const executeQueuedRound = useStore((s) => s.executeQueuedRound);
+  // queueUnitAction, clearUnitAction, executeQueuedRound replaced by hook
   const setMode = useStore((s) => s.setMode);
   const mode = useStore((s) => s.mode);
   const startDialogueTree = useStore((s) => s.startDialogueTree);
@@ -851,10 +662,6 @@ export function QueueBattleView() {
     }
   };
 
-  // const handleAbilityHover = (id: string | null) => {
-  //   setHoveredAbilityId(id);
-  // };
-
   const handleSelectAttack = () => {
     setSelectedAbilityId(null);
     setMenuMode('root');
@@ -918,9 +725,6 @@ export function QueueBattleView() {
       return;
     }
 
-    // NOTE: Crit counter progression moved to execution phase (see effect below)
-    // This prevents incrementing the counter if the unit is KO'd before their turn
-
     // Reset selection for next
     setSelectedAbilityId(undefined);
 
@@ -977,7 +781,9 @@ export function QueueBattleView() {
   }, [cycleSpeed]);
 
   const handleExecute = () => {
-    if (isQueueComplete && uiPhase === 'planning') executeQueuedRound();
+    if (isQueueComplete && uiPhase === 'planning') {
+      handleExecuteRound();
+    }
   };
 
   // Button should only be enabled in planning phase with complete queue
@@ -1009,8 +815,6 @@ export function QueueBattleView() {
       onClick: () => openModal('settings'),
     },
   ];
-
-// --- RENDER ---
 
   if (!battle) {
     return (
@@ -1093,25 +897,13 @@ export function QueueBattleView() {
   // Determine valid targets if in selection mode (only during planning phase)
   let validTargets: readonly { id: string; name: string }[] = [];
   if (uiPhase === 'planning' && selectedAbilityId !== undefined && currentUnit) {
-    // selectedAbilityId is null -> Basic Attack
-    // selectedAbilityId is string -> Ability
     const ability = selectedAbilityId
       ? currentUnit.abilities.find(a => a.id === selectedAbilityId)
-      : undefined; // undefined corresponds to 'Basic Attack' in getValidTargets if logic allows?
-                   // Actually getValidTargets expects ability object or undefined for Basic Attack
-
-    // Note: getValidTargets signature might need checking.
-    // Assuming getValidTargets(ability | null/undefined, unit, team, enemies)
-    // Checking import... getValidTargets(ability: Ability | null | undefined, ...)
+      : undefined;
     validTargets = getValidTargets(ability || null, currentUnit, battle.playerTeam, battle.enemies);
   }
   const validTargetIds = new Set(validTargets.map((t: { id: string }) => t.id));
   const isTargeting = selectedAbilityId !== undefined && validTargets.length > 0;
-
-  // --- HELPERS FOR RENDERING ABILITY LIST ---
-  // Helpers not required; rendering handled via BattleActionMenu.
-
-  const isExecuting = uiPhase === 'executing';
 
   return (
     <div
@@ -1261,7 +1053,7 @@ export function QueueBattleView() {
               60% { transform: translateX(20px) scale(1.1); }
               100% { transform: translateX(0) scale(1); }
             }
-                        @keyframes screenShake {
+            @keyframes screenShake {
               0% { transform: translate(0, 0); }
               20% { transform: translate(-4px, 4px); }
               40% { transform: translate(4px, -4px); }
@@ -1278,457 +1070,46 @@ export function QueueBattleView() {
           `}
         </style>
         {/* Battlefield Area */}
-        <div
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            overflow: 'hidden',
-            animation: isScreenShaking ? 'screenShake 0.4s ease-in-out' : 'none',
-          }}
-        >
-        <div
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            backgroundImage: `url(${backgroundUrl})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center 70%',
-            imageRendering: 'pixelated',
-            zIndex: 0,
-          }}
-        />
-
-        <div style={{ position: 'absolute', top: 8, left: 8, zIndex: Z_INDEX.MODE_LABEL }}>
-          <ModeLabel
-            battleType={battleType}
-            locationName={locationName}
-            floorNumber={currentFloor?.floorNumber}
-          />
-        </div>
-
-        {isExecuting && (
-          <div
-            style={{
-              position: 'absolute',
-              top: 16,
-              left: '50%',
-              transform: 'translateX(-50%)',
-              background: 'rgba(0,0,0,0.7)',
-              border: '1px solid rgba(255,216,127,0.4)',
-              borderRadius: 8,
-              padding: '8px 12px',
-              color: '#FFD87F',
-              fontWeight: 700,
-              letterSpacing: 0.5,
-              zIndex: 5,
-            }}
-          >
-            ⚔️ Executing round...
+        {battle && (
+          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 1 }}>
+            <div
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                backgroundImage: `url(${backgroundUrl})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center 70%',
+                imageRendering: 'pixelated',
+                zIndex: 0,
+              }}
+            />
+            
+            <BattlefieldV2
+              battle={battle}
+              events={events}
+              validTargetIds={validTargetIds}
+              highlightedTargets={highlightedTargets}
+              currentActorId={currentActorId}
+              shakingUnits={shakingUnits}
+              attackingUnits={attackingUnits}
+              castingUnits={castingUnits}
+              hitTargetIds={hitTargetIds}
+              attackingUnitId={attackingUnitId}
+              floatingNumbers={floatingNumbers}
+              floatingActions={floatingActions}
+              onTargetSelect={(id) => handleTargetSelect(id)}
+              equippedDjinn={battle.playerTeam.equippedDjinn}
+              onOpenSummonMenu={() => setMenuMode('summon')}
+              djinnSpriteByElement={DJINN_SPRITE_BY_ELEMENT}
+              djinnData={DJINN}
+            />
           </div>
         )}
 
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-              gap: 48,
-              height: '100%',
-              position: 'relative',
-              zIndex: 1,
-            }}
-        >
-          <div
-            style={{
-              position: 'absolute',
-              bottom: '42%',
-              left: '8%',
-              display: 'flex',
-              gap: '3rem',
-              zIndex: 10,
-            }}
-          >
-            {battle.enemies.map((enemy: Unit, enemyIndex: number) => {
-              const isTargetCandidate = validTargetIds.has(enemy.id);
-              const isResolvingTarget = highlightedTargets.has(enemy.id);
-              const isActor = currentActorId === enemy.id;
-              const isShaking = shakingUnits.has(enemy.id);
-              const isAttacking = attackingUnits.has(enemy.id);
-              const isCasting = castingUnits.has(enemy.id);
-              // Don't filter out KO'd units if they have ANY pending events related to them
-              // This includes ability casts, hits, heals, status changes, and KO animations
-              const hasPendingEvent = events.some((evt: BattleEvent) => {
-                if (evt.type === 'ability' && evt.casterId === enemy.id) return true;
-                if (evt.type === 'ability' && evt.targets.includes(enemy.id)) return true;
-                if (evt.type === 'hit' && evt.targetId === enemy.id) return true;
-                if (evt.type === 'heal' && evt.targetId === enemy.id) return true;
-                if (evt.type === 'ko' && evt.unitId === enemy.id) return true;
-                if (evt.type === 'status-applied' && evt.targetId === enemy.id) return true;
-                if (evt.type === 'status-expired' && evt.targetId === enemy.id) return true;
-                return false;
-              });
-              if (isUnitKO(enemy) && !hasPendingEvent) return null;
-              // Use NPC sprite override for the first enemy (leader) if available
-              const isLeader = enemyIndex === 0;
-              const mappedSprite = isLeader
-                ? getEnemyBattleSpriteWithOverride(enemy.id, 'idle', battle.leaderSpriteId)
-                : getEnemyBattleSprite(enemy.id, 'idle');
-              const nameBasedFallback = `/sprites/battle/enemies/${enemy.name.replace(/\s+/g, '')}.gif`;
-              const spriteId = mappedSprite ?? nameBasedFallback;
-              
-              // Determine animation: attack lunge (right toward player), shake, or casting
-              let spriteAnimation = 'none';
-              if (isAttacking) {
-                spriteAnimation = 'attackLungeRight 400ms ease-out';
-              } else if (isCasting) {
-                spriteAnimation = 'castPulse 500ms ease-out';
-              } else if (isShaking) {
-                spriteAnimation = 'unitDamageShake 240ms ease-in-out';
-              }
-              
-              return (
-                <div
-                  key={enemy.id}
-                  data-testid={`battle-enemy-${enemy.id}`}
-                  onClick={() => isTargetCandidate && handleTargetSelect(enemy.id)}
-                  style={{
-                    position: 'relative',
-                    cursor: isTargetCandidate ? 'pointer' : 'default',
-                    textAlign: 'center',
-                  }}
-                >
-                  <div
-                    style={{
-                      position: 'absolute',
-                      bottom: 0,
-                      left: '50%',
-                      transform: 'translateX(-50%)',
-                      width: 70,
-                      height: 24,
-                      background: 'rgba(0,0,0,0.6)',
-                      borderRadius: '50%',
-                      filter: 'blur(4px)',
-                      pointerEvents: 'none',
-                      zIndex: 0,
-                    }}
-                  />
-                  <div
-                    style={{
-                      position: 'relative',
-                      transform: isActor ? 'scale(3.2)' : 'scale(3)',
-                      zIndex: 1,
-                      filter: isResolvingTarget
-                      ? 'drop-shadow(0 0 14px rgba(255,216,127,0.9))'
-                      : isTargetCandidate
-                        ? 'drop-shadow(0 0 8px rgba(255,216,127,0.7))'
-                        : 'none',
-                      animation: spriteAnimation,
-                    }}
-                  >
-                    <SimpleSprite
-                      id={spriteId}
-                      width={64}
-                      height={64}
-                      fallback={
-                        <SimpleSprite
-                          id="/sprites/battle/enemies/Goblin.gif"
-                          width={64}
-                          height={64}
-                          imageRendering="pixelated"
-                        />
-                      }
-                      imageRendering="pixelated"
-                    />
-                  </div>
-                  {floatingNumbers
-                    .filter((n) => n.unitId === enemy.id)
-                    .map((num, idx) => {
-                      const displayValue = Math.abs(num.amount);
-                      const isCritical = num.isCrit;
-                      return (
-                        <div
-                          key={num.id}
-                          style={{
-                            position: 'absolute',
-                            bottom: `calc(100% + ${idx * 16 + 6}px)`,
-                            left: '50%',
-                            color: num.kind === 'heal' ? '#6df0a2' : isCritical ? '#FFD54A' : '#ff6b6b',
-                            fontSize: isCritical ? '1.4rem' : '1rem',
-                            fontWeight: 800,
-                            textShadow: isCritical
-                              ? '0 0 12px rgba(255, 215, 74, 0.9), 0 0 20px rgba(255, 180, 0, 0.6), 2px 2px 4px rgba(0,0,0,0.9)'
-                              : '0 0 6px rgba(0,0,0,0.8)',
-                            animation: isCritical ? 'criticalFloat 1.3s ease-out forwards' : 'floatNumber 1.05s ease-out forwards',
-                            pointerEvents: 'none',
-                            zIndex: isCritical ? 20 : 12,
-                          }}
-                        >
-                          {isCritical && <span style={{ display: 'block', fontSize: '0.7rem', color: '#FFD54A' }}>CRITICAL!</span>}
-                          {num.kind === 'heal' ? `+${displayValue}` : `-${displayValue}`}
-                        </div>
-                      );
-                    })}
-                  {/* Floating action text (ability names, KO) */}
-                  {floatingActions
-                    .filter((a) => a.unitId === enemy.id)
-                    .map((action, idx) => (
-                      <div
-                        key={action.id}
-                        style={{
-                          position: 'absolute',
-                          top: `calc(-20px - ${idx * 18}px)`,
-                          left: '50%',
-                          color: action.color,
-                          fontSize: '0.75rem',
-                          fontWeight: 700,
-                          textShadow: '0 0 6px rgba(0,0,0,0.9), 1px 1px 2px rgba(0,0,0,0.8)',
-                          animation: 'floatAction 1.1s ease-out forwards',
-                          pointerEvents: 'none',
-                          zIndex: 15,
-                          whiteSpace: 'nowrap',
-                        }}
-                      >
-                        {action.text}
-                      </div>
-                    ))}
-                  <div
-                    style={{
-                      marginTop: 4,
-                      fontSize: '0.8rem',
-                      color: isTargetCandidate ? '#FFD87F' : '#aaa',
-                    }}
-                  >
-                    {enemy.name}
-                  </div>
-                  {isTargetCandidate && (
-                    <div style={{ color: '#FFD87F', fontSize: '0.75rem' }}>Click to target</div>
-                  )}
-                  {isResolvingTarget && (
-                    <div
-                      style={{
-                        position: 'absolute',
-                        top: -12,
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        color: '#FFD87F',
-                        fontSize: '1.2rem',
-                        fontWeight: 900,
-                        textShadow: '0 0 8px rgba(255,216,127,0.9)',
-                        pointerEvents: 'none',
-                        zIndex: 15,
-                      }}
-                    >
-                      ⯈
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-
-          <div
-            style={{
-              position: 'absolute',
-              bottom: '28%',
-              right: '15%',
-              width: 260,
-              height: 160,
-              zIndex: 10,
-            }}
-          >
-            {battle.playerTeam.units.map((unit: Unit, index: number) => {
-              // Don't filter out KO'd units if they have ANY pending events related to them
-              // This includes ability casts, hits, heals, status changes, and KO animations
-              const hasPendingEvent = events.some((evt: BattleEvent) => {
-                if (evt.type === 'ability' && evt.casterId === unit.id) return true;
-                if (evt.type === 'ability' && evt.targets.includes(unit.id)) return true;
-                if (evt.type === 'hit' && evt.targetId === unit.id) return true;
-                if (evt.type === 'heal' && evt.targetId === unit.id) return true;
-                if (evt.type === 'ko' && evt.unitId === unit.id) return true;
-                if (evt.type === 'status-applied' && evt.targetId === unit.id) return true;
-                if (evt.type === 'status-expired' && evt.targetId === unit.id) return true;
-                return false;
-              });
-              if (isUnitKO(unit) && !hasPendingEvent) return null;
-              const isActor = currentActorId === unit.id;
-              const isTarget = highlightedTargets.has(unit.id);
-              const isShaking = shakingUnits.has(unit.id);
-              const isAttacking = attackingUnits.has(unit.id);
-              const isCasting = castingUnits.has(unit.id);
-              const isAttackingBasic = attackingUnitId === unit.id;
-              const isBeingHit = hitTargetIds.has(unit.id);
-              // Determine sprite state: attack > hit > idle
-              const spriteState: 'idle' | 'attack' | 'hit' = isAttackingBasic ? 'attack' : isBeingHit ? 'hit' : 'idle';
-              
-              // Determine animation: attack lunge (left toward enemy), shake, or casting
-              let spriteAnimation = 'none';
-              if (isAttacking) {
-                spriteAnimation = 'attackLungeLeft 400ms ease-out';
-              } else if (isCasting) {
-                spriteAnimation = 'castPulse 500ms ease-out';
-              } else if (isShaking) {
-                spriteAnimation = 'unitDamageShake 240ms ease-in-out';
-              }
-              
-              return (
-                <div
-                  key={unit.id}
-                  style={{
-                    position: 'absolute',
-                    left: index * 55,
-                    bottom: index * 12,
-                    textAlign: 'center',
-                  }}
-                >
-                  <div
-                    style={{
-                      position: 'absolute',
-                      bottom: 4,
-                      left: '50%',
-                      transform: 'translateX(-50%)',
-                      width: 48,
-                      height: 16,
-                      background: isActor || isTarget ? 'rgba(255,216,127,0.3)' : 'rgba(0,0,0,0.6)',
-                      borderRadius: '50%',
-                      filter: 'blur(4px)',
-                      pointerEvents: 'none',
-                      zIndex: 0,
-                    }}
-                  />
-                  <div
-                    style={{
-                      position: 'relative',
-                      transform: isActor ? 'scale(2.7)' : 'scale(2.5)',
-                      zIndex: 1,
-                      filter: isTarget ? 'drop-shadow(0 0 12px rgba(255,216,127,0.8))' : 'none',
-                      animation: spriteAnimation,
-                    }}
-                  >
-                    <BattleUnitSprite unitId={unit.id} state={spriteState} size="large" />
-                  </div>
-                  {isTarget && (
-                    <div
-                      style={{
-                        position: 'absolute',
-                        top: -12,
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        color: '#FFD87F',
-                        fontSize: '1.2rem',
-                        fontWeight: 900,
-                        textShadow: '0 0 8px rgba(255,216,127,0.9)',
-                        pointerEvents: 'none',
-                        zIndex: 15,
-                      }}
-                    >
-                      ⯈
-                    </div>
-                  )}
-                  {floatingNumbers
-                    .filter((n) => n.unitId === unit.id)
-                    .map((num, idx) => {
-                      const displayValue = Math.abs(num.amount);
-                      const isCritical = num.isCrit;
-                      return (
-                        <div
-                          key={num.id}
-                          style={{
-                            position: 'absolute',
-                            bottom: `calc(100% + ${idx * 16 + 6}px)`,
-                            left: '50%',
-                            color: num.kind === 'heal' ? '#6df0a2' : isCritical ? '#FFD54A' : '#ff6b6b',
-                            fontSize: isCritical ? '1.4rem' : '1rem',
-                            fontWeight: 800,
-                            textShadow: isCritical
-                              ? '0 0 12px rgba(255, 215, 74, 0.9), 0 0 20px rgba(255, 180, 0, 0.6), 2px 2px 4px rgba(0,0,0,0.9)'
-                              : '0 0 6px rgba(0,0,0,0.8)',
-                            animation: isCritical ? 'criticalFloat 1.3s ease-out forwards' : 'floatNumber 1.05s ease-out forwards',
-                            pointerEvents: 'none',
-                            zIndex: isCritical ? 20 : 12,
-                          }}
-                        >
-                          {isCritical && <span style={{ display: 'block', fontSize: '0.7rem', color: '#FFD54A' }}>CRITICAL!</span>}
-                          {num.kind === 'heal' ? `+${displayValue}` : `-${displayValue}`}
-                        </div>
-                      );
-                    })}
-                  {/* Floating action text (ability names, KO) */}
-                  {floatingActions
-                    .filter((a) => a.unitId === unit.id)
-                    .map((action, idx) => (
-                      <div
-                        key={action.id}
-                        style={{
-                          position: 'absolute',
-                          top: `calc(-20px - ${idx * 18}px)`,
-                          left: '50%',
-                          color: action.color,
-                          fontSize: '0.75rem',
-                          fontWeight: 700,
-                          textShadow: '0 0 6px rgba(0,0,0,0.9), 1px 1px 2px rgba(0,0,0,0.8)',
-                          animation: 'floatAction 1.1s ease-out forwards',
-                          pointerEvents: 'none',
-                          zIndex: 15,
-                          whiteSpace: 'nowrap',
-                        }}
-                      >
-                        {action.text}
-                      </div>
-                    ))}
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Djinn companions behind party - dynamic based on equipped */}
-          {battle.playerTeam.equippedDjinn.length > 0 && (
-            <div
-              onClick={() => setMenuMode('summon')}
-              title="Open Summon Menu"
-              style={{
-                cursor: 'pointer',
-                position: 'absolute',
-                right: '6%',
-                bottom: '34%',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 4,
-                zIndex: 8,
-              }}
-            >
-              {battle.playerTeam.equippedDjinn.map((djinnId: string, idx: number) => {
-                const djinn = DJINN[djinnId];
-                if (!djinn) return null;
-                const spritePath = DJINN_SPRITE_BY_ELEMENT[djinn.element] || '/sprites/battle/djinn/Venus_Djinn_Front.gif';
-                return (
-                  <div
-                    key={djinnId}
-                    style={{
-                      position: 'relative',
-                      left: idx % 2 === 0 ? 0 : 6,
-                    }}
-                  >
-                    <img
-                      src={spritePath}
-                      alt={djinn.name}
-                      width={32}
-                      height={32}
-                      style={{ imageRendering: 'pixelated', transform: 'scale(2.5)' }}
-                    />
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-
+        {/* Target Selection Modal */}
         {validTargets.length > 0 && (
           <div
             style={{
@@ -1764,196 +1145,223 @@ export function QueueBattleView() {
             </button>
           </div>
         )}
-      </div>
 
-      {/* Bottom UI simplified strip */}
-      <div
-        style={{
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: 100,
-          background: 'linear-gradient(to top, rgba(8,8,10,0.95), transparent)',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          gap: 16,
-          padding: '10px 20px',
-          zIndex: Z_INDEX.BOTTOM_BAR,
-        }}
-      >
-        <BattleManaBar
-          currentMana={currentManaDisplay}
-          maxMana={maxManaDisplay}
-          pendingThisRound={pendingManaThisRound}
-          pendingNextRound={pendingManaNextRound}
-        />
-        {/* Quick Attack Button - next to portraits */}
-        <button
-          onClick={handleAutoAttack}
-          disabled={isExecuting || uiPhase !== 'planning' || !currentUnit || isUnitKO(currentUnit)}
-          data-testid="battle-quick-attack"
-          title="Quick Attack (Q)"
-          style={{
-            width: 56,
-            height: 56,
-            padding: 0,
-            background: isExecuting ? 'rgba(0,0,0,0.5)' : 'linear-gradient(180deg, #3a3a4a 0%, #1a1a2e 100%)',
-            border: '2px solid rgba(255, 213, 74, 0.7)',
-            borderRadius: 8,
-            cursor: isExecuting || uiPhase !== 'planning' ? 'not-allowed' : 'pointer',
-            opacity: isExecuting ? 0.5 : 1,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 2,
-            boxShadow: '0 2px 8px rgba(0,0,0,0.5)',
-            transition: 'all 0.15s ease',
-          }}
-        >
-          <img
-            src="/sprites/icons/buttons/Attack.gif"
-            alt="Attack"
-            width={28}
-            height={28}
-            style={{ imageRendering: 'pixelated' }}
-          />
-          <span style={{ color: '#ffd87f', fontSize: '0.6rem', fontWeight: 700 }}>ATK</span>
-        </button>
-        <BattlePortraitRow
-          units={battle.playerTeam.units}
-          activeIndex={activePortraitIndex}
-          queuedActions={battle.queuedActions}
-          critCounters={critCounters}
-          critThresholds={critThresholds}
-          critFlashes={critFlash}
-          onSelect={(idx) => {
-            const unit = battle.playerTeam.units[idx];
-            if (isTargeting && unit && validTargetIds.has(unit.id)) {
-              handleTargetSelect(unit.id);
-              return;
-            }
-            if (uiPhase === 'planning') {
-              // If clicking on a unit with a queued action, cancel it
-              const hasQueuedAction = battle.queuedActions[idx] !== null;
-              if (hasQueuedAction) {
-                clearUnitAction(idx);
-                setActivePortrait(idx); // Select the unit so they can queue a new action
-                setSelectedAbilityId(undefined);
-              } else {
-                setActivePortrait(idx);
-                setSelectedAbilityId(undefined);
-              }
-            }
-          }}
-        />
+        {/* Bottom UI Strip */}
         <div
           style={{
-            alignSelf: 'flex-end',
-            position: 'relative',
-            zIndex: 60,
-            opacity: isExecuting ? 0.5 : 1,
-            pointerEvents: isExecuting ? 'none' : 'auto',
-            transition: 'opacity 0.2s ease',
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: 100,
+            background: 'linear-gradient(to top, rgba(8,8,10,0.95), transparent)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: 16,
+            padding: '10px 20px',
+            zIndex: Z_INDEX.BOTTOM_BAR,
           }}
         >
-          <BattleActionMenu
-            battle={battle}
-            currentUnit={currentUnit}
-            selectedAbilityId={selectedAbilityId ?? null}
-            mode={menuMode}
-            onModeChange={setMenuMode}
-            onSelectAttack={handleSelectAttack}
-            onSelectAbility={handleAbilitySelect}
+          <BattleManaBar
+            currentMana={currentManaDisplay}
+            maxMana={maxManaDisplay}
+            pendingThisRound={pendingManaThisRound}
+            pendingNextRound={pendingManaNextRound}
           />
-          {isExecuting && (
-            <div
-              style={{
-                position: 'absolute',
-                inset: 0,
-                background: 'rgba(0,0,0,0.4)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderRadius: 8,
-                color: '#FFD87F',
-                fontWeight: 700,
-                fontSize: '0.9rem',
-              }}
-            >
-              Resolving...
-            </div>
-          )}
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 6, minWidth: 200 }}>
+          
+          {/* Quick Attack Button */}
           <button
-            onClick={cycleSpeed}
+            onClick={handleAutoAttack}
+            disabled={isExecuting || uiPhase !== 'planning' || !currentUnit || isUnitKO(currentUnit)}
+            data-testid="battle-quick-attack"
+            title="Quick Attack (Q)"
             style={{
-              padding: '6px 10px',
-              background: 'rgba(255,255,255,0.1)',
-              color: '#ccc',
-              border: '1px solid rgba(255,255,255,0.2)',
-              borderRadius: 6,
-              cursor: 'pointer',
-              fontSize: '0.8rem',
-              marginBottom: 4,
-            }}
-            title="Click to change battle speed (S key)"
-          >
-            Speed: {speedPreset.charAt(0).toUpperCase() + speedPreset.slice(1)}
-          </button>
-          <button
-            onClick={handleExecute}
-            disabled={!canExecute}
-            data-testid="battle-execute-round"
-            style={{
-              padding: '10px 14px',
-              background: canExecute ? '#FFD54A' : 'rgba(255,255,255,0.08)',
-              color: canExecute ? '#000' : '#888',
-              border: '1px solid rgba(255,255,255,0.18)',
+              width: 56,
+              height: 56,
               borderRadius: 8,
-              cursor: canExecute ? 'pointer' : 'not-allowed',
-              fontWeight: 700,
-              letterSpacing: 0.5,
+              background: isExecuting ? 'rgba(0,0,0,0.5)' : 'linear-gradient(180deg, #3a3a4a 0%, #1a1a2e 100%)',
+              border: '2px solid rgba(255, 213, 74, 0.7)',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.5)',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: 2,
+              cursor: isExecuting || uiPhase !== 'planning' ? 'not-allowed' : 'pointer',
+              opacity: isExecuting ? 0.5 : 1,
+              transition: 'all 0.15s ease',
             }}
           >
-            {isExecuting ? 'Executing...' : isQueueComplete ? 'Execute Round' : 'Queue all actions first'}
+            <img
+              src="/sprites/icons/buttons/Attack.gif"
+              alt="Attack"
+              width={28}
+              height={28}
+              style={{ imageRendering: 'pixelated' }}
+            />
+            <span style={{ color: '#ffd87f', fontSize: '0.6rem', fontWeight: 700 }}>ATK</span>
           </button>
-          {lastError && (
-            <div
+
+          <BattlePortraitRow
+            units={battle?.playerTeam.units || []}
+            activeIndex={activePortraitIndex}
+            queuedActions={battle?.queuedActions || []}
+            critCounters={critCounters}
+            critThresholds={critThresholds}
+            critFlashes={critFlash}
+            onSelect={(idx) => {
+              const unit = battle?.playerTeam.units[idx];
+              if (isTargeting && unit && validTargetIds.has(unit.id)) {
+                handleTargetSelect(unit.id);
+                return;
+              }
+              if (uiPhase === 'planning') {
+                const hasQueuedAction = battle?.queuedActions[idx] !== null;
+                if (hasQueuedAction) {
+                  clearUnitAction(idx);
+                  setActivePortrait(idx);
+                  setSelectedAbilityId(undefined);
+                } else {
+                  setActivePortrait(idx);
+                  setSelectedAbilityId(undefined);
+                }
+              }
+            }}
+          />
+
+          <div
+            style={{
+              alignSelf: 'flex-end',
+              position: 'relative',
+              zIndex: 60,
+              opacity: isExecuting ? 0.5 : 1,
+              pointerEvents: isExecuting ? 'none' : 'auto',
+              transition: 'opacity 0.2s ease',
+            }}
+          >
+            <BattleActionMenu
+              battle={battle!}
+              currentUnit={currentUnit}
+              selectedAbilityId={selectedAbilityId ?? null}
+              mode={menuMode}
+              onModeChange={setMenuMode}
+              onSelectAttack={handleSelectAttack}
+              onSelectAbility={handleAbilitySelect}
+            />
+            {isExecuting && (
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background: 'rgba(0,0,0,0.4)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 8,
+                  color: '#FFD87F',
+                  fontWeight: 700,
+                  fontSize: '0.9rem',
+                }}
+              >
+                Resolving...
+              </div>
+            )}
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6, minWidth: 200 }}>
+            <button
+              onClick={cycleSpeed}
               style={{
-                color: '#ffb3b3',
-                fontSize: '0.85rem',
-                background: 'rgba(0,0,0,0.6)',
-                border: '1px solid rgba(255,99,71,0.4)',
+                padding: '6px 10px',
+                background: 'rgba(255,255,255,0.1)',
+                color: '#ccc',
+                border: '1px solid rgba(255,255,255,0.2)',
                 borderRadius: 6,
-                padding: '6px 8px',
-                maxWidth: 240,
+                cursor: 'pointer',
+                fontSize: '0.8rem',
+                marginBottom: 4,
+              }}
+              title="Click to change battle speed (S key)"
+            >
+              Speed: {speedPreset.charAt(0).toUpperCase() + speedPreset.slice(1)}
+            </button>
+            <button
+              onClick={handleExecute}
+              disabled={!canExecute}
+              data-testid="battle-execute-round"
+              style={{
+                padding: '10px 14px',
+                background: canExecute ? '#FFD54A' : 'rgba(255,255,255,0.08)',
+                color: canExecute ? '#000' : '#888',
+                border: '1px solid rgba(255,255,255,0.18)',
+                borderRadius: 8,
+                cursor: canExecute ? 'pointer' : 'not-allowed',
+                fontWeight: 700,
+                letterSpacing: 0.5,
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ flex: 1 }}>{lastError}</span>
-                <button
-                  onClick={clearError}
-                  style={{
-                    background: 'transparent',
-                    border: 'none',
-                    color: '#ffb3b3',
-                    cursor: 'pointer',
-                    fontWeight: 700,
-                  }}
-                  aria-label="Dismiss error"
-                >
-                  x
-                </button>
+              {isExecuting ? 'Executing...' : isQueueComplete ? 'Execute Round' : 'Queue all actions first'}
+            </button>
+            {lastError && (
+              <div
+                style={{
+                  color: '#ffb3b3',
+                  fontSize: '0.85rem',
+                  background: 'rgba(0,0,0,0.6)',
+                  border: '1px solid rgba(255,99,71,0.4)',
+                  borderRadius: 6,
+                  padding: '6px 8px',
+                  maxWidth: 240,
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ flex: 1 }}>{lastError}</span>
+                  <button
+                    onClick={clearError}
+                    style={{
+                      background: 'transparent',
+                      border: 'none',
+                      color: '#ffb3b3',
+                      cursor: 'pointer',
+                      fontWeight: 700,
+                    }}
+                    aria-label="Dismiss error"
+                  >
+                    x
+                  </button>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
-      </div>
+
+      {/* Overlays */}
+      {showCutscene && battleOutcome && (
+        <PostBattleCutscene
+          victory={battleOutcome === 'victory'}
+          onComplete={() => {
+            setShowCutscene(false);
+            if (battleOutcome === 'victory') {
+              setShowVictoryOverlay(true);
+            } else {
+              setShowDefeatOverlay(true);
+            }
+          }}
+        />
+      )}
+
+      {battleOutcome === 'victory' && showVictoryOverlay && (
+        <VictoryOverlay onComplete={handleVictoryOverlayComplete} />
+      )}
+
+      {battleOutcome === 'defeat' && showDefeatOverlay && (
+        <DefeatOverlay onComplete={() => {
+          setShowDefeatOverlay(false);
+          handleDefeatResolution();
+        }} />
+      )}
     </div>
   );
 }

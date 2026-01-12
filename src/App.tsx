@@ -212,7 +212,7 @@ const ShopWrapper: FunctionComponent = () => {
 };
 
 import { PauseMenu } from './modals/PauseMenu';
-import { DialogueChatOverlay } from './ui/components/DialogueChatOverlay';
+import { CutsceneDialogueContainer } from './ui/components/dialogue/CutsceneDialogueContainer';
 import { InventoryModal } from './modals/InventoryModal';
 import { SettingsModal } from './modals/SettingsModal';
 import { SaveMenu } from './ui/components/SaveMenu';
@@ -440,7 +440,7 @@ const App: FunctionComponent = () => {
       {renderScreen()}
       {renderModal()}
       <TransitionSpiral isVisible={isTransitioning && screen === 'battle'} />
-      <DialogueChatOverlay />
+      <CutsceneDialogueContainer />
       <DevModeOverlay />
     </div>
   );

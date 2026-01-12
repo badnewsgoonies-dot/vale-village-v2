@@ -8,6 +8,7 @@
 
 import type { Layer } from '../engine/types';
 import type { Camera } from '../engine/Camera';
+import { MOUNTAIN_BASE_Y, WORLD_WIDTH_SCENERY } from '../data/constants';
 
 interface MountainRange {
   points: Array<{ x: number; y: number }>;
@@ -23,10 +24,10 @@ export class BackgroundLayer implements Layer {
   zIndex = 1;
 
   private mountainRanges: MountainRange[] = [];
-  private baseY: number = 256; // Where mountains meet terrain (4/10 of 640px)
+  private baseY: number = MOUNTAIN_BASE_Y; // Where mountains meet terrain (4/10 of 640px)
   private timeOfDay: number = 0.5;
   /** World width for offscreen canvas sizing */
-  private worldWidth: number = 6000;
+  private worldWidth: number = WORLD_WIDTH_SCENERY;
 
   constructor() {
     this.generateMountains();

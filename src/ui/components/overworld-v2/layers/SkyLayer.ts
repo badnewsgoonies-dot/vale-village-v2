@@ -6,6 +6,7 @@
 import type { Layer } from '../engine/types';
 import type { Camera } from '../engine/Camera';
 import { lerp } from '../engine/math';
+import { SKY_HEIGHT, CLOUD_COUNT } from '../data/constants';
 
 interface SkyColors {
   top: string;
@@ -44,7 +45,7 @@ export class SkyLayer implements Layer {
   private timeOfDay: number = 0.5; // 0=midnight, 0.5=noon
   private clouds: Cloud[] = [];
   private cloudOffset: number = 0;
-  private skyHeight: number = 256; // Height of sky area (4/10 of 640px)
+  private skyHeight: number = SKY_HEIGHT; // Height of sky area (4/10 of 640px)
 
   /** Cached sky gradient colors */
   private cachedColors: SkyColors = { top: '#5090c0', bottom: '#90c8e8' };
@@ -57,7 +58,7 @@ export class SkyLayer implements Layer {
 
   private initClouds(): void {
     // Generate random clouds
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < CLOUD_COUNT; i++) {
       this.clouds.push({
         x: Math.random() * 960,
         y: 30 + Math.random() * 150,

@@ -2,6 +2,14 @@ import { BUILDING_GROUND_Y, VIEWPORT_WIDTH } from './constants';
 
 export type BuildingKind = 'house' | 'tower' | 'shop';
 
+export type InteractionType = 'enter-interior' | 'enter-tower' | 'open-shop';
+
+export interface InteractionConfig {
+  type: InteractionType;
+  /** Payload for the interaction (e.g. mapId, shopId, position) */
+  payload?: Record<string, any>;
+}
+
 export interface VillageBuilding {
   id: string;
   kind: BuildingKind;
@@ -15,10 +23,8 @@ export interface VillageBuilding {
   /** Door offset from the building anchor (world pixels). */
   doorOffsetX?: number;
   doorOffsetY?: number;
-  /** Optional interior map id (wired in Phase 4). */
-  interiorMapId?: string;
-  /** Optional shop id (for shop buildings). */
-  shopId?: string;
+  /** Interaction configuration for data-driven handling */
+  interaction?: InteractionConfig;
 }
 
 const SPRITE_SIZE: Record<string, { width: number; height: number }> = {
@@ -72,6 +78,9 @@ export const BATTLE_TOWER: VillageBuilding = {
   spritePath: TOWER_SPRITE_PATH,
   doorOffsetX: 0,
   doorOffsetY: 0,
+  interaction: {
+    type: 'enter-tower',
+  }
 };
 
 export const VALE_ARMORY: VillageBuilding = {
@@ -84,13 +93,17 @@ export const VALE_ARMORY: VillageBuilding = {
   spritePath: ARMORY_SPRITE_PATH,
   doorOffsetX: 0,
   doorOffsetY: 0,
-  shopId: 'vale-armory',
+  interaction: {
+    type: 'open-shop',
+    payload: { shopId: 'vale-armory' }
+  }
 };
 
 export const HOUSES: VillageBuilding[] = Array.from({ length: 30 }, (_, i) => {
   const houseNumber = i + 1;
   const spritePath = HOUSE_SPRITES[i % HOUSE_SPRITES.length]!;
   const size = SPRITE_SIZE[spritePath] ?? { width: 96, height: 96 };
+  const interiorMapId = `house-${String(houseNumber).padStart(2, '0')}-interior`;
 
   return {
     id: `house-${String(houseNumber).padStart(2, '0')}`,
@@ -102,7 +115,10 @@ export const HOUSES: VillageBuilding[] = Array.from({ length: 30 }, (_, i) => {
     spritePath,
     doorOffsetX: 0,
     doorOffsetY: 0,
-    interiorMapId: `house-${String(houseNumber).padStart(2, '0')}-interior`,
+    interaction: {
+      type: 'enter-interior',
+      payload: { mapId: interiorMapId, houseNumber }
+    }
   };
 });
 

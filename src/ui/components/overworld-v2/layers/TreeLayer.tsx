@@ -7,7 +7,14 @@ import type { Layer } from '../engine/types';
 import type { Camera } from '../engine/Camera';
 import { loadSprite } from '../../../sprites/loader';
 import { VILLAGE_WORLD_WIDTH } from '../data/villageLayout';
-import { BUILDING_GROUND_Y } from '../data/constants';
+import { 
+  BUILDING_GROUND_Y,
+  TREE_SPACING,
+  TREE_BASE_Y_OFFSET,
+  TREE_Y_JITTER,
+  TREE_SWAY_SPEED,
+  TREE_SWAY_AMOUNT
+} from '../data/constants';
 
 type TreeInstance = {
   x: number;
@@ -55,13 +62,13 @@ export class TreeLayer implements Layer {
 
     // Distribute trees deterministically across the village world width
     // Place them above the road band so they read as background scenery.
-    const spacing = 220; // world pixels between trees
-    const baseY = BUILDING_GROUND_Y - 120;
+    const spacing = TREE_SPACING; // world pixels between trees
+    const baseY = BUILDING_GROUND_Y - TREE_BASE_Y_OFFSET;
     for (let x = 120; x < VILLAGE_WORLD_WIDTH - 120; x += spacing) {
       const seed = this.seedFromX(x);
       const idx = Math.floor(seed * candidates.length) % candidates.length;
       const spritePath = candidates[idx] as string;
-      const yJitter = Math.round((seed - 0.5) * 30); // small vertical jitter
+      const yJitter = Math.round((seed - 0.5) * TREE_Y_JITTER); // small vertical jitter
       const y = baseY + yJitter; // anchor above the road band
 
       this.trees.push({ x, y, spritePath });
@@ -87,7 +94,7 @@ export class TreeLayer implements Layer {
       if (!camera.isVisible(t.x - width / 2, t.y - height, width, height, 64)) continue;
 
       // Slight subtle sway based on time and index for liveliness (pixel offset)
-      const sway = Math.round(Math.sin((this.time / 900) + i) * 1.2);
+      const sway = Math.round(Math.sin((this.time / TREE_SWAY_SPEED) + i) * TREE_SWAY_AMOUNT);
 
       const { x: screenX, y: screenY } = camera.worldToScreenSnapped(t.x + sway, t.y);
 

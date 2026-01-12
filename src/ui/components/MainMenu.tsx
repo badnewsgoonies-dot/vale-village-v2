@@ -9,7 +9,7 @@ import { useStore } from '../../ui/state/store';
 import { ADEPT } from '../../data/definitions/units';
 import { createUnit } from '../../core/models/Unit';
 import { createTeam } from '../../core/models/Team';
-import { collectDjinn, equipDjinn } from '../../core/services/DjinnService';
+import { GameInitializationService } from '../../core/services/GameInitializationService';
 import './MainMenu.css';
 
 // Character sprites flanking the menu
@@ -131,23 +131,16 @@ export function MainMenu() {
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [startTransition]);
 
-  const createStarterTeamWithFlint = () => {
-    const isaac = createUnit(ADEPT, 1, 0);
-    addUnitToRoster(isaac);
-
-    let starterTeam = createTeam([isaac]);
-    const collectResult = collectDjinn(starterTeam, 'flint');
-    if (collectResult.ok) {
-      const equipResult = equipDjinn(collectResult.value, 'flint');
-      starterTeam = equipResult.ok ? equipResult.value : collectResult.value;
-    }
-
-    setTeam(starterTeam);
-  };
-
   const handleSelectOption = (optionId: string) => {
     if (optionId === 'new-game') {
-      createStarterTeamWithFlint();
+      const starterTeam = GameInitializationService.createStarterTeamWithFlint();
+      setTeam(starterTeam);
+      
+      // Add units to roster for legacy/compatibility if needed, 
+      // though GameInitializationService returns a full Team object.
+      // We iterate to ensure store consistency.
+      starterTeam.units.forEach(unit => addUnitToRoster(unit));
+
       setMode('overworld');
       startTransition('overworld'); // Start new game -> go to overworld
     } else if (optionId === 'continue') {
@@ -169,7 +162,9 @@ export function MainMenu() {
       // Initialize team if none exists (for Battle Tower quick access)
       const store = useStore.getState();
       if (!store.team || store.team.units.length === 0) {
-        createStarterTeamWithFlint();
+        const starterTeam = GameInitializationService.createStarterTeamWithFlint();
+        setTeam(starterTeam);
+        starterTeam.units.forEach(unit => addUnitToRoster(unit));
       }
       // Enter the actual tower system with proper progression
       openTowerFromMainMenu();

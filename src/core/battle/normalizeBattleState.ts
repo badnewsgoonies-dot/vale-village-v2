@@ -34,20 +34,20 @@ export function normalizeBattleState(state: BattleState): BattleState {
     queuedActions.length = safeTeamSize;
   }
 
-  const maxMana = Number.isFinite((state as any).maxMana) ? state.maxMana : calculateTeamManaPool(state.playerTeam);
-  const remainingMana = Number.isFinite((state as any).remainingMana) ? state.remainingMana : maxMana;
-  const currentTurn = Number.isFinite((state as any).currentTurn) ? state.currentTurn : DEFAULT_CURRENT_TURN;
-  const roundNumber = Number.isFinite((state as any).roundNumber) ? state.roundNumber : DEFAULT_ROUND_NUMBER;
-  const currentQueueIndex = Number.isFinite((state as any).currentQueueIndex) ? state.currentQueueIndex : DEFAULT_CURRENT_QUEUE_INDEX;
-  const executionIndex = Number.isFinite((state as any).executionIndex) ? state.executionIndex : DEFAULT_EXECUTION_INDEX;
+  const maxMana = typeof state.maxMana === 'number' ? state.maxMana : calculateTeamManaPool(state.playerTeam);
+  const remainingMana = typeof state.remainingMana === 'number' ? state.remainingMana : maxMana;
+  const currentTurn = typeof state.currentTurn === 'number' ? state.currentTurn : DEFAULT_CURRENT_TURN;
+  const roundNumber = typeof state.roundNumber === 'number' ? state.roundNumber : DEFAULT_ROUND_NUMBER;
+  const currentQueueIndex = typeof state.currentQueueIndex === 'number' ? state.currentQueueIndex : DEFAULT_CURRENT_QUEUE_INDEX;
+  const executionIndex = typeof state.executionIndex === 'number' ? state.executionIndex : DEFAULT_EXECUTION_INDEX;
 
   const phase = VALID_PHASES_SET.has(state.phase) ? state.phase : DEFAULT_PHASE;
   const status = state.status ?? DEFAULT_STATUS;
 
-  const queuedDjinn = Array.isArray((state as any).queuedDjinn) ? state.queuedDjinn : [];
-  const log = Array.isArray((state as any).log) ? state.log : [];
-  const turnOrder = Array.isArray((state as any).turnOrder) ? state.turnOrder : [];
-  const djinnRecoveryTimers = (state as any).djinnRecoveryTimers ?? {};
+  const queuedDjinn = Array.isArray(state.queuedDjinn) ? state.queuedDjinn : [];
+  const log = Array.isArray(state.log) ? state.log : [];
+  const turnOrder = Array.isArray(state.turnOrder) ? state.turnOrder : [];
+  const djinnRecoveryTimers = state.djinnRecoveryTimers ?? {};
 
   const unitById = state.unitById instanceof Map ? state.unitById : buildUnitIndex(state.playerTeam.units, state.enemies);
 
