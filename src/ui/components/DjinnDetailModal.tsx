@@ -7,6 +7,7 @@ import { JSX } from 'preact';
 import { useStore } from '../state/store';
 import { DJINN } from '@/data/definitions/djinn';
 import { calculateDjinnSynergy } from '@/core/algorithms/djinn';
+import { MAX_EQUIPPED_DJINN } from '@/core/constants';
 import { SimpleSprite } from '../sprites/SimpleSprite';
 import { warnIfPlaceholderSprite } from '../sprites/utils/warnIfPlaceholderSprite';
 import './DjinnDetailModal.css';
@@ -36,7 +37,7 @@ export function DjinnDetailModal({ djinnId, onClose }: DjinnDetailModalProps): J
   const handleEquip = (slotIndex: number) => {
     if (!team) return;
 
-    // Create new equippedDjinn array (max 3 slots)
+    // Create new equippedDjinn array
     const newEquippedDjinn: string[] = [];
 
     // Copy existing equipped Djinn, skipping the one being moved
@@ -47,14 +48,13 @@ export function DjinnDetailModal({ djinnId, onClose }: DjinnDetailModalProps): J
     });
 
     // Add to target slot (will be inserted at correct position)
-    // Ensure we have exactly 3 slots
     while (newEquippedDjinn.length < slotIndex) {
       newEquippedDjinn.push('');
     }
     newEquippedDjinn[slotIndex] = djinnId;
 
-    // Filter out empty strings and ensure max 3
-    const filteredDjinn = newEquippedDjinn.filter(Boolean).slice(0, 3);
+    // Filter out empty strings and ensure max limit
+    const filteredDjinn = newEquippedDjinn.filter(Boolean).slice(0, MAX_EQUIPPED_DJINN);
 
     // Update trackers
     const newTrackers = { ...team.djinnTrackers };
@@ -184,7 +184,7 @@ export function DjinnDetailModal({ djinnId, onClose }: DjinnDetailModalProps): J
             <div class="djinn-assignment">
               <h3>Global Team Slots</h3>
               <div class="slot-buttons">
-                {[0, 1, 2].map((slotIndex) => {
+                {Array.from({ length: MAX_EQUIPPED_DJINN }, (_, i) => i).map((slotIndex) => {
                   const slotDjinnId = team.equippedDjinn[slotIndex];
                   const slotDjinn = slotDjinnId ? DJINN[slotDjinnId] : null;
                   const isSlotEquipped = slotDjinnId === djinnId;

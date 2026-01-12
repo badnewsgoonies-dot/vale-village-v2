@@ -21,7 +21,26 @@ import { PlayerLayer } from './layers/PlayerLayer';
 import { InteriorNpcLayer } from './layers/InteriorNpcLayer';
 import { InteriorFloorLayer } from '../overworld/layers/InteriorFloorLayer';
 import { InteriorFurnitureLayer } from '../overworld/layers/InteriorFurnitureLayer';
-import { VIEWPORT_HEIGHT, VIEWPORT_WIDTH, PLAYER_Y_MIN, PLAYER_Y_MAX } from './data/constants';
+import { 
+  VIEWPORT_HEIGHT, 
+  VIEWPORT_WIDTH, 
+  PLAYER_Y_MIN, 
+  PLAYER_Y_MAX,
+  PLAYER_MOVE_SPEED,
+  INTERIOR_ROOM_WIDTH,
+  INTERIOR_ROOM_HEIGHT,
+  INTERIOR_ROOM_X,
+  INTERIOR_ROOM_Y,
+  INTERIOR_PLAYER_SPEED,
+  EXIT_ZONE_WIDTH,
+  EXIT_ZONE_HEIGHT,
+  INTERIOR_ENEMY_OFFSET_Y,
+  INTERIOR_NPC_TRIGGER_RADIUS,
+  TOWER_LOBBY_WIDTH,
+  TOWER_LOBBY_HEIGHT,
+  TOWER_LOBBY_X,
+  TOWER_LOBBY_Y
+} from './data/constants';
 import { VILLAGE_WORLD_WIDTH, VILLAGE_BUILDINGS } from './data/villageLayout';
 import { clamp } from './engine/math';
 import type { OverworldSlice } from '../../state/overworldSlice';
@@ -30,25 +49,8 @@ import '../overworld/OverworldCanvas.css';
 import { VirtualJoystick } from '../VirtualJoystick';
 import { getPlayerSprite } from '../../sprites/mappings/overworldSprites';
 import { TelemetryService } from '../../../core/services/TelemetryService';
+import { audio } from '../../../core/services/AudioService';
 
-
-/** Movement speed in world pixels per second */
-const PLAYER_SPEED = 160;
-
-/** Interior room configuration */
-const INTERIOR_ROOM_WIDTH = 320;
-const INTERIOR_ROOM_HEIGHT = 240;
-const INTERIOR_ROOM_X = (VIEWPORT_WIDTH - INTERIOR_ROOM_WIDTH) / 2;
-const INTERIOR_ROOM_Y = (VIEWPORT_HEIGHT - INTERIOR_ROOM_HEIGHT) / 2 + 50;
-
-/** Interior player speed (slower indoors) */
-const INTERIOR_PLAYER_SPEED = 120;
-
-/** Exit trigger zone (bottom center of room) */
-const EXIT_ZONE_WIDTH = 60;
-const EXIT_ZONE_HEIGHT = 30;
-const INTERIOR_ENEMY_OFFSET_Y = 70;
-const INTERIOR_NPC_TRIGGER_RADIUS = 40;
 
 interface OverworldV2Props {
   width?: number;
@@ -67,6 +69,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
   const interiorNpcRef = useRef<InteriorNpcLayer | null>(null);
   const interiorBattleTriggeredRef = useRef(false);
   const encountersLayerRef = useRef<any>(null);
+  const encounterTriggeredRef = useRef<Record<string, boolean>>({});
 
   const keysRef = useRef<Set<string>>(new Set());
   const touchInputRef = useRef<{ h: number; v: number; action: boolean }>({ h: 0, v: 0, action: false });
@@ -97,6 +100,11 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
   const startDialogueTree = useStore((s) => s.startDialogueTree);
   const story = useStore((s) => s.story);
   const hasSeenDjinnIntro = Boolean(story.flags.first_djinn_intro_completed);
+
+  // Audio: Play Overworld BGM
+  useEffect(() => {
+    audio.playBGM('overworld');
+  }, []);
 
   // gameStore subscriptions
   const startTransition = useGameStore((s) => s.startTransition);
@@ -143,13 +151,21 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
 
   // Detect scene type from map ID
   const getSceneTypeFromMapId = useCallback((mapId: string): SceneType => {
-    return mapId.includes('-interior') ? 'interior' : 'overworld';
+    return mapId.includes('-interior') || mapId.includes('tower-lobby') ? 'interior' : 'overworld';
   }, []);
 
   // Extract house number from map ID (e.g., "house-05-interior" -> 5)
   const getHouseNumberFromMapId = useCallback((mapId: string): number => {
     const match = mapId.match(/house-(\d+)/);
     return match && match[1] ? parseInt(match[1], 10) : 1;
+  }, []);
+
+  // Helper to get room config based on map ID (for custom rooms like Tower)
+  const getRoomConfig = useCallback((mapId: string) => {
+    if (mapId.includes('tower-lobby')) {
+      return { width: TOWER_LOBBY_WIDTH, height: TOWER_LOBBY_HEIGHT };
+    }
+    return undefined;
   }, []);
 
   // Handle keyboard input
@@ -181,7 +197,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
     villageLayer.setUnlockedHouses(getUnlockedBuildingIds());
 
     const encountersLayer = new EncountersLayer({
-      buildings: VILLAGE_BUILDINGS,
+      buildings: [], // Do not treat buildings as proximity encounters (battles)
       getPlayerPosition: () => playerLayerRef.current?.getPosition() ?? null,
       onTrigger: (buildingId: string) => {
         handleTrigger({
@@ -190,13 +206,6 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
           position: { x: 0, y: 0 },
           data: { encounterId: buildingId },
         });
-      },
-      showPredicate: (b) => {
-        if (b.id && b.id.startsWith('house-')) {
-          const num = parseInt(b.id.split('-')[1], 10);
-          return num <= 20;
-        }
-        return false;
       },
     });
     encountersLayerRef.current = encountersLayer;
@@ -231,40 +240,68 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
   }, [story, getUnlockedBuildingIds]);
 
   // Create interior layers
-  const createInteriorLayers = useCallback((houseNum: number): Layer[] => {
+  const createInteriorLayers = useCallback((houseNum: number, roomConfig?: { width: number; height: number }): Layer[] => {
+    const isCustomRoom = !!roomConfig;
+    const width = roomConfig?.width ?? INTERIOR_ROOM_WIDTH;
+    const height = roomConfig?.height ?? INTERIOR_ROOM_HEIGHT;
+    const roomX = isCustomRoom ? TOWER_LOBBY_X : INTERIOR_ROOM_X;
+    const roomY = isCustomRoom ? TOWER_LOBBY_Y : INTERIOR_ROOM_Y;
+
     const houseId = `house-${String(houseNum).padStart(2, '0')}`;
     const floorLayer = new InteriorFloorLayer();
-    floorLayer.setRoomSize(INTERIOR_ROOM_WIDTH, INTERIOR_ROOM_HEIGHT);
+    floorLayer.setRoomSize(width, height);
     interiorFloorRef.current = floorLayer;
 
     const furnitureLayer = new InteriorFurnitureLayer();
     furnitureLayer.setRenderPlayer(false);
     furnitureLayer.setRoomConfig({
-      roomX: INTERIOR_ROOM_X,
-      roomY: INTERIOR_ROOM_Y,
-      roomWidth: INTERIOR_ROOM_WIDTH,
-      roomHeight: INTERIOR_ROOM_HEIGHT,
+      roomX: roomX,
+      roomY: roomY,
+      roomWidth: width,
+      roomHeight: height,
     });
-    furnitureLayer.generateHouseFurniture(houseNum);
+    
+    if (isCustomRoom) {
+      // TODO: Custom furniture for Tower Lobby
+    } else {
+      furnitureLayer.generateHouseFurniture(houseNum);
+    }
     interiorFurnitureRef.current = furnitureLayer;
 
     // Interior access is already gated by door unlocks; only suppress enemies after completion.
-    const shouldSpawnEnemy = storyRef.current.flags[houseId] !== true;
+    // Tower lobby doesn't have random enemies for now.
+    const shouldSpawnEnemy = !isCustomRoom && storyRef.current.flags[houseId] !== true;
     const enemyOffsetY = houseNum === 1 ? INTERIOR_ROOM_HEIGHT / 2 : INTERIOR_ENEMY_OFFSET_Y;
     const npcLayer = shouldSpawnEnemy
       ? new InteriorNpcLayer({
         id: `${houseId}-enemy`,
-        x: INTERIOR_ROOM_X + INTERIOR_ROOM_WIDTH / 2,
-        y: INTERIOR_ROOM_Y + enemyOffsetY,
+        x: roomX + width / 2,
+        y: roomY + enemyOffsetY,
       })
       : null;
-    interiorNpcRef.current = npcLayer;
+      
+    // Add Tower Guide NPC if in Tower Lobby
+    // We reuse InteriorNpcLayer for now, but mark it as 'tower-guide'
+    let towerNpcLayer = null;
+    if (isCustomRoom) {
+        towerNpcLayer = new InteriorNpcLayer({
+            id: 'tower-guide',
+            x: roomX + width / 2,
+            y: roomY + height / 2 - 50, // Center of room
+        });
+        // We need to set up a trigger for this NPC in the update loop or here?
+        // InteriorNpcLayer doesn't handle triggers itself, the update loop checks proximity to it.
+        // So we just need to assign it to a ref that the update loop checks.
+    }
+    
+    // We use the same ref for simplicity, assuming only one "interactive NPC" layer exists at a time.
+    interiorNpcRef.current = towerNpcLayer || npcLayer;
     interiorBattleTriggeredRef.current = false;
 
-    // Create player layer for interior (centered at entrance)
+    // Create player layer for interior
     const playerLayer = new PlayerLayer({
-      x: INTERIOR_ROOM_X + INTERIOR_ROOM_WIDTH / 2,
-      y: INTERIOR_ROOM_Y + INTERIOR_ROOM_HEIGHT - 30,
+      x: roomX + width / 2,
+      y: roomY + height - 50,
       facing: 'up',
       unitId: 'adept',
     });
@@ -272,11 +309,18 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
     playerLayer.shouldRenderSprite = false;
     playerLayerRef.current = playerLayer;
 
-    return npcLayer ? [floorLayer, furnitureLayer, npcLayer, playerLayer] : [floorLayer, furnitureLayer, playerLayer];
+    return (towerNpcLayer || npcLayer) 
+        ? [floorLayer, furnitureLayer, (towerNpcLayer || npcLayer)!, playerLayer] 
+        : [floorLayer, furnitureLayer, playerLayer];
   }, []);
 
   // Switch scene type with fade transition
-  const transitionToScene = useCallback((targetScene: SceneType, houseNum: number = 1, teleportTo?: { mapId: string; position?: { x: number; y: number } }) => {
+  const transitionToScene = useCallback((
+    targetScene: SceneType, 
+    houseNum: number = 1, 
+    teleportTo?: { mapId: string; position?: { x: number; y: number } },
+    roomConfig?: { width: number; height: number }
+  ) => {
     if (isTransitioningRef.current) return;
 
     const isInstant = typeof localStorage !== "undefined" && localStorage.getItem("battleSpeed") === "instant";
@@ -289,8 +333,19 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
           try { teleportPlayer(teleportTo.mapId, teleportTo.position ?? { x: 5, y: 7 }); } catch (err) { console.error("Failed to teleport", err); }
         }
         if (targetScene === "interior") {
-          engine.setLayers(createInteriorLayers(houseNum));
-          engine.getCamera().setTarget(VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2);
+          engine.setLayers(createInteriorLayers(houseNum, roomConfig));
+          
+          if (roomConfig && (roomConfig.width > VIEWPORT_WIDTH || roomConfig.height > VIEWPORT_HEIGHT)) {
+             const width = roomConfig.width;
+             const height = roomConfig.height;
+             const roomX = TOWER_LOBBY_X;
+             const roomY = TOWER_LOBBY_Y;
+             const startX = roomX + width / 2;
+             const startY = roomY + height - 50;
+             engine.getCamera().setTarget(startX, startY);
+          } else {
+             engine.getCamera().setTarget(VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2);
+          }
           engine.getCamera().snapToTarget();
         } else {
           engine.setLayers(createOverworldLayers());
@@ -315,24 +370,33 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
         if (engine) {
           sceneTypeRef.current = targetScene;
 
-          // Perform teleport at the same point we switch layers to avoid double transitions
+          // Perform teleport
           if (teleportTo) {
             try {
               teleportPlayer(teleportTo.mapId, teleportTo.position ?? { x: 5, y: 7 });
             } catch (err) {
-              // Teleport failure should not block rendering
               console.error('Failed to teleport during transition', err);
             }
           }
 
           if (targetScene === 'interior') {
-            engine.setLayers(createInteriorLayers(houseNum));
-            // Reset camera for interior (no scrolling)
-            engine.getCamera().setTarget(VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2);
+            engine.setLayers(createInteriorLayers(houseNum, roomConfig));
+            
+            // Camera Logic
+            if (roomConfig && (roomConfig.width > VIEWPORT_WIDTH || roomConfig.height > VIEWPORT_HEIGHT)) {
+                 const width = roomConfig.width;
+                 const height = roomConfig.height;
+                 const roomX = TOWER_LOBBY_X;
+                 const roomY = TOWER_LOBBY_Y;
+                 const startX = roomX + width / 2;
+                 const startY = roomY + height - 50;
+                 engine.getCamera().setTarget(startX, startY);
+            } else {
+                 engine.getCamera().setTarget(VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2);
+            }
             engine.getCamera().snapToTarget();
           } else {
             engine.setLayers(createOverworldLayers());
-            // Restore camera to player position
             const pos = playerLayerRef.current?.getPosition();
             if (pos) {
               engine.getCamera().setTarget(pos.x, pos.y);
@@ -341,7 +405,6 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
           }
         }
 
-        // Fade in
         requestAnimationFrame(fadeIn);
       } else {
         requestAnimationFrame(fadeOut);
@@ -366,9 +429,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
   // Handle entering a building
   const enterBuilding = useCallback((buildingId: string) => {
     const building = VILLAGE_BUILDINGS.find(b => b.id === buildingId);
-    if (!building) return;
-
-
+    if (!building || !building.interaction) return;
 
     // Save current X position for return
     const playerPos = playerLayerRef.current?.getPosition();
@@ -376,30 +437,25 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
       savedOverworldXRef.current = playerPos.x;
     }
 
-    // Handle tower entry separately - triggers tower game mode
-    if (building.kind === 'tower') {
-      enterTowerFromOverworld({
-        mapId: 'vale-village',
-        position: { x: Math.floor(playerPos?.x ?? 100) / 32, y: 14 },
-      });
-      return;
-    }
+    const { type, payload } = building.interaction;
 
-    if (building.kind === 'shop') {
+    if (type === 'enter-tower') {
+      // Enter Tower Lobby (Interior)
+      transitionToScene('interior', 0, 
+        { mapId: 'tower-lobby', position: { x: 50, y: 75 } }, 
+        { width: TOWER_LOBBY_WIDTH, height: TOWER_LOBBY_HEIGHT }
+      );
+    } else if (type === 'open-shop') {
       handleTrigger({
         id: 'overworld-shop',
         type: 'shop',
         position: { x: 0, y: 0 },
-        data: { shopId: building.shopId ?? 'vale-armory' },
+        data: { shopId: payload?.shopId ?? 'vale-armory' },
       });
-      return;
+    } else if (type === 'enter-interior') {
+      const houseNum = payload?.houseNumber ?? 1;
+      transitionToScene('interior', houseNum, payload?.mapId ? { mapId: payload.mapId, position: { x: 5, y: 7 } } : undefined);
     }
-
-    // Get house number (e.g., "house-05" -> 5)
-    const houseNum = getHouseNumberFromMapId(building.id);
-
-    // Transition to interior and request teleport when layers switch
-    transitionToScene('interior', houseNum, building.interiorMapId ? { mapId: building.interiorMapId, position: { x: 5, y: 7 } } : undefined);
   }, [transitionToScene, getHouseNumberFromMapId, teleportPlayer, enterTowerFromOverworld, handleTrigger, hasSeenDjinnIntro, startDialogueTree]);
 
   // Handle exiting interior
@@ -414,14 +470,22 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
     if (!player) return false;
 
     const pos = player.getPosition();
-    const exitCenterX = INTERIOR_ROOM_X + INTERIOR_ROOM_WIDTH / 2;
-    const exitY = INTERIOR_ROOM_Y + INTERIOR_ROOM_HEIGHT;
+    const isTowerLobby = currentMapId.includes('tower-lobby');
+    
+    // Bounds depend on room size/location
+    const roomX = isTowerLobby ? TOWER_LOBBY_X : INTERIOR_ROOM_X;
+    const roomY = isTowerLobby ? TOWER_LOBBY_Y : INTERIOR_ROOM_Y;
+    const roomW = isTowerLobby ? TOWER_LOBBY_WIDTH : INTERIOR_ROOM_WIDTH;
+    const roomH = isTowerLobby ? TOWER_LOBBY_HEIGHT : INTERIOR_ROOM_HEIGHT;
+
+    const exitCenterX = roomX + roomW / 2;
+    const exitY = roomY + roomH;
 
     return (
       Math.abs(pos.x - exitCenterX) < EXIT_ZONE_WIDTH / 2 &&
       pos.y > exitY - EXIT_ZONE_HEIGHT
     );
-  }, []);
+  }, [currentMapId]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -457,12 +521,10 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
       const player = playerLayerRef.current;
       const village = villageLayerRef.current;
 
-      // Update telemetry each frame with lightweight navigation assist data
       try {
         const nearestDoor = village?.getNearestDoor ? village.getNearestDoor() : null;
         TelemetryService.updateFrame({ navigationAssist: { nearestDoorId: nearestDoor?.id ?? null } });
       } catch (e) {
-        // swallow telemetry errors
       }
 
       if (!player || isTransitioningRef.current) return;
@@ -472,28 +534,18 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
         const state = player.getPlayerState();
         const pos = player.getPosition();
         
-        // Determine sprite source (handling direction)
         const spriteSrc = getPlayerSprite(state.unitId, state.facing, state.isMoving);
         if (playerDomRef.current.src !== window.location.origin + spriteSrc) {
             playerDomRef.current.src = spriteSrc;
         }
         
-        // Handle mirroring for left facing
         const mirror = state.facing === 'left';
         playerDomRef.current.style.transform = mirror ? 'scaleX(-1)' : 'scaleX(1)';
         
-        // Position DOM element via camera projection
-        // We use worldToScreenSnapped to align with canvas pixel grid
         const screenPos = eng.getCamera().worldToScreenSnapped(pos.x, pos.y);
-        
-        // The container is centered at player feet (like the canvas render)
-        // Sprite is 32x48, anchor is bottom-center
-        // container is 0x0 at screenPos.
-        // We offset the image inside the container
         playerDomContainerRef.current.style.transform = `translate(${screenPos.x}px, ${screenPos.y}px)`;
       }
 
-      // Freeze player control when not actively in overworld mode or while a modal is open.
       if (isGameplayInputLocked(modeRef.current) || activeModalRef.current !== null) {
         player.setPlayerState({ isMoving: false });
         return;
@@ -502,69 +554,78 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
       const keys = keysRef.current;
       const isOverworld = sceneTypeRef.current === 'overworld';
 
-      // Poll Gamepad
       const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
-      const gp = gamepads[0]; // Support first controller
+      const gp = gamepads[0];
       let gpAction = false;
       let gpStart = false;
 
       if (gp) {
-        // Standard mapping: 0 = Bottom (A/Cross), 9 = Start/Options
         if (gp.buttons[0]?.pressed) gpAction = true;
         if (gp.buttons[9]?.pressed) gpStart = true;
 
-        // Handle Start Button (Toggle Pause) - Rising Edge Only
         if (gpStart && !lastGamepadStartRef.current) {
           openModal('pause');
         }
         lastGamepadStartRef.current = gpStart;
       }
 
-      // Handle SPACE/Enter for interactions or touch/gamepad action
       const actionPressed = keys.has(' ') || keys.has('Enter') || touchInputRef.current.action || (gpAction && !lastGamepadActionRef.current);
-      // Update gamepad latch
       lastGamepadActionRef.current = gpAction;
 
       if (actionPressed) {
         keys.delete(' ');
         keys.delete('Enter');
-        // consume touch action once to mirror keyboard single-press behaviour
         if (touchInputRef.current.action) touchInputRef.current.action = false;
 
         if (isOverworld) {
-          // Check for nearby door
           const nearestDoor = village?.getNearestDoor();
           if (nearestDoor) {
             enterBuilding(nearestDoor.id);
             return;
           }
+        } else {
+            // Interior Interaction
+            const npcLayer = interiorNpcRef.current;
+            if (npcLayer) {
+                const npcPos = npcLayer.getPosition();
+                const playerPos = player.getPosition();
+                const dx = playerPos.x - npcPos.x;
+                const dy = playerPos.y - npcPos.y;
+                const distanceSq = dx * dx + dy * dy;
+                
+                // Interaction range (60px)
+                if (distanceSq <= 60 * 60) {
+                    if (npcLayer.getId() === 'tower-guide') {
+                        // Open Tower Menu
+                        enterTowerFromOverworld({
+                            mapId: 'tower-lobby',
+                            position: { x: 50, y: 50 } // ignored usually
+                        });
+                    }
+                }
+            }
         }
       }
 
       let dx = 0;
       let dy = 0;
 
-      // Read input (touch > gamepad > keyboard)
       const t = touchInputRef.current;
       if (t.h !== 0 || t.v !== 0) {
         dx = t.h;
         dy = t.v;
       } else if (gp) {
-        // Gamepad Axis (Left Stick)
         const axisX = gp.axes[0] || 0;
         const axisY = gp.axes[1] || 0;
-        // Deadzone
         if (Math.abs(axisX) > 0.2) dx = axisX;
         if (Math.abs(axisY) > 0.2) dy = axisY;
 
-        // Gamepad D-Pad (Buttons 12-15: Up, Down, Left, Right)
-        if (gp.buttons[12]?.pressed) dy -= 1; // Up
-        if (gp.buttons[13]?.pressed) dy += 1; // Down
-        if (gp.buttons[14]?.pressed) dx -= 1; // Left
-        if (gp.buttons[15]?.pressed) dx += 1; // Right
+        if (gp.buttons[12]?.pressed) dy -= 1;
+        if (gp.buttons[13]?.pressed) dy += 1;
+        if (gp.buttons[14]?.pressed) dx -= 1;
+        if (gp.buttons[15]?.pressed) dx += 1;
       } 
       
-      // Fallback to keyboard if no other input
       if (dx === 0 && dy === 0) {
         if (keys.has('ArrowLeft') || keys.has('a')) dx -= 1;
         if (keys.has('ArrowRight') || keys.has('d')) dx += 1;
@@ -577,37 +638,39 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
 
       if (!isMoving) return;
 
-      // Normalize diagonal movement
       const len = Math.sqrt(dx * dx + dy * dy);
       dx /= len;
       dy /= len;
 
       const pos = player.getPosition();
-      const speed = isOverworld ? PLAYER_SPEED : INTERIOR_PLAYER_SPEED;
+      const speed = isOverworld ? PLAYER_MOVE_SPEED : INTERIOR_PLAYER_SPEED;
 
       let newX: number;
       let newY: number;
 
       if (isOverworld) {
-        // Overworld bounds
         newX = clampPlayerXToWorldBounds(pos.x + dx * speed * dt, VILLAGE_WORLD_WIDTH);
         newY = clamp(pos.y + dy * speed * dt, PLAYER_Y_MIN, PLAYER_Y_MAX);
       } else {
-        // Interior bounds
+        const isTowerLobby = currentMapId.includes('tower-lobby');
+        const roomX = isTowerLobby ? TOWER_LOBBY_X : INTERIOR_ROOM_X;
+        const roomY = isTowerLobby ? TOWER_LOBBY_Y : INTERIOR_ROOM_Y;
+        const roomW = isTowerLobby ? TOWER_LOBBY_WIDTH : INTERIOR_ROOM_WIDTH;
+        const roomH = isTowerLobby ? TOWER_LOBBY_HEIGHT : INTERIOR_ROOM_HEIGHT;
+
         newX = clamp(
           pos.x + dx * speed * dt,
-          INTERIOR_ROOM_X + 20,
-          INTERIOR_ROOM_X + INTERIOR_ROOM_WIDTH - 20
+          roomX + 20,
+          roomX + roomW - 20
         );
         newY = clamp(
           pos.y + dy * speed * dt,
-          INTERIOR_ROOM_Y + 20,
-          INTERIOR_ROOM_Y + INTERIOR_ROOM_HEIGHT + 10  // Allow slight overshoot for exit
+          roomY + 20,
+          roomY + roomH + 10 
         );
       }
 
       if (!isOverworld) {
-        // Interior collision against furniture footprints (slide along obstacles).
         const furniture = interiorFurnitureRef.current;
         const collider = { halfWidth: 10, halfHeight: 7 };
 
@@ -621,7 +684,6 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
           finalY = newY;
         }
 
-        // If blocked in both axes, cancel movement to avoid jitter (but still allow facing updates).
         if (finalX === pos.x && finalY === pos.y) {
           player.setPlayerState({ isMoving: false });
           newX = pos.x;
@@ -646,19 +708,14 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
       }
 
       if (isOverworld) {
-        // Update camera target
         eng.getCamera().setTarget(newX, newY);
-        // Update village layer for door proximity
         village?.setPlayerPosition(newX, newY);
-        // Update encounters layer player position for proximity checks
         encountersLayerRef.current?.setPlayerPosition(newX, newY);
 
-        // Check for nearby overworld symbol encounters and trigger battles
         const encountersLayer = encountersLayerRef.current;
         try {
           const nearby = encountersLayer?.getNearbyEncounter(newX, newY, 32);
           if (nearby && !encounterTriggeredRef.current[nearby.id]) {
-            // Mark as triggered to avoid repeat triggers until battle flow completes
             encounterTriggeredRef.current[nearby.id] = true;
             handleTrigger({
               id: `${nearby.id}-overworld`,
@@ -668,14 +725,17 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
             });
           }
         } catch (e) {
-          // Layer may not be ready; ignore
         }
       } else {
-        // Update interior furniture layer with player position
         const state = player.getPlayerState();
         interiorFurnitureRef.current?.setPlayerPosition({ x: newX, y: newY }, state.facing);
+        
+        // Follow camera in large interiors
+        const isTowerLobby = currentMapId.includes('tower-lobby');
+        if (isTowerLobby) {
+            eng.getCamera().setTarget(newX, newY);
+        }
 
-        // Check for exit trigger
         if (isInExitZone() && dy > 0) {
           exitInterior();
         } else {
@@ -686,15 +746,18 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
             const dyNpc = newY - npcPos.y;
             const distanceSq = dxNpc * dxNpc + dyNpc * dyNpc;
             if (distanceSq <= INTERIOR_NPC_TRIGGER_RADIUS * INTERIOR_NPC_TRIGGER_RADIUS) {
-              const houseId = `house-${String(currentHouseNumRef.current).padStart(2, '0')}`;
-              if (storyRef.current.flags[houseId] !== true) {
-                interiorBattleTriggeredRef.current = true;
-                handleTrigger({
-                  id: `${houseId}-enemy`,
-                  type: 'battle',
-                  position: { x: 0, y: 0 },
-                  data: { encounterId: houseId },
-                });
+              // Only trigger battle for HOUSE enemies, not Tower Guide
+              if (npcLayer.getId().includes('enemy')) {
+                  const houseId = `house-${String(currentHouseNumRef.current).padStart(2, '0')}`;
+                  if (storyRef.current.flags[houseId] !== true) {
+                    interiorBattleTriggeredRef.current = true;
+                    handleTrigger({
+                      id: `${houseId}-enemy`,
+                      type: 'battle',
+                      position: { x: 0, y: 0 },
+                      data: { encounterId: houseId },
+                    });
+                  }
               }
             }
           }
@@ -702,10 +765,8 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
       }
     });
 
-    // Render transition overlay
     const renderOverlay = () => {
-      // Publish sanitized telemetry each frame (Navigation Assist)
-      try { TelemetryService.updateFrame(); } catch (e) { /* ignore telemetry errors */ }
+      try { TelemetryService.updateFrame(); } catch (e) { }
       if (transitionAlphaRef.current > 0) {
         const ctx = canvas.getContext('2d');
         if (ctx) {
@@ -728,10 +789,9 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [width, height, handleKeyDown, handleKeyUp, createOverworldLayers, enterBuilding, exitInterior, isInExitZone, handleTrigger]);
+  }, [width, height, handleKeyDown, handleKeyUp, createOverworldLayers, enterBuilding, exitInterior, isInExitZone, handleTrigger, currentMapId]); // Added currentMapId dependency for isTowerLobby checks
 
-  // Sync V1 store mode to V2 gameStore screens.
-  // (Overworld V2 doesn't use tile triggers yet, but dialogue/battle effects still depend on mode transitions.)
+  // ... (keep useEffects for mode sync)
   useEffect(() => {
     if (mode === 'team-select') {
       startTransition('team-select');
@@ -742,26 +802,22 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
     } else if (mode === 'rewards') {
       startTransition('rewards');
     } else if (mode === 'overworld') {
-      // When returning to overworld (e.g., dialogue ends), ensure no stale modal is left open.
       closeModal();
-      // Reset per-overworld-touch trigger locks so encounters can retrigger after returning
       encounterTriggeredRef.current = {};
     }
   }, [mode, startTransition, closeModal]);
 
-  // React to map changes from store (e.g., from save/load)
   useEffect(() => {
     const targetScene = getSceneTypeFromMapId(currentMapId);
     if (targetScene !== sceneTypeRef.current && !isTransitioning) {
       const houseNum = getHouseNumberFromMapId(currentMapId);
-      transitionToScene(targetScene, houseNum);
+      const roomConfig = getRoomConfig(currentMapId);
+      transitionToScene(targetScene, houseNum, undefined, roomConfig);
     }
-  }, [currentMapId, getSceneTypeFromMapId, getHouseNumberFromMapId, transitionToScene, isTransitioning]);
-
-
+  }, [currentMapId, getSceneTypeFromMapId, getHouseNumberFromMapId, transitionToScene, isTransitioning, getRoomConfig]);
 
   const computedSceneType = getSceneTypeFromMapId(currentMapId); const computedHouseNum = getHouseNumberFromMapId(currentMapId); const sceneName = computedSceneType === "interior"
-    ? `House ${computedHouseNum} Interior`
+    ? currentMapId.includes('tower') ? 'Battle Tower Lobby' : `House ${computedHouseNum} Interior`
     : 'Vale Village';
 
   return (
@@ -770,7 +826,9 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
         <div class="location-title">{sceneName}</div>
         <div class="location-meta">
           <span class="location-chip location-chip--ghost">
-            {sceneTypeRef.current === 'interior' ? 'Walk to EXIT to leave' : 'SPACE to enter buildings'}
+            {sceneTypeRef.current === 'interior' 
+                ? (currentMapId.includes('tower') ? 'SPACE to speak to Guide' : 'Walk to EXIT to leave') 
+                : 'SPACE to enter buildings'}
           </span>
         </div>
       </div>
@@ -784,7 +842,6 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
             class="overworld-canvas"
           />
           
-          {/* DOM Player Overlay for GIF Animation Support */}
           <div 
             ref={playerDomContainerRef}
             style={{

@@ -44,15 +44,13 @@ describe('BUG-011 - Revival targeting mismatch (repro)', () => {
 
     // Core targeting helper SHOULD include KO target because ability.revives === true
     const valid = getValidTargets(reviveAbility, caster, playerTeam, enemies);
-    expect(valid.map((u: any) => u.id)).toContain('ally-ko');
+    const validIds = new Set(valid.map((u: any) => u.id));
+    expect(validIds.has('ally-ko')).toBe(true);
 
-    // UI selection logic in Battlefield.tsx (simplified) currently prevents selecting
-    // KO'd units via: targetingMode && !unit.isKo
-    const targetingMode = true;
-    const uiAllowsSelection = targetingMode && !allyKO.isKo;
+    // Modern UI selection logic (e.g. in QueueBattleView.tsx) uses validIds 
+    // from getValidTargets rather than checking unit.isKo directly.
+    const uiAllowsSelection = validIds.has('ally-ko');
 
-    // This assertion is intentionally expected to fail in the current codebase:
-    // the core targeting allows the KO target but the UI blocks it.
     expect(uiAllowsSelection).toBe(true);
   });
 });

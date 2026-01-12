@@ -108,12 +108,13 @@ export class PlayerLayer implements Layer {
   render(ctx: CanvasRenderingContext2D, camera: Camera): void {
     const { x: worldX, y: worldY, facing, unitId } = this.playerState;
     const { x: screenX, y: screenY } = camera.worldToScreenSnapped(worldX, worldY);
+    const z = camera.zoom;
 
     // Shadow on the ground (ellipse below feet)
     ctx.save();
     ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
     ctx.beginPath();
-    ctx.ellipse(screenX, screenY + 4, this.width * 0.4, 6, 0, 0, Math.PI * 2);
+    ctx.ellipse(screenX, screenY + 4 * z, this.width * 0.4 * z, 6 * z, 0, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
 
@@ -129,10 +130,10 @@ export class PlayerLayer implements Layer {
       ctx.save();
       ctx.fillStyle = 'rgba(100, 150, 255, 0.6)';
       ctx.fillRect(
-        screenX - this.width / 2,
-        screenY - this.height,
-        this.width,
-        this.height
+        screenX - (this.width * z) / 2,
+        screenY - this.height * z,
+        this.width * z,
+        this.height * z
       );
       ctx.restore();
       return;
@@ -148,19 +149,19 @@ export class PlayerLayer implements Layer {
       ctx.scale(-1, 1);
       ctx.drawImage(
         sprite,
-        -this.width / 2,
-        -this.height,
-        this.width,
-        this.height
+        -(this.width * z) / 2,
+        -this.height * z,
+        this.width * z,
+        this.height * z
       );
     } else {
       // Normal bottom-center anchored draw
       ctx.drawImage(
         sprite,
-        screenX - this.width / 2,
-        screenY - this.height,
-        this.width,
-        this.height
+        screenX - (this.width * z) / 2,
+        screenY - this.height * z,
+        this.width * z,
+        this.height * z
       );
     }
     ctx.restore();

@@ -36,92 +36,91 @@ export class InteriorFloorLayer implements Layer {
     this.roomOffsetY = (640 - height) / 2 + 50; // Slightly lower for ceiling space
   }
 
-  render(ctx: CanvasRenderingContext2D, _camera: Camera): void {
+  render(ctx: CanvasRenderingContext2D, camera: Camera): void {
+    const z = camera.zoom;
+    
     // Dark background (walls)
     ctx.fillStyle = '#2a2a2a';
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
+    const { x: screenX, y: screenY } = camera.worldToScreenSnapped(this.roomOffsetX, this.roomOffsetY);
+
     // Draw room walls (angled perspective)
-    this.drawWalls(ctx);
+    this.drawWalls(ctx, screenX, screenY, z);
 
     // Draw wooden floor
-    this.drawFloor(ctx);
+    this.drawFloor(ctx, screenX, screenY, z);
 
     // Draw floor grid
-    this.drawGrid(ctx);
+    this.drawGrid(ctx, screenX, screenY, z);
   }
 
-  private drawWalls(ctx: CanvasRenderingContext2D): void {
-    const x = this.roomOffsetX;
-    const y = this.roomOffsetY;
-    const w = this.roomWidth;
-    const h = this.roomHeight;
+  private drawWalls(ctx: CanvasRenderingContext2D, x: number, y: number, z: number): void {
+    const w = this.roomWidth * z;
+    const h = this.roomHeight * z;
+    const wallH = 80 * z;
+    const wallSide = 60 * z;
 
     // Back wall
-    const wallGradient = ctx.createLinearGradient(x, y - 80, x, y);
+    const wallGradient = ctx.createLinearGradient(x, y - wallH, x, y);
     wallGradient.addColorStop(0, '#4a4a5a');
     wallGradient.addColorStop(1, '#3a3a4a');
 
     ctx.fillStyle = wallGradient;
     ctx.beginPath();
-    ctx.moveTo(x - 20, y - 80);
-    ctx.lineTo(x + w + 20, y - 80);
+    ctx.moveTo(x - 20 * z, y - wallH);
+    ctx.lineTo(x + w + 20 * z, y - wallH);
     ctx.lineTo(x + w, y);
     ctx.lineTo(x, y);
     ctx.closePath();
     ctx.fill();
 
     // Left wall (perspective)
-    const leftWallGradient = ctx.createLinearGradient(x - 60, y, x, y);
+    const leftWallGradient = ctx.createLinearGradient(x - wallSide, y, x, y);
     leftWallGradient.addColorStop(0, '#2a2a3a');
     leftWallGradient.addColorStop(1, '#3a3a4a');
 
     ctx.fillStyle = leftWallGradient;
     ctx.beginPath();
-    ctx.moveTo(x - 60, y - 40);
+    ctx.moveTo(x - wallSide, y - 40 * z);
     ctx.lineTo(x, y);
     ctx.lineTo(x, y + h);
-    ctx.lineTo(x - 60, y + h + 40);
+    ctx.lineTo(x - wallSide, y + h + 40 * z);
     ctx.closePath();
     ctx.fill();
 
     // Right wall (perspective)
-    const rightWallGradient = ctx.createLinearGradient(x + w, y, x + w + 60, y);
+    const rightWallGradient = ctx.createLinearGradient(x + w, y, x + w + wallSide, y);
     rightWallGradient.addColorStop(0, '#3a3a4a');
     rightWallGradient.addColorStop(1, '#2a2a3a');
 
     ctx.fillStyle = rightWallGradient;
     ctx.beginPath();
     ctx.moveTo(x + w, y);
-    ctx.lineTo(x + w + 60, y - 40);
-    ctx.lineTo(x + w + 60, y + h + 40);
+    ctx.lineTo(x + w + wallSide, y - 40 * z);
+    ctx.lineTo(x + w + wallSide, y + h + 40 * z);
     ctx.lineTo(x + w, y + h);
     ctx.closePath();
     ctx.fill();
 
     // Wall trim/baseboard
     ctx.fillStyle = '#5a4a3a';
-    ctx.fillRect(x, y + h - 8, w, 8);
+    ctx.fillRect(x, y + h - 8 * z, w, 8 * z);
   }
 
-  private drawFloor(ctx: CanvasRenderingContext2D): void {
-    const x = this.roomOffsetX;
-    const y = this.roomOffsetY;
-    const w = this.roomWidth;
-    const h = this.roomHeight;
+  private drawFloor(ctx: CanvasRenderingContext2D, x: number, y: number, z: number): void {
+    const w = this.roomWidth * z;
+    const h = this.roomHeight * z;
 
     // Create wood plank pattern
-    const plankHeight = 24;
+    const plankHeight = 24 * z;
     const plankCount = Math.ceil(h / plankHeight);
 
     for (let i = 0; i < plankCount; i++) {
       const plankY = y + i * plankHeight;
       const isEvenRow = i % 2 === 0;
 
-      // Alternating plank colors for wood grain effect
       const baseColor = isEvenRow ? this.config.woodColor : this.config.woodColorDark;
-
-      // Gradient for depth (planks closer = darker)
       const depthFactor = i / plankCount;
       const gradient = ctx.createLinearGradient(x, plankY, x, plankY + plankHeight);
       gradient.addColorStop(0, this.adjustBrightness(baseColor, 1 - depthFactor * 0.2));
@@ -130,7 +129,6 @@ export class InteriorFloorLayer implements Layer {
       ctx.fillStyle = gradient;
       ctx.fillRect(x, plankY, w, plankHeight);
 
-      // Plank gap line
       ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)';
       ctx.lineWidth = 1;
       ctx.beginPath();
@@ -138,8 +136,7 @@ export class InteriorFloorLayer implements Layer {
       ctx.lineTo(x + w, plankY + plankHeight);
       ctx.stroke();
 
-      // Vertical gaps for plank segments (offset alternating rows)
-      const segmentWidth = 80;
+      const segmentWidth = 80 * z;
       const offset = isEvenRow ? 0 : segmentWidth / 2;
 
       ctx.strokeStyle = 'rgba(0, 0, 0, 0.15)';
@@ -151,28 +148,22 @@ export class InteriorFloorLayer implements Layer {
       }
     }
 
-    // Floor edge shadow (depth illusion)
-    const shadowGradient = ctx.createLinearGradient(x, y, x, y + 30);
+    const shadowGradient = ctx.createLinearGradient(x, y, x, y + 30 * z);
     shadowGradient.addColorStop(0, 'rgba(0, 0, 0, 0.3)');
     shadowGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
     ctx.fillStyle = shadowGradient;
-    ctx.fillRect(x, y, w, 30);
+    ctx.fillRect(x, y, w, 30 * z);
   }
 
-  private drawGrid(ctx: CanvasRenderingContext2D): void {
-    const x = this.roomOffsetX;
-    const y = this.roomOffsetY;
-    const w = this.roomWidth;
-    const h = this.roomHeight;
-    const gridSize = this.config.gridSize;
+  private drawGrid(ctx: CanvasRenderingContext2D, x: number, y: number, z: number): void {
+    const w = this.roomWidth * z;
+    const h = this.roomHeight * z;
+    const gridSize = this.config.gridSize * z;
 
     ctx.strokeStyle = this.config.gridColor;
     ctx.lineWidth = 1;
-
-    // Subtle grid overlay (for alignment, barely visible)
     ctx.globalAlpha = 0.3;
 
-    // Vertical lines
     for (let gx = gridSize; gx < w; gx += gridSize) {
       ctx.beginPath();
       ctx.moveTo(x + gx, y);
@@ -180,7 +171,6 @@ export class InteriorFloorLayer implements Layer {
       ctx.stroke();
     }
 
-    // Horizontal lines
     for (let gy = gridSize; gy < h; gy += gridSize) {
       ctx.beginPath();
       ctx.moveTo(x, y + gy);

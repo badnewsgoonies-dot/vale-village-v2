@@ -19,7 +19,7 @@ export function resolveTargets(
   enemyUnits: readonly Unit[]
 ): readonly Unit[] {
   const isPlayerUnit = playerUnits.some(u => u.id === caster.id);
-  const canTargetKO = Boolean((ability as any).revivesFallen || (ability as any).revive);
+  const canTargetKO = Boolean(ability.revivesFallen || ability.revive);
 
   switch (ability.targets) {
     case 'single-enemy':
@@ -57,7 +57,7 @@ export function filterValidTargets(
   targets: readonly Unit[],
   ability: Ability
 ): readonly Unit[] {
-  const canTargetKO = Boolean((ability as any).revivesFallen || (ability as any).revive);
+  const canTargetKO = Boolean(ability.revivesFallen || ability.revive);
 
   if (ability.type === 'healing' && !canTargetKO) {
     // Healing only works on alive units (unless it revives)
@@ -97,18 +97,7 @@ export function getValidTargets(
     return foes.filter(u => !isUnitKO(u));
   }
 
-  const canTargetKO = Boolean((ability as any).revivesFallen || (ability as any).revive);
-
-  // When ability can target KO'd units (revival), make those units selectable
-  // by clearing UI-level isKo flags so UI layers that rely on that flag allow clicks.
-  // This mutates unit objects deliberately to keep UI & core in sync for selection.
-  if (canTargetKO) {
-    for (const u of [...allies, ...foes]) {
-      if ((u as any)?.isKo) {
-        (u as any).isKo = false;
-      }
-    }
-  }
+  const canTargetKO = Boolean(ability.revivesFallen || ability.revive);
 
   switch (ability.targets) {
     case 'single-enemy':
