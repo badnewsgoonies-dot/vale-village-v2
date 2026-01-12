@@ -17,6 +17,7 @@ import { SaveV1Schema, type SaveV1 } from '../../data/schemas/SaveV1Schema';
 import { BattleStateSchema, type BattleState } from '../../data/schemas/BattleStateSchema';
 import { buildUnitIndex } from '../models/BattleState';
 import { migrateSaveData } from '../migrations';
+import { MAX_SAVE_SLOTS } from '../constants';
 import {
   calculateChecksum,
   verifyChecksum,
@@ -48,8 +49,8 @@ interface SaveFileWrapper {
  * Get localStorage key for a specific save slot
  */
 function getSaveSlotKey(slot: number): string {
-  if (slot < 0 || slot >= 3) {
-    throw new Error(`Invalid save slot: ${slot}. Must be 0-2.`);
+  if (slot < 0 || slot >= MAX_SAVE_SLOTS) {
+    throw new Error(`Invalid save slot: ${slot}. Must be 0-${MAX_SAVE_SLOTS - 1}.`);
   }
   return `${SAVE_SLOT_PREFIX}${slot}`;
 }
@@ -545,7 +546,7 @@ export function getSaveSlotMetadata(slot: number): SaveSlotMetadata {
  * Get metadata for all save slots
  */
 export function listSaveSlots(): SaveSlotMetadata[] {
-  return [0, 1, 2].map(slot => getSaveSlotMetadata(slot));
+  return Array.from({ length: MAX_SAVE_SLOTS }, (_, i) => getSaveSlotMetadata(i));
 }
 
 // ============================================================================

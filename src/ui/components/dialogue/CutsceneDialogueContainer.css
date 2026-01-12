@@ -1,0 +1,120 @@
+.cutscene-container {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 900;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #000;
+  overflow: hidden;
+}
+
+.cutscene-background {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.7);
+  transition: background-image 0.5s ease-in-out, filter 0.5s ease;
+  z-index: 0;
+}
+
+.cutscene-portraits {
+  position: absolute;
+  bottom: 140px; /* Above the text box */
+  width: 100%;
+  height: 400px;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 100px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.portrait-wrapper {
+  position: relative;
+  width: 300px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.portrait-wrapper.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.portrait-wrapper.side-left {
+  justify-content: flex-start;
+}
+
+.portrait-wrapper.side-right {
+  justify-content: flex-end;
+}
+
+.portrait-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
+}
+
+.portrait-img.talking {
+  animation: mouth-move 0.2s infinite alternate;
+}
+
+@keyframes mouth-move {
+  from { transform: scaleY(1); }
+  to { transform: scaleY(1.05); }
+}
+
+.cutscene-ui {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.choice-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.8);
+  border: 2px solid #ffd700;
+  padding: 20px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: auto;
+}
+
+.choice-button {
+  background: #1a1a4a;
+  border: 1px solid #ffffff;
+  color: #fff;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 12px;
+  text-align: left;
+  transition: background 0.2s;
+}
+
+.choice-button:hover {
+  background: #3a3a8a;
+  border-color: #ffd700;
+}

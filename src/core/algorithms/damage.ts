@@ -55,8 +55,8 @@ export function calculateTotalEquipmentElementalResistance(unit: Unit): number {
 
   for (const slot of slots) {
     const item = unit.equipment[slot];
-    if (item && typeof (item as any).elementalResist === 'number') {
-      total += (item as any).elementalResist || 0;
+    if (item && typeof item.elementalResist === 'number') {
+      total += item.elementalResist || 0;
     }
   }
 

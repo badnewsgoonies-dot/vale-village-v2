@@ -5,10 +5,11 @@ import type { Ability } from '../../data/schemas/AbilitySchema';
 import type { Unit } from '../../core/models/Unit';
 import { canAffordAction, getAbilityManaCost } from '../../core/algorithms/mana';
 import { DJINN_ABILITIES } from '../../data/definitions/djinnAbilities';
-import { getDjinnAbilityMetadataForUnit, getLockedDjinnAbilityMetadataForUnit } from '../../core/algorithms/djinnAbilities';
+import { getLockedDjinnAbilityMetadataForUnit } from '../../core/algorithms/djinnAbilities';
 import { getSetDjinnIds } from '../../core/algorithms/djinn';
 import { useStore } from '../state/store';
 import { DJINN } from '../../data/definitions/djinn';
+import { audio } from '../../core/services/AudioService';
 
 const ACTION_ICONS: Record<string, string> = {
   attack: '/sprites/icons/buttons/Attack.gif',
@@ -97,45 +98,41 @@ function AbilityGrid({
         const canAfford = canAffordAction(effectiveRemainingMana, manaCost);
         const isLocked = lockedAbilityIds.includes(ability.id);
         const isSelected = selectedAbilityId === ability.id;
-        const abilityType = (ability as any).type || 'psynergy';
-
-        return (
-          <button
-            key={ability.id}
-            class={`gs-button ${isSelected ? 'selected' : ''} ${(!canAfford || isLocked) ? 'disabled' : ''}`}
-            onMouseEnter={() => onPreview?.(ability)}
-            onClick={() => canAfford && !isLocked && onSelect(ability.id, ability)}
-            aria-pressed={isSelected}
-            aria-disabled={!canAfford || isLocked}
-            data-testid={`ability-${ability.id}`}
-            style={{ 
-              flexDirection: 'column', 
-              alignItems: 'flex-start', 
-              padding: '6px 8px',
-              minHeight: 60,
-              gap: 2
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: 4, width: '100%' }}>
-              <img
-                src={ACTION_ICONS.abilities}
-                alt=""
-                width={14}
-                height={14}
-                style={{ imageRendering: 'pixelated' }}
-              />
-              <span class="gs-value" style={{ fontSize: '0.75rem', flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                {ability.name}
-              </span>
-              <span style={{ fontSize: '0.65rem', opacity: 0.8 }}>{manaCost}</span>
+                const abilityType = (ability as any).type || 'psynergy';
+                
+                return (
+                  <div
+                    key={ability.id}
+                    className={`gs-list-item ${isSelected ? 'selected' : ''} ${!canAfford || isLocked ? 'disabled' : ''}`}
+                    onClick={() => {
+                      if (canAfford && !isLocked) {
+                        audio.playSFX('menu_select');
+                        onSelect(ability.id, ability);
+                      }
+                    }}
+                    onMouseEnter={() => onPreview?.(ability)}
+                    style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '4px', opacity: isLocked ? 0.5 : 1 }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 4, width: '100%' }}>
+                      <img
+                        src={ACTION_ICONS.abilities}
+                        alt=""
+                        width={14}
+                        height={14}
+                        style={{ imageRendering: 'pixelated' }}
+                      />
+                      <span class="gs-value" style={{ fontSize: '0.75rem', flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {ability.name}
+                      </span>
+                      <span style={{ fontSize: '0.65rem', opacity: 0.8 }}>{manaCost}</span>
+                    </div>
+                    <div style={{ fontSize: '0.6rem', opacity: 0.6 }}>{abilityType}</div>
+                  </div>
+                );
+              })}
             </div>
-            <div style={{ fontSize: '0.6rem', opacity: 0.6 }}>{abilityType}</div>
-          </button>
-        );
-      })}
-    </div>
-  );
-}
+          );
+        }
 
 export function BattleActionMenu({
   battle,

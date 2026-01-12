@@ -487,8 +487,9 @@ export class InteriorFurnitureLayer implements Layer {
     this.playerFacing = facing;
   }
 
-  render(ctx: CanvasRenderingContext2D, _camera: Camera): void {
+  render(ctx: CanvasRenderingContext2D, camera: Camera): void {
     const { roomX, roomY } = this.config;
+    const z = camera.zoom;
 
     // Combine furniture and player for Y-sorting
     const renderables: Array<{ item: FurnitureItem | 'player'; y: number }> = [];
@@ -508,19 +509,21 @@ export class InteriorFurnitureLayer implements Layer {
     // Render each item
     for (const { item } of renderables) {
       if (item === 'player') {
-        this.drawPlayer(ctx, roomX, roomY);
+        this.drawPlayer(ctx, camera, roomX, roomY);
         continue;
       }
-      this.drawFurniture(ctx, item, roomX, roomY);
+      this.drawFurniture(ctx, camera, item, roomX, roomY);
     }
 
     // Draw exit door marker at bottom center
-    this.drawExitMarker(ctx, roomX, roomY);
+    this.drawExitMarker(ctx, camera, roomX, roomY);
   }
 
-  private drawFurniture(ctx: CanvasRenderingContext2D, item: FurnitureItem, roomX: number, roomY: number): void {
-    const x = roomX + item.x;
-    const y = roomY + item.y;
+  private drawFurniture(ctx: CanvasRenderingContext2D, camera: Camera, item: FurnitureItem, roomX: number, roomY: number): void {
+    const worldX = roomX + item.x;
+    const worldY = roomY + item.y;
+    const { x, y } = camera.worldToScreenSnapped(worldX, worldY);
+    const z = camera.zoom;
 
     // Skip shadow for flat items like rugs
     if (item.type !== 'rug') {
@@ -528,69 +531,71 @@ export class InteriorFurnitureLayer implements Layer {
       ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
       ctx.beginPath();
       ctx.ellipse(
-        x + item.width / 2,
-        y + item.height + 4,
-        item.width * 0.4,
-        6,
+        x + (item.width * z) / 2,
+        y + item.height * z + 4 * z,
+        item.width * 0.4 * z,
+        6 * z,
         0, 0, Math.PI * 2
       );
       ctx.fill();
     }
 
     // Draw furniture placeholder based on type
-    this.drawFurniturePlaceholder(ctx, item, x, y);
+    this.drawFurniturePlaceholder(ctx, item, x, y, z);
   }
 
-  private drawFurniturePlaceholder(ctx: CanvasRenderingContext2D, item: FurnitureItem, x: number, y: number): void {
+  private drawFurniturePlaceholder(ctx: CanvasRenderingContext2D, item: FurnitureItem, x: number, y: number, z: number): void {
     ctx.save();
+    const w = item.width * z;
+    const h = item.height * z;
 
     switch (item.type) {
       case 'table':
         // Table top
         ctx.fillStyle = '#6B4423';
-        ctx.fillRect(x, y, item.width, item.height);
+        ctx.fillRect(x, y, w, h);
         // Legs
         ctx.fillStyle = '#4a3010';
-        ctx.fillRect(x + 5, y + item.height - 5, 6, 8);
-        ctx.fillRect(x + item.width - 11, y + item.height - 5, 6, 8);
+        ctx.fillRect(x + 5 * z, y + h - 5 * z, 6 * z, 8 * z);
+        ctx.fillRect(x + w - 11 * z, y + h - 5 * z, 6 * z, 8 * z);
         break;
 
       case 'chair':
         // Seat
         ctx.fillStyle = '#7B5B3A';
-        ctx.fillRect(x, y + 10, item.width, 12);
+        ctx.fillRect(x, y + 10 * z, w, 12 * z);
         // Back
         ctx.fillStyle = '#6B4B2A';
-        ctx.fillRect(x + 2, y, item.width - 4, 12);
+        ctx.fillRect(x + 2 * z, y, w - 4 * z, 12 * z);
         // Legs
         ctx.fillStyle = '#4a3010';
-        ctx.fillRect(x + 2, y + 22, 4, 10);
-        ctx.fillRect(x + item.width - 6, y + 22, 4, 10);
+        ctx.fillRect(x + 2 * z, y + 22 * z, 4 * z, 10 * z);
+        ctx.fillRect(x + w - 6 * z, y + 22 * z, 4 * z, 10 * z);
         break;
 
       case 'bed':
         // Frame
         ctx.fillStyle = '#5a4a3a';
-        ctx.fillRect(x, y, item.width, item.height);
+        ctx.fillRect(x, y, w, h);
         // Mattress
         ctx.fillStyle = '#e8e0d8';
-        ctx.fillRect(x + 4, y + 4, item.width - 8, item.height - 20);
+        ctx.fillRect(x + 4 * z, y + 4 * z, w - 8 * z, h - 20 * z);
         // Pillow
         ctx.fillStyle = '#f0f0e8';
-        ctx.fillRect(x + 6, y + 6, item.width - 12, 20);
+        ctx.fillRect(x + 6 * z, y + 6 * z, w - 12 * z, 20 * z);
         // Blanket
         ctx.fillStyle = '#8a6050';
-        ctx.fillRect(x + 4, y + 30, item.width - 8, item.height - 46);
+        ctx.fillRect(x + 4 * z, y + 30 * z, w - 8 * z, h - 46 * z);
         break;
 
       case 'bookshelf':
         // Frame
         ctx.fillStyle = '#5a3a2a';
-        ctx.fillRect(x, y, item.width, item.height);
+        ctx.fillRect(x, y, w, h);
         // Shelves
         ctx.fillStyle = '#7a5a4a';
         for (let sy = 15; sy < item.height - 10; sy += 20) {
-          ctx.fillRect(x + 3, y + sy, item.width - 6, 4);
+          ctx.fillRect(x + 3 * z, y + sy * z, w - 6 * z, 4 * z);
         }
         // Books (colored spines)
         const bookColors = ['#c04040', '#4060c0', '#40a040', '#a0a040', '#8040a0'];
@@ -598,7 +603,7 @@ export class InteriorFurnitureLayer implements Layer {
           for (let bx = 0; bx < 5; bx++) {
             const color = bookColors[(sy + bx) % bookColors.length] ?? '#c04040';
             ctx.fillStyle = color;
-            ctx.fillRect(x + 5 + bx * 7, y + sy, 6, 14);
+            ctx.fillRect(x + (5 + bx * 7) * z, y + sy * z, 6 * z, 14 * z);
           }
         }
         break;
@@ -606,55 +611,55 @@ export class InteriorFurnitureLayer implements Layer {
       case 'chest':
         // Body
         ctx.fillStyle = '#6a4a30';
-        ctx.fillRect(x, y + 8, item.width, item.height - 8);
+        ctx.fillRect(x, y + 8 * z, w, h - 8 * z);
         // Lid
         ctx.fillStyle = '#7a5a40';
-        ctx.fillRect(x, y, item.width, 12);
+        ctx.fillRect(x, y, w, 12 * z);
         // Metal trim
         ctx.fillStyle = '#a0a0a0';
-        ctx.fillRect(x + item.width / 2 - 6, y + 4, 12, 20);
+        ctx.fillRect(x + w / 2 - 6 * z, y + 4 * z, 12 * z, 20 * z);
         break;
 
       case 'rug':
         // Decorative rug pattern
         ctx.fillStyle = '#804040';
-        ctx.fillRect(x, y, item.width, item.height);
+        ctx.fillRect(x, y, w, h);
         // Border
         ctx.strokeStyle = '#c08040';
-        ctx.lineWidth = 3;
-        ctx.strokeRect(x + 5, y + 5, item.width - 10, item.height - 10);
+        ctx.lineWidth = 3 * z;
+        ctx.strokeRect(x + 5 * z, y + 5 * z, w - 10 * z, h - 10 * z);
         // Center pattern
         ctx.fillStyle = '#c08040';
         ctx.beginPath();
-        ctx.arc(x + item.width / 2, y + item.height / 2, 15, 0, Math.PI * 2);
+        ctx.arc(x + w / 2, y + h / 2, 15 * z, 0, Math.PI * 2);
         ctx.fill();
         break;
 
       case 'plant':
         // Pot
         ctx.fillStyle = '#8a5a4a';
-        ctx.fillRect(x + item.width / 4, y + item.height - 15, item.width / 2, 15);
+        ctx.fillRect(x + w / 4, y + h - 15 * z, w / 2, 15 * z);
         // Plant
         ctx.fillStyle = '#3a8a3a';
         ctx.beginPath();
-        ctx.arc(x + item.width / 2, y + item.height / 2, item.width / 3, 0, Math.PI * 2);
+        ctx.arc(x + w / 2, y + h / 2, w / 3, 0, Math.PI * 2);
         ctx.fill();
         break;
 
       case 'lamp':
         // Base
         ctx.fillStyle = '#a0a0a0';
-        ctx.fillRect(x + item.width / 2 - 8, y + item.height - 10, 16, 10);
+        ctx.fillRect(x + w / 2 - 8 * z, y + h - 10 * z, 16 * z, 10 * z);
         // Pole
         ctx.fillStyle = '#808080';
-        ctx.fillRect(x + item.width / 2 - 2, y + 15, 4, item.height - 25);
+        ctx.fillRect(x + w / 2 - 2 * z, y + 15 * z, 4 * z, h - 25 * z);
         // Shade
         ctx.fillStyle = '#e8d8c0';
         ctx.beginPath();
-        ctx.moveTo(x, y + 15);
-        ctx.lineTo(x + item.width, y + 15);
-        ctx.lineTo(x + item.width - 5, y);
-        ctx.lineTo(x + 5, y);
+        ctx.moveTo(x, y + 15 * z);
+        ctx.lineTo(x + w, y + 15 * z);
+        ctx.lineTo(x + w - 5 * z, y);
+        ctx.lineTo(x + 5 * z, y);
         ctx.closePath();
         ctx.fill();
         break;
@@ -662,14 +667,14 @@ export class InteriorFurnitureLayer implements Layer {
       case 'fireplace':
         // Stone frame
         ctx.fillStyle = '#6a6a6a';
-        ctx.fillRect(x, y, item.width, item.height);
+        ctx.fillRect(x, y, w, h);
         // Opening
         ctx.fillStyle = '#1a1a1a';
-        ctx.fillRect(x + 8, y + 15, item.width - 16, item.height - 15);
+        ctx.fillRect(x + 8 * z, y + 15 * z, w - 16 * z, h - 15 * z);
         // Fire glow
         ctx.fillStyle = 'rgba(255, 100, 50, 0.6)';
         ctx.beginPath();
-        ctx.arc(x + item.width / 2, y + item.height - 10, 15, 0, Math.PI * 2);
+        ctx.arc(x + w / 2, y + h - 10 * z, 15 * z, 0, Math.PI * 2);
         ctx.fill();
         break;
     }
@@ -677,16 +682,19 @@ export class InteriorFurnitureLayer implements Layer {
     ctx.restore();
   }
 
-  private drawPlayer(ctx: CanvasRenderingContext2D, roomX: number, roomY: number): void {
-    const x = roomX + this.playerPos.x;
-    const y = roomY + this.playerPos.y;
-    const width = 28;
-    const height = 40;
+  private drawPlayer(ctx: CanvasRenderingContext2D, camera: Camera, roomX: number, roomY: number): void {
+    const worldX = roomX + this.playerPos.x;
+    const worldY = roomY + this.playerPos.y;
+    const { x, y } = camera.worldToScreenSnapped(worldX, worldY);
+    const z = camera.zoom;
+    
+    const width = 28 * z;
+    const height = 40 * z;
 
     // Shadow
     ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
     ctx.beginPath();
-    ctx.ellipse(x, y + 3, 12, 5, 0, 0, Math.PI * 2);
+    ctx.ellipse(x, y + 3 * z, 12 * z, 5 * z, 0, 0, Math.PI * 2);
     ctx.fill();
 
     // Player body
@@ -695,44 +703,47 @@ export class InteriorFurnitureLayer implements Layer {
 
     // Head
     ctx.fillStyle = '#f5d5c8';
-    ctx.fillRect(x - width / 2 + 4, y - height + 2, width - 8, 12);
+    ctx.fillRect(x - width / 2 + 4 * z, y - height + 2 * z, width - 8 * z, 12 * z);
 
     // Direction indicator
     ctx.fillStyle = '#fff';
     let ix = x, iy = y - height / 2;
     switch (this.playerFacing) {
-      case 'up': iy = y - height - 4; break;
-      case 'down': iy = y + 4; break;
-      case 'left': ix = x - width / 2 - 4; break;
-      case 'right': ix = x + width / 2 + 4; break;
+      case 'up': iy = y - height - 4 * z; break;
+      case 'down': iy = y + 4 * z; break;
+      case 'left': ix = x - width / 2 - 4 * z; break;
+      case 'right': ix = x + width / 2 + 4 * z; break;
     }
     ctx.beginPath();
-    ctx.arc(ix, iy, 3, 0, Math.PI * 2);
+    ctx.arc(ix, iy, 3 * z, 0, Math.PI * 2);
     ctx.fill();
   }
 
-  private drawExitMarker(ctx: CanvasRenderingContext2D, roomX: number, roomY: number): void {
+  private drawExitMarker(ctx: CanvasRenderingContext2D, camera: Camera, roomX: number, roomY: number): void {
     const { roomWidth, roomHeight } = this.config;
-    const exitX = roomX + roomWidth / 2;
-    const exitY = roomY + roomHeight + 10;
+    const worldX = roomX + roomWidth / 2;
+    const worldY = roomY + roomHeight + 10;
+    const { x: exitX, y: exitY } = camera.worldToScreenSnapped(worldX, worldY);
+    const z = camera.zoom;
 
     // Pulsing animation
     const pulse = Math.sin(Date.now() * 0.004) * 0.2 + 0.8;
 
     // Exit glow
-    const gradient = ctx.createRadialGradient(exitX, exitY, 0, exitX, exitY, 30);
+    const gradient = ctx.createRadialGradient(exitX, exitY, 0, exitX, exitY, 30 * z);
     gradient.addColorStop(0, `rgba(100, 200, 255, ${0.4 * pulse})`);
     gradient.addColorStop(1, 'rgba(100, 200, 255, 0)');
     ctx.fillStyle = gradient;
     ctx.beginPath();
-    ctx.arc(exitX, exitY, 30, 0, Math.PI * 2);
+    ctx.arc(exitX, exitY, 30 * z, 0, Math.PI * 2);
     ctx.fill();
 
     // Exit text
     ctx.fillStyle = `rgba(255, 255, 255, ${pulse})`;
-    ctx.font = '11px sans-serif';
+    const fontSize = Math.max(8, Math.round(11 * z));
+    ctx.font = `${fontSize}px sans-serif`;
     ctx.textAlign = 'center';
-    ctx.fillText('EXIT', exitX, exitY + 4);
+    ctx.fillText('EXIT', exitX, exitY + 4 * z);
   }
 }
 

@@ -116,6 +116,7 @@ export class VillageLayer implements Layer {
   }
 
   render(ctx: CanvasRenderingContext2D, camera: Camera): void {
+    const z = camera.zoom;
     for (const building of this.buildings) {
       const { x: screenX, y: screenY } = camera.worldToScreenSnapped(building.x, building.y);
 
@@ -134,14 +135,14 @@ export class VillageLayer implements Layer {
 
       // Render door glow BEFORE shadow and building (so it's behind)
       if (isHighlighted) {
-        this.renderDoorGlow(ctx, screenX, screenY, building);
+        this.renderDoorGlow(ctx, screenX, screenY, building, z);
       }
 
       // Shadow on the road (slightly below the ground line)
       ctx.save();
       ctx.fillStyle = 'rgba(0, 0, 0, 0.28)';
       ctx.beginPath();
-      ctx.ellipse(screenX, screenY + 10, building.width * 0.28, 8, 0, 0, Math.PI * 2);
+      ctx.ellipse(screenX, screenY + 10 * z, building.width * 0.28 * z, 8 * z, 0, 0, Math.PI * 2);
       ctx.fill();
       ctx.restore();
 
@@ -151,7 +152,7 @@ export class VillageLayer implements Layer {
         // Placeholder until sprite is ready
         ctx.save();
         ctx.fillStyle = 'rgba(255,255,255,0.08)';
-        ctx.fillRect(screenX - building.width / 2, screenY - building.height, building.width, building.height);
+        ctx.fillRect(screenX - (building.width * z) / 2, screenY - building.height * z, building.width * z, building.height * z);
         ctx.restore();
         continue;
       }
@@ -159,15 +160,15 @@ export class VillageLayer implements Layer {
       // Bottom-center anchored draw
       ctx.drawImage(
         sprite,
-        screenX - building.width / 2,
-        screenY - building.height,
-        building.width,
-        building.height
+        screenX - (building.width * z) / 2,
+        screenY - building.height * z,
+        building.width * z,
+        building.height * z
       );
 
       // Render prompt AFTER building (so it's on top)
       if (isHighlighted) {
-        this.renderDoorPrompt(ctx, screenX, screenY, building);
+        this.renderDoorPrompt(ctx, screenX, screenY, building, z);
       }
     }
   }
@@ -177,7 +178,8 @@ export class VillageLayer implements Layer {
     ctx: CanvasRenderingContext2D,
     screenX: number,
     screenY: number,
-    building: VillageBuilding
+    building: VillageBuilding,
+    z: number
   ): void {
     const isLocked = !this.isUnlocked(building.id);
 
@@ -200,10 +202,10 @@ export class VillageLayer implements Layer {
     ctx.save();
 
     // Draw radial gradient glow
-    const glowRadius = Math.max(building.width, building.height) * 0.6;
+    const glowRadius = Math.max(building.width, building.height) * 0.6 * z;
     const gradient = ctx.createRadialGradient(
-      screenX, screenY - building.height * 0.3, 0,
-      screenX, screenY - building.height * 0.3, glowRadius
+      screenX, screenY - building.height * 0.3 * z, 0,
+      screenX, screenY - building.height * 0.3 * z, glowRadius
     );
     gradient.addColorStop(0, glowColor);
     gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
@@ -212,7 +214,7 @@ export class VillageLayer implements Layer {
     ctx.beginPath();
     ctx.ellipse(
       screenX,
-      screenY - building.height * 0.3,
+      screenY - building.height * 0.3 * z,
       glowRadius,
       glowRadius * 0.7,
       0, 0, Math.PI * 2
@@ -227,7 +229,8 @@ export class VillageLayer implements Layer {
     ctx: CanvasRenderingContext2D,
     screenX: number,
     screenY: number,
-    building: VillageBuilding
+    building: VillageBuilding,
+    z: number
   ): void {
     const isLocked = !this.isUnlocked(building.id);
 
@@ -250,18 +253,19 @@ export class VillageLayer implements Layer {
     }
 
     // Position prompt above the building
-    const promptY = screenY - building.height - 20;
+    const promptY = screenY - building.height * z - 20 * z;
 
     ctx.save();
 
     // Text styling
-    ctx.font = 'bold 14px "Press Start 2P", monospace';
+    const fontSize = Math.max(8, Math.round(14 * z));
+    ctx.font = `bold ${fontSize}px "Press Start 2P", monospace`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'bottom';
 
     // Draw text shadow
     ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
-    ctx.fillText(promptText, screenX + 2, promptY + 2);
+    ctx.fillText(promptText, screenX + 2 * z, promptY + 2 * z);
 
     // Draw main text
     ctx.fillStyle = textColor;

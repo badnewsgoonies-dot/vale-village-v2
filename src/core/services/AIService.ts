@@ -16,6 +16,7 @@ import { resolveTargets } from '../algorithms/targeting';
 import type { Team } from '../models/Team';
 import { calculateEffectiveStats } from '../algorithms/stats';
 import { ENEMIES } from '../../data/definitions/enemies';
+import { AI_CONSTANTS } from '../constants';
 
 /**
  * AI hints for abilities (optional metadata)
@@ -90,7 +91,7 @@ function scoreAbility(
   const validTargets = potentialTargets.filter(t => canTargetKO || !isUnitKO(t));
 
   if (validTargets.length === 0) {
-    return -1000; // No valid targets
+    return AI_CONSTANTS.INVALID_SCORE; // No valid targets
   }
 
   if (abilityTargets === 'all-enemies' || abilityTargets === 'all-allies') {
@@ -108,7 +109,7 @@ function scoreAbility(
     const aliveTargets = validTargets.filter(t => !isUnitKO(t));
     
     if (aliveTargets.length === 0) {
-      return -1000;
+      return AI_CONSTANTS.INVALID_SCORE;
     }
 
     const avgTargetDef = aliveTargets.reduce((sum, t) => {
@@ -148,10 +149,10 @@ function scoreAbility(
       const koTargets = validTargets.filter(isUnitKO);
       if (koTargets.length > 0) {
         // High value for reviving units
-        estimatedValue += 100 * koTargets.length;
+        estimatedValue += AI_CONSTANTS.REVIVE_SCORE_BONUS * koTargets.length;
       } else if (ability.basePower === 0) {
         // If it's a pure revival skill and no one is KO'd, it's useless
-        return -1000;
+        return AI_CONSTANTS.INVALID_SCORE;
       }
     }
 
@@ -163,18 +164,18 @@ function scoreAbility(
     if (ability.buffEffect) {
       const statMods = Object.values(ability.buffEffect).filter(v => typeof v === 'number');
       const totalMod = statMods.reduce((sum, mod) => sum + Math.abs(mod as number), 0);
-      estimatedValue += totalMod * 2;
+      estimatedValue += totalMod * AI_CONSTANTS.BUFF_UTILITY_MULTIPLIER;
     }
     if (ability.debuffEffect) {
       const statMods = Object.values(ability.debuffEffect).filter(v => typeof v === 'number');
       const totalMod = statMods.reduce((sum, mod) => sum + Math.abs(mod as number), 0);
-      estimatedValue += totalMod * 2;
+      estimatedValue += totalMod * AI_CONSTANTS.BUFF_UTILITY_MULTIPLIER;
     }
     // Status utility - value based on stat modifier
   }
 
   // Apply status utility weight
-  score += estimatedValue * 0.1;
+  score += estimatedValue * AI_CONSTANTS.STATUS_UTILITY_MULTIPLIER;
 
   // Opener bonus (prefer in early turns)
   // Note: turnNumber tracking would need to be added to BattleState if needed
@@ -452,7 +453,7 @@ export function makeAIDecision(
 
     // Phase priority bonus: +10 to abilities in phase's priority list
     if (priorityAbilityIds.includes(ability.id)) {
-      score += 10;
+      score += AI_CONSTANTS.PHASE_PRIORITY_BONUS;
     }
 
     return { ability, score };
@@ -469,7 +470,7 @@ export function makeAIDecision(
   // Length check guarantees [0] and potentially [1] exist
   let chosenAbility = scored[0]!.ability;
 
-  if (scored.length > 1 && scored[0]!.score - scored[1]!.score < 2.0) {
+  if (scored.length > 1 && scored[0]!.score - scored[1]!.score < AI_CONSTANTS.SCORE_CLOSE_THRESHOLD) {
     // Scores are close - randomize between top 2
     const topTwo = scored.slice(0, 2);
     const index = Math.floor(rng.next() * topTwo.length);
