@@ -1,0 +1,76 @@
+.dialogue-box-v3 {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) scale(0.9);
+  width: 90%;
+  max-width: 800px;
+  min-height: 120px;
+  background: linear-gradient(180deg, #1a1a4a 0%, #0a0a2a 100%);
+  border: 3px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px 24px;
+  color: #ffffff;
+  font-family: 'Press Start 2P', 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), inset 0 0 16px rgba(255, 255, 255, 0.1);
+  z-index: 1000;
+  opacity: 0;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+  pointer-events: auto;
+}
+
+.dialogue-box-v3.open {
+  transform: translateX(-50%) scale(1);
+  opacity: 1;
+}
+
+.dialogue-header {
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 4px;
+}
+
+.speaker-name {
+  color: #ffd700;
+  font-weight: bold;
+  text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5);
+}
+
+.dialogue-text {
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.dialogue-cursor {
+  position: absolute;
+  bottom: 12px;
+  right: 16px;
+  width: 12px;
+  height: 12px;
+  background-color: #ffd700;
+  animation: blink 0.8s infinite;
+  clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Character shaking effect for emphasis */
+@keyframes text-shake {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-1px, 1px); }
+  50% { transform: translate(1px, -1px); }
+  75% { transform: translate(-1px, -1px); }
+  100% { transform: translate(1px, 1px); }
+}
+
+.shake {
+  display: inline-block;
+  animation: text-shake 0.1s infinite;
+  color: #ff4444;
+}

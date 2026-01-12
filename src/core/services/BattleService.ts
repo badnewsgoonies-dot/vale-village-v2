@@ -29,7 +29,7 @@ import {
 } from '../algorithms/status';
 import { applyBreakDamage } from '../algorithms/weakness';
 import { resolveTargets, filterValidTargets } from '../algorithms/targeting';
-import { BATTLE_CONSTANTS } from '../constants';
+import { BATTLE_CONSTANTS, STATUS_CONSTANTS } from '../constants';
 import type { BattleEvent } from './types';
 import { Ok, Err, type Result } from '../utils/result';
 import { BattleTransaction } from './BattleTransaction';
@@ -443,7 +443,7 @@ export function executeAbility(
             const isPlayerTarget = team.units.some(u => u.id === currentTarget!.id);
             
             if (isPlayerCaster && !isPlayerTarget) {
-              damage = 9999; // One-hit kill enemies
+              damage = BATTLE_CONSTANTS.GOD_MODE_DAMAGE; // One-hit kill enemies
             } else if (!isPlayerCaster && isPlayerTarget) {
               damage = 0; // Invincible player
             }

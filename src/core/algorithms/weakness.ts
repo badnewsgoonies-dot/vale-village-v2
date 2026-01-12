@@ -1,6 +1,7 @@
 
 import { Unit, updateUnit } from '../models/Unit';
 import { Element } from '../models/types';
+import { BATTLE_CONSTANTS } from '../constants';
 
 export interface BreakResult {
   unit: Unit;
@@ -33,7 +34,7 @@ export function applyBreakDamage(
 
   // If already broken, just return extra damage multiplier
   if (target.isBroken) {
-    return { unit: target, broke: false, damageMultiplier: 1.5 };
+    return { unit: target, broke: false, damageMultiplier: BATTLE_CONSTANTS.BREAK_DAMAGE_MULTIPLIER };
   }
 
   // If unit has no break gauge, ignore
@@ -42,7 +43,9 @@ export function applyBreakDamage(
   }
 
   // Calculate break damage (10 point for normal hit, 25 for weakness)
-  const breakDmg = weak ? 25 : 10;
+  const breakDmg = weak 
+    ? BATTLE_CONSTANTS.BREAK_GAUGE_REDUCTION_WEAKNESS 
+    : BATTLE_CONSTANTS.BREAK_GAUGE_REDUCTION_NORMAL;
   
   let newGauge = target.breakGauge - breakDmg;
   let broke = false;
@@ -60,14 +63,14 @@ export function applyBreakDamage(
   return {
     unit: updated,
     broke,
-    damageMultiplier: broke ? 1.5 : 1.0
+    damageMultiplier: broke ? BATTLE_CONSTANTS.BREAK_DAMAGE_MULTIPLIER : 1.0
   };
 }
 
 /**
  * Reset break state (e.g. at end of turn or after duration)
  */
-export function recoverBreak(unit: Unit, recoveryAmount: number = 50): Unit {
+export function recoverBreak(unit: Unit, recoveryAmount: number = BATTLE_CONSTANTS.BREAK_RECOVERY_DEFAULT): Unit {
   if (!unit.breakThreshold) return unit;
 
   // Simple logic: if broken, recover some gauge. If full, remove broken status.

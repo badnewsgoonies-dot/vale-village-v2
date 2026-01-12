@@ -76,3 +76,30 @@ Rationale: Remove TODO and ensure UI shows correct chapter metadata from saves.
 
 Recorded at: 2026-01-11T20:20:00Z
 
+
+# Round 3 — Magic numbers / hardcoded arrays audit
+
+Date: 2026-01-11T22:34:00Z
+
+Summary:
+- Performed a code search for top-level array literals (candidates for hardcoded arrays / magic-number lists) across src/.
+- Multiple files contain array literals or small fixed arrays that limit scalability; these are prioritized for small, focused refactors.
+
+Top candidate files to refactor (minimal, surgical changes):
+- src/ui/components/overworld-v2/data/villageLayout.ts  (layout arrays for village; extract to data loader)
+- src/data/definitions/towerFloors.ts and src/data/definitions/towerRewards.ts  (tower floor arrays)
+- src/data/definitions/maps.ts  (map definitions with inline arrays)
+- src/village/buildings.ts and src/ui/components/overworld/OverworldCanvas.tsx (static building/level data)
+- src/ui/sprites/sprite-list-generated.ts and src/ui/sprites/catalog.ts (generated lists; consider moving to JSON or dynamic import)
+
+Proposed next actions (small PRs):
+1. For each file above, extract the hardcoded array into a named constant at the top of the file or into a new data file under src/data/ (e.g., src/data/villageLayout.json or .ts) and load dynamically. Use explicit types and exports.
+2. Add unit tests asserting arrays are non-empty and that loading code supports extension (e.g., accepts additional entries without code changes).
+3. Replace magic numbers within algorithms by introducing well-named constants in relevant modules (e.g., src/core/algorithms/*) and update usages.
+
+Decision:
+- Proceed with small, per-file PRs starting with villageLayout and tower definitions to validate approach; keep changes reversible and covered by unit tests.
+
+Next action for worker:
+- Implement extraction for src/ui/components/overworld-v2/data/villageLayout.ts into src/data/villageLayout.ts (or JSON), add types and a unit test verifying the exported layout shape.
+

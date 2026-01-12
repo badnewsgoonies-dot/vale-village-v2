@@ -16,6 +16,16 @@ export const MIN_PARTY_SIZE = 1;
 export const MAX_PARTY_SIZE = 4;
 
 /**
+ * Maximum number of save slots
+ */
+export const MAX_SAVE_SLOTS = 3;
+
+/**
+ * Maximum number of Djinn that can be equipped by the team at once
+ */
+export const MAX_EQUIPPED_DJINN = 3;
+
+/**
  * Maximum unit level supported by XP curve / normalization
  */
 export const MAX_LEVEL = GAME_MAX_LEVEL;
@@ -91,6 +101,16 @@ export const BATTLE_CONSTANTS = {
   MINIMUM_DAMAGE: 1,
   /** Minimum healing amount (all heals restore at least this much if basePower > 0) */
   MINIMUM_HEALING: 1,
+  /** God mode damage (one-hit kill) */
+  GOD_MODE_DAMAGE: 9999,
+  /** Break system: normal hit gauge reduction */
+  BREAK_GAUGE_REDUCTION_NORMAL: 10,
+  /** Break system: weakness hit gauge reduction */
+  BREAK_GAUGE_REDUCTION_WEAKNESS: 25,
+  /** Break system: damage multiplier when broken */
+  BREAK_DAMAGE_MULTIPLIER: 1.5,
+  /** Break system: default recovery amount */
+  BREAK_RECOVERY_DEFAULT: 50,
 } as const;
 
 export const STATUS_CONSTANTS = {
@@ -102,6 +122,21 @@ export const STATUS_CONSTANTS = {
 
 export const TOWER_CONSTANTS = {
   HARD_DIFFICULTY_BONUS: 0.25,
+} as const;
+
+export const AI_CONSTANTS = {
+  /** Score returned when no valid targets or useless ability */
+  INVALID_SCORE: -1000,
+  /** Bonus score for each unit a revival ability can revive */
+  REVIVE_SCORE_BONUS: 100,
+  /** Bonus score for abilities prioritized in a boss phase */
+  PHASE_PRIORITY_BONUS: 10,
+  /** Threshold for considering scores "close" for randomization */
+  SCORE_CLOSE_THRESHOLD: 2.0,
+  /** Multiplier for estimated damage/healing utility */
+  STATUS_UTILITY_MULTIPLIER: 0.1,
+  /** Multiplier for buff/debuff stat modifiers */
+  BUFF_UTILITY_MULTIPLIER: 2.0,
 } as const;
 
 /**

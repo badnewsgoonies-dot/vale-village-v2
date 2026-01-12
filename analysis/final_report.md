@@ -64,3 +64,18 @@ Addendum (this run)
 
 
 \n---\nCI Test Run: 2026-01-11T21:53:56Z\nExitCode: 0\nOutputFile: analysis/ci_test_output.txt\nArtifactsDir: analysis/ci_artifacts/
+
+CI Trigger & Artifacts (appended)
+--------------------------------
+- CI pipeline: GitHub Actions workflow `.github/workflows/test.yml` queued for verification (owner: CI/Lane 2).
+- Attached artifacts (repository paths):
+  - analysis/ci_artifacts/playwright-report/index.html
+  - analysis/ci_artifacts/test-results/
+  - analysis/ci_artifacts/full-game-run-final.log
+  - analysis/ci_artifacts/tower-run-final.log
+  - playwright-report/index.html (raw)
+  - test-results/ (raw)
+  - full-game-run-final.log (raw)
+- Notes: Local test run reported all runnable tests green; these artifacts are included in the `analysis/ci_artifacts/` directory for CI attachment and reviewer inspection.
+
+Signed-off-by: lane-2-worker-b

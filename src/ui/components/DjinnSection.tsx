@@ -8,6 +8,7 @@ import type { Unit } from '@/core/models/Unit';
 import type { Team } from '@/core/models/Team';
 import { getDjinnAbilityMetadataForUnit } from '@/core/algorithms/djinnAbilities';
 import { DJINN } from '@/data/definitions/djinn';
+import { MAX_EQUIPPED_DJINN } from '@/core/constants';
 
 interface DjinnSectionProps {
   unit: Unit;
@@ -45,7 +46,7 @@ export function DjinnSection({
       <div class="djinn-slots-panel">
         <div class="section-title">DJINN CONFIGURATION</div>
         <div class="djinn-slots-grid">
-          {[0, 1, 2].map((slotIndex) => {
+          {Array.from({ length: MAX_EQUIPPED_DJINN }, (_, i) => i).map((slotIndex) => {
             const djinnId = djinnSlots[slotIndex];
             const hasDjinn = Boolean(djinnId);
             const djinn = hasDjinn ? DJINN[djinnId as keyof typeof DJINN] : null;

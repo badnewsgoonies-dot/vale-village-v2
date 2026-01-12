@@ -5,21 +5,16 @@
  */
 
 import { JSX } from 'preact';
-import { useEffect, useState, useRef } from 'preact/hooks';
+import { useEffect, useRef } from 'preact/hooks';
 import { useStore } from '../state/store';
 import { SHOPS } from '../../data/definitions/shops';
 import { EQUIPMENT } from '../../data/definitions/equipment';
-import {
-  buyItem,
-  canAffordItem,
-  purchaseStarterKit,
-  purchaseUnitEquipment,
-} from '../../core/services/ShopService';
+import { canAffordItem } from '../../core/services/ShopService';
 import { getStarterKit } from '../../data/definitions/starterKits';
 import { EquipmentIcon } from './EquipmentIcon';
+import { useShopController } from '../hooks/useShopController';
 import './ShopScreen.css';
 import type { Equipment } from '../../data/schemas/EquipmentSchema';
-import type { Unit } from '../../core/models/Unit';
 import { isAvailableInCampaign } from '../utils/contentAvailability';
 
 interface ShopScreenProps {
@@ -28,18 +23,15 @@ interface ShopScreenProps {
 }
 
 export function ShopScreen({ shopId, onClose }: ShopScreenProps): JSX.Element {
-  const { gold, addGold, addEquipment, team, updateTeamUnits } = useStore((s) => ({
-    gold: s.gold,
-    addGold: s.addGold,
-    addEquipment: s.addEquipment,
-    team: s.team,
-    updateTeamUnits: s.updateTeamUnits,
-  }));
+  const {
+    gold,
+    team,
+    error,
+    handleStarterKitPurchase,
+    handleUnitEquipmentPurchase,
+  } = useShopController();
 
   const storyFlags = useStore((s) => s.story.flags);
-
-  const [error, setError] = useState<string | null>(null);
-
   const modalRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -85,18 +77,6 @@ export function ShopScreen({ shopId, onClose }: ShopScreenProps): JSX.Element {
         .filter(isAvailableInCampaign))
     : [];
 
-  const handleUnlock = (itemId: string) => {
-    setError(null);
-    const result = buyItem(gold, itemId);
-    if (!result.ok) {
-      setError(result.error);
-      return;
-    }
-
-    addGold(result.value.newGold - gold);
-    addEquipment([result.value.item]);
-  };
-
   const starterKitEntries = team
     ? team.units
         .map((unit) => ({
@@ -108,39 +88,6 @@ export function ShopScreen({ shopId, onClose }: ShopScreenProps): JSX.Element {
     : [];
 
   const unlockedUnits = team ? team.units.filter((unit) => unit.storeUnlocked) : [];
-
-  const handleStarterKitPurchase = (unitId: string) => {
-    if (!team) return;
-    const unit = team.units.find(u => u.id === unitId);
-    if (!unit) return;
-
-    setError(null);
-    const result = purchaseStarterKit(unit, gold);
-    if (!result.ok) {
-      setError(result.error);
-      return;
-    }
-
-    addGold(result.value.newGold - gold);
-    addEquipment(result.value.equipment);
-
-    const updatedUnits = team.units.map((unit) =>
-      unit.id === unitId ? { ...unit, storeUnlocked: true } : unit
-    );
-    updateTeamUnits(updatedUnits);
-  };
-
-  const handleUnitEquipmentPurchase = (unit: Unit, itemId: string) => {
-    setError(null);
-    const result = purchaseUnitEquipment(unit, gold, itemId);
-    if (!result.ok) {
-      setError(result.error);
-      return;
-    }
-
-    addGold(result.value.newGold - gold);
-    addEquipment([result.value.item]);
-  };
 
   return (
     <div class="shop-screen-overlay" onClick={onClose}>

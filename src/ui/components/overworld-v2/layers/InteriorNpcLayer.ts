@@ -57,14 +57,19 @@ export class InteriorNpcLayer implements Layer {
     return { x: this.npc.x, y: this.npc.y };
   }
 
+  getId(): string {
+    return this.npc.id;
+  }
+
   render(ctx: CanvasRenderingContext2D, camera: Camera): void {
     const { x: worldX, y: worldY } = this.npc;
     const { x: screenX, y: screenY } = camera.worldToScreenSnapped(worldX, worldY);
+    const z = camera.zoom;
 
     ctx.save();
     ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
     ctx.beginPath();
-    ctx.ellipse(screenX, screenY + 4, this.width * 0.4, 6, 0, 0, Math.PI * 2);
+    ctx.ellipse(screenX, screenY + 4 * z, this.width * 0.4 * z, 6 * z, 0, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
 
@@ -76,10 +81,10 @@ export class InteriorNpcLayer implements Layer {
       ctx.save();
       ctx.fillStyle = 'rgba(220, 100, 100, 0.6)';
       ctx.fillRect(
-        screenX - this.width / 2,
-        screenY - this.height,
-        this.width,
-        this.height
+        screenX - (this.width * z) / 2,
+        screenY - this.height * z,
+        this.width * z,
+        this.height * z
       );
       ctx.restore();
       return;
@@ -87,10 +92,10 @@ export class InteriorNpcLayer implements Layer {
 
     ctx.drawImage(
       sprite,
-      screenX - this.width / 2,
-      screenY - this.height,
-      this.width,
-      this.height
+      screenX - (this.width * z) / 2,
+      screenY - this.height * z,
+      this.width * z,
+      this.height * z
     );
   }
 }
