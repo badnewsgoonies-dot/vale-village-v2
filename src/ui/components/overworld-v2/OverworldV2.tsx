@@ -50,6 +50,7 @@ import { VirtualJoystick } from '../VirtualJoystick';
 import { getPlayerSprite } from '../../sprites/mappings/overworldSprites';
 import { TelemetryService } from '../../../core/services/TelemetryService';
 import { audio } from '../../../core/services/AudioService';
+import { OVERWORLD_CONSTANTS } from '../../../core/constants';
 
 
 interface OverworldV2Props {
@@ -212,7 +213,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
 
     const playerLayer = new PlayerLayer({
       x: savedOverworldXRef.current,
-      y: 450,
+      y: OVERWORLD_CONSTANTS.INTERIOR_PLAYER_Y,
       facing: 'right',
       unitId: 'adept',
     });
@@ -220,7 +221,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
     playerLayer.shouldRenderSprite = false;
     playerLayerRef.current = playerLayer;
 
-    villageLayer.setPlayerPosition(savedOverworldXRef.current, 450);
+    villageLayer.setPlayerPosition(savedOverworldXRef.current, OVERWORLD_CONSTANTS.INTERIOR_PLAYER_Y);
 
     return [
       new SkyLayer(),
@@ -363,7 +364,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
 
     // Fade out
     const fadeOut = () => {
-      transitionAlphaRef.current += 0.05;
+      transitionAlphaRef.current += OVERWORLD_CONSTANTS.TRANSITION_ALPHA_STEP;
       if (transitionAlphaRef.current >= 1) {
         // Switch layers at peak darkness
         const engine = engineRef.current;
@@ -412,7 +413,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
     };
 
     const fadeIn = () => {
-      transitionAlphaRef.current -= 0.05;
+      transitionAlphaRef.current -= OVERWORLD_CONSTANTS.TRANSITION_ALPHA_STEP;
       if (transitionAlphaRef.current <= 0) {
         transitionAlphaRef.current = 0;
         transitionTargetRef.current = null;
@@ -594,7 +595,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
                 const distanceSq = dx * dx + dy * dy;
                 
                 // Interaction range (60px)
-                if (distanceSq <= 60 * 60) {
+                if (distanceSq <= OVERWORLD_CONSTANTS.ENCOUNTER_PROXIMITY_RADIUS_SQ) {
                     if (npcLayer.getId() === 'tower-guide') {
                         // Open Tower Menu
                         enterTowerFromOverworld({

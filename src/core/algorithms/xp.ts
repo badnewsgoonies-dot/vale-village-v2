@@ -4,6 +4,7 @@
  */
 
 import type { Unit } from '../models/Unit';
+import { MAX_LEVEL } from '../constants';
 
 /**
  * XP curve from GAME_MECHANICS.md Section 1.1
@@ -41,8 +42,8 @@ export function getXpForLevel(level: number): number {
   if (level < 1) {
     return 0; // Below level 1
   }
-  if (level > 20) {
-    return XP_CURVE[20] || 0; // Clamp to level 20 max
+  if (level > MAX_LEVEL) {
+    return XP_CURVE[MAX_LEVEL] || 0; // Clamp to max level
   }
   return XP_CURVE[level] || 0;
 }
@@ -58,7 +59,7 @@ export function calculateLevelFromXp(xp: number): number {
   
   // Binary search for level
   let low = 1;
-  let high = 20;
+  let high = MAX_LEVEL;
   let result = 1;
   
   while (low <= high) {
