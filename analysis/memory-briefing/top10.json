@@ -1,0 +1,12 @@
+[
+  {"id":"recent_decision_1","title":"Vision-Driven Development kickstart","snippet":"Started Vision-Driven Development cycle; analyzing Golden Sun gameplay for 'Juice' implementation","date":"2026-01-11"},
+  {"id":"operation_gold_master_kickoff","title":"Operation Gold Master kickoff","snippet":"Confirmed kickoff decision and updated analysis/briefing.md; tracked as id:16412","date":"2025-12-21"},
+  {"id":"mem_infra_ollama","title":"Local Ollama/Codex infra","snippet":"Codex CLI configured for local Ollama and models; details about qwen2.5-coder and gemma3 present","date":"2025-12-02"},
+  {"id":"known_bug_watch_vision","title":"watch_vision blocked","snippet":"watch_vision run blocked due to missing Steam URL and prompt—documented as actionable bug","date":"2025-12-09"},
+  {"id":"battle_state_leakage","title":"Battle state leakage (queuedActions)","snippet":"Prioritize queuedActions resets on new encounters; tests added to validate behavior","date":"2025-12-20"},
+  {"id":"menu_focus_issue","title":"Menu focus / focus-restore","snippet":"Added focus-restore hook, test IDs and prioritized P0 fixes for menu focus handling","date":"2025-12-18"},
+  {"id":"accessory_wiring","title":"Accessory wiring parity","snippet":"Accessory elementalResist and SaveService metadata validated; wiring prioritized","date":"2025-12-19"},
+  {"id":"rng_constants","title":"Centralized RNG streams","snippet":"Centralized PRNG warmup and determinism changes recorded in constants","date":"2025-12-15"},
+  {"id":"visual_layering_priority","title":"Visual layering & weakness prototype","snippet":"Prioritized visual layering and weakness/break prototype work; flagged as risk for implementation","date":"2025-12-21"},
+  {"id":"mem_briefing_summary","title":"Mem-briefing summary snapshot","snippet":"Latest mem-briefing produced a high-level snapshot of decisions, infra, and known bugs; preserved here for ingestion","date":"2026-01-11"}
+]

@@ -712,6 +712,20 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
         village?.setPlayerPosition(newX, newY);
         encountersLayerRef.current?.setPlayerPosition(newX, newY);
 
+        // Fix: Auto-enter houses on collision (walk-in)
+        // Only applies to standard interiors, not Tower/Shops which might require interaction
+        if (isMoving) {
+          const nearestDoor = village?.getNearestDoor();
+          if (nearestDoor && nearestDoor.interaction?.type === 'enter-interior') {
+            const doorX = nearestDoor.x + (nearestDoor.doorOffsetX ?? 0);
+            const doorY = nearestDoor.y + (nearestDoor.doorOffsetY ?? 0);
+            const dist = Math.sqrt(Math.pow(newX - doorX, 2) + Math.pow(newY - doorY, 2));
+            if (dist < 25) { // 25px collision threshold
+              enterBuilding(nearestDoor.id);
+            }
+          }
+        }
+
         const encountersLayer = encountersLayerRef.current;
         try {
           const nearby = encountersLayer?.getNearbyEncounter(newX, newY, 32);
