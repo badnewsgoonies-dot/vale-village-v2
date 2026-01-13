@@ -31,6 +31,12 @@ export const MAX_EQUIPPED_DJINN = 3;
 export const MAX_LEVEL = GAME_MAX_LEVEL;
 
 /**
+ * Y coordinate (world pixels) used as the baseline ground anchor for building placement in the village.
+ * All buildings use this as their bottom-center Y coordinate.
+ */
+export const BUILDING_GROUND_Y = 200;
+
+/**
  * RNG stream offsets for deterministic battle RNG
  * Each stream is separated by a large offset to prevent collisions
  */
@@ -93,6 +99,8 @@ export const BATTLE_CONSTANTS = {
   ELEMENT_ADVANTAGE_MULTIPLIER: 1.5,
   /** Element disadvantage damage multiplier */
   ELEMENT_DISADVANTAGE_MULTIPLIER: 0.67,
+  /** Maximum elemental resistance from equipment to avoid full immunity */
+  MAX_ELEMENTAL_RESIST: 0.9,
   /** Normal battle equipment drop rate (10%) */
   EQUIPMENT_DROP_RATE_NORMAL: 0.1,
   /** Boss battle equipment drop rate (50%) */
@@ -122,6 +130,15 @@ export const STATUS_CONSTANTS = {
 
 export const TOWER_CONSTANTS = {
   HARD_DIFFICULTY_BONUS: 0.25,
+} as const;
+
+export const OVERWORLD_CONSTANTS = {
+  INTERIOR_PLAYER_Y: 450,
+  TRANSITION_ALPHA_STEP: 0.05,
+  TRANSITION_ALPHA_MIN: 0,
+  TRANSITION_ALPHA_MAX: 1,
+  ENCOUNTER_PROXIMITY_RADIUS_PX: 60,
+  ENCOUNTER_PROXIMITY_RADIUS_SQ: 60 * 60,
 } as const;
 
 export const AI_CONSTANTS = {
