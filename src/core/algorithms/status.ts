@@ -6,6 +6,7 @@
 import type { Unit } from '../models/Unit';
 import type { PRNG } from '../random/prng';
 import { applyDamage } from './damage';
+import { STATUS_CONSTANTS } from '../constants';
 
 /**
  * Process status effect tick at start of unit's turn
@@ -38,12 +39,12 @@ export function processStatusEffectTick(
 
   const updatedStatusEffects = unit.statusEffects.map(effect => {
     if (effect.type === 'poison') {
-      const damage = Math.floor(maxHp * 0.08);
+      const damage = Math.floor(maxHp * STATUS_CONSTANTS.POISON_PERCENT);
       totalDamage += damage;
       messages.push(`${unit.name} takes ${damage} poison damage!`);
       return { ...effect, duration: effect.duration - 1 };
     } else if (effect.type === 'burn') {
-      const damage = Math.floor(maxHp * 0.10);
+      const damage = Math.floor(maxHp * STATUS_CONSTANTS.BURN_PERCENT);
       totalDamage += damage;
       messages.push(`${unit.name} takes ${damage} burn damage!`);
       return { ...effect, duration: effect.duration - 1 };
@@ -53,7 +54,7 @@ export function processStatusEffectTick(
       messages.push(`${unit.name} recovers ${healing} HP!`);
       return { ...effect, duration: effect.duration - 1 };
     } else if (effect.type === 'freeze') {
-      const breakChance = 0.3; // 30% chance to break free
+      const breakChance = STATUS_CONSTANTS.FREEZE_BREAK_CHANCE; // 30% chance to break free
       if (rng.next() < breakChance) {
         messages.push(`${unit.name} broke free from freeze!`);
         return { ...effect, duration: 0 }; // Mark for removal
@@ -117,7 +118,7 @@ export function checkParalyzeFailure(
   ) as Array<Extract<typeof unit.statusEffects[number], { type: 'paralyze' }>>;
 
   const paralyzed = paralyzeEffects[0];
-  if (paralyzed && rng.next() < 0.25) {
+  if (paralyzed && rng.next() < STATUS_CONSTANTS.PARALYZE_FAIL_CHANCE) {
     return true; // Action fails (25% chance)
   }
   return false;

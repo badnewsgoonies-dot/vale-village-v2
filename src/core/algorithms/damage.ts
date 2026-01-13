@@ -61,7 +61,7 @@ export function calculateTotalEquipmentElementalResistance(unit: Unit): number {
   }
 
   // Clamp to reasonable bounds to avoid full immunity
-  return Math.max(0, Math.min(0.9, total));
+  return Math.max(0, Math.min(BATTLE_CONSTANTS.MAX_ELEMENTAL_RESIST, total));
 }
 
 /**
@@ -87,7 +87,7 @@ export function applyDamageModifiers(
   // 1. Elemental resistance from equipment (armor/helm/boots/accessory)
   if (abilityElement) {
     const equipResist = calculateTotalEquipmentElementalResistance(defender);
-    const clampedEquipResist = Math.min(0.9, Math.max(0, equipResist)); // prevent full immunity
+    const clampedEquipResist = Math.min(BATTLE_CONSTANTS.MAX_ELEMENTAL_RESIST, Math.max(0, equipResist)); // prevent full immunity
     modifiedDamage *= (1 - clampedEquipResist);
   }
 
