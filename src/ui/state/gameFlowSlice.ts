@@ -249,6 +249,19 @@ export const createGameFlowSlice: StateCreator<
     }
 
     // ========================================
+    // DOOR TRIGGERS (Restored Logic)
+    // ========================================
+    if (trigger.type === 'door') {
+      const data = trigger.data as { targetMap?: string; targetPos?: { x: number; y: number } };
+      if (data.targetMap && data.targetPos) {
+        const { teleportPlayer } = get();
+        teleportPlayer(data.targetMap, data.targetPos);
+      }
+      set({ lastTrigger: trigger });
+      return;
+    }
+
+    // ========================================
     // TRANSITION TRIGGERS
     // ========================================
     if (trigger.type === 'transition') {

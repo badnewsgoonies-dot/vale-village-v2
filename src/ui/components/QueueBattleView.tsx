@@ -17,9 +17,9 @@ import { getEncounterId } from '../../core/models/BattleState';
 import { BattleManaBar } from './BattleManaBar';
 import { BattlePortraitRow } from './BattlePortraitRow';
 import { BattleActionMenu, type ActionMenuMode } from './BattleActionMenu';
-import { ModeLabel } from './ModeLabel';
 import { BattlefieldV2 } from './battle/BattlefieldV2';
 import { useBattleOrchestrator } from '../hooks/useBattleOrchestrator';
+import { useBattleController } from '../hooks/useBattleController';
 import type { Ability } from '../../data/schemas/AbilitySchema';
 import type { Unit } from '../../core/models/Unit';
 import type { BattleEvent } from '../../core/services/types';
@@ -27,10 +27,7 @@ import { ABILITIES } from '../../data/definitions/abilities';
 import { DJINN } from '../../data/definitions/djinn';
 import { DIALOGUES } from '../../data/definitions/dialogues';
 import { VS1_ENCOUNTER_ID, VS1_SCENE_PRE } from '../../story/vs1Constants';
-import { type BattleUIPhase, deriveUIPhase } from '../types/BattleUIPhase';
-import { getEventTiming } from '../constants/animationTiming';
 import { BASIC_ATTACK_IDS, UI_TIMEOUTS } from '../state/types';
-import { useBattleSpeed } from '../hooks/useBattleSpeed';
 import { getBackgroundPath, getTowerFloorBackground } from '../sprites/backgrounds';
 import type { FloatingNumber as FNumber, FloatingAction as FAction } from '../state/types';
 import type { BattleState } from '../../core/models/BattleState';
@@ -68,32 +65,38 @@ const DJINN_SPRITE_BY_ELEMENT: Record<string, string> = {
 };
 
 export function QueueBattleView() {
-  // Use the orchestrator hook for battle logic
+  // Use the controller hook for UI state and logic (Event Loop, Timing, Phase)
+  const {
+    battle,
+    events,
+    uiPhase,
+    activePortraitIndex,
+    currentUnit,
+    mode,
+    setActivePortrait,
+    speedPreset,
+    applySpeed,
+    cycleSpeed,
+    getTimeout,
+  } = useBattleController();
+
+  // Use the orchestrator hook for battle actions (Execute, Queue, Clear)
   const { 
     isExecuting, 
     handleExecuteRound, 
     queueUnitAction, 
     clearUnitAction,
-    queueDjinnActivation,
-    unqueueDjinnActivation
   } = useBattleOrchestrator();
 
   // V2 gameStore for screen navigation
   const setScreen = useGameStore((s) => s.setScreen);
   const openModal = useGameStore((s) => s.openModal);
 
-  // V1 store for battle domain state
-  const battle = useStore((s) => s.battle) as BattleState | null;
-  const events = useStore((s) => s.events) as BattleEvent[];
-  const dequeue = useStore((s) => s.dequeueEvent);
+  // V1 store for remaining domain state (that isn't covered by hooks yet)
   const setBattle = useStore((s) => s.setBattle);
-  // queueUnitAction, clearUnitAction, executeQueuedRound replaced by hook
   const setMode = useStore((s) => s.setMode);
-  const mode = useStore((s) => s.mode);
   const startDialogueTree = useStore((s) => s.startDialogueTree);
   const returnToOverworldV1 = useStore((s) => s.returnToOverworld);
-  const activePortraitIndex = useStore((s) => s.activePortraitIndex);
-  const setActivePortrait = useStore((s) => s.setActivePortrait);
   const currentManaDisplay = useStore((s) => s.currentMana);
   const maxManaDisplay = useStore((s) => s.maxMana);
   const pendingManaThisRound = useStore((s) => s.pendingManaThisRound);
@@ -114,21 +117,12 @@ export function QueueBattleView() {
   const processVictory = useStore((s) => s.processVictory);
   const lastError = useStore((s) => s.lastError);
   const clearError = useStore((s) => s.clearError);
-  const skipAnimations = useStore((s) => s.skipAnimations);
+
   // Wrapper to sync both V1 and V2 store when returning to overworld
   const returnToOverworld = () => {
     returnToOverworldV1();
     setScreen('overworld');
   };
-
-  // Derive UI phase - if events exist, we're 'executing' regardless of battle.phase
-  // This is the KEY FIX: executeRound() returns planning phase, but we need executing while events drain
-  const uiPhase: BattleUIPhase = events.length > 0 ? 'executing' : deriveUIPhase(battle?.phase);
-
-  // Battle speed control
-  const { speedPreset, applySpeed, cycleSpeed } = useBattleSpeed();
-
-  const getTimeout = (ms: number) => skipAnimations ? 0 : ms;
 
   // Selection State
   const [selectedAbilityId, setSelectedAbilityId] = useState<string | null | undefined>(undefined);
@@ -152,7 +146,7 @@ export function QueueBattleView() {
   const [shakingUnits, setShakingUnits] = useState<Set<string>>(new Set());
   const [attackingUnits, setAttackingUnits] = useState<Set<string>>(new Set());
   const [castingUnits, setCastingUnits] = useState<Set<string>>(new Set());
-  const [isScreenShaking, setIsScreenShaking] = useState(false);
+  const [, setIsScreenShaking] = useState(false);
   const shakeTimeoutsRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
   const attackTimeoutsRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
   const castTimeoutsRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
@@ -163,7 +157,6 @@ export function QueueBattleView() {
   const lastCritProcessedEventRef = useRef<BattleEvent | undefined>(undefined);
   const lastActionEventRef = useRef<BattleEvent | undefined>(undefined);
   const lastAttackAnimEventRef = useRef<BattleEvent | undefined>(undefined);
-  const pendingDequeueEventRef = useRef<string | undefined>(undefined);
 
   // Redirect to tower hub if battle is null during tower run
   useEffect(() => {
@@ -337,11 +330,9 @@ export function QueueBattleView() {
         shakeTimeoutsRef.current.set(targetId, shakeTimeout);
       }
     }
-  }, [uiPhase, events, battle, critFlash]);
+  }, [uiPhase, events, battle, critFlash, getTimeout]);
 
-  // Crit counter progression for basic attacks (during execution phase)
-  // This ensures the counter only increments when the attack actually happens,
-  // not during planning (prevents counter increment if unit is KO'd before their turn)
+  // Crit counter progression for basic attacks
   useEffect(() => {
     if (!battle || uiPhase !== 'executing') return;
     const evt = events[0];
@@ -349,10 +340,8 @@ export function QueueBattleView() {
     if (evt === lastCritProcessedEventRef.current) return;
     lastCritProcessedEventRef.current = evt;
 
-    // Only process 'ability' events for basic attacks from player units
     if (evt.type === 'ability' && BASIC_ATTACK_IDS.includes(evt.abilityId)) {
       const casterId = evt.casterId;
-      // Only track crit counters for player units
       const isPlayerUnit = battle.playerTeam.units.some((u: Unit) => u.id === casterId);
       if (isPlayerUnit) {
         const nextCount = (critCounters[casterId] ?? 0) + 1;
@@ -367,7 +356,7 @@ export function QueueBattleView() {
     }
   }, [uiPhase, events, battle, critCounters, critThresholds, incrementCritCounter, resetCritCounter, triggerCritFlash]);
 
-  // Spawn floating action text for ability events (shows ability name near caster)
+  // Spawn floating action text
   useEffect(() => {
     if (!battle || uiPhase !== 'executing') return;
     const evt = events[0];
@@ -401,9 +390,9 @@ export function QueueBattleView() {
       }, getTimeout(UI_TIMEOUTS.koAction));
       floatingActionTimeoutsRef.current.set(id, timeoutId);
     }
-  }, [uiPhase, events, battle]);
+  }, [uiPhase, events, battle, getTimeout]);
 
-  // Trigger attack/cast animations when ability events fire
+  // Trigger attack/cast animations
   useEffect(() => {
     if (!battle || uiPhase !== 'executing') return;
     const evt = events[0];
@@ -415,14 +404,12 @@ export function QueueBattleView() {
       const casterId = evt.casterId;
       const isBasicAttack = BASIC_ATTACK_IDS.includes(evt.abilityId);
       
-      // Clear any existing animation timeout for this unit
       const existingAttackTimeout = attackTimeoutsRef.current.get(casterId);
       if (existingAttackTimeout) clearTimeout(existingAttackTimeout);
       const existingCastTimeout = castTimeoutsRef.current.get(casterId);
       if (existingCastTimeout) clearTimeout(existingCastTimeout);
       
       if (isBasicAttack) {
-        // Physical attack - lunge animation
         setAttackingUnits((prev) => new Set([...prev, casterId]));
         const timeout = setTimeout(() => {
           setAttackingUnits((prev) => {
@@ -434,7 +421,6 @@ export function QueueBattleView() {
         }, getTimeout(UI_TIMEOUTS.attackLunge));
         attackTimeoutsRef.current.set(casterId, timeout);
       } else {
-        // Psynergy/ability - cast pulse animation
         setCastingUnits((prev) => new Set([...prev, casterId]));
         const timeout = setTimeout(() => {
           setCastingUnits((prev) => {
@@ -447,49 +433,9 @@ export function QueueBattleView() {
         castTimeoutsRef.current.set(casterId, timeout);
       }
     }
-  }, [uiPhase, events, battle]);
-
-  // 4. Event Queue Processing - with stale closure protection
-  useEffect(() => {
-    if (!battle || uiPhase !== 'executing' || events.length === 0) {
-      return;
-    }
-
-    const currentEvent = events[0]!; // Safe: we check events.length > 0 above
-    const eventId = `${currentEvent.type}-${currentEvent.type === 'ability' ? currentEvent.casterId : currentEvent.type === 'turn-start' ? currentEvent.actorId : 'event'}-${Date.now()}`;
-    pendingDequeueEventRef.current = eventId;
-
-    const baseDelay = getEventTiming(currentEvent?.type ?? 'unknown', false);
-    let delay = skipAnimations ? 0 : applySpeed(baseDelay);
-
-    // Gap 4: Hit Stop (Freeze flow for impact)
-    if (currentEvent?.type === 'hit' && !skipAnimations) {
-      delay += 120; // 120ms hit stop
-    }
-
-    const timer = setTimeout(() => {
-      // Only dequeue if this timer is still the active one (prevents stale closure race)
-      if (pendingDequeueEventRef.current === eventId) {
-        dequeue();
-        pendingDequeueEventRef.current = undefined;
-      }
-    }, delay);
-
-    return () => {
-      clearTimeout(timer);
-      if (pendingDequeueEventRef.current === eventId) {
-        pendingDequeueEventRef.current = undefined;
-      }
-    };
-  }, [uiPhase, events, dequeue, battle, applySpeed]);
+  }, [uiPhase, events, battle, getTimeout]);
 
   // --- COMPUTED VALUES ---
-
-  const currentUnit = useMemo<Unit | null>(() => {
-    if (!battle) return null;
-    if (activePortraitIndex === null || activePortraitIndex === undefined) return null;
-    return battle.playerTeam.units[activePortraitIndex] ?? null;
-  }, [battle, activePortraitIndex]);
 
   const totalQueuedMana = useMemo(() =>
     battle?.queuedActions?.reduce((sum: number, a: BattleState['queuedActions'][number]) => sum + (a?.manaCost || 0), 0) || 0
@@ -499,7 +445,6 @@ export function QueueBattleView() {
     if (!battle) return false;
     const aliveUnits = battle.playerTeam.units.filter((u: Unit) => !isUnitKO(u));
 
-    // Count queued actions by index, matching alive units
     let queuedCount = 0;
     for (let i = 0; i < battle.playerTeam.units.length; i++) {
       const unit = battle.playerTeam.units[i];
@@ -514,7 +459,6 @@ export function QueueBattleView() {
 
   const currentFloor = useMemo(() => (towerStatus === 'in-run' ? getCurrentTowerFloor() : null), [towerStatus, getCurrentTowerFloor]);
   const battleType = towerStatus === 'in-run' ? 'tower' : 'story';
-  const locationName = battle?.meta?.encounterId || battle?.encounterId || 'Story Battle';
 
   const towerTutorialFlagKey = 'tutorial:tower-battle-controls';
   const showTowerBattleTutorial =
@@ -522,20 +466,17 @@ export function QueueBattleView() {
     Boolean(currentFloor?.tags?.includes('tutorial')) &&
     storyFlags[towerTutorialFlagKey] !== true;
 
-  // Determine battle background: tower floor > encounter > default
   const backgroundUrl = useMemo(() => {
-    // For tower battles, use floor-based background rotation
     if (currentFloor?.floorNumber) {
       const towerBgId = getTowerFloorBackground(currentFloor.floorNumber);
       return getBackgroundPath(towerBgId);
     }
-    // For story/encounter battles, use encounter's backgroundId
     if (battle?.backgroundId) {
       return getBackgroundPath(battle.backgroundId);
     }
-    // Default background
     return getBackgroundPath(undefined);
   }, [currentFloor?.floorNumber, battle?.backgroundId]);
+
   const currentEvent = events[0];
   const currentActorId =
     currentEvent?.type === 'ability' ? currentEvent.casterId :
@@ -543,11 +484,9 @@ export function QueueBattleView() {
     currentEvent?.type === 'ko' ? currentEvent.unitId :
     undefined;
   
-  // Determine if a unit should show attack animation (for basic attacks)
   const isBasicAttackEvent = currentEvent?.type === 'ability' && isBasicAttackAbility(currentEvent.abilityId);
   const attackingUnitId = isBasicAttackEvent ? currentActorId : null;
   
-  // Determine targets being hit (for hit animation)
   const hitTargetIds = new Set<string>();
   if (currentEvent?.type === 'hit') {
     hitTargetIds.add(currentEvent.targetId);
@@ -673,7 +612,7 @@ export function QueueBattleView() {
       return;
     }
     setSelectedAbilityId(id);
-    void ability; // reserved for future metadata uses
+    void ability;
     setMenuMode('root');
   };
 
@@ -683,7 +622,6 @@ export function QueueBattleView() {
     const abilityIdToUse = abilityIdOverride ?? selectedAbilityId;
     const ability = abilityIdToUse ? currentUnit.abilities.find(a => a.id === abilityIdToUse) : undefined;
 
-    // Resolve target list based on ability target type
     let targetIds: string[] = [targetId];
     const aliveEnemies = battle.enemies.filter((e: Unit) => !isUnitKO(e)).map((e: Unit) => e.id);
     const aliveAllies = battle.playerTeam.units.filter((u: Unit) => !isUnitKO(u)).map((u: Unit) => u.id);
@@ -702,10 +640,8 @@ export function QueueBattleView() {
         targetIds = [targetId];
     }
 
-    // Check if this unit already has an action queued
     const existingAction = battle.queuedActions[activePortraitIndex];
     if (existingAction !== null) {
-      // Already has an action, skip to next unit
       const order = getPlanningTurnOrder(battle);
       const currentOrderIdx = order.indexOf(activePortraitIndex);
       for (let i = currentOrderIdx + 1; i < order.length; i++) {
@@ -719,23 +655,19 @@ export function QueueBattleView() {
       return;
     }
 
-    // Queue the action
     const queued = queueUnitAction(activePortraitIndex, abilityIdToUse ?? null, targetIds, ability);
     if (!queued) {
       return;
     }
 
-    // Reset selection for next
     setSelectedAbilityId(undefined);
 
-    // Auto-advance to next unit by SPEED, skipping KO'd units and those with actions
     const order = getPlanningTurnOrder(battle);
     const currentOrderIdx = order.indexOf(activePortraitIndex);
     for (let i = currentOrderIdx + 1; i < order.length; i++) {
       const nextIndex = order[i];
       if (nextIndex === undefined) continue;
       const nextUnit = battle.playerTeam.units[nextIndex];
-      // Skip KO'd units and units that already have an action queued
       if (nextUnit && !isUnitKO(nextUnit) && battle.queuedActions[nextIndex] === null) {
         setActivePortrait(nextIndex);
         break;
@@ -786,7 +718,6 @@ export function QueueBattleView() {
     }
   };
 
-  // Button should only be enabled in planning phase with complete queue
   const canExecute = isQueueComplete && uiPhase === 'planning';
 
   const toolboxActions = [
@@ -1089,19 +1020,19 @@ export function QueueBattleView() {
             
             <BattlefieldV2
               battle={battle}
-              events={events}
+              events={[...events]}
               validTargetIds={validTargetIds}
               highlightedTargets={highlightedTargets}
-              currentActorId={currentActorId}
+              currentActorId={currentActorId ?? null}
               shakingUnits={shakingUnits}
               attackingUnits={attackingUnits}
               castingUnits={castingUnits}
               hitTargetIds={hitTargetIds}
-              attackingUnitId={attackingUnitId}
+              attackingUnitId={attackingUnitId ?? null}
               floatingNumbers={floatingNumbers}
               floatingActions={floatingActions}
               onTargetSelect={(id) => handleTargetSelect(id)}
-              equippedDjinn={battle.playerTeam.equippedDjinn}
+              equippedDjinn={[...battle.playerTeam.equippedDjinn]}
               onOpenSummonMenu={() => setMenuMode('summon')}
               djinnSpriteByElement={DJINN_SPRITE_BY_ELEMENT}
               djinnData={DJINN}
@@ -1206,7 +1137,7 @@ export function QueueBattleView() {
           <BattlePortraitRow
             units={battle?.playerTeam.units || []}
             activeIndex={activePortraitIndex}
-            queuedActions={battle?.queuedActions || []}
+            queuedActions={battle?.queuedActions || ([] as readonly (BattleState['queuedActions'][number])[])}
             critCounters={critCounters}
             critThresholds={critThresholds}
             critFlashes={critFlash}
