@@ -1,0 +1,138 @@
+{
+  "generated_at": "2026-01-13T00:51:25.957Z",
+  "notes": "Enriched scan: per-file numeric literal candidates extracted from src/core/algorithms and mapped to GAME_MECHANICS.md clauses where clearly applicable; ambiguous otherwise.",
+  "files": [
+    {
+      "path": "src/core/algorithms/damage.ts",
+      "numbers": [1.5, 0.67, 1.0, 0.9, 0.5, 0.3, 0, 1],
+      "snippets": [
+        "return BATTLE_CONSTANTS.ELEMENT_ADVANTAGE_MULTIPLIER; // +50% damage",
+        "Formula: basePower + effective ATK - (effective DEF × 0.5)",
+        "Always returns at least 1 damage"
+      ],
+      "mapping": "Damage, healing, and mana algorithms (GAME_MECHANICS.md: Damage formulas / element modifiers)",
+      "reason": "Element multipliers and defense multipliers appear as numeric literals in comments and clamps; some values are delegated to BATTLE_CONSTANTS but similar literals present in logic/comments. Recommend centralizing in src/core/constants.ts where missing."
+    },
+    {
+      "path": "src/core/algorithms/turn-order.ts",
+      "numbers": [0, 1],
+      "snippets": [
+        "turnNumber: number = 0",
+        "for (let i = 0; i < turnNumber; i++)",
+        "return aIsPlayer ? -1 : 1; // Player before enemy"
+      ],
+      "mapping": "Turn order & execution indices (GAME_MECHANICS.md: Turn order / executionIndex)",
+      "reason": "Small integer literals used for loop/tie-break logic; consider named constants for priority tiers (e.g., PLAYER_PRIORITY)."
+    },
+    {
+      "path": "src/core/algorithms/weakness.ts",
+      "numbers": [10, 25, 1.0],
+      "snippets": [
+        "Calculate break damage (10 point for normal hit, 25 for weakness)",
+        "damageMultiplier: broke ? BATTLE_CONSTANTS.BREAK_DAMAGE_MULTIPLIER : 1.0",
+        "breakGauge: Math.floor(unit.breakThreshold / 2)"
+      ],
+      "mapping": "Break/weakness mechanics (GAME_MECHANICS.md: damage multiplier / break mechanics)",
+      "reason": "Break values and thresholds present; map to breaking rules in GAME_MECHANICS.md; some literals (10,25) should be promoted to named constants."
+    },
+    {
+      "path": "src/core/algorithms/djinn.ts",
+      "numbers": [80, 150, 300, 4, 3, 8, 5, 12, 6, 2],
+      "snippets": [
+        "1: 80,   // Individual attack",
+        "2: 150,  // Medium summon",
+        "3: 300,  // Mega summon (to all enemies)",
+        "atk: 4, def: 3",
+        "atk: 8, def: 5"
+      ],
+      "mapping": "Djinn states & summons (GAME_MECHANICS.md: Djinn mechanics / summons)",
+      "reason": "Explicit numeric damage and stat bonus literals for Djinn effects; these are domain constants and worth centralizing with descriptive names."
+    },
+    {
+      "path": "src/core/algorithms/status.ts",
+      "numbers": [0.08, 0.10, 0.3, 0.25],
+      "snippets": [
+        "Poison: 8% max HP damage per turn",
+        "Burn: 10% max HP damage per turn",
+        "Freeze: Skip turn, 30% break chance per turn",
+        "Paralyze: 25% failure chance"
+      ],
+      "mapping": "Status effects (GAME_MECHANICS.md Section 5.3)",
+      "reason": "Percent-based status effect magnitudes and chances are present as literals; promote to named constants for clarity and tuning."
+    },
+    {
+      "path": "src/core/algorithms/rewards.ts",
+      "numbers": [20],
+      "snippets": [
+        "if (unit.level >= 20)",
+        "const xpPerUnit = partySize > 0 ? Math.floor(encounter.reward.xp / partySize) : 0"
+      ],
+      "mapping": "Progression & leveling (GAME_MECHANICS.md: XP distribution / level cap)",
+      "reason": "Level cap literal and XP division logic appear; level cap (20) is a clear candidate for a named constant."
+    },
+    {
+      "path": "src/core/algorithms/mana.ts",
+      "numbers": [0, 10, 1, 4],
+      "snippets": [
+        "Basic attacks (null abilityId) cost 0",
+        "@returns Mana cost (0-10)",
+        "if (expectedSize < 1 || expectedSize > 4) { throw new Error(`Team size must be between 1 and 4`); }"
+      ],
+      "mapping": "Mana & action cost (GAME_MECHANICS.md: Mana & action cost)",
+      "reason": "Mana cost bounds and allowed team sizes are hard-coded; promote to constants (e.g., MAX_MANA_COST, MIN_TEAM_SIZE, MAX_TEAM_SIZE)."
+    },
+    {
+      "path": "src/core/algorithms/djinnAbilities.ts",
+      "numbers": [4, 3, -3, -2, 2],
+      "snippets": [
+        "addStat('atk', 4);",
+        "addStat('def', 3);",
+        "addStat('atk', -3);",
+        "addStat('def', -2);",
+        "abilitiesToGrant = abilityGroup.same.slice(0, 2)"
+      ],
+      "mapping": "Djinn abilities / stat modifiers (GAME_MECHANICS.md: Djinn states & ability grants)",
+      "reason": "Stat modifier literals and slice counts are present; consider named constants for readability."
+    },
+    {
+      "path": "src/core/algorithms/weakness.test.ts",
+      "numbers": [100, 10, 25],
+      "snippets": [
+        "baseStats: { hp: 100, pp: 10, atk: 10, def: 10, mag: 10, spd: 10 }",
+        "breakGauge: 100",
+        "expect(res.unit.breakGauge).toBe(90); // 100 - 10"
+      ],
+      "mapping": "Tests referencing break mechanics (maps to Break/weakness mechanics)",
+      "reason": "Test fixtures include numeric literals; these reflect domain defaults (e.g., default HP) and should align with constants used in code."
+    },
+    {
+      "path": "src/core/algorithms/xp.ts",
+      "numbers": [0,100,350,850,1850,3100,4700,6700,9200,12300,16000,20400,25600,31700,38800,47000,56400,67100,79200,92800,1,20],
+      "snippets": [
+        "1: 0,      // Starting XP",
+        "2: 100,    // Level 1 → 2",
+        "20: 92800  // Level 1 → 20",
+        "if (level < 1) { return 0; }",
+        "if (level > 20) { return XP_CURVE[20] || 0; // Clamp to level 20 max }"
+      ],
+      "mapping": "Progression & leveling (GAME_MECHANICS.md: XP curve / level caps)",
+      "reason": "Explicit XP curve numeric literals define progression pacing; keep as data but consider centralizing/tuning constants or a config to adjust progression."
+    },
+    {
+      "path": "src/core/algorithms/stats.ts",
+      "numbers": [1, 0],
+      "snippets": [
+        "Stats increase by growthRates per level above 1",
+        "hp: Math.max(1, Math.floor(base.hp + (level.hp ?? 0) + ...))",
+        "pp: Math.max(0, Math.floor(base.pp + (level.pp ?? 0) + ...))"
+      ],
+      "mapping": "Unit stats & growth (GAME_MECHANICS.md: Unit stats / growth rates)",
+      "reason": "Floor/clamp literals for minimum stat values are present (e.g., min HP 1); these are sensible defaults but can be named for clarity."
+    }
+  ],
+  "next_action": "Review each file above and replace inline numeric literals with named constants in src/core/constants.ts where semantics are clear; for data tables (xp curve) keep as data but reference from a single source.",
+  "mem_actions": [
+    "mem-briefing executed",
+    "mem-semantic query: 'magic numbers' (10 results)"
+  ]
+}

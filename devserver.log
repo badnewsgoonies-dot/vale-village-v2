@@ -171,3 +171,1039 @@
 3:42:08 p.m. [vite] page reload src/ui/state/queueBattleSlice.ts
 3:42:08 p.m. [vite] page reload src/ui/state/queueBattleSlice.ts
 3:42:24 p.m. [vite] page reload src/ui/state/queueBattleSlice.ts
+5:45:06 p.m. [vite] hmr update /src/ui/components/overworld-v2/OverworldV2.tsx
+5:47:29 p.m. [vite] hmr update /src/ui/components/overworld-v2/OverworldV2.tsx
+5:48:28 p.m. [vite] hmr update /src/ui/components/overworld-v2/OverworldV2.tsx
+5:48:44 p.m. [vite] hmr update /src/ui/components/BattleActionMenu.tsx
+5:49:18 p.m. [vite] hmr update /src/ui/components/BattleActionMenu.tsx
+6:08:51 p.m. [vite] Pre-transform error: /home/geni/Documents/vale-village-v2/src/ui/components/BattleActionMenu.tsx: Expected corresponding JSX closing tag for <div>. (129:10)
+
+  127 |             </div>
+  128 |             <div style={{ fontSize: '0.6rem', opacity: 0.6 }}>{abilityType}</div>
+> 129 |           </button>
+      |           ^
+  130 |         );
+  131 |       })}
+  132 |     </div>
+6:08:51 p.m. [vite] ✨ new dependencies optimized: howler
+6:08:51 p.m. [vite] ✨ optimized dependencies changed. reloading
+6:08:56 p.m. [vite] Pre-transform error: /home/geni/Documents/vale-village-v2/src/ui/components/BattleActionMenu.tsx: Expected corresponding JSX closing tag for <div>. (129:10)
+
+  127 |             </div>
+  128 |             <div style={{ fontSize: '0.6rem', opacity: 0.6 }}>{abilityType}</div>
+> 129 |           </button>
+      |           ^
+  130 |         );
+  131 |       })}
+  132 |     </div>
+6:08:57 p.m. [vite] Internal server error: /home/geni/Documents/vale-village-v2/src/ui/components/BattleActionMenu.tsx: Expected corresponding JSX closing tag for <div>. (129:10)
+
+  127 |             </div>
+  128 |             <div style={{ fontSize: '0.6rem', opacity: 0.6 }}>{abilityType}</div>
+> 129 |           </button>
+      |           ^
+  130 |         );
+  131 |       })}
+  132 |     </div>
+  Plugin: vite:preact-jsx
+  File: /home/geni/Documents/vale-village-v2/src/ui/components/BattleActionMenu.tsx:129:10
+  127|              </div>
+  128|              <div style={{ fontSize: '0.6rem', opacity: 0.6 }}>{abilityType}</div>
+  129|            </button>
+     |            ^
+  130|          );
+  131|        })}
+      at constructor (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:367:19)
+      at TypeScriptParserMixin.raise (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:6624:19)
+      at TypeScriptParserMixin.jsxParseElementAt (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:4756:16)
+      at TypeScriptParserMixin.jsxParseElement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:4778:17)
+      at TypeScriptParserMixin.parseExprAtom (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:4788:19)
+      at TypeScriptParserMixin.parseExprSubscripts (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:11145:23)
+      at TypeScriptParserMixin.parseUpdate (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:11130:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:11110:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9890:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10963:61)
+      at TypeScriptParserMixin.parseExprOps (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10968:23)
+      at TypeScriptParserMixin.parseMaybeConditional (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10945:23)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10895:21)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9828:39
+      at TypeScriptParserMixin.tryParse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:6932:20)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9828:18)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10864:39
+      at TypeScriptParserMixin.allowInAnd (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12500:12)
+      at TypeScriptParserMixin.parseMaybeAssignAllowIn (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10864:17)
+      at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12567:17)
+      at TypeScriptParserMixin.parseParenAndDistinguishExpression (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:11747:28)
+      at TypeScriptParserMixin.parseExprAtom (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:11395:23)
+      at TypeScriptParserMixin.parseExprAtom (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:4793:20)
+      at TypeScriptParserMixin.parseExprSubscripts (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:11145:23)
+      at TypeScriptParserMixin.parseUpdate (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:11130:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:11110:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9890:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10963:61)
+      at TypeScriptParserMixin.parseExprOps (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10968:23)
+      at TypeScriptParserMixin.parseMaybeConditional (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10945:23)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10895:21)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9839:20)
+      at TypeScriptParserMixin.parseExpressionBase (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10848:23)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10844:39
+      at TypeScriptParserMixin.allowInAnd (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12495:16)
+      at TypeScriptParserMixin.parseExpression (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10844:17)
+      at TypeScriptParserMixin.parseReturnStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13218:28)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12874:21)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseStatementListItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12823:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13392:61)
+      at TypeScriptParserMixin.parseBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13385:10)
+      at TypeScriptParserMixin.parseBlock (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13373:10)
+      at TypeScriptParserMixin.parseFunctionBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12174:24)
+      at TypeScriptParserMixin.parseArrowExpression (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12149:10)
+      at TypeScriptParserMixin.parseParenAndDistinguishExpression (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:11759:12)
+      at TypeScriptParserMixin.parseExprAtom (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:11395:23)
+      at TypeScriptParserMixin.parseExprAtom (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:4793:20)
+      at TypeScriptParserMixin.parseExprSubscripts (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:11145:23)
+6:19:25 p.m. [vite] hmr update /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/overworld-v2/engine/OverworldEngineV2.ts, /src/ui/components/overworld-v2/layers/TreeLayer.tsx, /src/ui/components/overworld-v2/layers/RoadLayer.ts, /src/ui/components/overworld-v2/layers/TerrainLayer.ts, /src/ui/components/overworld-v2/data/villageLayout.ts
+6:19:31 p.m. [vite] hmr update /src/ui/components/overworld-v2/OverworldV2.tsx
+6:19:34 p.m. [vite] hmr update /src/ui/components/overworld-v2/OverworldV2.tsx
+6:19:37 p.m. [vite] page reload src/core/constants.ts
+6:20:39 p.m. [vite] page reload src/core/services/SaveService.ts
+6:20:46 p.m. [vite] page reload src/core/services/SaveService.ts
+6:21:49 p.m. [vite] page reload src/core/algorithms/targeting.ts
+6:21:52 p.m. [vite] hmr update /src/ui/components/QueueBattleView.tsx
+6:21:56 p.m. [vite] hmr update /src/ui/components/QueueBattleView.tsx
+6:22:14 p.m. [vite] page reload src/core/constants.ts
+6:22:22 p.m. [vite] page reload src/core/algorithms/weakness.ts
+6:22:58 p.m. [vite] page reload src/core/services/BattleService.ts
+6:23:01 p.m. [vite] page reload src/core/services/BattleService.ts
+6:23:09 p.m. [vite] page reload src/core/constants.ts
+6:23:17 p.m. [vite] page reload src/core/services/AIService.ts
+6:23:20 p.m. [vite] page reload src/core/services/AIService.ts
+6:23:29 p.m. [vite] page reload src/core/services/AIService.ts
+6:23:36 p.m. [vite] page reload src/core/services/AIService.ts
+6:23:53 p.m. [vite] page reload src/core/services/AIService.ts
+6:23:56 p.m. [vite] page reload src/core/services/AIService.ts
+6:23:59 p.m. [vite] page reload src/core/services/AIService.ts
+6:24:02 p.m. [vite] page reload src/core/services/AIService.ts
+6:24:20 p.m. [vite] page reload src/core/algorithms/damage.ts
+6:24:35 p.m. [vite] page reload src/core/battle/normalizeBattleState.ts
+6:24:58 p.m. [vite] hmr update /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/overworld-v2/engine/OverworldEngineV2.ts, /src/ui/components/overworld-v2/layers/TreeLayer.tsx, /src/ui/components/overworld-v2/layers/RoadLayer.ts, /src/ui/components/overworld-v2/layers/TerrainLayer.ts, /src/ui/components/overworld-v2/data/villageLayout.ts
+6:25:00 p.m. [vite] hmr update /src/ui/components/overworld-v2/layers/BackgroundLayer.ts
+6:25:04 p.m. [vite] hmr update /src/ui/components/overworld-v2/layers/BackgroundLayer.ts
+6:25:07 p.m. [vite] hmr update /src/ui/components/overworld-v2/layers/SkyLayer.ts
+6:25:11 p.m. [vite] hmr update /src/ui/components/overworld-v2/layers/SkyLayer.ts
+6:25:19 p.m. [vite] hmr update /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/overworld-v2/engine/OverworldEngineV2.ts, /src/ui/components/overworld-v2/layers/TreeLayer.tsx, /src/ui/components/overworld-v2/layers/RoadLayer.ts, /src/ui/components/overworld-v2/layers/TerrainLayer.ts, /src/ui/components/overworld-v2/data/villageLayout.ts
+6:25:22 p.m. [vite] hmr update /src/ui/components/overworld-v2/layers/TreeLayer.tsx
+6:25:28 p.m. [vite] hmr update /src/ui/components/overworld-v2/layers/TreeLayer.tsx
+6:26:19 p.m. [vite] page reload src/core/services/BattleService.ts
+6:28:12 p.m. [vite] page reload src/core/constants.ts
+6:28:16 p.m. [vite] hmr update /src/ui/components/DjinnDetailModal.tsx
+6:28:20 p.m. [vite] hmr update /src/ui/components/DjinnDetailModal.tsx
+6:28:25 p.m. [vite] hmr update /src/ui/components/DjinnDetailModal.tsx
+6:31:55 p.m. [vite] hmr update /src/ui/components/BattleActionMenu.tsx
+6:42:01 p.m. [vite] hmr update /src/ui/components/MainMenu.tsx
+6:42:10 p.m. [vite] hmr update /src/ui/components/MainMenu.tsx
+6:44:02 p.m. [vite] hmr update /src/ui/components/QueueBattleView.tsx
+6:46:17 p.m. [vite] hmr update /src/ui/components/QueueBattleView.tsx
+6:46:22 p.m. [vite] hmr update /src/ui/components/QueueBattleView.tsx
+6:46:59 p.m. [vite] hmr update /src/ui/components/QueueBattleView.tsx
+6:48:09 p.m. [vite] hmr update /src/ui/components/overworld-v2/data/villageLayout.ts
+6:48:27 p.m. [vite] hmr update /src/ui/components/overworld-v2/data/villageLayout.ts
+6:48:44 p.m. [vite] hmr update /src/ui/components/overworld-v2/OverworldV2.tsx
+6:55:21 p.m. [vite] Pre-transform error: /home/geni/Documents/vale-village-v2/src/ui/components/QueueBattleView.tsx: Missing semicolon. (138:14)
+
+  136 | }
+  137 |     justifyContent: 'center',
+> 138 |     alignItems: 'center',
+      |               ^
+  139 |     background: 'radial-gradient(circle at 50% 30%, #1a253a 0%, #050810 80%)',
+  140 |     perspective: '1000px',
+  141 |   },
+6:55:22 p.m. [vite] Internal server error: /home/geni/Documents/vale-village-v2/src/ui/components/QueueBattleView.tsx: Missing semicolon. (138:14)
+
+  136 | }
+  137 |     justifyContent: 'center',
+> 138 |     alignItems: 'center',
+      |               ^
+  139 |     background: 'radial-gradient(circle at 50% 30%, #1a253a 0%, #050810 80%)',
+  140 |     perspective: '1000px',
+  141 |   },
+  Plugin: vite:preact-jsx
+  File: /home/geni/Documents/vale-village-v2/src/ui/components/QueueBattleView.tsx:138:14
+  136|  }
+  137|      justifyContent: 'center',
+  138|      alignItems: 'center',
+     |                ^
+  139|      background: 'radial-gradient(circle at 50% 30%, #1a253a 0%, #050810 80%)',
+  140|      perspective: '1000px',
+      at constructor (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:367:19)
+      at TypeScriptParserMixin.raise (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:6624:19)
+      at TypeScriptParserMixin.semicolon (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:6920:10)
+      at TypeScriptParserMixin.parseExpressionStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13361:10)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12975:19)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseStatementOrSloppyAnnexBFunctionDeclaration (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12833:17)
+      at TypeScriptParserMixin.parseLabeledStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13354:34)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12973:19)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseModuleItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12820:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13392:36)
+      at TypeScriptParserMixin.parseBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13385:10)
+      at TypeScriptParserMixin.parseProgram (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12698:10)
+      at TypeScriptParserMixin.parseTopLevel (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12688:25)
+      at TypeScriptParserMixin.parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14568:25)
+      at TypeScriptParserMixin.parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10183:18)
+      at parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14602:38)
+      at parser (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/parser/index.js:41:34)
+      at parser.next (<anonymous>)
+      at normalizeFile (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transformation/normalize-file.js:64:37)
+      at normalizeFile.next (<anonymous>)
+      at run (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transformation/index.js:22:50)
+      at run.next (<anonymous>)
+      at transform (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transform.js:22:33)
+      at transform.next (<anonymous>)
+      at step (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:261:32)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:273:13
+      at async.call.result.err.err (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:223:11)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:189:28
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/gensync-utils/async.js:67:7
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:113:33
+      at step (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:287:14)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:273:13
+      at async.call.result.err.err (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:223:11)
+6:55:28 p.m. [vite] hmr update /src/ui/components/ShopScreen.tsx
+6:55:28 p.m. [vite] Pre-transform error: /home/geni/Documents/vale-village-v2/src/ui/components/ShopScreen.tsx: Identifier 'handleStarterKitPurchase' has already been declared. (104:8)
+
+  102 |   const unlockedUnits = team ? team.units.filter((unit) => unit.storeUnlocked) : [];
+  103 |
+> 104 |   const handleStarterKitPurchase = (unitId: string) => {
+      |         ^
+  105 |     if (!team) return;
+  106 |     const unit = team.units.find(u => u.id === unitId);
+  107 |     if (!unit) return;
+6:55:28 p.m. [vite] Internal server error: /home/geni/Documents/vale-village-v2/src/ui/components/ShopScreen.tsx: Identifier 'handleStarterKitPurchase' has already been declared. (104:8)
+
+  102 |   const unlockedUnits = team ? team.units.filter((unit) => unit.storeUnlocked) : [];
+  103 |
+> 104 |   const handleStarterKitPurchase = (unitId: string) => {
+      |         ^
+  105 |     if (!team) return;
+  106 |     const unit = team.units.find(u => u.id === unitId);
+  107 |     if (!unit) return;
+  Plugin: vite:preact-jsx
+  File: /home/geni/Documents/vale-village-v2/src/ui/components/ShopScreen.tsx:104:8
+  102|    const unlockedUnits = team ? team.units.filter((unit) => unit.storeUnlocked) : [];
+  103|  
+  104|    const handleStarterKitPurchase = (unitId: string) => {
+     |          ^
+  105|      if (!team) return;
+  106|      const unit = team.units.find(u => u.id === unitId);
+      at constructor (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:367:19)
+      at TypeScriptParserMixin.raise (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:6624:19)
+      at TypeScriptScopeHandler.checkRedeclarationInScope (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:1646:19)
+      at TypeScriptScopeHandler.declareName (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:1612:12)
+      at TypeScriptScopeHandler.declareName (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:4909:11)
+      at TypeScriptParserMixin.declareNameFromIdentifier (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:7594:16)
+      at TypeScriptParserMixin.checkIdentifier (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:7590:12)
+      at TypeScriptParserMixin.checkLVal (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:7527:12)
+      at TypeScriptParserMixin.parseVarId (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13488:10)
+      at TypeScriptParserMixin.parseVarId (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9805:11)
+      at TypeScriptParserMixin.parseVar (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13459:12)
+      at TypeScriptParserMixin.parseVarStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13306:10)
+      at TypeScriptParserMixin.parseVarStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9469:31)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12927:23)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseStatementListItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12823:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13392:61)
+      at TypeScriptParserMixin.parseBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13385:10)
+      at TypeScriptParserMixin.parseBlock (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13373:10)
+      at TypeScriptParserMixin.parseFunctionBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12174:24)
+      at TypeScriptParserMixin.parseFunctionBodyAndFinish (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12160:10)
+      at TypeScriptParserMixin.parseFunctionBodyAndFinish (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9223:18)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13521:12
+      at TypeScriptParserMixin.withSmartMixTopicForbiddingContext (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12477:14)
+      at TypeScriptParserMixin.parseFunction (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13520:10)
+      at TypeScriptParserMixin.parseFunctionStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13201:17)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12867:21)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseStatementListItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12823:17)
+      at TypeScriptParserMixin.parseExportDeclaration (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14010:17)
+      at TypeScriptParserMixin.parseExportDeclaration (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9690:85)
+      at TypeScriptParserMixin.maybeParseExportDeclaration (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13969:31)
+      at TypeScriptParserMixin.parseExport (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13888:29)
+      at TypeScriptParserMixin.parseExport (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9446:20)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12954:27)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseModuleItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12820:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13392:36)
+      at TypeScriptParserMixin.parseBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13385:10)
+      at TypeScriptParserMixin.parseProgram (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12698:10)
+      at TypeScriptParserMixin.parseTopLevel (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12688:25)
+      at TypeScriptParserMixin.parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14568:25)
+      at TypeScriptParserMixin.parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10183:18)
+      at parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14602:38)
+      at parser (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/parser/index.js:41:34)
+      at parser.next (<anonymous>)
+      at normalizeFile (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transformation/normalize-file.js:64:37)
+6:55:28 p.m. [vite] Internal server error: /home/geni/Documents/vale-village-v2/src/ui/components/QueueBattleView.tsx: Missing semicolon. (138:14)
+
+  136 | }
+  137 |     justifyContent: 'center',
+> 138 |     alignItems: 'center',
+      |               ^
+  139 |     background: 'radial-gradient(circle at 50% 30%, #1a253a 0%, #050810 80%)',
+  140 |     perspective: '1000px',
+  141 |   },
+  Plugin: vite:preact-jsx
+  File: /home/geni/Documents/vale-village-v2/src/ui/components/QueueBattleView.tsx:138:14
+  136|  }
+  137|      justifyContent: 'center',
+  138|      alignItems: 'center',
+     |                ^
+  139|      background: 'radial-gradient(circle at 50% 30%, #1a253a 0%, #050810 80%)',
+  140|      perspective: '1000px',
+      at constructor (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:367:19)
+      at TypeScriptParserMixin.raise (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:6624:19)
+      at TypeScriptParserMixin.semicolon (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:6920:10)
+      at TypeScriptParserMixin.parseExpressionStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13361:10)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12975:19)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseStatementOrSloppyAnnexBFunctionDeclaration (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12833:17)
+      at TypeScriptParserMixin.parseLabeledStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13354:34)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12973:19)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseModuleItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12820:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13392:36)
+      at TypeScriptParserMixin.parseBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13385:10)
+      at TypeScriptParserMixin.parseProgram (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12698:10)
+      at TypeScriptParserMixin.parseTopLevel (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12688:25)
+      at TypeScriptParserMixin.parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14568:25)
+      at TypeScriptParserMixin.parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10183:18)
+      at parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14602:38)
+      at parser (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/parser/index.js:41:34)
+      at parser.next (<anonymous>)
+      at normalizeFile (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transformation/normalize-file.js:64:37)
+      at normalizeFile.next (<anonymous>)
+      at run (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transformation/index.js:22:50)
+      at run.next (<anonymous>)
+      at transform (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transform.js:22:33)
+      at transform.next (<anonymous>)
+      at step (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:261:32)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:273:13
+      at async.call.result.err.err (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:223:11)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:189:28
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/gensync-utils/async.js:67:7
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:113:33
+      at step (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:287:14)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:273:13
+      at async.call.result.err.err (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:223:11)
+6:55:31 p.m. [vite] Internal server error: /home/geni/Documents/vale-village-v2/src/ui/components/ShopScreen.tsx: Identifier 'handleStarterKitPurchase' has already been declared. (104:8)
+
+  102 |   const unlockedUnits = team ? team.units.filter((unit) => unit.storeUnlocked) : [];
+  103 |
+> 104 |   const handleStarterKitPurchase = (unitId: string) => {
+      |         ^
+  105 |     if (!team) return;
+  106 |     const unit = team.units.find(u => u.id === unitId);
+  107 |     if (!unit) return;
+  Plugin: vite:preact-jsx
+  File: /home/geni/Documents/vale-village-v2/src/ui/components/ShopScreen.tsx:104:8
+  102|    const unlockedUnits = team ? team.units.filter((unit) => unit.storeUnlocked) : [];
+  103|  
+  104|    const handleStarterKitPurchase = (unitId: string) => {
+     |          ^
+  105|      if (!team) return;
+  106|      const unit = team.units.find(u => u.id === unitId);
+      at constructor (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:367:19)
+      at TypeScriptParserMixin.raise (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:6624:19)
+      at TypeScriptScopeHandler.checkRedeclarationInScope (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:1646:19)
+      at TypeScriptScopeHandler.declareName (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:1612:12)
+      at TypeScriptScopeHandler.declareName (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:4909:11)
+      at TypeScriptParserMixin.declareNameFromIdentifier (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:7594:16)
+      at TypeScriptParserMixin.checkIdentifier (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:7590:12)
+      at TypeScriptParserMixin.checkLVal (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:7527:12)
+      at TypeScriptParserMixin.parseVarId (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13488:10)
+      at TypeScriptParserMixin.parseVarId (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9805:11)
+      at TypeScriptParserMixin.parseVar (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13459:12)
+      at TypeScriptParserMixin.parseVarStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13306:10)
+      at TypeScriptParserMixin.parseVarStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9469:31)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12927:23)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseStatementListItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12823:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13392:61)
+      at TypeScriptParserMixin.parseBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13385:10)
+      at TypeScriptParserMixin.parseBlock (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13373:10)
+      at TypeScriptParserMixin.parseFunctionBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12174:24)
+      at TypeScriptParserMixin.parseFunctionBodyAndFinish (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12160:10)
+      at TypeScriptParserMixin.parseFunctionBodyAndFinish (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9223:18)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13521:12
+      at TypeScriptParserMixin.withSmartMixTopicForbiddingContext (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12477:14)
+      at TypeScriptParserMixin.parseFunction (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13520:10)
+      at TypeScriptParserMixin.parseFunctionStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13201:17)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12867:21)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseStatementListItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12823:17)
+      at TypeScriptParserMixin.parseExportDeclaration (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14010:17)
+      at TypeScriptParserMixin.parseExportDeclaration (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9690:85)
+      at TypeScriptParserMixin.maybeParseExportDeclaration (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13969:31)
+      at TypeScriptParserMixin.parseExport (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13888:29)
+      at TypeScriptParserMixin.parseExport (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9446:20)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12954:27)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseModuleItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12820:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13392:36)
+      at TypeScriptParserMixin.parseBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13385:10)
+      at TypeScriptParserMixin.parseProgram (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12698:10)
+      at TypeScriptParserMixin.parseTopLevel (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12688:25)
+      at TypeScriptParserMixin.parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14568:25)
+      at TypeScriptParserMixin.parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10183:18)
+      at parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14602:38)
+      at parser (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/parser/index.js:41:34)
+      at parser.next (<anonymous>)
+      at normalizeFile (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transformation/normalize-file.js:64:37)
+6:55:31 p.m. [vite] Internal server error: /home/geni/Documents/vale-village-v2/src/ui/components/QueueBattleView.tsx: Missing semicolon. (138:14)
+
+  136 | }
+  137 |     justifyContent: 'center',
+> 138 |     alignItems: 'center',
+      |               ^
+  139 |     background: 'radial-gradient(circle at 50% 30%, #1a253a 0%, #050810 80%)',
+  140 |     perspective: '1000px',
+  141 |   },
+  Plugin: vite:preact-jsx
+  File: /home/geni/Documents/vale-village-v2/src/ui/components/QueueBattleView.tsx:138:14
+  136|  }
+  137|      justifyContent: 'center',
+  138|      alignItems: 'center',
+     |                ^
+  139|      background: 'radial-gradient(circle at 50% 30%, #1a253a 0%, #050810 80%)',
+  140|      perspective: '1000px',
+      at constructor (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:367:19)
+      at TypeScriptParserMixin.raise (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:6624:19)
+      at TypeScriptParserMixin.semicolon (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:6920:10)
+      at TypeScriptParserMixin.parseExpressionStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13361:10)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12975:19)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseStatementOrSloppyAnnexBFunctionDeclaration (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12833:17)
+      at TypeScriptParserMixin.parseLabeledStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13354:34)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12973:19)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseModuleItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12820:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13392:36)
+      at TypeScriptParserMixin.parseBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13385:10)
+      at TypeScriptParserMixin.parseProgram (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12698:10)
+      at TypeScriptParserMixin.parseTopLevel (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12688:25)
+      at TypeScriptParserMixin.parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14568:25)
+      at TypeScriptParserMixin.parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10183:18)
+      at parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14602:38)
+      at parser (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/parser/index.js:41:34)
+      at parser.next (<anonymous>)
+      at normalizeFile (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transformation/normalize-file.js:64:37)
+      at normalizeFile.next (<anonymous>)
+      at run (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transformation/index.js:22:50)
+      at run.next (<anonymous>)
+      at transform (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transform.js:22:33)
+      at transform.next (<anonymous>)
+      at step (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:261:32)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:273:13
+      at async.call.result.err.err (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:223:11)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:189:28
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/gensync-utils/async.js:67:7
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:113:33
+      at step (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:287:14)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:273:13
+      at async.call.result.err.err (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:223:11)
+6:55:31 p.m. [vite] Internal server error: /home/geni/Documents/vale-village-v2/src/ui/components/ShopScreen.tsx: Identifier 'handleStarterKitPurchase' has already been declared. (104:8)
+
+  102 |   const unlockedUnits = team ? team.units.filter((unit) => unit.storeUnlocked) : [];
+  103 |
+> 104 |   const handleStarterKitPurchase = (unitId: string) => {
+      |         ^
+  105 |     if (!team) return;
+  106 |     const unit = team.units.find(u => u.id === unitId);
+  107 |     if (!unit) return;
+  Plugin: vite:preact-jsx
+  File: /home/geni/Documents/vale-village-v2/src/ui/components/ShopScreen.tsx:104:8
+  102|    const unlockedUnits = team ? team.units.filter((unit) => unit.storeUnlocked) : [];
+  103|  
+  104|    const handleStarterKitPurchase = (unitId: string) => {
+     |          ^
+  105|      if (!team) return;
+  106|      const unit = team.units.find(u => u.id === unitId);
+      at constructor (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:367:19)
+      at TypeScriptParserMixin.raise (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:6624:19)
+      at TypeScriptScopeHandler.checkRedeclarationInScope (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:1646:19)
+      at TypeScriptScopeHandler.declareName (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:1612:12)
+      at TypeScriptScopeHandler.declareName (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:4909:11)
+      at TypeScriptParserMixin.declareNameFromIdentifier (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:7594:16)
+      at TypeScriptParserMixin.checkIdentifier (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:7590:12)
+      at TypeScriptParserMixin.checkLVal (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:7527:12)
+      at TypeScriptParserMixin.parseVarId (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13488:10)
+      at TypeScriptParserMixin.parseVarId (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9805:11)
+      at TypeScriptParserMixin.parseVar (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13459:12)
+      at TypeScriptParserMixin.parseVarStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13306:10)
+      at TypeScriptParserMixin.parseVarStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9469:31)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12927:23)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseStatementListItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12823:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13392:61)
+      at TypeScriptParserMixin.parseBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13385:10)
+      at TypeScriptParserMixin.parseBlock (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13373:10)
+      at TypeScriptParserMixin.parseFunctionBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12174:24)
+      at TypeScriptParserMixin.parseFunctionBodyAndFinish (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12160:10)
+      at TypeScriptParserMixin.parseFunctionBodyAndFinish (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9223:18)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13521:12
+      at TypeScriptParserMixin.withSmartMixTopicForbiddingContext (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12477:14)
+      at TypeScriptParserMixin.parseFunction (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13520:10)
+      at TypeScriptParserMixin.parseFunctionStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13201:17)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12867:21)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseStatementListItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12823:17)
+      at TypeScriptParserMixin.parseExportDeclaration (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14010:17)
+      at TypeScriptParserMixin.parseExportDeclaration (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9690:85)
+      at TypeScriptParserMixin.maybeParseExportDeclaration (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13969:31)
+      at TypeScriptParserMixin.parseExport (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13888:29)
+      at TypeScriptParserMixin.parseExport (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9446:20)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12954:27)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseModuleItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12820:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13392:36)
+      at TypeScriptParserMixin.parseBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13385:10)
+      at TypeScriptParserMixin.parseProgram (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12698:10)
+      at TypeScriptParserMixin.parseTopLevel (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12688:25)
+      at TypeScriptParserMixin.parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14568:25)
+      at TypeScriptParserMixin.parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10183:18)
+      at parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14602:38)
+      at parser (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/parser/index.js:41:34)
+      at parser.next (<anonymous>)
+      at normalizeFile (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transformation/normalize-file.js:64:37)
+6:55:31 p.m. [vite] Internal server error: /home/geni/Documents/vale-village-v2/src/ui/components/QueueBattleView.tsx: Missing semicolon. (138:14)
+
+  136 | }
+  137 |     justifyContent: 'center',
+> 138 |     alignItems: 'center',
+      |               ^
+  139 |     background: 'radial-gradient(circle at 50% 30%, #1a253a 0%, #050810 80%)',
+  140 |     perspective: '1000px',
+  141 |   },
+  Plugin: vite:preact-jsx
+  File: /home/geni/Documents/vale-village-v2/src/ui/components/QueueBattleView.tsx:138:14
+  136|  }
+  137|      justifyContent: 'center',
+  138|      alignItems: 'center',
+     |                ^
+  139|      background: 'radial-gradient(circle at 50% 30%, #1a253a 0%, #050810 80%)',
+  140|      perspective: '1000px',
+      at constructor (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:367:19)
+      at TypeScriptParserMixin.raise (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:6624:19)
+      at TypeScriptParserMixin.semicolon (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:6920:10)
+      at TypeScriptParserMixin.parseExpressionStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13361:10)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12975:19)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseStatementOrSloppyAnnexBFunctionDeclaration (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12833:17)
+      at TypeScriptParserMixin.parseLabeledStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13354:34)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12973:19)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseModuleItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12820:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13392:36)
+      at TypeScriptParserMixin.parseBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13385:10)
+      at TypeScriptParserMixin.parseProgram (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12698:10)
+      at TypeScriptParserMixin.parseTopLevel (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12688:25)
+      at TypeScriptParserMixin.parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14568:25)
+      at TypeScriptParserMixin.parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10183:18)
+      at parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14602:38)
+      at parser (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/parser/index.js:41:34)
+      at parser.next (<anonymous>)
+      at normalizeFile (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transformation/normalize-file.js:64:37)
+      at normalizeFile.next (<anonymous>)
+      at run (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transformation/index.js:22:50)
+      at run.next (<anonymous>)
+      at transform (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transform.js:22:33)
+      at transform.next (<anonymous>)
+      at step (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:261:32)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:273:13
+      at async.call.result.err.err (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:223:11)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:189:28
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/gensync-utils/async.js:67:7
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:113:33
+      at step (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:287:14)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:273:13
+      at async.call.result.err.err (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:223:11)
+6:55:45 p.m. [vite] hmr update /src/ui/components/ShopScreen.tsx
+6:55:46 p.m. [vite] Internal server error: /home/geni/Documents/vale-village-v2/src/ui/components/QueueBattleView.tsx: Missing semicolon. (138:14)
+
+  136 | }
+  137 |     justifyContent: 'center',
+> 138 |     alignItems: 'center',
+      |               ^
+  139 |     background: 'radial-gradient(circle at 50% 30%, #1a253a 0%, #050810 80%)',
+  140 |     perspective: '1000px',
+  141 |   },
+  Plugin: vite:preact-jsx
+  File: /home/geni/Documents/vale-village-v2/src/ui/components/QueueBattleView.tsx:138:14
+  136|  }
+  137|      justifyContent: 'center',
+  138|      alignItems: 'center',
+     |                ^
+  139|      background: 'radial-gradient(circle at 50% 30%, #1a253a 0%, #050810 80%)',
+  140|      perspective: '1000px',
+      at constructor (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:367:19)
+      at TypeScriptParserMixin.raise (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:6624:19)
+      at TypeScriptParserMixin.semicolon (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:6920:10)
+      at TypeScriptParserMixin.parseExpressionStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13361:10)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12975:19)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseStatementOrSloppyAnnexBFunctionDeclaration (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12833:17)
+      at TypeScriptParserMixin.parseLabeledStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13354:34)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12973:19)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseModuleItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12820:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13392:36)
+      at TypeScriptParserMixin.parseBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13385:10)
+      at TypeScriptParserMixin.parseProgram (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12698:10)
+      at TypeScriptParserMixin.parseTopLevel (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12688:25)
+      at TypeScriptParserMixin.parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14568:25)
+      at TypeScriptParserMixin.parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10183:18)
+      at parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14602:38)
+      at parser (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/parser/index.js:41:34)
+      at parser.next (<anonymous>)
+      at normalizeFile (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transformation/normalize-file.js:64:37)
+      at normalizeFile.next (<anonymous>)
+      at run (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transformation/index.js:22:50)
+      at run.next (<anonymous>)
+      at transform (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transform.js:22:33)
+      at transform.next (<anonymous>)
+      at step (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:261:32)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:273:13
+      at async.call.result.err.err (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:223:11)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:189:28
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/gensync-utils/async.js:67:7
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:113:33
+      at step (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:287:14)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:273:13
+      at async.call.result.err.err (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:223:11)
+6:57:12 p.m. [vite] Internal server error: /home/geni/Documents/vale-village-v2/src/ui/components/QueueBattleView.tsx: Missing semicolon. (138:14)
+
+  136 | }
+  137 |     justifyContent: 'center',
+> 138 |     alignItems: 'center',
+      |               ^
+  139 |     background: 'radial-gradient(circle at 50% 30%, #1a253a 0%, #050810 80%)',
+  140 |     perspective: '1000px',
+  141 |   },
+  Plugin: vite:preact-jsx
+  File: /home/geni/Documents/vale-village-v2/src/ui/components/QueueBattleView.tsx:138:14
+  136|  }
+  137|      justifyContent: 'center',
+  138|      alignItems: 'center',
+     |                ^
+  139|      background: 'radial-gradient(circle at 50% 30%, #1a253a 0%, #050810 80%)',
+  140|      perspective: '1000px',
+      at constructor (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:367:19)
+      at TypeScriptParserMixin.raise (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:6624:19)
+      at TypeScriptParserMixin.semicolon (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:6920:10)
+      at TypeScriptParserMixin.parseExpressionStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13361:10)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12975:19)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseStatementOrSloppyAnnexBFunctionDeclaration (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12833:17)
+      at TypeScriptParserMixin.parseLabeledStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13354:34)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12973:19)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseModuleItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12820:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13392:36)
+      at TypeScriptParserMixin.parseBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13385:10)
+      at TypeScriptParserMixin.parseProgram (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12698:10)
+      at TypeScriptParserMixin.parseTopLevel (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12688:25)
+      at TypeScriptParserMixin.parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14568:25)
+      at TypeScriptParserMixin.parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10183:18)
+      at parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14602:38)
+      at parser (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/parser/index.js:41:34)
+      at parser.next (<anonymous>)
+      at normalizeFile (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transformation/normalize-file.js:64:37)
+      at normalizeFile.next (<anonymous>)
+      at run (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transformation/index.js:22:50)
+      at run.next (<anonymous>)
+      at transform (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transform.js:22:33)
+      at transform.next (<anonymous>)
+      at step (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:261:32)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:273:13
+      at async.call.result.err.err (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:223:11)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:189:28
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/gensync-utils/async.js:67:7
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:113:33
+      at step (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:287:14)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:273:13
+      at async.call.result.err.err (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:223:11)
+6:57:15 p.m. [vite] Internal server error: /home/geni/Documents/vale-village-v2/src/ui/components/QueueBattleView.tsx: Missing semicolon. (138:14)
+
+  136 | }
+  137 |     justifyContent: 'center',
+> 138 |     alignItems: 'center',
+      |               ^
+  139 |     background: 'radial-gradient(circle at 50% 30%, #1a253a 0%, #050810 80%)',
+  140 |     perspective: '1000px',
+  141 |   },
+  Plugin: vite:preact-jsx
+  File: /home/geni/Documents/vale-village-v2/src/ui/components/QueueBattleView.tsx:138:14
+  136|  }
+  137|      justifyContent: 'center',
+  138|      alignItems: 'center',
+     |                ^
+  139|      background: 'radial-gradient(circle at 50% 30%, #1a253a 0%, #050810 80%)',
+  140|      perspective: '1000px',
+      at constructor (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:367:19)
+      at TypeScriptParserMixin.raise (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:6624:19)
+      at TypeScriptParserMixin.semicolon (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:6920:10)
+      at TypeScriptParserMixin.parseExpressionStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13361:10)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12975:19)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseStatementOrSloppyAnnexBFunctionDeclaration (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12833:17)
+      at TypeScriptParserMixin.parseLabeledStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13354:34)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12973:19)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseModuleItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12820:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13392:36)
+      at TypeScriptParserMixin.parseBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13385:10)
+      at TypeScriptParserMixin.parseProgram (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12698:10)
+      at TypeScriptParserMixin.parseTopLevel (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12688:25)
+      at TypeScriptParserMixin.parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14568:25)
+      at TypeScriptParserMixin.parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10183:18)
+      at parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14602:38)
+      at parser (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/parser/index.js:41:34)
+      at parser.next (<anonymous>)
+      at normalizeFile (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transformation/normalize-file.js:64:37)
+      at normalizeFile.next (<anonymous>)
+      at run (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transformation/index.js:22:50)
+      at run.next (<anonymous>)
+      at transform (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transform.js:22:33)
+      at transform.next (<anonymous>)
+      at step (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:261:32)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:273:13
+      at async.call.result.err.err (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:223:11)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:189:28
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/gensync-utils/async.js:67:7
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:113:33
+      at step (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:287:14)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:273:13
+      at async.call.result.err.err (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:223:11)
+6:57:15 p.m. [vite] Internal server error: /home/geni/Documents/vale-village-v2/src/ui/components/QueueBattleView.tsx: Missing semicolon. (138:14)
+
+  136 | }
+  137 |     justifyContent: 'center',
+> 138 |     alignItems: 'center',
+      |               ^
+  139 |     background: 'radial-gradient(circle at 50% 30%, #1a253a 0%, #050810 80%)',
+  140 |     perspective: '1000px',
+  141 |   },
+  Plugin: vite:preact-jsx
+  File: /home/geni/Documents/vale-village-v2/src/ui/components/QueueBattleView.tsx:138:14
+  136|  }
+  137|      justifyContent: 'center',
+  138|      alignItems: 'center',
+     |                ^
+  139|      background: 'radial-gradient(circle at 50% 30%, #1a253a 0%, #050810 80%)',
+  140|      perspective: '1000px',
+      at constructor (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:367:19)
+      at TypeScriptParserMixin.raise (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:6624:19)
+      at TypeScriptParserMixin.semicolon (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:6920:10)
+      at TypeScriptParserMixin.parseExpressionStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13361:10)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12975:19)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseStatementOrSloppyAnnexBFunctionDeclaration (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12833:17)
+      at TypeScriptParserMixin.parseLabeledStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13354:34)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12973:19)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseModuleItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12820:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13392:36)
+      at TypeScriptParserMixin.parseBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13385:10)
+      at TypeScriptParserMixin.parseProgram (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12698:10)
+      at TypeScriptParserMixin.parseTopLevel (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12688:25)
+      at TypeScriptParserMixin.parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14568:25)
+      at TypeScriptParserMixin.parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10183:18)
+      at parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14602:38)
+      at parser (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/parser/index.js:41:34)
+      at parser.next (<anonymous>)
+      at normalizeFile (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transformation/normalize-file.js:64:37)
+      at normalizeFile.next (<anonymous>)
+      at run (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transformation/index.js:22:50)
+      at run.next (<anonymous>)
+      at transform (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transform.js:22:33)
+      at transform.next (<anonymous>)
+      at step (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:261:32)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:273:13
+      at async.call.result.err.err (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:223:11)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:189:28
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/gensync-utils/async.js:67:7
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:113:33
+      at step (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:287:14)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:273:13
+      at async.call.result.err.err (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:223:11)
+7:06:51 p.m. [vite] Internal server error: /home/geni/Documents/vale-village-v2/src/ui/components/QueueBattleView.tsx: Missing semicolon. (138:14)
+
+  136 | }
+  137 |     justifyContent: 'center',
+> 138 |     alignItems: 'center',
+      |               ^
+  139 |     background: 'radial-gradient(circle at 50% 30%, #1a253a 0%, #050810 80%)',
+  140 |     perspective: '1000px',
+  141 |   },
+  Plugin: vite:preact-jsx
+  File: /home/geni/Documents/vale-village-v2/src/ui/components/QueueBattleView.tsx:138:14
+  136|  }
+  137|      justifyContent: 'center',
+  138|      alignItems: 'center',
+     |                ^
+  139|      background: 'radial-gradient(circle at 50% 30%, #1a253a 0%, #050810 80%)',
+  140|      perspective: '1000px',
+      at constructor (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:367:19)
+      at TypeScriptParserMixin.raise (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:6624:19)
+      at TypeScriptParserMixin.semicolon (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:6920:10)
+      at TypeScriptParserMixin.parseExpressionStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13361:10)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12975:19)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseStatementOrSloppyAnnexBFunctionDeclaration (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12833:17)
+      at TypeScriptParserMixin.parseLabeledStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13354:34)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12973:19)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseModuleItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12820:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13392:36)
+      at TypeScriptParserMixin.parseBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13385:10)
+      at TypeScriptParserMixin.parseProgram (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12698:10)
+      at TypeScriptParserMixin.parseTopLevel (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12688:25)
+      at TypeScriptParserMixin.parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14568:25)
+      at TypeScriptParserMixin.parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10183:18)
+      at parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14602:38)
+      at parser (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/parser/index.js:41:34)
+      at parser.next (<anonymous>)
+      at normalizeFile (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transformation/normalize-file.js:64:37)
+      at normalizeFile.next (<anonymous>)
+      at run (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transformation/index.js:22:50)
+      at run.next (<anonymous>)
+      at transform (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transform.js:22:33)
+      at transform.next (<anonymous>)
+      at step (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:261:32)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:273:13
+      at async.call.result.err.err (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:223:11)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:189:28
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/gensync-utils/async.js:67:7
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:113:33
+      at step (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:287:14)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:273:13
+      at async.call.result.err.err (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:223:11)
+7:06:54 p.m. [vite] Internal server error: /home/geni/Documents/vale-village-v2/src/ui/components/QueueBattleView.tsx: Missing semicolon. (138:14)
+
+  136 | }
+  137 |     justifyContent: 'center',
+> 138 |     alignItems: 'center',
+      |               ^
+  139 |     background: 'radial-gradient(circle at 50% 30%, #1a253a 0%, #050810 80%)',
+  140 |     perspective: '1000px',
+  141 |   },
+  Plugin: vite:preact-jsx
+  File: /home/geni/Documents/vale-village-v2/src/ui/components/QueueBattleView.tsx:138:14
+  136|  }
+  137|      justifyContent: 'center',
+  138|      alignItems: 'center',
+     |                ^
+  139|      background: 'radial-gradient(circle at 50% 30%, #1a253a 0%, #050810 80%)',
+  140|      perspective: '1000px',
+      at constructor (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:367:19)
+      at TypeScriptParserMixin.raise (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:6624:19)
+      at TypeScriptParserMixin.semicolon (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:6920:10)
+      at TypeScriptParserMixin.parseExpressionStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13361:10)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12975:19)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseStatementOrSloppyAnnexBFunctionDeclaration (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12833:17)
+      at TypeScriptParserMixin.parseLabeledStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13354:34)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12973:19)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseModuleItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12820:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13392:36)
+      at TypeScriptParserMixin.parseBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13385:10)
+      at TypeScriptParserMixin.parseProgram (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12698:10)
+      at TypeScriptParserMixin.parseTopLevel (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12688:25)
+      at TypeScriptParserMixin.parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14568:25)
+      at TypeScriptParserMixin.parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10183:18)
+      at parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14602:38)
+      at parser (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/parser/index.js:41:34)
+      at parser.next (<anonymous>)
+      at normalizeFile (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transformation/normalize-file.js:64:37)
+      at normalizeFile.next (<anonymous>)
+      at run (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transformation/index.js:22:50)
+      at run.next (<anonymous>)
+      at transform (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transform.js:22:33)
+      at transform.next (<anonymous>)
+      at step (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:261:32)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:273:13
+      at async.call.result.err.err (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:223:11)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:189:28
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/gensync-utils/async.js:67:7
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:113:33
+      at step (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:287:14)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:273:13
+      at async.call.result.err.err (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:223:11)
+7:06:54 p.m. [vite] Internal server error: /home/geni/Documents/vale-village-v2/src/ui/components/QueueBattleView.tsx: Missing semicolon. (138:14)
+
+  136 | }
+  137 |     justifyContent: 'center',
+> 138 |     alignItems: 'center',
+      |               ^
+  139 |     background: 'radial-gradient(circle at 50% 30%, #1a253a 0%, #050810 80%)',
+  140 |     perspective: '1000px',
+  141 |   },
+  Plugin: vite:preact-jsx
+  File: /home/geni/Documents/vale-village-v2/src/ui/components/QueueBattleView.tsx:138:14
+  136|  }
+  137|      justifyContent: 'center',
+  138|      alignItems: 'center',
+     |                ^
+  139|      background: 'radial-gradient(circle at 50% 30%, #1a253a 0%, #050810 80%)',
+  140|      perspective: '1000px',
+      at constructor (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:367:19)
+      at TypeScriptParserMixin.raise (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:6624:19)
+      at TypeScriptParserMixin.semicolon (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:6920:10)
+      at TypeScriptParserMixin.parseExpressionStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13361:10)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12975:19)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseStatementOrSloppyAnnexBFunctionDeclaration (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12833:17)
+      at TypeScriptParserMixin.parseLabeledStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13354:34)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12973:19)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseModuleItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12820:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13392:36)
+      at TypeScriptParserMixin.parseBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13385:10)
+      at TypeScriptParserMixin.parseProgram (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12698:10)
+      at TypeScriptParserMixin.parseTopLevel (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12688:25)
+      at TypeScriptParserMixin.parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14568:25)
+      at TypeScriptParserMixin.parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10183:18)
+      at parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14602:38)
+      at parser (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/parser/index.js:41:34)
+      at parser.next (<anonymous>)
+      at normalizeFile (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transformation/normalize-file.js:64:37)
+      at normalizeFile.next (<anonymous>)
+      at run (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transformation/index.js:22:50)
+      at run.next (<anonymous>)
+      at transform (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transform.js:22:33)
+      at transform.next (<anonymous>)
+      at step (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:261:32)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:273:13
+      at async.call.result.err.err (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:223:11)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:189:28
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/gensync-utils/async.js:67:7
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:113:33
+      at step (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:287:14)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:273:13
+      at async.call.result.err.err (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:223:11)
+7:06:55 p.m. [vite] Internal server error: /home/geni/Documents/vale-village-v2/src/ui/components/QueueBattleView.tsx: Missing semicolon. (138:14)
+
+  136 | }
+  137 |     justifyContent: 'center',
+> 138 |     alignItems: 'center',
+      |               ^
+  139 |     background: 'radial-gradient(circle at 50% 30%, #1a253a 0%, #050810 80%)',
+  140 |     perspective: '1000px',
+  141 |   },
+  Plugin: vite:preact-jsx
+  File: /home/geni/Documents/vale-village-v2/src/ui/components/QueueBattleView.tsx:138:14
+  136|  }
+  137|      justifyContent: 'center',
+  138|      alignItems: 'center',
+     |                ^
+  139|      background: 'radial-gradient(circle at 50% 30%, #1a253a 0%, #050810 80%)',
+  140|      perspective: '1000px',
+      at constructor (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:367:19)
+      at TypeScriptParserMixin.raise (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:6624:19)
+      at TypeScriptParserMixin.semicolon (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:6920:10)
+      at TypeScriptParserMixin.parseExpressionStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13361:10)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12975:19)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseStatementOrSloppyAnnexBFunctionDeclaration (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12833:17)
+      at TypeScriptParserMixin.parseLabeledStatement (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13354:34)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12973:19)
+      at TypeScriptParserMixin.parseStatementContent (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12843:17)
+      at TypeScriptParserMixin.parseModuleItem (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12820:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13392:36)
+      at TypeScriptParserMixin.parseBlockBody (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:13385:10)
+      at TypeScriptParserMixin.parseProgram (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12698:10)
+      at TypeScriptParserMixin.parseTopLevel (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:12688:25)
+      at TypeScriptParserMixin.parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14568:25)
+      at TypeScriptParserMixin.parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:10183:18)
+      at parse (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+parser@7.28.5/node_modules/@babel/parser/lib/index.js:14602:38)
+      at parser (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/parser/index.js:41:34)
+      at parser.next (<anonymous>)
+      at normalizeFile (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transformation/normalize-file.js:64:37)
+      at normalizeFile.next (<anonymous>)
+      at run (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transformation/index.js:22:50)
+      at run.next (<anonymous>)
+      at transform (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/transform.js:22:33)
+      at transform.next (<anonymous>)
+      at step (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:261:32)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:273:13
+      at async.call.result.err.err (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:223:11)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:189:28
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/@babel+core@7.28.5/node_modules/@babel/core/lib/gensync-utils/async.js:67:7
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:113:33
+      at step (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:287:14)
+      at /home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:273:13
+      at async.call.result.err.err (/home/geni/Documents/vale-village-v2/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:223:11)
+7:08:56 p.m. [vite] hmr update /src/ui/components/QueueBattleView.tsx
+7:15:21 p.m. [vite] hmr update /src/ui/components/overworld-v2/OverworldV2.tsx
+7:17:15 p.m. [vite] hmr update /src/ui/components/overworld-v2/layers/encountersLayer.ts
+7:22:32 p.m. [vite] hmr update /src/ui/components/overworld-v2/OverworldV2.tsx, /src/ui/components/overworld-v2/engine/OverworldEngineV2.ts, /src/ui/components/overworld-v2/layers/TreeLayer.tsx, /src/ui/components/overworld-v2/layers/RoadLayer.ts, /src/ui/components/overworld-v2/layers/TerrainLayer.ts, /src/ui/components/overworld-v2/data/villageLayout.ts, /src/ui/components/overworld-v2/layers/SkyLayer.ts, /src/ui/components/overworld-v2/layers/BackgroundLayer.ts
+7:24:45 p.m. [vite] hmr update /src/ui/components/overworld-v2/OverworldV2.tsx
+7:28:51 p.m. [vite] hmr update /src/ui/components/overworld-v2/OverworldV2.tsx
+7:29:03 p.m. [vite] hmr update /src/ui/components/overworld-v2/OverworldV2.tsx
+7:41:30 p.m. [vite] hmr update /src/App.tsx
+7:41:35 p.m. [vite] hmr update /src/App.tsx
+7:42:10 p.m. [vite] hmr update /src/ui/components/overworld-v2/engine/Camera.ts
+7:42:29 p.m. [vite] hmr update /src/ui/components/overworld-v2/layers/PlayerLayer.ts
+7:42:46 p.m. [vite] hmr update /src/ui/components/overworld-v2/layers/InteriorNpcLayer.ts
+7:43:10 p.m. [vite] hmr update /src/ui/components/overworld-v2/layers/VillageLayer.ts
+7:43:27 p.m. [vite] hmr update /src/ui/components/overworld/layers/InteriorFloorLayer.ts
+7:44:01 p.m. [vite] hmr update /src/ui/components/overworld/layers/InteriorFurnitureLayer.ts
+8:10:41 p.m. [vite] hmr update /src/core/services/GameInitializationService.ts
+7:05:49 p.m. [vite] page reload src/core/constants.ts
+7:12:09 p.m. [vite] page reload src/core/constants.ts
+7:12:20 p.m. [vite] page reload src/core/constants.ts
+7:13:02 p.m. [vite] page reload src/core/constants.ts
+7:14:04 p.m. [vite] page reload src/core/constants.ts
+7:23:21 p.m. [vite] page reload src/ui/state/gameFlowSlice.ts
+7:23:33 p.m. [vite] hmr update /src/ui/components/overworld-v2/OverworldV2.tsx
+7:25:04 p.m. [vite] page reload src/ui/state/gameFlowSlice.ts
+7:40:23 p.m. [vite] hmr update /src/ui/components/QueueBattleView.tsx
+8:03:54 p.m. [vite] hmr update /src/ui/components/QueueBattleView.tsx
+8:04:36 p.m. [vite] hmr update /src/ui/components/QueueBattleView.tsx
+8:04:41 p.m. [vite] hmr update /src/ui/components/QueueBattleView.tsx

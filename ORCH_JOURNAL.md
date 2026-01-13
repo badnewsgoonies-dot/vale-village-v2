@@ -13649,3 +13649,615 @@ _Generated: 2026-01-11 12:12_
 **Summary:** 4/7 phases, 24 batches
 **Knowledge accumulated:** 31 items
 **Lessons learned:** 38
+
+## [SESSION START] 2026-01-11 16:02
+**Goal:** Operation Gold Master: Achieve Feature Parity with Design Docs & Ensure Seamless Game Loop.
+**Target repo:** /home/geni/Documents/vale-village-v2
+**Source repo:** N/A
+**Session ID:** strat-3b7673c0
+
+## [PHASE DONE] 2026-01-11 16:07
+**Phase:** phase-5
+**Outcome:** DONE
+**Key learnings:**
+- Prioritize state reset and determinism before performance polish
+- Minor errors do not block phase completion if core objectives are met
+- QueuedActions reset logic implemented
+- Determinism/reproducibility test added and passing
+
+## [SESSION END] 2026-01-11 16:17
+**Status:** blocked
+**Summary:** 5/7 phases, 32 batches
+**Knowledge accumulated:** 43 items
+**Lessons learned:** 48
+
+## [SESSION START] 2026-01-11 16:41
+**Goal:** Operation Gold Master: Achieve Feature Parity with Design Docs & Ensure Seamless Game Loop.
+**Target repo:** /home/geni/Documents/vale-village-v2
+**Source repo:** N/A
+**Session ID:** strat-3b7673c0
+
+## [PHASE DONE] 2026-01-11 16:53
+**Phase:** phase-6
+**Outcome:** BLOCKED
+**Key learnings:**
+- Automated CI triggering and artifact attachment require permissions or capabilities not available in the current environment
+- Manual or system-level intervention is needed for CI steps
+
+## [SESSION END] 2026-01-11 16:53
+**Status:** blocked
+**Summary:** 5/7 phases, 37 batches
+**Knowledge accumulated:** 55 items
+**Lessons learned:** 58
+
+## [SESSION START] 2026-01-11 17:30
+**Goal:** Operation Gold Master: Achieve Feature Parity with Design Docs & Ensure Seamless Game Loop.
+**Target repo:** /home/geni/Documents/vale-village-v2
+**Source repo:** N/A
+**Session ID:** strat-3b7673c0
+
+## [SESSION END] 2026-01-11 17:34
+**Status:** blocked
+**Summary:** 6/7 phases, 42 batches
+**Knowledge accumulated:** 58 items
+**Lessons learned:** 62
+
+## [SESSION START] 2026-01-11 17:58
+**Goal:** Achieve Visual and Gameplay Parity with Reference Footage (Golden Sun). \nObjective: Analyze Golden Sun gameplay mechanics, UI feel, and pacing to implement missing 'Juice'.
+**Target repo:** /home/geni/Documents/vale-village-v2
+**Source repo:** N/A
+**Session ID:** strat-1dd94767
+
+## [PHASE DONE] 2026-01-11 18:00
+**Phase:** phase-1
+**Outcome:** DONE
+**Key learnings:**
+- Initial memory ingestion and file creation can proceed in parallel with checklist and manifest refinement
+- No permission or scope issues encountered—current allowed_files set is sufficient
+- Swarm memory queried and top-10 relevant entries saved
+- Initial work on reference manifest and measurement checklist started
+
+## [SESSION END] 2026-01-11 18:04
+**Status:** blocked
+**Summary:** 1/9 phases, 9 batches
+**Knowledge accumulated:** 5 items
+**Lessons learned:** 7
+
+## [SESSION START] 2026-01-12 19:47
+**Goal:** Audit src/core/algorithms for magic numbers and disabled constants that conflict with GAME_MECHANICS.md
+**Target repo:** /home/geni/Documents/vale-village-v2
+**Source repo:** N/A
+**Session ID:** strat-79d474f4
+### Magic-number discovery — 2026-01-13
+- mem-briefing: ran /home/geni/swarm/memory/mem-briefing.py (recorded in session output).
+- files under src/core/algorithms referencing numeric literals or constants:
+  - src/core/algorithms/djinn.ts (DJINN_SUMMON_DAMAGE)
+  - src/core/algorithms/djinnAbilities.ts (COUNTER_PAIRS)
+  - src/core/algorithms/damage.ts (ELEMENT_ADVANTAGE)
+  - src/core/algorithms/xp.ts (XP_CURVE)
+  - src/core/algorithms/weakness.ts
+  - src/core/algorithms/status.ts
+  - src/core/algorithms/turn-order.ts
+  - src/core/algorithms/weakness.test.ts
+  - src/core/algorithms/stats.ts
+  - src/core/algorithms/mana.ts
+  - src/core/algorithms/rewards.ts
+- Mapping to GAME_MECHANICS.md: not performed; marked 'ambiguous' pending permission to create reports/magic_number_candidates.json and perform detailed clause mapping.
+- Next: request permission to create reports/magic_number_candidates.json and to run targeted extracts (exact literals, commented/disabled constants) and produce the mapping document.
+
+### MAGIC NUMBER CANDIDATES SCAN - 2026-01-13
+Run: mem-briefing + code scan of src/core/algorithms for numeric literals and commented-out constants.
+Summary of notable files and examples:
+- src/core/algorithms/xp.ts: XP_CURVE array with explicit per-level XP values (0,100,350,...,92800) — maps to GAME_MECHANICS.md Section 1.1 (Progression & leveling).
+- src/core/algorithms/djinn.ts: numeric summon/power values (80,150,300) and per-djinn stat bonuses (4,3,8,5,12,8) — references Section 2.1 (Djinn mechanics).
+- src/core/algorithms/damage.ts: uses BATTLE_CONSTANTS multipliers (1.5,0.67) and defense factors (0.5,0.3) and clamp bounds like Math.min(0.9) — maps to Section 5.2 (Damage formulas / element advantage).
+- src/core/algorithms/status.ts: status percentages and chances (0.08 poison, 0.10 burn, 0.3 break chance, 0.25 paralyze) — maps to Section 5.3 (Status effects).
+- src/core/algorithms/weakness.ts: break damage and thresholds (10,25 and breakThreshold values) — maps to weakness/breaking mechanics (ambiguous if exact clause).
+- src/core/algorithms/mana.ts: team size bounds (1-4) and mana cost clamps (0-10) — related to mana mechanics (ambiguous mapping).
+- src/core/algorithms/turn-order.ts: priority/tie-break numeric logic (loop bounds, priority tiers) — maps to Section 6.1 (Turn order) where noted.
+Notes:
+- Many numeric literals are documented inline with direct GAME_MECHANICS.md section references; others are implementation data arrays that should be promoted to named constants/config files (e.g., XP_CURVE, DJINN_TABLE, STATUS_CONSTANTS).
+- Blocked: DOD requests saving reports/magic_number_candidates.json under /reports which is outside current allowed write list; requesting lane permission.
+
+Audit summary (2026-01-13):
+- Memory briefing and recent memory queries executed (see mem-briefing output in swarm memory).
+- Files under src/core/algorithms referencing numeric literals or explicit numeric constants (candidates):
+  - src/core/algorithms/damage.ts — uses ELEMENT_ADVANTAGE_MULTIPLIER/ELEMENT_DISADVANTAGE_MULTIPLIER and explicit factors (1.5 / 0.67 / 1.0), clamps (0.9), defense multipliers (0.5, 0.3). Mapping: GAME_MECHANICS.md Section 5.2 (element/damage formulas) — mapped.
+  - src/core/algorithms/turn-order.ts — loop bounds, turnNumber math, and priority tiers (Hermes' Sandals priority). Mapping: ambiguous (tie-breaking & priority rules in GAME_MECHANICS.md Section 6.1 needs confirmation).
+  - src/core/algorithms/weakness.ts — break damage and multipliers (1.5), breakGauge and breakThreshold handling. Mapping: GAME_MECHANICS.md weakness/break clauses (ambiguous mapping verified partially).
+  - src/core/algorithms/djinn.ts — numeric summon weights and stat bonuses (80,150,300 and atk/def/spd bonuses for 1/2/3 djinn). Mapping: GAME_MECHANICS.md Section 2.1 (djinn behavior) — mapped.
+  - src/core/algorithms/status.ts — status numeric rules: Poison 8% HP, Burn 10% HP, Freeze 30% break chance, Paralyze 25% failure chance. Mapping: GAME_MECHANICS.md Section 5.3 — mapped.
+  - src/core/algorithms/djinnAbilities.ts — per-djinn stat add/sub values (e.g., atk +4, def +3, etc.). Mapping: ambiguous — relate to djinn abilities section.
+  - src/core/algorithms/xp.ts — explicit XP curve for levels 1..20 (hardcoded numbers). Mapping: GAME_MECHANICS.md Section 1.1 — mapped.
+  - src/core/algorithms/stats.ts — floor/clamp values (hp min 1, spd min 1) and growth formula usage. Mapping: ambiguous — relates to level/stats rules.
+  - src/core/algorithms/mana.ts — mana cost bounds (0-10) and teamSize validation (1-4). Mapping: ambiguous — relates to mana rules.
+  - tests (weakness.test.ts) contain numeric literals used for assertions (informational/evidence).
+- Commented-out / disabled constants search returned no matches under src/core/algorithms (grep found no "// const" or DISABLED markers).
+- Mapping status: literals that are direct mechanical constants (XP curve, status percentages, element multipliers, djinn summon values) were mapped to GAME_MECHANICS.md sections where explicit; remaining literals marked 'ambiguous' pending clause-level confirmation.
+- Next actions / Request: permission to write the canonical report JSON at reports/magic_number_candidates.json and to export the detailed JSON (each entry: file, line number, exact literal/snippet, suggested named constant, mapped GAME_MECHANICS.md clause or 'ambiguous'). Once permitted, automated extraction and a PR to centralize these into src/core/constants.ts will be produced.
+
+(End audit summary)
+
+### Magic number candidates scan (2026-01-13T00:48:23Z)
+
+Summary: ran memory briefing and semantic search, then scanned src/core/algorithms for numeric literals and commented-out constants. Found numeric literals in the files listed below; no commented-out "const" declarations were found.
+
+Files with numeric literals (candidates):
+- src/core/algorithms/damage.ts
+- src/core/algorithms/turn-order.ts
+- src/core/algorithms/weakness.ts
+- src/core/algorithms/djinn.ts
+- src/core/algorithms/status.ts
+- src/core/algorithms/rewards.ts
+- src/core/algorithms/mana.ts
+- src/core/algorithms/djinnAbilities.ts
+- src/core/algorithms/weakness.test.ts (test file)
+- src/core/algorithms/xp.ts
+- src/core/algorithms/stats.ts
+
+Mapping to GAME_MECHANICS.md (clause or 'ambiguous'):
+- damage.ts -> "Damage, healing, and mana algorithms" (GAME_MECHANICS.md lines ~55-58)
+- mana.ts -> "Mana & action cost" (GAME_MECHANICS.md lines ~17)
+- rewards.ts, xp.ts -> "Progression & leveling" (GAME_MECHANICS.md lines ~39-43)
+- stats.ts -> "Unit stats" (GAME_MECHANICS.md lines ~39-43)
+- turn-order.ts -> "Turn order & execution indices" (GAME_MECHANICS.md lines ~19)
+- weakness.ts / weakness.test.ts -> ambiguous (likely related to damage/weakness rules)
+- djinn.ts / djinnAbilities.ts -> ambiguous (djinn rules intersect rewards/stats and tower rules)
+- status.ts -> ambiguous (status effects relate to damage/algorithms but mapping unclear)
+
+Notes & next steps:
+- No commented-out/disabled "const" declarations detected in src/core/algorithms (searched for // const and /* const patterns).
+- The repo-wide recommendation is to extract numeric literals in these files into well-named constants (e.g., DAMAGE_CRIT_MULTIPLIER, BASE_XP_TABLE, BASE_MANA_MAX) and document them in core/constants.ts or a new core/constants/algorithms.ts.
+- Requirement to save JSON report at reports/magic_number_candidates.json not performed because ALLOWED FILES for this task restrict creation/modification to ORCH_JOURNAL.md only; coordinator approval required to create reports/ file. The JSON report content (candidate list + mapping) is captured above and can be serialized on permission.
+
+2026-01-13T00:49:34Z - Lane 2 Round 2 - Magic-number discovery
+- Actions: ran /home/geni/swarm/memory/mem-briefing.py, mem-semantic search "magic numbers and disabled constants", and scanned src/core/algorithms for numeric literals and commented/disabled constants.
+- Files (candidates) and notable literals:
+  - src/core/algorithms/damage.ts: element multipliers (1.5, 0.67), clamp bounds (0.9, 0, 1), defense multipliers (0.5, 0.3)
+  - src/core/algorithms/status.ts: poison/burn percents (0.08, 0.10), freeze/paralyze chances (0.3, 0.25)
+  - src/core/algorithms/djinn.ts: summon/attack values (80, 150, 300), per-djinn stat bonuses (4,3,8,5,12,8)
+  - src/core/algorithms/weakness.ts: break damages (10, 25), breakThreshold/breakGauge (100)
+  - src/core/algorithms/xp.ts: explicit XP table values and level cap (20)
+  - src/core/algorithms/mana.ts: mana range comments (0-10), team size bounds (1-4)
+  - src/core/algorithms/stats.ts, rewards.ts, turn-order.ts contain numeric bounds and iterative loop counts worth review
+- Mapping to GAME_MECHANICS.md: many literals align to sections (damage → 5.2, status → 5.3, djinn → 2.1, XP → 1.1); where no direct clause exists they are marked 'ambiguous' for design review.
+- Blocker/request: Definition of Done asks to save full report at reports/magic_number_candidates.json, but current round allowlist only permits editing ORCH_JOURNAL.md. Request permission to create reports/magic_number_candidates.json (or alternative allowed path) so a machine-readable JSON report can be written.
+
+## Next steps (continuation)
+
+1) Request: grant write permission to create a serialized report at docs/magic_number_candidates.json so the audit can be exported as a machine-readable artifact.
+
+2) If permission granted, the immediate plan is:
+   - Serialize the candidate mapping (file, line, literal, suggested_constant_name, rationale) into docs/magic_number_candidates.json.
+   - Create a minimal src/core/constants.ts exporting only the identified constants (XP curve, element multipliers, defense factors, status percents, djinn summon/power values, mana/team bounds, clamp thresholds) and run typecheck/build.
+   - Open a small, focused PR that replaces literals with those named constants in a few core algorithm files (one logical area per commit) to minimize review surface.
+
+3) If write permission is denied, produce a patch plan and an inline JSON-like section inside this journal that a reviewer can apply manually.
+
+4) Blockers & risks to note before proceeding:
+   - validateGameData / validateAllGameData may throw on mutated shapes; prefer adding a strict/throwOnError flag and running with fail-fast in CI only.
+   - Normalization hooks (normalizeBattleState) need careful placement to avoid runtime regressions; plan to add unit tests for each refactor.
+
+5) Requesting explicit confirmation to proceed with creating the JSON and the minimal constants file and then open the PR; reply with "approve" to proceed or "deny" to keep changes confined to ORCH_JOURNAL.md.
+
+
+## [SESSION END] 2026-01-12 19:52
+**Status:** blocked
+**Summary:** 0/5 phases, 5 batches
+**Knowledge accumulated:** 5 items
+**Lessons learned:** 5
+
+## [SESSION START] 2026-01-12 19:56
+**Goal:** Fix TypeScript errors in src/ui/components/QueueBattleView.tsx and src/ui/hooks/useBattleController.ts specifically related to null vs undefined and readonly arrays
+**Target repo:** /home/geni/Documents/vale-village-v2
+**Source repo:** N/A
+**Session ID:** strat-b7dcebc0
+
+
+## Memory Capture 2026-01-13T00:57:39Z
+
+### mem-briefing
+
+# Session Briefing
+_Generated: 2026-01-12 19:57_
+## Infrastructure
+- Linux box (10.0.0.52) has NO GPU - CPU only. Previous RTX 4090 entry was incorrect. Windows PC (10.0.0.122) has GTX 1060 6GB. (2025-12-08)
+- Codex CLI working with local Ollama. Use qwen2.5-coder:7b for tool support. Command: codex --oss. Models: qwen2.5-coder:7b (4.7GB, tools), llama3.2:3b (2GB, tools), gemma3:4b (3.3GB, no tools), deepse (2025-12-02)
+- Codex CLI v0.63.0 configured for local Ollama: oss_provider=ollama, oss_model=deepseek-coder:6.7b. Use 'codex --oss' to run with local models. Default mode still uses gpt-5.1-codex-max. (2025-12-02)
+- Windows Ollama setup complete: v0.13.0, gemma3:4b loaded, 63% GPU / 37% CPU offload on GTX 1060 6GB. Generation speed: 21.34 tok/s. LAN IP: 10.0.0.122:11434. OLLAMA_HOST=0.0.0.0 set for network access (2025-12-02)
+- Ollama v0.13.0 installed on Windows with GPU acceleration. GTX 1060 6GB detected (6144 MiB VRAM, driver 581.57). gemma3:4b model (3.3GB) pulled and ready for inference. (2025-12-02)
+
+## Known Bugs & Issues (7d)
+- [RESULT][vale-village-v2] Implemented Tower Lobby feature: 1) Added Tower Lobby constants (1600x1200 size). 2) Updated OverworldV2 to handle 'ente [success] (1d)
+- [RESULT][vale-village-v2] Fixed Overworld regression (BUG-015): Houses no longer trigger battles on collision. Implemented 'tests/unit/bugs/bug_01 [success] (1d)
+- [H][batch-rotation-lane1] {   "lane": 1,   "from_worker": "a",   "thread_id": null,   "decisions": [     "Kept single trace-processing loop and mo [@all] (1d)
+- [LESSON][strategic-orch] Batch failed to produce code or test artifacts—need to ensure actionable steps are executed (1d)
+- [LESSON][strategic-orch] Code bug detected by triage: Check batch_orchestrator.py for logic or runtime errors causing exit code 1. (1d)
+
+## Recent Handoffs (6h)
+- [batch-rotation-lane1] {   "lane": 1,   "from_worker": "a",   "thread_id": null,   "decisions": [],   "todos": [],   "risks": [],   "commands_run": 0,   "last_mess [@all] (41s)
+- [batch-rotation-lane1] {   "lane": 1,   "from_worker": "a",   "thread_id": null,   "decisions": [],   "todos": [],   "risks": [],   "commands_run": 0,   "last_mess [@all] (1m)
+- [batch-rotation-lane1] {   "lane": 1,   "from_worker": "b",   "thread_id": null,   "decisions": [],   "todos": [],   "risks": [],   "commands_run": 0,   "last_mess [@all] (5m)
+- [batch-rotation-lane1] {   "lane": 1,   "from_worker": "a",   "thread_id": null,   "decisions": [     "Scanned src/core/algorithms for numeric literals and disable [@all] (5m)
+- [batch-rotation-lane1] {   "lane": 1,   "from_worker": "a",   "thread_id": null,   "decisions": [],   "todos": [],   "risks": [],   "commands_run": 0,   "last_mess [@all] (6m)
+
+## Known Bugs
+- [FAIL][bug] Blocked on watch_vision run due to missing Steam URL and prompt. (3d)
+
+## Memory Stats
+- Total entries: 7991
+- Last 24h: 39 new entries
+
+### mem-semantic
+
+[1;36m[0.68][0m [1;33mACTION: compression[0m
+  Implement SeCom-style KMeans clustering for old chunks
+  [90m? | research_session[0m
+
+[1;36m[0.66][0m [1;33mL: orch_7f6d3a4d[0m
+  Subtask subtask-1 succeeded. Approach: Create `src/game/flow/EarlyGameFlowController.ts` to centralize early-game progression flags (first  Files: /home/geni/Documents/vale-village-v2/src/game/flow/EarlyGameFlowController.ts
+  [90m2025-12-21[0m
+
+[1;36m[0.66][0m [1;33mL: orch_7f6d3a4d[0m
+  Subtask subtask-3 succeeded. Approach: Update `src/game/menus/PauseMenu.ts` to use `MenuStackRouter` for Settings/How-To-Play open/close an Files: /home/geni/Documents/vale-village-v2/src/game/menus/PauseMenu.ts
+  [90m2025-12-21[0m
+
+[1;36m[0.65][0m [1;33mL: orch_7f6d3a4d[0m
+  Subtask subtask-2 succeeded. Approach: Create `src/game/menus/MenuStackRouter.ts` to fix Settings/How-To-Play navigation (push/pop stack, c Files: /home/geni/Documents/vale-village-v2/src/game/menus/MenuStackRouter.ts
+  [90m2025-12-21[0m
+
+[1;36m[0.65][0m [1;33mL: orch_2c8d76d6[0m
+  Subtask subtask-1 succeeded. Approach: Modify `src/scenes/MainMenuScene.ts` to make Settings + How-To-Play navigation reliable (no flash),  Files: /home/geni/Documents/vale-village-v2/src/scenes/MainMenuScene.ts
+  [90m2025-12-21[0m
+
+[1;36m[0.65][0m [1;33mL: orch_7f6d3a4d[0m
+  Subtask subtask-5 succeeded. Approach: Update `src/game/systems/InputLock.ts` to make input locking reference-counted with scoped acquire/r Files: /home/geni/Documents/vale-village-v2/src/game/systems/InputLock.ts, /home/geni/Documents/vale-village-v2/src/input/InputLock.ts
+  [90m2025-12-21[0m
+
+[1;36m[0.64][0m [1;33mL: orch_7f6d3a4d[0m
+  Task orch-7f6d3a4d lessons: Subtask subtask-2 succeeded. Approach: Create `src/game/menus/MenuStackRouter.ts` to fix Settings/How-To-Play navigation (push/pop stack, c Files: /home/geni/Documents/vale-village-v2/src/game/menus/MenuStackRouter.ts; Subtask subtask-3 succeeded. Approach: Update `src/game/menus/PauseMenu.ts` to use `MenuStackRouter` for Settings/How-To-Play open/close an Files: /home/geni/Documents/vale-village-v2/src/game/menus/PauseMenu.ts; Subtask subtask-4 failed. Error: Codex CLI timeout [sig:ad3f7ff4]; Subtask subtask-4 succeeded. Approach: Update `src/game/scenes/HouseInteriorScene.ts` to fix first house entry spawn/position reset (determ Files: /home/geni/Documents/vale-village-v2/src/game/scenes/HouseInteriorScene.ts; Subtask subtask-5 succeeded. Approach: Update `src/game/systems/InputLock.ts` to make input locking reference-counted with scoped acquire/r Files: /home/geni/Documents/vale-village-v2/src/game/systems/InputLock.ts, /home/geni/Documents/vale-village-v2/src/input/InputLock.ts
+  [90m2025-12-21[0m
+
+[1;36m[0.63][0m [1;33mL: orch_aa35e7c5[0m
+  Subtask subtask-1 succeeded. Approach: Modify `src/input/InputLock.ts` to scope input locks per-scene and guarantee unlock/cleanup on scene Files: /home/geni/Documents/vale-village-v2/src/input/InputLock.ts
+  [90m2025-12-21[0m
+
+[1;36m[0.63][0m [1;33mL: orch_2c8d76d6[0m
+  Subtask subtask-2 succeeded. Approach: Modify `src/systems/SceneTransitionManager.ts` to persist and restore player spawn/position across i Files: /home/geni/Documents/vale-village-v2/src/systems/SceneTransitionManager.ts
+  [90m2025-12-21[0m
+
+[1;36m[0.62][0m [1;33mL: orch_2c8d76d6[0m
+  Task orch-2c8d76d6 lessons: Subtask subtask-1 succeeded. Approach: Modify `src/scenes/MainMenuScene.ts` to make Settings + How-To-Play navigation reliable (no flash),  Files: /home/geni/Documents/vale-village-v2/src/scenes/MainMenuScene.ts; Subtask subtask-2 succeeded. Approach: Modify `src/systems/SceneTransitionManager.ts` to persist and restore player spawn/position across i Files: /home/geni/Documents/vale-village-v2/src/systems/SceneTransitionManager.ts; Subtask subtask-3 succeeded. Approach: Modify `src/scenes/OverworldScene.ts` to use `SceneTransitionManager` when entering/exiting the firs Files: /home/geni/Documents/vale-village-v2/src/scenes/OverworldScene.ts
+  [90m2025-12-21[0m
+
+
+### mem-db-query
+
+[DECISION] vale-village-v2
+  Completed vision analysis of JRPG dialogue systems. Created implementation plan 'docs/design/dialogue_system_upgrade.md' for upgrading vale-village-v2. Key features planned: enhanced DialogueBoxV3 with typewriter effect, animated portraits, and cinematic camera control in OverworldV2.
+  Choice: success
+  1d ago | ? | imp=H
+
+[DECISION] vale-village-v2
+  Started Vision-Driven Development cycle. Analyzing Golden Sun gameplay (https://www.youtube.com/watch?v=7s1k9qW5R2M) to drive 'Juice' implementation in vale-village-v2.
+  1d ago | ?
+
+[DECISION] vale-village-v2
+  Phase 6 of 'Operation Gold Master' marked DONE via manual override. Local tests passed, but agents blocked on CI triggering. Unblocked Phase 7.
+  1d ago | ?
+
+[DECISION] VV2
+  Confirmed existing kickoff Operation Gold Master in swarm memory (id:16412) and updated analysis/briefing.md to include memory links.
+  Choice: confirmed
+  1d ago | ? | imp=M
+
+[DECISION] VV2
+  Kickoff Operation Gold Master: Round 1 Lane 1 Worker a memory & environment briefing
+  Choice: kickoff
+  1d ago | ?
+
+[DECISION] VV2
+  Kickoff Operation Gold Master: begin strategic-phase-1 (Lane 2 Round 1) focusing on memory & environment briefing and analysis/briefing.md creation.
+  Choice: Operation Gold Master
+  1d ago | ? | imp=H
+
+[DECISION] VV2
+  Adopt scripts/verify_research.sh as canonical verification for market research artifacts; when clips are missing, add placeholder Early/Mid/Boss entries in docs/video_inspiration.md and flag with [web-lookup-blocked] for follow-up.
+  Choice: use_script
+  1d ago | ? | imp=M
+
+[DECISION] VV2
+  Assign P0 owners for battle_state_validation and menus_focus_and_input; create tickets and add deterministic replay tests for revive/immunity/AoE.
+  Choice: P0-owners
+  1d ago | ? | imp=H
+
+[DECISION] strategic-orch
+  Implemented smart loosenings: soft plan validation (SWARM_PLAN_SOFT_VALIDATE), objective-contract fallback in batch_orchestrator (SWARM_SOFT_OBJECTIVE_CONTRACT/SWARM_SOFT_CONTRACT), auto scope expansion from out-of-scope activity, auto lane/round escalation, and elastic max-batches. Added plan_summary allowed/read-only/DoD fields; fixed plan_state f-string bug; added phase retry/adapt tracking and scope/lanes escalation logic in strategic_orchestrator; batch_orchestrator now escalates lanes/rounds after consecutive failures.
+  Choice: completed
+  1d ago | ?
+
+[DECISION] acquisition-fanfare
+  Created acquisition fanfare design doc and unit/e2e test skeletons in docs/implementation and tests/ per lane-1 Definition of Done.
+  Choice: create_docs
+  1d ago | ? | imp=M
+
+[DECISION] he_is_coming
+  Decision: build a spiritual companion with gameplay parity feel, but keep all assets/names/UI styling original (no reuse of IP). Prioritize authentic mechanics over exact visuals.
+  Choice: agreed
+  1d ago | ?
+
+[DECISION] he_is_coming
+  Decision: stay on Python/Pygame for parity to minimize friction; package into EXE later if needed (e.g., PyInstaller) once playable DLC run is proven.
+  Choice: agreed
+  1d ago | ?
+
+[DECISION] batch-rotation-lane1
+  request the user provide the missing inputs and necessary file access to proceed
+  Choice: pending
+  3d ago | ? | role=codex-lane1-worker-a
+
+[DECISION] batch-rotation-lane1
+  proceed to run it using the shell despite potential file access issues
+  Choice: pending
+  3d ago | ? | role=codex-lane1-worker-a
+
+[DECISION] documentation
+  Require Google-style docstrings for core/; added docs/docstring-style.md and CONTRIBUTING.md
+  4d ago | ? | imp=M
+
+[DECISION] strategic-orch
+  Updated decomposition prompt to encourage 2-3 parallel lanes instead of defaulting to 1. Added PARALLELISM GUIDANCE section explaining when to use 2-3 lanes vs 1 lane. Changed refinement phase from 1 to 2 lanes. Workers can operate well in parallel for most phases (discovery, implementation, refactoring).
+  Choice: encourage_parallelism
+  5d ago | ?
+
+[DECISION] strategic-orch
+  Added retry logic to decompose_goal(): council → authority-only → decomposer-only → gemini. Prevents single-phase fallback when council pattern fails due to nested JSON or API issues.
+  Choice: retry-decomposition
+  5d ago | ?
+
+[DECISION] VV2
+  Executed mem-briefing: python3 /home/geni/swarm/memory/mem-briefing.py
+  Choice: mem-briefing
+  5d ago | ? | imp=M
+
+[DECISION] brain-router
+  Implemented BrainRouter for role-segmented LLM orchestration: GPT-4.1 as authority (state mutations), GPT-5-mini as decomposer/critic (advisory). Uses Copilot CLI with --available-tools "" for pure LLM mode.
+  Choice: copilot-cli-council
+  6d ago | ? | imp=H
+
+[DECISION] watcher-parser
+  Fixed TERSE_HANDOFF_RE in copilot_watcher_parser.py - old regex required JSON to end with "x":\d} but new terse format includes "L" and "Li" fields after x. Changed to greedy match for any valid JSON object starting with {"f":[
+  Choice: implemented
+  6d ago | ? | imp=H
+
+[DECISION] strategic-orch
+  Applied 4 critical fixes to strategic_orchestrator.py: (1) Removed stray path.write_text crash in notify_progress, (2) Fixed ground truth regex to capture full filenames not just extensions, (3) Made BATCH_BASE deterministic with timestamps so capsule discovery works, (4) Redirected batch output to log file to avoid PIPE deadlocks
+  Choice: implemented
+  6d ago | ? | imp=H
+
+[DECISION] VV2
+  Discovery complete: mapped structure, entry points listed, indexes refreshed
+  Choice: complete
+  6d ago | ?
+
+[DECISION] vale-fixes
+  Systematic fix complete: Console cleanup done, CSS types fixed, test stubs created. Manual review needed for: empty catch blocks, a11y handlers
+  Choice: complete
+  6d ago | ? | imp=H
+
+[DECISION] vale-village
+  IMPROVEMENT_BACKLOG.md generated: Type safety issues, TODOs, console statements, error handling, test gaps, complexity warnings
+  Choice: complete
+  6d ago | ? | imp=H
+
+[DECISION] vale-encyclopedia
+  Encyclopedia complete: INDEX, ARCHITECTURE, GOTCHAS, DEPENDENCIES, ENTRY_POINTS, PATTERNS, INTERFACES, STATE created
+  Choice: complete
+  6d ago | ? | imp=H
+
+[DECISION] context-system
+  Lean Context System complete (08909a8): (1) context_budget.py - 5-tier adaptive compression (86-98% token reduction), (2) context_meter.py - cumulative token tracking with rotation trigger, (3) Integration in copilot_agent.sh + lane_rotation.sh. Replaces 'Viewing Room' approach - reduces tokens instead of adding.
+  Choice: complete
+  6d ago | ? | imp=H
+
+[DECISION] context-meter
+  Context Meter implemented: agents/context_meter.py tracks cumulative token usage across worker sessions. Persists to /tmp/context_meter_{lane}_{worker}.json. Integrated into copilot_agent.sh (records per call) and lane_rotation.sh (checks threshold, triggers rotation). CLI: --check exits 0 if rotation needed.
+  Choice: implemented
+  6d ago | ? | imp=H
+
+[DECISION] context-budget
+  Context Budget System implemented: agents/context_budget.py provides adaptive compression (FULL/NORMAL/COMPACT/MINIMAL/EMERGENCY tiers). Token reduction: COMPACT=-80%, MINIMAL=-95%. Auto-selects tier based on remaining context window capacity. Replaces bloated context_nexus HUD for workers.
+  Choice: implemented
+  6d ago | ? | imp=H
+
+[DECISION] orchestrator-evolution
+  Orchestrator Evolution 100% Complete. Gemini audit + fixes committed (377ccfc). Closed: (1) Worker-Orchestrator feedback loop - workers now write trust_level="proposed", MemoryKernel allows it without MEM_TRUST_WRITE, (2) Critic fail-safe - defaults to NEEDS_WORK instead of APPROVED on failure, (3) Extensionless file detection - Dockerfile/Makefile/etc now caught by regex.
+  Choice: complete
+  6d ago | ? | imp=H
+
+[DECISION] architecture
+  Architecture Decision: 3-Layer LLM System. Strategic Layer (Gemini 3 Pro) = Planning, REPLAN, ADAPT - needs 1M context for project history. Tactical Layer (GPT-4o/Copilot, free) = DoD verification, error triage, question routing, critic pass - 90% of decisions. Operational Layer (Copilot workers) = Code writing. Python handles control flow (process management, DB I/O, watchdog), LLMs handle understanding. This is the "Golden Ratio" for cost/latency/quality.
+  6d ago | ? | imp=H
+
+[DECISION] orchestrator-evolution
+  12-Hour Orchestrator Evolution Complete (35 commits). Major milestone: Basic orchestrator → Full strategic+tactical layered system. Key additions: (1) Tactical LLM Layer - free GPT-4o for DoD verification, error triage, question routing, critic pass, (2) Strategic Orchestrator - ground truth verification, REPLAN, crash watchdog, cross-session lessons, persistent journal, self-healing, multi-repo support, webhooks, structured ADAPT commands, 1M token Gemini context, (3) Worker-Orchestrator communication loop with memory proposals, (4) LLM-native terse JSON handoff format. New flow: Batch → Tactical DoD → Governor scan → Critic → APPROVED/NEEDS_WORK → Strategic only for ambiguous cases.
+  Choice: complete
+  6d ago | ? | imp=H
+
+[DECISION] tactical-llm
+  Phase 3 Complete: Critic Agent in batch_orchestrator.py. Flow: DoD verification passes → run_governor_scan_for_critic() → run_critic_pass() with tactical LLM (GPT-4o). If APPROVED: return done with critic_score. If NEEDS_WORK with blocking_issues and batches remaining: inject [CRITIC FEEDBACK] into next batch objective. If no batches left: pass to strategic layer. Zero shell changes - all logic in Python.
+  Choice: implemented
+  6d ago | ? | imp=H
+
+[DECISION] tactical-llm
+  Phase 2 Complete: Smart Watchdog. strategic_orchestrator._detect_batch_crash() now uses tactical LLM (triage_error_with_llm) to classify errors into transient/code_bug/env_issue. On code_bug detection: (1) fix_hint returned in assessment, (2) fix_hint injected into accumulated_knowledge as [FIX_REQUIRED], (3) fix_hint prepended to phase.intent for next batch visibility. This enables self-healing: workers see the fix hint and can address the specific bug.
+  Choice: implemented
+  6d ago | ? | imp=H
+
+[DECISION] tactical-llm
+  Phase 4 Complete: Strategic Offload. strategic_orchestrator.py now imports tactical layer (verify_dod_with_llm, collect_dod_file_samples). synthesize_results() runs tactical pre-check before Gemini: (1) High-confidence DONE (≥0.8) skips Gemini, (2) High-confidence RETRY with missing items (≥0.7) skips Gemini, (3) Only ambiguous cases escalate to expensive Gemini call. Expected Gemini call reduction: ~60%.
+  Choice: implemented
+  6d ago | ? | imp=H
+
+[DECISION] tactical-llm
+  Phase 1 Complete: Tactical LLM Layer added to batch_orchestrator.py. Free GPT-4o now handles: (1) DoD verification before strategic LLM, (2) Error triage (transient vs code_bug vs env_issue), (3) Smart question routing (auto-answer trivial file lookups). New functions: verify_dod_with_llm(), triage_error_with_llm(), route_question_with_llm(), try_auto_answer_question(), collect_dod_file_samples(). Config via TACTICAL_LLM_PROVIDER and TACTICAL_LLM_MODEL env vars.
+  Choice: implemented
+  6d ago | ? | imp=H
+
+[DECISION] diner-dash
+  Fixed critical Godot 4 migration issues: (1) Removed circular dependencies in GameManager/HUD, (2) Registered missing Autoloads in project.godot, (3) Converted scene files with godot4 --convert-3to4, (4) Patched InputManager syntax. Export still blocked by missing templates, but code compilation is closer.
+  Choice: fixed_migration
+  6d ago | ?
+
+[DECISION] strategic-orch
+  Ground Truth Verification implemented: Before RETRY, strategic_orchestrator.py now calls _verify_ground_truth() to scan repo for DoD files. If files exist despite capsule failure, overrides to DONE. Prevents stuck retry loops.
+  Choice: implemented
+  6d ago | ? | imp=H
+
+[DECISION] memory-profiles
+  Memory Profile System implemented: Workers auto-detect project type (godot/typescript/python/rust/golang) via detect_profile.sh. WORKER_PROFILE env var sets scope for memory writes. Orchestrator uses scope=orch. All can read scope=shared. Profiles enable domain-specific expertise accumulation.
+  Choice: implemented
+  6d ago | ? | imp=H
+
+[DECISION] llm-native-system
+  LLM-Native System implemented: (1) Terse JSON handoffs {"f","d","n","r","x","L","Li","D","F"} - 90% ceremony reduction, (2) Worker memory proposals with trust_level flow (proposed→verified on orch approval), (3) MCP compliance removed as mandatory. Commits: 30b1760, d595947, bbfde71.
+  Choice: implemented
+  6d ago | ? | imp=H
+
+[DECISION] memory-architecture
+  Memory Profile Architecture Design: Workers/orchestrators should have segregated memory pools via scope field. Godot workers query scope=godot, TS workers query scope=typescript, orchestrator uses scope=orch. All can read scope=shared. Profiles accumulate domain expertise over time - identity-based not just tags.
+  Choice: profile-scopes
+  6d ago | ? | imp=H
+
+[DECISION] llm-native-system
+  LLM-Native Memory Design: Workers PROPOSE memories (L=lesson, D=decision, F=fact) in terse handoff with trust_level="proposed". Orchestrator APPROVES during synthesis, promoting to trust_level="verified". Default queries show verified only. This lets workers contribute knowledge while orch maintains quality gate.
+  Choice: propose-approve
+  6d ago | ? | imp=H
+
+[DECISION] llm-native-system
+  LLM-Native Handoff Schema Design: Replacing verbose CAPSULE+MCP_USED format (~1320 bytes) with terse JSON (~130 bytes). Schema: {"f":files,"d":decision,"n":next,"r":risks,"x":exit_code}. 90% reduction in ceremony overhead. Shell UI will decode for human display.
+  Choice: terse-json
+  6d ago | ? | imp=H
+
+\n\n## MEM BRIEFING RUN: Tue 13 Jan 2026 12:58:48 AM UTC\n
+--- mem-briefing.py output (first 200 lines) ---
+# Session Briefing
+_Generated: 2026-01-12 19:58_
+## Infrastructure
+- Linux box (10.0.0.52) has NO GPU - CPU only. Previous RTX 4090 entry was incorrect. Windows PC (10.0.0.122) has GTX 1060 6GB. (2025-12-08)
+- Codex CLI working with local Ollama. Use qwen2.5-coder:7b for tool support. Command: codex --oss. Models: qwen2.5-coder:7b (4.7GB, tools), llama3.2:3b (2GB, tools), gemma3:4b (3.3GB, no tools), deepse (2025-12-02)
+- Codex CLI v0.63.0 configured for local Ollama: oss_provider=ollama, oss_model=deepseek-coder:6.7b. Use 'codex --oss' to run with local models. Default mode still uses gpt-5.1-codex-max. (2025-12-02)
+- Windows Ollama setup complete: v0.13.0, gemma3:4b loaded, 63% GPU / 37% CPU offload on GTX 1060 6GB. Generation speed: 21.34 tok/s. LAN IP: 10.0.0.122:11434. OLLAMA_HOST=0.0.0.0 set for network access (2025-12-02)
+- Ollama v0.13.0 installed on Windows with GPU acceleration. GTX 1060 6GB detected (6144 MiB VRAM, driver 581.57). gemma3:4b model (3.3GB) pulled and ready for inference. (2025-12-02)
+
+## Known Bugs & Issues (7d)
+- [RESULT][vale-village-v2] Implemented Tower Lobby feature: 1) Added Tower Lobby constants (1600x1200 size). 2) Updated OverworldV2 to handle 'ente [success] (1d)
+- [RESULT][vale-village-v2] Fixed Overworld regression (BUG-015): Houses no longer trigger battles on collision. Implemented 'tests/unit/bugs/bug_01 [success] (1d)
+- [H][batch-rotation-lane1] {   "lane": 1,   "from_worker": "a",   "thread_id": null,   "decisions": [     "Kept single trace-processing loop and mo [@all] (1d)
+- [LESSON][strategic-orch] Batch failed to produce code or test artifacts—need to ensure actionable steps are executed (1d)
+- [LESSON][strategic-orch] Code bug detected by triage: Check batch_orchestrator.py for logic or runtime errors causing exit code 1. (1d)
+
+## Recent Handoffs (6h)
+- [batch-rotation-lane1] {   "lane": 1,   "from_worker": "b",   "thread_id": null,   "decisions": [],   "todos": [],   "risks": [],   "commands_run": 0,   "last_mess [@all] (59s)
+- [batch-rotation-lane1] {   "lane": 1,   "from_worker": "a",   "thread_id": null,   "decisions": [     "Run memory scripts and capture outputs for QueueBattleView/u [@all] (1m)
+- [batch-rotation-lane1] {   "lane": 1,   "from_worker": "a",   "thread_id": null,   "decisions": [],   "todos": [],   "risks": [],   "commands_run": 0,   "last_mess [@all] (1m)
+- [batch-rotation-lane1] {   "lane": 1,   "from_worker": "a",   "thread_id": null,   "decisions": [],   "todos": [],   "risks": [],   "commands_run": 0,   "last_mess [@all] (2m)
+- [batch-rotation-lane1] {   "lane": 1,   "from_worker": "b",   "thread_id": null,   "decisions": [],   "todos": [],   "risks": [],   "commands_run": 0,   "last_mess [@all] (6m)
+
+## Known Bugs
+- [FAIL][bug] Blocked on watch_vision run due to missing Steam URL and prompt. (3d)
+
+## Memory Stats
+- Total entries: 7997
+- Last 24h: 45 new entries
+--- mem-semantic.py output (first 200 lines) ---
+[1;36m[0.68][0m [1;33mACTION: compression[0m
+  Implement SeCom-style KMeans clustering for old chunks
+  [90m? | research_session[0m
+
+[1;36m[0.62][0m [1;33mL: orch_7f6d3a4d[0m
+  Subtask subtask-5 succeeded. Approach: Update `src/game/systems/InputLock.ts` to make input locking reference-counted with scoped acquire/r Files: /home/geni/Documents/vale-village-v2/src/game/systems/InputLock.ts, /home/geni/Documents/vale-village-v2/src/input/InputLock.ts
+  [90m2025-12-21[0m
+
+[1;36m[0.61][0m [1;33mL: orch_7f6d3a4d[0m
+  Subtask subtask-3 succeeded. Approach: Update `src/game/menus/PauseMenu.ts` to use `MenuStackRouter` for Settings/How-To-Play open/close an Files: /home/geni/Documents/vale-village-v2/src/game/menus/PauseMenu.ts
+  [90m2025-12-21[0m
+
+[1;36m[0.61][0m [1;33mL: orch_aa35e7c5[0m
+  Subtask subtask-1 succeeded. Approach: Modify `src/input/InputLock.ts` to scope input locks per-scene and guarantee unlock/cleanup on scene Files: /home/geni/Documents/vale-village-v2/src/input/InputLock.ts
+  [90m2025-12-21[0m
+
+[1;36m[0.60][0m [1;33mL: orch_7f6d3a4d[0m
+  Subtask subtask-2 succeeded. Approach: Create `src/game/menus/MenuStackRouter.ts` to fix Settings/How-To-Play navigation (push/pop stack, c Files: /home/geni/Documents/vale-village-v2/src/game/menus/MenuStackRouter.ts
+  [90m2025-12-21[0m
+
+[1;36m[0.59][0m [1;33mL: orch_2c8d76d6[0m
+  Subtask subtask-1 succeeded. Approach: Modify `src/scenes/MainMenuScene.ts` to make Settings + How-To-Play navigation reliable (no flash),  Files: /home/geni/Documents/vale-village-v2/src/scenes/MainMenuScene.ts
+  [90m2025-12-21[0m
+
+[1;36m[0.59][0m [1;33mL: orch_aa35e7c5[0m
+  Subtask subtask-2 failed. Error: Failed after 2 attempts [sig:ad3f7ff4]
+  [90m2025-12-21[0m
+
+[1;36m[0.59][0m [1;33mL: orch_2c8d76d6[0m
+  Subtask subtask-2 succeeded. Approach: Modify `src/systems/SceneTransitionManager.ts` to persist and restore player spawn/position across i Files: /home/geni/Documents/vale-village-v2/src/systems/SceneTransitionManager.ts
+  [90m2025-12-21[0m
+
+[1;36m[0.58][0m [1;33mL: orch_8eb9e6de[0m
+  Subtask subtask-2 succeeded. Approach: Create `tools/repo_walk_test.py` (stdlib `unittest`) to validate JSON shape, determinism, and edge c Files: /home/geni/swarm/memory/tools/repo_walk_test.py
+  [90m2025-12-21[0m
+
+[1;36m[0.58][0m [1;33mL: orch_2c8d76d6[0m
+  Subtask subtask-3 succeeded. Approach: Modify `src/scenes/OverworldScene.ts` to use `SceneTransitionManager` when entering/exiting the firs Files: /home/geni/Documents/vale-village-v2/src/scenes/OverworldScene.ts
+  [90m2025-12-21[0m
+
+--- mem-db query output (first 200 lines) ---
+No matches found.
+\n## ANALYSIS SUMMARY\n- Ran mem-briefing and memory queries; outputs saved into /tmp and appended above.\n- Collected recent decisions and notes relevant to QueueBattleView/useBattleController.\n- Hypotheses: 1) API/state differences cause null vs undefined due to optional chaining/initialization order; 2) readonly arrays cause mutation failures when code assumes mutable arrays (push/pop) vs expecting new copies; 3) TypeScript strictness/implicit any or union types allow undefined slipping through.\n- Next: deeper code review of QueueBattleView and useBattleController to map exact failure points.\n
+
+## [PHASE DONE] 2026-01-12 19:59
+**Phase:** phase-1
+**Outcome:** DONE
+**Key learnings:**
+- Partial lane errors do not preclude phase success if main objectives are met
+- Recording outputs and hypotheses in a central journal is effective for context gathering
+- mem-briefing.py and memory queries executed
+- Outputs and hypotheses appended to ORCH_JOURNAL.md
+- Root-cause hypotheses for null/undefined and readonly array issues recorded
+
+## TypeScript diagnostics capture (2026-01-13T01:00:17Z)
+Reproducer command: ./node_modules/.bin/tsc --noEmit --pretty false
+
+Captured relevant diagnostics (exact tsc output lines):
+
+- src/core/battleEngine.ts:18:5
+  error TS2322: Type 'Enemy' is not assignable to type '{ breakGauge: { current: number; max: number; }; id: string; name: string; maxHp: number; currentHp: number; statusEffects: StatusEffect[]; brokenDamageMultiplier?: number; }'.
+  Types of property 'breakGauge' are incompatible. Type 'BreakGauge | undefined' is not assignable to type '{ current: number; max: number; }'. Type 'undefined' is not assignable to type '{ current: number; max: number; }'.
+  Category: null/undefined-safety (property possibly undefined when strict-assigning to non-optional type).
+
+- src/core/services/GameInitializationService.ts:27:25
+  error TS2339: Property 'push' does not exist on type 'readonly string[]'.
+  Category: readonly-array mutation (attempt to mutate readonly string[]).
+
+- src/core/services/GameInitializationService.ts:33:5
+  error TS2542: Index signature in type 'readonly string[]' only permits reading.
+  Category: readonly-array index mutation (writing to readonly array via index).
+
+- src/ui/components/QueueBattleView.tsx:1035:15
+  error TS4104: The type 'readonly string[]' is 'readonly' and cannot be assigned to the mutable type 'string[]'.
+  Category: readonly-array assignment (immutable -> mutable assignment).
+
+Notes/next steps:
+- Fix root causes by making properties optionally typed where appropriate (or ensure values are initialized), and by avoiding mutation of readonly arrays (use spread/copy to create mutable arrays or change types where mutation is intended).
+- Re-run the above tsc command to validate fixes.
+
+
+## [PHASE DONE] 2026-01-12 20:01
+**Phase:** phase-2
+**Outcome:** DONE
+**Key learnings:**
+- Capturing and documenting TypeScript errors before attempting fixes provides a clear baseline for verification.
+- Appending diagnostics and commands to ORCH_JOURNAL.md ensures reproducibility and traceability.
+- Captured tsc diagnostics for the two files
+- Documented repro command in ORCH_JOURNAL.md
+- Mapped file:line:column and diagnostic text for each issue

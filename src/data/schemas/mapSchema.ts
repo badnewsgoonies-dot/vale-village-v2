@@ -22,7 +22,7 @@ export const NPCSchema = z.object({
 export const MapTriggerSchema = z.object({
   id: z.string(),
   position: PositionSchema,
-  type: z.enum(['battle', 'npc', 'transition', 'story', 'shop', 'tower']),
+  type: z.enum(['battle', 'npc', 'transition', 'story', 'shop', 'tower', 'door']),
   data: z.record(z.unknown()),
 });
 
