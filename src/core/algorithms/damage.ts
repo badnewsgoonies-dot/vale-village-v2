@@ -4,6 +4,7 @@
  */
 
 import type { Unit } from '../models/Unit';
+import { getCombinedStatusEffects } from '../models/Unit';
 import type { Team } from '../models/Team';
 import type { Ability } from '../../data/schemas/AbilitySchema';
 import type { Element } from '../models/types';
@@ -91,10 +92,11 @@ export function applyDamageModifiers(
     modifiedDamage *= (1 - clampedEquipResist);
   }
 
-  // 2. Apply damage reduction from status effects
-  const damageReductionEffects = defender.statusEffects.filter(
+  // 2. Apply damage reduction from status effects (including equipment passives)
+  const allStatuses = getCombinedStatusEffects(defender);
+  const damageReductionEffects = allStatuses.filter(
     effect => effect.type === 'damageReduction'
-  ) as Array<Extract<typeof defender.statusEffects[number], { type: 'damageReduction' }>>;
+  ) as Array<Extract<typeof allStatuses[number], { type: 'damageReduction' }>>;
 
   const damageReductionPercents = damageReductionEffects.map(effect => effect.percent);
 
@@ -220,14 +222,14 @@ export function calculateHealAmount(
  * Phase 2: Check if unit is invulnerable (blocks ALL damage)
  */
 export function isInvulnerable(unit: Unit): boolean {
-  return unit.statusEffects.some(effect => effect.type === 'invulnerable');
+  return getCombinedStatusEffects(unit).some(effect => effect.type === 'invulnerable');
 }
 
 /**
  * Phase 2: Check if unit has active shield charges
  */
 export function hasShieldCharges(unit: Unit): boolean {
-  return unit.statusEffects.some(
+  return getCombinedStatusEffects(unit).some(
     effect => effect.type === 'shield' && effect.remainingCharges > 0
   );
 }

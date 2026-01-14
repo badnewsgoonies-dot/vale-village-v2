@@ -10,6 +10,7 @@ import type { Team } from '../models/Team';
 import type { Stats } from '../models/types';
 import { calculateEquipmentBonuses } from '../models/Equipment';
 import { calculateDjinnBonusesForUnit } from './djinnAbilities';
+import { getCombinedStatusEffects } from '../models/Unit';
 
 /**
  * Calculate level-based stat bonuses
@@ -44,7 +45,7 @@ export function calculateLevelBonuses(unit: Unit): Partial<Stats> {
 export function calculateStatusModifiers(unit: Unit): Partial<Stats> {
   const modifiers: Partial<Stats> = {};
   
-  for (const status of unit.statusEffects) {
+  for (const status of getCombinedStatusEffects(unit)) {
     if (status.type === 'buff' || status.type === 'debuff') {
       const statKey = status.stat;
       const modifier = status.modifier;

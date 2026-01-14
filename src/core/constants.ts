@@ -126,6 +126,8 @@ export const STATUS_CONSTANTS = {
   BURN_PERCENT: 0.10,
   FREEZE_BREAK_CHANCE: 0.3,
   PARALYZE_FAIL_CHANCE: 0.25,
+  /** Maximum number of buff or debuff stacks allowed per stat */
+  BUFF_DEBUFF_STACK_LIMIT: 3,
 } as const;
 
 export const TOWER_CONSTANTS = {
