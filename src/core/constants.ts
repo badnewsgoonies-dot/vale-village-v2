@@ -158,6 +158,8 @@ export const AI_CONSTANTS = {
   AGGRESSIVE_OFFENSE_MULTIPLIER: 1.5,
   /** Multiplier applied to healing/buff utility for support/defensive enemies */
   SUPPORT_UTILITY_MULTIPLIER: 1.5,
+  /** Bonus score for attack patterns that favor elemental abilities (per-enemy) */
+  ATTACK_PATTERN_ELEMENTAL_BONUS: 2.0,
 } as const;
 
 /**
