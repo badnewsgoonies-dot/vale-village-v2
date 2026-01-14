@@ -9,6 +9,7 @@ import { getLockedDjinnAbilityMetadataForUnit } from '../../core/algorithms/djin
 import { getSetDjinnIds } from '../../core/algorithms/djinn';
 import { useStore } from '../state/store';
 import { DJINN } from '../../data/definitions/djinn';
+import { calculateSummonDamage } from '../../core/algorithms/djinn';
 import { audio } from '../../core/services/AudioService';
 
 const ACTION_ICONS: Record<string, string> = {
@@ -208,12 +209,51 @@ export function BattleActionMenu({
   }
 
   if (mode === 'summon') {
+    const selectedDjinn = selectedDjinnIds.map(id => DJINN[id]).filter(Boolean);
+    const elementCounts: Record<string, number> = {};
+    selectedDjinn.forEach(d => { elementCounts[d.element] = (elementCounts[d.element] || 0) + 1; });
+    const estimatedPower = selectedDjinn.length === 1 && selectedDjinn[0].summonEffect?.damage
+      ? selectedDjinn[0].summonEffect.damage
+      : (selectedDjinn.length >= 1 ? calculateSummonDamage(Math.min(3, selectedDjinn.length as 1 | 2 | 3)) : 0);
+
     return (
-      <div class="gs-window gs-window--layered" role="dialog" aria-modal="true" aria-label="Battle Actions - Summon" data-testid="battle-action-menu-summon" tabIndex={-1} style={{ width: 300, padding: 12 }}>
+      <div class="gs-window gs-window--layered" role="dialog" aria-modal="true" aria-label="Battle Actions - Summon" data-testid="battle-action-menu-summon" tabIndex={-1} style={{ width: 340, padding: 12 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>
           <SectionHeader title="SUMMON" />
           <button class="gs-button" data-testid="battle-back-btn" onClick={() => onModeChange('root')} style={{ padding: '2px 8px', fontSize: '0.7rem' }}>BACK</button>
         </div>
+
+        {/* Preview / Cost */}
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 8 }}>
+          {selectedDjinn.length === 0 ? (
+            <div class="gs-label" style={{ fontSize: '0.75rem', opacity: 0.9 }}>Select up to 3 Djinn to preview summon power and cost</div>
+          ) : selectedDjinn.length === 1 ? (
+            <>
+              <img src={`/sprites/battle/djinn/${selectedDjinn[0].element}_Djinn_Front.gif`} width={36} height={36} style={{ imageRendering: 'pixelated' }} />
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <div class="gs-value" style={{ fontSize: '0.85rem' }}>{selectedDjinn[0].name} — {selectedDjinn[0].element}</div>
+                <div style={{ fontSize: '0.75rem', opacity: 0.85 }}>Power: {estimatedPower}{selectedDjinn[0].summonEffect?.damage ? ' DMG' : selectedDjinn[0].summonEffect?.healAmount ? ' HEAL' : ''}</div>
+                <div style={{ fontSize: '0.7rem', opacity: 0.7 }}>{selectedDjinn[0].summonEffect?.description}</div>
+              </div>
+            </>
+          ) : (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div style={{ display: 'flex', gap: 4 }}>
+                {Object.keys(elementCounts).map(el => (
+                  <img key={el} src={`/sprites/icons/misc/${el}_Star.gif`} width={20} height={20} style={{ imageRendering: 'pixelated' }} />
+                ))}
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <div class="gs-value" style={{ fontSize: '0.85rem' }}>{selectedDjinn.length} Djinn selected</div>
+                <div style={{ fontSize: '0.75rem', opacity: 0.85 }}>Estimated Power: {estimatedPower} DMG</div>
+                <div style={{ fontSize: '0.7rem', opacity: 0.7 }}>
+                  {Object.entries(elementCounts).map(([el, cnt]) => `${el}: ${cnt}`).join(' • ')}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
         <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
           {setDjinnIds.map(id => {
             const djinn = DJINN[id];
@@ -226,6 +266,7 @@ export function BattleActionMenu({
               >
                 <img src={`/sprites/icons/misc/${djinn.element}_Star.gif`} width={16} height={16} />
                 <span style={{ flex: 1 }}>{djinn.name}</span>
+                <span style={{ fontSize: '0.75rem', opacity: 0.8 }}>{djinn.tier}</span>
               </button>
             );
           })}
