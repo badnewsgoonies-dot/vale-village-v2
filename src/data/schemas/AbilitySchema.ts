@@ -100,6 +100,15 @@ export const AbilitySchema = z.object({
     avoidOverkill: z.boolean().optional(),
     opener: z.boolean().optional(),
   }).optional(),
+
+  // Combo metadata (phase 2)
+  combo: z.object({
+    id: z.string().regex(abilityIdRegex),
+    requires: z.array(z.string()).optional(), // Ability IDs that must have been used previously in battle
+    bonusDamageMultiplier: z.number().min(1).optional(), // Multiplier applied when combo triggers (e.g., 2.0)
+    castersRequired: z.number().int().min(1).optional(),
+    message: z.string().optional(),
+  }).optional(),
 });
 
 export type Ability = z.infer<typeof AbilitySchema>;
