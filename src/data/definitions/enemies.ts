@@ -2948,6 +2948,63 @@ export const ENEMIES: Record<string, Enemy> = {
     baseXp: 50000,
     baseGold: 99999,
   },
+
+  // Phase 7: New enemy types added
+  'poison-toad': {
+    id: 'poison-toad',
+    name: 'Poison Toad',
+    level: 3,
+    element: 'Mercury',
+    stats: { hp: 90, pp: 20, atk: 12, def: 10, mag: 8, spd: 9 },
+    abilities: [{ ...STRIKE, unlockLevel: 1 }, { ...POISON_STRIKE, unlockLevel: 1 }],
+    baseXp: 30,
+    baseGold: 12,
+  },
+
+  'storm-knight': {
+    id: 'storm-knight',
+    name: 'Storm Knight',
+    level: 6,
+    element: 'Jupiter',
+    stats: { hp: 180, pp: 40, atk: 28, def: 20, mag: 22, spd: 14 },
+    abilities: [{ ...HEAVY_STRIKE, unlockLevel: 1 }, { ...CHAIN_LIGHTNING, unlockLevel: 1 }, { ...GUARD_BREAK, unlockLevel: 1 }],
+    baseXp: 120,
+    baseGold: 60,
+  },
+
+  'lava-salamander': {
+    id: 'lava-salamander',
+    name: 'Lava Salamander',
+    level: 4,
+    element: 'Mars',
+    stats: { hp: 130, pp: 24, atk: 20, def: 14, mag: 18, spd: 12 },
+    abilities: [{ ...STRIKE, unlockLevel: 1 }, { ...BURN_TOUCH, unlockLevel: 1 }],
+    baseXp: 70,
+    baseGold: 35,
+  },
+
+  'crystal-bat': {
+    id: 'crystal-bat',
+    name: 'Crystal Bat',
+    level: 2,
+    element: 'Venus',
+    stats: { hp: 48, pp: 10, atk: 8, def: 6, mag: 12, spd: 18 },
+    abilities: [{ ...PRECISE_JAB, unlockLevel: 1 }, { ...BLIND, unlockLevel: 1 }],
+    baseXp: 20,
+    baseGold: 10,
+  },
+
+  'dark-mage': {
+    id: 'dark-mage',
+    name: 'Dark Mage',
+    level: 7,
+    element: 'Mars',
+    stats: { hp: 200, pp: 80, atk: 12, def: 10, mag: 48, spd: 10 },
+    abilities: [{ ...CHAIN_LIGHTNING, unlockLevel: 1 }, { ...WEAKEN_DEF, unlockLevel: 1 }, { ...HEAL, unlockLevel: 1 }],
+    baseXp: 200,
+    baseGold: 120,
+  },
+
   // Phase 6 added enemy entries
   'fire-elemental': FIRE_ELEMENTAL,
   'ice-golem': ICE_GOLEM,

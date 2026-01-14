@@ -147,8 +147,15 @@ const ENEMY_SPRITES: Record<string, SpriteStateMap> = {
   'tempest-warlord': makeSinglePose('/sprites/battle/enemies/Thunder_Lizard.gif'),
 
   // Existing misc mappings
+  'bandit': makeSinglePose('/sprites/battle/enemies/Thief.gif'),
   'bandit-minion': makeSinglePose('/sprites/battle/enemies/Thief.gif'),
   'bandit-captain': makeSinglePose('/sprites/battle/enemies/Brigand.gif'),
+  'scavenger': makeSinglePose('/sprites/battle/enemies/Vermin.gif'),
+  'merchant-guard': makeSinglePose('/sprites/battle/enemies/Ruffian.gif'),
+  'carrion-bird': makeSinglePose('/sprites/battle/enemies/Seabird.gif'),
+  'wild-boar': makeSinglePose('/sprites/battle/enemies/Mauler.gif'),
+  'jupiter-vortex-sentry': makeSinglePose('/sprites/battle/enemies/Tornado_Lizard.gif'),
+  'the-golden-sun': makeSinglePose('/sprites/battle/enemies/Magicore.gif'),
   'sentinel-enemy': makeSinglePose('/sprites/battle/enemies/Living_Armor.gif'),
   'stormcaller-enemy': makeSinglePose('/sprites/battle/enemies/Ghost_Mage.gif'),
   'mercury-slime': makeSinglePose('/sprites/battle/enemies/Slime.gif'),
