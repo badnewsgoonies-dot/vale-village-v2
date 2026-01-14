@@ -2658,6 +2658,15 @@ export const STORMCALLER_ENEMY: Enemy = _STORMCALLER_ENEMY;
 // Export all enemies
 // ============================================================================
 
+// New enemy aliases added for Phase 6: Fire Elemental, Ice Golem, Thunder Hawk, Earth Wyrm, Shadow Wisp
+// These are shallow clones of existing high-quality definitions to minimize duplication and
+// ensure balance consistency with established enemies.
+export const FIRE_ELEMENTAL: Enemy = { ...FLAME_ELEMENTAL, id: 'fire-elemental', name: 'Fire Elemental' };
+export const ICE_GOLEM: Enemy = { ...PERMAFROST_GOLEM, id: 'ice-golem', name: 'Ice Golem' };
+export const THUNDER_HAWK: Enemy = { ...THUNDERBIRD, id: 'thunder-hawk', name: 'Thunder Hawk' };
+export const EARTH_WYRM: Enemy = { ...GLACIER_WYRM, id: 'earth-wyrm', name: 'Earth Wyrm', element: 'Venus' };
+export const SHADOW_WISP: Enemy = { ...GHOST_WISP, id: 'shadow-wisp', name: 'Shadow Wisp' };
+
 export const ENEMIES: Record<string, Enemy> = {
   // Enslaved Beasts - Redesigned Originals
   'mercury-slime': MERCURY_SLIME,
@@ -2939,4 +2948,10 @@ export const ENEMIES: Record<string, Enemy> = {
     baseXp: 50000,
     baseGold: 99999,
   },
+  // Phase 6 added enemy entries
+  'fire-elemental': FIRE_ELEMENTAL,
+  'ice-golem': ICE_GOLEM,
+  'thunder-hawk': THUNDER_HAWK,
+  'earth-wyrm': EARTH_WYRM,
+  'shadow-wisp': SHADOW_WISP,
 };
