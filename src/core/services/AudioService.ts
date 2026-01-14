@@ -17,7 +17,7 @@ class AudioService {
     shop: null
   };
 
-  private sfx: Record<SFXTrack, Howl | null> = {
+  private _sfx: Record<SFXTrack, Howl | null> = {
     menu_move: null,
     menu_select: null,
     cancel: null,
@@ -77,7 +77,7 @@ class AudioService {
 
   public playSFX(track: SFXTrack) {
     if (this.muted) return;
-    // this.sfx[track]?.play();
+    this._sfx[track]?.play();
     console.log(`[Audio] SFX: ${track}`);
   }
 

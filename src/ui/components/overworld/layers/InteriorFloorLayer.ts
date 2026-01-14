@@ -37,13 +37,13 @@ export class InteriorFloorLayer implements Layer {
   }
 
   render(ctx: CanvasRenderingContext2D, camera: Camera): void {
-    const z = camera.zoom;
+    const z = (camera as any).zoom;
     
     // Dark background (walls)
     ctx.fillStyle = '#2a2a2a';
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-    const { x: screenX, y: screenY } = camera.worldToScreenSnapped(this.roomOffsetX, this.roomOffsetY);
+    const { x: screenX, y: screenY } = (camera as any).worldToScreenSnapped(this.roomOffsetX, this.roomOffsetY);
 
     // Draw room walls (angled perspective)
     this.drawWalls(ctx, screenX, screenY, z);
