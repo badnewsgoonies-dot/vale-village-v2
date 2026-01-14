@@ -154,6 +154,10 @@ export const AI_CONSTANTS = {
   STATUS_UTILITY_MULTIPLIER: 0.1,
   /** Multiplier for buff/debuff stat modifiers */
   BUFF_UTILITY_MULTIPLIER: 2.0,
+  /** Multiplier applied to offensive ability utility for aggressive enemies */
+  AGGRESSIVE_OFFENSE_MULTIPLIER: 1.5,
+  /** Multiplier applied to healing/buff utility for support/defensive enemies */
+  SUPPORT_UTILITY_MULTIPLIER: 1.5,
 } as const;
 
 /**

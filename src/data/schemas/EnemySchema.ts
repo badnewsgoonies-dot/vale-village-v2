@@ -53,6 +53,9 @@ export const EnemySchema = z.object({
   drops: z.array(EquipmentDropSchema).optional(),
   // Phase configuration for bosses - sorted by threshold ascending
   phases: z.array(PhaseConfigSchema).optional(),
+  // Optional AI style hint for enemies: can bias decision-making
+  // Examples: 'aggressive' prefers offensive actions, 'defensive' prefers healing/buffs
+  aiStyle: z.enum(['aggressive','defensive','balanced']).optional(),
 });
 
 export type Enemy = z.infer<typeof EnemySchema>;
