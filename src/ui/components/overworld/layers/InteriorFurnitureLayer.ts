@@ -489,7 +489,6 @@ export class InteriorFurnitureLayer implements Layer {
 
   render(ctx: CanvasRenderingContext2D, camera: Camera): void {
     const { roomX, roomY } = this.config;
-    const z = camera.zoom;
 
     // Combine furniture and player for Y-sorting
     const renderables: Array<{ item: FurnitureItem | 'player'; y: number }> = [];
@@ -522,8 +521,8 @@ export class InteriorFurnitureLayer implements Layer {
   private drawFurniture(ctx: CanvasRenderingContext2D, camera: Camera, item: FurnitureItem, roomX: number, roomY: number): void {
     const worldX = roomX + item.x;
     const worldY = roomY + item.y;
-    const { x, y } = camera.worldToScreenSnapped(worldX, worldY);
-    const z = camera.zoom;
+    const { x, y } = (camera as any).worldToScreenSnapped(worldX, worldY);
+    const z = (camera as any).zoom;
 
     // Skip shadow for flat items like rugs
     if (item.type !== 'rug') {
@@ -685,8 +684,8 @@ export class InteriorFurnitureLayer implements Layer {
   private drawPlayer(ctx: CanvasRenderingContext2D, camera: Camera, roomX: number, roomY: number): void {
     const worldX = roomX + this.playerPos.x;
     const worldY = roomY + this.playerPos.y;
-    const { x, y } = camera.worldToScreenSnapped(worldX, worldY);
-    const z = camera.zoom;
+    const { x, y } = (camera as any).worldToScreenSnapped(worldX, worldY);
+    const z = (camera as any).zoom;
     
     const width = 28 * z;
     const height = 40 * z;
@@ -723,8 +722,8 @@ export class InteriorFurnitureLayer implements Layer {
     const { roomWidth, roomHeight } = this.config;
     const worldX = roomX + roomWidth / 2;
     const worldY = roomY + roomHeight + 10;
-    const { x: exitX, y: exitY } = camera.worldToScreenSnapped(worldX, worldY);
-    const z = camera.zoom;
+    const { x: exitX, y: exitY } = (camera as any).worldToScreenSnapped(worldX, worldY);
+    const z = (camera as any).zoom;
 
     // Pulsing animation
     const pulse = Math.sin(Date.now() * 0.004) * 0.2 + 0.8;

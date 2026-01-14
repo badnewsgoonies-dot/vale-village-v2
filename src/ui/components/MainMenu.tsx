@@ -6,9 +6,7 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { useGameStore } from '../../store/gameStore';
 import { useStore } from '../../ui/state/store';
-import { ADEPT } from '../../data/definitions/units';
-import { createUnit } from '../../core/models/Unit';
-import { createTeam } from '../../core/models/Team';
+
 import { GameInitializationService } from '../../core/services/GameInitializationService';
 import './MainMenu.css';
 

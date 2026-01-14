@@ -1,4 +1,4 @@
-import { h } from 'preact';
+
 import type { BattleState } from '../../../core/models/BattleState';
 import type { Unit } from '../../../core/models/Unit';
 import type { BattleEvent } from '../../../core/services/types';

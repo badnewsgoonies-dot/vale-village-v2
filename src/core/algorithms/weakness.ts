@@ -70,7 +70,7 @@ export function applyBreakDamage(
 /**
  * Reset break state (e.g. at end of turn or after duration)
  */
-export function recoverBreak(unit: Unit, recoveryAmount: number = BATTLE_CONSTANTS.BREAK_RECOVERY_DEFAULT): Unit {
+export function recoverBreak(unit: Unit, _recoveryAmount: number = BATTLE_CONSTANTS.BREAK_RECOVERY_DEFAULT): Unit {
   if (!unit.breakThreshold) return unit;
 
   // Simple logic: if broken, recover some gauge. If full, remove broken status.
