@@ -1020,6 +1020,243 @@ export const JESTERS_ARMLET: Equipment = {
 // ========================================
 // EQUIPMENT REGISTRY
 // ========================================
+
+// New weapon definitions (Phase 22 additions) must be declared before registry
+export const NIGHT_DAGGER: Equipment = {
+  id: 'night-dagger',
+  name: 'Night Dagger',
+  slot: 'weapon',
+  tier: 'silver',
+  cost: 2600,
+  statBonus: { atk: 34, spd: 10 },
+  allowedElements: ['Venus', 'Jupiter'],
+  unlocksAbility: 'shadow-step',
+  equipmentUnlocksPermanent: true,
+};
+
+export const RADIANT_RAPIER: Equipment = {
+  id: 'radiant-rapier',
+  name: 'Radiant Rapier',
+  slot: 'weapon',
+  tier: 'mythril',
+  cost: 4200,
+  statBonus: { atk: 40, spd: 12 },
+  allowedElements: ['Venus', 'Jupiter'],
+  unlocksAbility: 'radiant-stab',
+  availableIn: ['tower'],
+};
+
+export const STORM_LANCE: Equipment = {
+  id: 'storm-lance',
+  name: 'Storm Lance',
+  slot: 'weapon',
+  tier: 'mythril',
+  cost: 3900,
+  statBonus: { atk: 44, spd: 6, mag: 10 },
+  allowedElements: ['Jupiter'],
+  unlocksAbility: 'storm-pierce',
+};
+
+export const VOID_SCYTHE: Equipment = {
+  id: 'void-scythe',
+  name: 'Void Scythe',
+  slot: 'weapon',
+  tier: 'legendary',
+  cost: 0,
+  statBonus: { atk: 60, mag: 25 },
+  allowedElements: ['Mars', 'Mercury'],
+  unlocksAbility: 'void-swipe',
+  availableIn: ['tower'],
+};
+
+export const DAWN_KATANA: Equipment = {
+  id: 'dawn-katana',
+  name: 'Dawn Katana',
+  slot: 'weapon',
+  tier: 'legendary',
+  cost: 7000,
+  statBonus: { atk: 58, spd: 14 },
+  allowedElements: ['Venus', 'Jupiter'],
+  unlocksAbility: 'dawn-slash',
+  alwaysFirstTurn: true,
+};
+
+export const ETHER_BOW: Equipment = {
+  id: 'ether-bow',
+  name: 'Ether Bow',
+  slot: 'weapon',
+  tier: 'mythril',
+  cost: 3500,
+  statBonus: { atk: 38, mag: 12, spd: 8 },
+  allowedElements: ['Jupiter'],
+  unlocksAbility: 'ether-shot',
+};
+
+export const SERAPHIC_STAFF: Equipment = {
+  id: 'seraphic-staff',
+  name: 'Seraphic Staff',
+  slot: 'weapon',
+  tier: 'legendary',
+  cost: 8000,
+  statBonus: { atk: 30, mag: 50, pp: 25 },
+  allowedElements: ['Mercury'],
+  unlocksAbility: 'seraphic-beam',
+  equipmentUnlocksPermanent: true,
+};
+
+export const HEAVY_HALBERD: Equipment = {
+  id: 'heavy-halberd',
+  name: 'Heavy Halberd',
+  slot: 'weapon',
+  tier: 'steel',
+  cost: 900,
+  statBonus: { atk: 28, def: 6, spd: -2 },
+  allowedElements: ['Venus', 'Mars'],
+  unlocksAbility: 'halberd-sweep',
+};
+
+export const GLEAMING_JAVELIN: Equipment = {
+  id: 'gleaming-javelin',
+  name: 'Gleaming Javelin',
+  slot: 'weapon',
+  tier: 'silver',
+  cost: 2100,
+  statBonus: { atk: 36, spd: 4 },
+  allowedElements: ['Jupiter'],
+  unlocksAbility: 'javelin-throw',
+};
+
+export const MYSTIC_DAGGER: Equipment = {
+  id: 'mystic-dagger',
+  name: 'Mystic Dagger',
+  slot: 'weapon',
+  tier: 'bronze',
+  cost: 300,
+  statBonus: { atk: 12, mag: 8, spd: 3 },
+  allowedElements: ['Mercury', 'Jupiter'],
+  unlocksAbility: 'mystic-stab',
+};
+
+export const STORMPLATE_ARMOR: Equipment = {
+  id: 'stormplate-armor',
+  name: 'Stormplate Armor',
+  slot: 'armor',
+  tier: 'legendary',
+  cost: 0,
+  statBonus: { def: 60, spd: 8, mag: 10 },
+  allowedElements: ['Jupiter'],
+  availableIn: ['tower'],
+  setId: 'tempest-set',
+};
+
+export const THUNDERPLATE_ARMOR: Equipment = {
+  id: 'thunderplate-armor',
+  name: 'Thunderplate Armor',
+  slot: 'armor',
+  tier: 'legendary',
+  cost: 0,
+  statBonus: { def: 62, spd: 6, atk: 8 },
+  allowedElements: ['Jupiter'],
+  availableIn: ['tower'],
+  setId: 'tempest-set',
+};
+
+export const FROSTPLATE_ARMOR: Equipment = {
+  id: 'frostplate-armor',
+  name: 'Frostplate Armor',
+  slot: 'armor',
+  tier: 'legendary',
+  cost: 0,
+  statBonus: { def: 64, hp: 90, mag: 12 },
+  allowedElements: ['Mercury'],
+  availableIn: ['tower'],
+  setId: 'glacier-set',
+};
+
+export const VOLCANIC_PLATE_ARMOR: Equipment = {
+  id: 'volcanic-plate-armor',
+  name: 'Volcanic Plate',
+  slot: 'armor',
+  tier: 'legendary',
+  cost: 0,
+  statBonus: { def: 66, atk: 14, hp: 60 },
+  allowedElements: ['Mars'],
+  availableIn: ['tower'],
+  setId: 'inferno-set',
+};
+
+export const TERRA_GUARD_ARMOR: Equipment = {
+  id: 'terra-guard-armor',
+  name: 'Terra Guard Armor',
+  slot: 'armor',
+  tier: 'mythril',
+  cost: 0,
+  statBonus: { def: 50, hp: 80 },
+  allowedElements: ['Venus'],
+  availableIn: ['tower'],
+  setId: 'aegis-set',
+};
+
+export const SKYWARDEN_MAIL: Equipment = {
+  id: 'skywarden-mail',
+  name: 'Skywarden Mail',
+  slot: 'armor',
+  tier: 'mythril',
+  cost: 0,
+  statBonus: { def: 48, spd: 10, mag: 8 },
+  allowedElements: ['Jupiter'],
+  availableIn: ['tower'],
+  setId: 'tempest-set',
+};
+
+export const OCEANIC_MAIL: Equipment = {
+  id: 'oceanic-mail',
+  name: 'Oceanic Mail',
+  slot: 'armor',
+  tier: 'mythril',
+  cost: 0,
+  statBonus: { def: 52, mag: 14, hp: 70 },
+  allowedElements: ['Mercury'],
+  availableIn: ['tower'],
+  setId: 'glacier-set',
+};
+
+export const PYRO_MAIL: Equipment = {
+  id: 'pyro-mail',
+  name: 'Pyro Mail',
+  slot: 'armor',
+  tier: 'mythril',
+  cost: 0,
+  statBonus: { def: 54, atk: 16 },
+  allowedElements: ['Mars'],
+  availableIn: ['tower'],
+  setId: 'inferno-set',
+};
+
+export const LUNAR_ARMOR: Equipment = {
+  id: 'lunar-armor',
+  name: 'Lunar Armor',
+  slot: 'armor',
+  tier: 'legendary',
+  cost: 0,
+  statBonus: { def: 58, mag: 18, pp: 10 },
+  allowedElements: ['Mercury', 'Jupiter'],
+  availableIn: ['tower'],
+  setId: 'celestial-set',
+};
+
+export const SOLAR_ARMOR: Equipment = {
+  id: 'solar-armor',
+  name: 'Solar Armor',
+  slot: 'armor',
+  tier: 'legendary',
+  cost: 0,
+  statBonus: { def: 70, atk: 18, hp: 120 },
+  allowedElements: ['Venus'],
+  availableIn: ['tower'],
+  setId: 'aegis-set',
+};
+
 export const EQUIPMENT: Record<string, Equipment> = {
   // Swords
   'wooden-sword': WOODEN_SWORD,
@@ -1110,6 +1347,16 @@ export const EQUIPMENT: Record<string, Equipment> = {
   'flame-branded-axe': FLAME_BRANDED_AXE,
   'frost-scepter': FROST_SCEPTER,
   'thunderbolt-bow': THUNDERBOLT_BOW,
+  'night-dagger': NIGHT_DAGGER,
+  'radiant-rapier': RADIANT_RAPIER,
+  'storm-lance': STORM_LANCE,
+  'void-scythe': VOID_SCYTHE,
+  'dawn-katana': DAWN_KATANA,
+  'ether-bow': ETHER_BOW,
+  'seraphic-staff': SERAPHIC_STAFF,
+  'heavy-halberd': HEAVY_HALBERD,
+  'gleaming-javelin': GLEAMING_JAVELIN,
+  'mystic-dagger': MYSTIC_DAGGER,
 
   // Tower-exclusive items
   'storm-cleaver': STORM_CLEAVER,
