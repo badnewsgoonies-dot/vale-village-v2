@@ -56,6 +56,9 @@ export const EnemySchema = z.object({
   // Optional AI style hint for enemies: can bias decision-making
   // Examples: 'aggressive' prefers offensive actions, 'defensive' prefers healing/buffs
   aiStyle: z.enum(['aggressive','defensive','balanced']).optional(),
+  // Optional per-enemy attack pattern to bias ability selection (phase 14)
+  // Examples: 'elementalRotation' favors abilities matching the enemy's element
+  attackPattern: z.enum(['elementalRotation','focusLowHp','random']).optional(),
 });
 
 export type Enemy = z.infer<typeof EnemySchema>;

@@ -3,6 +3,8 @@ import {
   STRIKE,
   QUAKE,
 } from "./abilities";
+import { LEATHER_CAP, POWER_RING } from "./equipment";
+import { BATTLE_CONSTANTS } from "../../core/constants";
 
 export const LUMEN_FAWN: Enemy = {
   id: "lumen-fawn",
@@ -24,5 +26,8 @@ export const LUMEN_FAWN: Enemy = {
   ],
   baseXp: 12,
   baseGold: 6,
-  drops: [],
+  drops: [
+    { equipment: LEATHER_CAP, chance: BATTLE_CONSTANTS.EQUIPMENT_DROP_RATE_NORMAL },
+    { equipment: POWER_RING, chance: 0.02 },
+  ],
 };
