@@ -54,6 +54,9 @@ export const EquipmentSchema = z.object({
   unlocksAbility: z.string().optional(),
   equipmentUnlocksPermanent: z.boolean().optional(),
   alwaysFirstTurn: z.boolean().optional(),
+  // Passive effects are free-form here to avoid circular schema dependencies with UnitSchema.
+  // Expected shape mirrors StatusEffect entries but is validated elsewhere if needed.
+  passiveEffects: z.array(z.any()).optional(),
   availableIn: ContentAvailabilitySchema.optional().readonly(),
   setId: z.string().optional(),
 });

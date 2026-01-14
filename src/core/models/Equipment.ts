@@ -37,6 +37,12 @@ export interface Equipment {
 
   // Optional elemental resistance provided by this equipment (0.0 - 1.0)
   readonly elementalResist?: number;
+
+  // Optional passive status effects granted while this equipment is equipped
+  // These are read-only passive effects (e.g., damageReduction, immunity) and are
+  // applied by the game logic for read-only checks. They are not mutated by
+  // status tick/consumption logic.
+  readonly passiveEffects?: any[];
 }
 
 /**

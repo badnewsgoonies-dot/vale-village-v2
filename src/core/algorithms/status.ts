@@ -183,6 +183,19 @@ export function applyStatusToUnit(
     updatedStatusEffects = unit.statusEffects.filter(s => s.type !== 'immunity');
   }
 
+  // Enforce stacking limits for buffs/debuffs
+  if (newStatus.type === 'buff' || newStatus.type === 'debuff') {
+    // Use constant from STATUS_CONSTANTS (fallback to 3 if missing)
+    const stackLimit = (STATUS_CONSTANTS as any).BUFF_DEBUFF_STACK_LIMIT ?? 3;
+    const statKey = (newStatus as any).stat;
+    // Count existing stacks of same type + stat
+    const sameStacks = unit.statusEffects.filter(s => (s.type === newStatus.type) && ('stat' in s) && (s.stat === statKey));
+    if (sameStacks.length >= stackLimit) {
+      // Reject new status when at cap
+      return unit;
+    }
+  }
+
   // Add status to unit
   return {
     ...unit,
