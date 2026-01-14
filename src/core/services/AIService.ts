@@ -190,6 +190,13 @@ function scoreAbility(
     estimatedValue *= AI_CONSTANTS.AGGRESSIVE_OFFENSE_MULTIPLIER;
   }
 
+  // Attack pattern preferences (per-enemy-type)
+  // Example: elementalRotation enemies prefer abilities that match their element
+  if (enemyDef?.attackPattern === 'elementalRotation' && ability.element && enemyDef.element === ability.element) {
+    // Small bonus to encourage elemental-specialist behavior
+    score += AI_CONSTANTS.ATTACK_PATTERN_ELEMENTAL_BONUS;
+  }
+
   // Support/defensive AI preference: favor healing and utility (buff/debuff) abilities
   if (enemyDef?.aiStyle === 'defensive' &&
       (ability.type === 'healing' || ability.type === 'buff' || ability.type === 'debuff')) {
