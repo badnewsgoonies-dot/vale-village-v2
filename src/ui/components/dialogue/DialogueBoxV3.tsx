@@ -8,6 +8,7 @@ interface DialogueBoxV3Props {
   onComplete?: () => void;
   typingSpeed?: number;
   isOpen: boolean;
+  pause?: number;
 }
 
 export function DialogueBoxV3({
@@ -15,7 +16,8 @@ export function DialogueBoxV3({
   speaker,
   onComplete,
   typingSpeed = 30,
-  isOpen
+  isOpen,
+  pause
 }: DialogueBoxV3Props): JSX.Element {
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -67,7 +69,16 @@ export function DialogueBoxV3({
     } else {
       setIsTyping(false);
       setIsFinished(true);
-      if (onComplete) onComplete();
+      if (onComplete) {
+        if (pause && pause > 0) {
+          timerRef.current = setTimeout(() => {
+            onComplete();
+            timerRef.current = null;
+          }, pause);
+        } else {
+          onComplete();
+        }
+      }
     }
   };
 
