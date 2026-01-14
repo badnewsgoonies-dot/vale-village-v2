@@ -271,3 +271,107 @@ Let me check the exact diff for the test files to ensure I made the right change
 
 Perfect! The changes look good. Let me commit these changes:
 
+Perfect! Let me verify the final state once more:
+
+Excellent! Let me update the TODO and document the results:
+
+## Summary
+
+I've successfully completed **Phase 3: Fix module import errors in tests**. 
+
+### Changes Made:
+
+**File 1: `src/core/services/QueueBattleService.test.ts`**
+- Removed unused `calculateMaxHp` import (was never used in the test)
+- Added non-null assertions (`!`) to `UNIT_DEFINITIONS` lookups to handle TypeScript's limitation with string key access
+- Added non-null assertions to array access patterns (`playerUnit[0]!`, `enemyUnit[0]!`)
+- Fixed Result type pattern by properly narrowing with `if (!result.ok)` before accessing the `error` property
+- Fixed manaEvents array access by capturing elements before indexing to avoid undefined access errors
+
+**File 2: `src/core/algorithms/weakness.test.ts`**
+- Removed unused `Element` import
+
+### Results:
+✅ **All test files now pass typecheck with zero test-specific type errors**
+
+The fixes follow TypeScript best practices:
+- Using non-null assertions where values are guaranteed at runtime (UNIT_DEFINITIONS are initialized, arrays are populated)
+- Properly narrowing discriminated union types (Result<T, E>)
+- Avoiding unsafe array indexing
+
+Changes committed with clear message explaining all fixes.
+
+[PHASE 3] Completed: Wed 14 Jan 2026 04:26:08 PM EST
+---
+[PHASE 4] Fix ambient-zustand.ts integration
+Started: Wed 14 Jan 2026 04:26:13 PM EST
+I'll start by reading the memory system to understand the current context and any previous work.
+
+Let me check what work is happening in Phase 4 by examining the project files directly.
+
+Now let me check what the current state is regarding Phase 4 - the ambient-zustand.ts integration issue.
+
+Now let me check the store.ts file to see how it uses zustand:
+
+Now let me check if there are any TypeScript errors by running typecheck:
+
+I can see the issue - the TypeScript compiler is not recognizing the types properly from zustand. The ambient-zustand.ts file has issues with how it's declaring the modules. Let me check how the zustand library actually exports these types:
+
+Now let me check the traditional module:
+
+Now I understand the issue. The ambient-zustand.ts file is too simplistic and doesn't match the actual zustand type definitions. Let me update it to properly declare the zustand module:
+
+Now let me check the tsconfig.json to see if it properly includes the ambient types file:
+
+I see the issue - the ambient types file needs to be actually included. Let me update the tsconfig to include it explicitly and ensure the types are recognized:
+
+Actually, I realize the issue is that the ambient-zustand.ts file needs to properly declare types instead of exporting. Let me check if it's imported anywhere and review what the actual problems are:
+
+The ambient file isn't imported anywhere. Let me check main.tsx to see what it imports:
+
+Let me check what errors come from store.ts and see if the issue is that the typecheck doesn't work because the types aren't properly recognized. Let me run typecheck again to see if my changes helped:
+
+Good! The zustand-related errors are gone. Now let me check what the remaining errors are:
+
+I made a mistake in the tsconfig.json - I need to add the missing quote and curly brace:
+
+I see - I forgot the comma. Let me fix it:
+
+Now let's run typecheck again:
+
+The error about `__tests__` is a separate issue. Let me revert the typeRoots change since it's not needed and causing the problem. The ambient-zustand.ts file should work without explicit typeRoots configuration:
+
+Now I need to make the ambient-zustand.ts file work as an actual ambient module declaration file. Let me update it to use declare statements instead of exports:
+
+Now I need to make sure this file is actually loaded by TypeScript. Let me add a triple-slash reference directive to the store.ts file or check if there's a better way. Actually, let me check if renaming it to ambient-zustand.d.ts would work better:
+
+Perfect! The zustand/ambient type issues are now gone. The remaining errors are unrelated to Phase 4 and are pre-existing TypeScript issues. Let me verify that tests still run properly with the ambient types file:
+
+There's a missing dependency issue. Let me try installing dependencies:
+
+Let me try building instead to verify the types work:
+
+There are missing dependencies. Let me try a clean install:
+
+Good, now let me run typecheck again to verify the fix is still working:
+
+Perfect! The ambient zustand types are now properly integrated - notice that all the previous zustand/type errors are gone. The remaining errors are unrelated to Phase 4 and are pre-existing issues. Let me now verify that tests can at least be started:
+
+Excellent! Tests are running successfully with the ambient zustand types properly integrated. Let me verify the changes I made are correct and clean up:
+
+Perfect. Now let me verify the tsconfig.json is properly set up:
+
+Perfect. The tsconfig is now clean and proper. Let me record the final verification by running typecheck and a subset of tests:
+
+Good - no zustand or vitest errors! Let me verify the errors found are pre-existing:
+
+Perfect. Let me create a summary of what was done in Phase 4. Let me update the PHASE_PLAN or create a note:
+
+Now let me show the new file:
+
+Perfect. Let me create a summary document showing the completion of Phase 4:
+
+Perfect! Now let me verify one more time that the solution is solid by running a quick test:
+
+Let me run a simpler verification:
+
