@@ -157,3 +157,26 @@ export function updateUnit(unit: Unit, updates: Partial<Unit>): Unit {
     battleStats: updates.battleStats ? { ...unit.battleStats, ...updates.battleStats } : unit.battleStats,
   };
 }
+
+/**
+ * Get active status effects for a unit including passive effects from equipped items.
+ *
+ * Note: Equipment passive effects are treated as read-only passives and are NOT
+ * mutated by status tick/consumption logic. Mutating functions should continue
+ * to operate on unit.statusEffects only.
+ */
+export function getCombinedStatusEffects(unit: Unit): readonly StatusEffect[] {
+  const passive: StatusEffect[] = [];
+
+  if (unit && unit.equipment) {
+    for (const item of Object.values(unit.equipment)) {
+      if (!item) continue;
+      const effects = (item as any).passiveEffects as StatusEffect[] | undefined;
+      if (effects && Array.isArray(effects)) {
+        passive.push(...effects);
+      }
+    }
+  }
+
+  return [...unit.statusEffects, ...passive];
+}
