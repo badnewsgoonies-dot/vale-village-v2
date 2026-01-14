@@ -3378,6 +3378,150 @@ export const GAIA_BLADE: Ability = {
 };
 
 // ============================================================================
+// New Fire/Earth Abilities (Phase addition)
+// ============================================================================
+
+export const EMBER_SHOWER: Ability = {
+  id: 'ember-shower',
+  name: 'Ember Shower',
+  type: 'psynergy',
+  element: 'Mars',
+  manaCost: 3,
+  basePower: 30,
+  targets: 'all-enemies',
+  unlockLevel: 8,
+  description: 'Showers embers across all enemies, may cause burns.',
+  statusEffect: { type: 'burn', duration: 2, chance: 0.4 },
+  aiHints: { priority: 2.5, target: 'random', avoidOverkill: false },
+};
+
+export const SOLAR_SMITE: Ability = {
+  id: 'solar-smite',
+  name: 'Solar Smite',
+  type: 'psynergy',
+  element: 'Mars',
+  manaCost: 4,
+  basePower: 42,
+  targets: 'single-enemy',
+  unlockLevel: 12,
+  description: 'Call down concentrated solar energy on one foe.',
+  splashDamagePercent: 0.3,
+  aiHints: { priority: 2.8, target: 'weakest', avoidOverkill: false },
+};
+
+export const MAGMA_CORE: Ability = {
+  id: 'magma-core',
+  name: 'Magma Core',
+  type: 'psynergy',
+  element: 'Mars',
+  manaCost: 5,
+  basePower: 58,
+  targets: 'single-enemy',
+  unlockLevel: 16,
+  description: 'Erupt a core of molten rock, dealing massive fire damage and burning.',
+  ignoreDefensePercent: 0.2,
+  statusEffect: { type: 'burn', duration: 3, chance: 0.6 },
+  aiHints: { priority: 3.0, target: 'weakest', avoidOverkill: false },
+};
+
+export const EARTHEN_CLEAVE: Ability = {
+  id: 'earthen-cleave',
+  name: 'Earthen Cleave',
+  type: 'physical',
+  element: 'Venus',
+  manaCost: 2,
+  basePower: 28,
+  targets: 'single-enemy',
+  unlockLevel: 10,
+  description: 'Cleave the earth with a heavy strike, hitting twice.',
+  hitCount: 2,
+  aiHints: { priority: 2.3, target: 'highestDef', avoidOverkill: false },
+};
+
+export const SEISMIC_ROAR: Ability = {
+  id: 'seismic-roar',
+  name: 'Seismic Roar',
+  type: 'psynergy',
+  element: 'Venus',
+  manaCost: 4,
+  basePower: 36,
+  targets: 'all-enemies',
+  unlockLevel: 14,
+  description: 'Unleash a roaring quake that damages all enemies and reduces DEF.',
+  debuffEffect: { def: -5 },
+  duration: 2,
+  aiHints: { priority: 2.8, target: 'random', avoidOverkill: false },
+};
+
+export const TIDAL_WAVE: Ability = {
+  id: 'tidal-wave',
+  name: 'Tidal Wave',
+  type: 'psynergy',
+  element: 'Mercury',
+  manaCost: 5,
+  basePower: 40,
+  targets: 'all-enemies',
+  unlockLevel: 12,
+  description: 'A massive wave that crashes over all enemies.',
+  aiHints: { priority: 3.0, target: 'random', avoidOverkill: false },
+};
+
+export const AQUA_LANCE: Ability = {
+  id: 'aqua-lance',
+  name: 'Aqua Lance',
+  type: 'psynergy',
+  element: 'Mercury',
+  manaCost: 2,
+  basePower: 28,
+  targets: 'single-enemy',
+  unlockLevel: 6,
+  description: 'A focused lance of water that pierces a single enemy.',
+  aiHints: { priority: 2.2, target: 'lowestRes', avoidOverkill: false },
+};
+
+export const WATER_SHROUD: Ability = {
+  id: 'water-shroud',
+  name: 'Water Shroud',
+  type: 'buff',
+  element: 'Mercury',
+  manaCost: 3,
+  basePower: 0,
+  targets: 'single-ally',
+  unlockLevel: 8,
+  description: 'Envelop an ally in a shroud of water, reducing incoming damage.',
+  damageReductionPercent: 0.2,
+  duration: 3,
+  aiHints: { priority: 2.0, target: 'random', opener: true },
+};
+
+export const GALE_BLAST: Ability = {
+  id: 'gale-blast',
+  name: 'Gale Blast',
+  type: 'psynergy',
+  element: 'Jupiter',
+  manaCost: 3,
+  basePower: 34,
+  targets: 'all-enemies',
+  unlockLevel: 12,
+  description: 'A powerful gust that batters all enemies.',
+  aiHints: { priority: 2.8, target: 'random', avoidOverkill: false },
+};
+
+export const ZEPHYR_BURST: Ability = {
+  id: 'zephyr-burst',
+  name: 'Zephyr Burst',
+  type: 'psynergy',
+  element: 'Jupiter',
+  manaCost: 2,
+  basePower: 26,
+  targets: 'single-enemy',
+  unlockLevel: 7,
+  description: 'A quick burst of wind that may stun the target.',
+  statusEffect: { type: 'stun', duration: 1, chance: 0.25 },
+  aiHints: { priority: 2.1, target: 'weakest', avoidOverkill: false },
+};
+
+// ============================================================================
 // Export all abilities
 // ============================================================================
 
@@ -3630,4 +3774,15 @@ export const ABILITIES: Record<string, Ability> = {
   'earth-judgment': EARTH_JUDGMENT,
   'master-aura': MASTER_AURA,
   'gaia-blade': GAIA_BLADE,
+  // Phase 16 additions: new fire/earth abilities
+  'ember-shower': EMBER_SHOWER,
+  'solar-smite': SOLAR_SMITE,
+  'magma-core': MAGMA_CORE,
+  'earthen-cleave': EARTHEN_CLEAVE,
+  'seismic-roar': SEISMIC_ROAR,
+  'tidal-wave': TIDAL_WAVE,
+  'aqua-lance': AQUA_LANCE,
+  'water-shroud': WATER_SHROUD,
+  'gale-blast': GALE_BLAST,
+  'zephyr-burst': ZEPHYR_BURST,
 };
