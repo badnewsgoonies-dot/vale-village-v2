@@ -99,7 +99,11 @@ function AbilityGrid({
         const isLocked = lockedAbilityIds.includes(ability.id);
         const isSelected = selectedAbilityId === ability.id;
                 const abilityType = (ability as any).type || 'psynergy';
-                
+                const element = (ability as any).element || 'Neutral';
+                const iconSrc = ELEMENT_ICONS[element] || TYPE_ICONS[abilityType] || ACTION_ICONS.abilities;
+                const borderColors: Record<string, string> = { Venus: '#FFC107', Mars: '#F44336', Mercury: '#2196F3', Jupiter: '#9C27B0', Neutral: 'transparent' };
+                const borderColor = borderColors[element] || 'transparent';
+
                 return (
                   <div
                     key={ability.id}
@@ -115,11 +119,11 @@ function AbilityGrid({
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: 4, width: '100%' }}>
                       <img
-                        src={ACTION_ICONS.abilities}
+                        src={iconSrc}
                         alt=""
                         width={14}
                         height={14}
-                        style={{ imageRendering: 'pixelated' }}
+                        style={{ imageRendering: 'pixelated', border: `2px solid ${borderColor}`, borderRadius: 2 }}
                       />
                       <span class="gs-value" style={{ fontSize: '0.75rem', flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                         {ability.name}
@@ -160,6 +164,12 @@ export function BattleActionMenu({
   const regularAbilities = unlocked.filter((a) => !DJINN_ABILITIES[a.id]);
 
   if (mode === 'abilities') {
+    const allAbilities = [...regularAbilities, ...djinnAbilities];
+    const order = ['Venus', 'Mars', 'Mercury', 'Jupiter', 'Neutral'];
+    const groups = order
+      .map((el) => ({ element: el, abilities: allAbilities.filter((a) => ((a as any).element || 'Neutral') === el) }))
+      .filter((g) => g.abilities.length > 0);
+
     return (
       <div class="gs-window gs-window--layered" role="dialog" aria-modal="true" aria-label="Battle Actions - Abilities" data-testid="battle-action-menu-abilities" tabIndex={-1} style={{ width: 360, padding: 12 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>
@@ -174,15 +184,25 @@ export function BattleActionMenu({
           </div>
         )}
 
-        <AbilityGrid
-          abilities={[...regularAbilities, ...djinnAbilities]}
-          selectedAbilityId={selectedAbilityId}
-          battle={battle}
-          lockedAbilityIds={lockedAbilityIds}
-          currentUnit={currentUnit}
-          onSelect={onSelectAbility}
-          onPreview={setPreviewAbility}
-        />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {groups.map((g) => (
+            <div key={g.element} style={{ marginBottom: 6 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
+                <img src={ELEMENT_ICONS[g.element] || ACTION_ICONS.abilities} width={16} height={16} alt={g.element} style={{ imageRendering: 'pixelated' }} />
+                <div class="gs-label" style={{ fontSize: '0.75rem' }}>{g.element.toUpperCase()}</div>
+              </div>
+              <AbilityGrid
+                abilities={g.abilities}
+                selectedAbilityId={selectedAbilityId}
+                battle={battle}
+                lockedAbilityIds={lockedAbilityIds}
+                currentUnit={currentUnit}
+                onSelect={onSelectAbility}
+                onPreview={setPreviewAbility}
+              />
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
