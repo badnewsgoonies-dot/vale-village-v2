@@ -6,17 +6,17 @@ set -e
 cd /home/geni/Documents/vale-village-v2
 
 # Export model settings for Haiku workers
-export BRAIN_DECOMPOSER_MODEL=claude-haiku-4.5
-export BRAIN_CRITIC_MODEL=claude-haiku-4.5
+export BRAIN_DECOMPOSER_MODEL=gpt-5-mini
+export BRAIN_CRITIC_MODEL=gpt-5-mini
 export LANE_RUNNER=copilot
-export COPILOT_MODEL=claude-haiku-4.5
+export COPILOT_MODEL=gpt-5-mini
 export MAX_LANES=2
 
 LOG_FILE="expansion-orch-$(date +%Y%m%d-%H%M%S).log"
 
 echo "=== VALE VILLAGE V2 EXPANSION ORCHESTRATOR ===" | tee "$LOG_FILE"
 echo "Started: $(date)" | tee -a "$LOG_FILE"
-echo "Model: claude-haiku-4.5" | tee -a "$LOG_FILE"
+echo "Model: gpt-5-mini" | tee -a "$LOG_FILE"
 echo "Max Lanes: 2" | tee -a "$LOG_FILE"
 echo "Phases: 1-50" | tee -a "$LOG_FILE"
 echo "" | tee -a "$LOG_FILE"
@@ -56,7 +56,7 @@ $ENCYCLOPEDIA_CONTEXT
 Execute this phase now."
 
     # Run with Haiku model
-    timeout 600 copilot --model claude-haiku-4.5 \
+    timeout 600 copilot --model gpt-5-mini \
         --allow-all-tools \
         --silent \
         --prompt "$PROMPT" 2>&1 | tee -a "$LOG_FILE"
@@ -73,7 +73,7 @@ log_journal() {
     echo "" >> ORCH_JOURNAL.md
     echo "## [SESSION START] $(date '+%Y-%m-%d %H:%M')" >> ORCH_JOURNAL.md
     echo "**Goal:** Expand Vale Village v2 with 50 phases of content" >> ORCH_JOURNAL.md
-    echo "**Model:** claude-haiku-4.5" >> ORCH_JOURNAL.md
+    echo "**Model:** gpt-5-mini" >> ORCH_JOURNAL.md
     echo "**Max Lanes:** 2" >> ORCH_JOURNAL.md
     echo "**Session ID:** expansion-$(date +%s)" >> ORCH_JOURNAL.md
 }

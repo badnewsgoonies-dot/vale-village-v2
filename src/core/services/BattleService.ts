@@ -29,7 +29,7 @@ import {
 } from '../algorithms/status';
 import { applyBreakDamage } from '../algorithms/weakness';
 import { resolveTargets, filterValidTargets } from '../algorithms/targeting';
-import { BATTLE_CONSTANTS, STATUS_CONSTANTS } from '../constants';
+import { BATTLE_CONSTANTS } from '../constants';
 import type { BattleEvent } from './types';
 import { Ok, Err, type Result } from '../utils/result';
 import { BattleTransaction } from './BattleTransaction';
@@ -453,7 +453,7 @@ export function executeAbility(
           const { updatedUnit: shieldedUnit, actualDamage } = applyDamageWithShields(currentTarget, damage);
           
           // Gap 1: Break System
-          const breakRes = applyBreakDamage(shieldedUnit, ability.element);
+          const breakRes = applyBreakDamage(shieldedUnit, ability.element ?? 'Neutral');
           currentTarget = breakRes.unit;
           // Apply break multiplier (1.5x) if unit is broken
           const finalDamage = Math.floor(actualDamage * breakRes.damageMultiplier);
