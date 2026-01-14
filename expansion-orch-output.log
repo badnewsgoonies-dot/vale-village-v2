@@ -207,3 +207,30 @@ Running typecheck to validate added abilities compile with the schema.
 
 Typecheck passed. Committing changes with a concise message. I'll create a single commit adding five water/wind abilities.
 
+Done — five new Mercury/Jupiter abilities added, typecheck passed, and changes committed.
+
+[PHASE 17] Completed: Wed 14 Jan 2026 05:24:52 PM EST
+---
+[PHASE 18] Add 5 new light/dark abilities
+Started: Wed 14 Jan 2026 05:24:57 PM EST
+Searching the codebase for ability definitions and existing light/dark abilities to add five new ones. Running parallel searches for ability files and relevant constants.
+
+Viewing ability definitions and schema to add new light/dark abilities; running file reads in parallel.
+
+Running typecheck to validate the new ability definitions and ensure no type/schema violations.
+
+Added five new light/dark-themed abilities and committed the change.
+
+Summary:
+- New abilities: luminous-ray, radiant-blessing, holy-lance, shadow-bolt, umbra-curse
+- File modified: src/data/definitions/abilities.ts
+- Typecheck passed (pnpm typecheck returned exit code 0)
+
+Next steps or adjustments?
+
+[PHASE 18] Completed: Wed 14 Jan 2026 05:27:22 PM EST
+---
+[PHASE 19] Create ability combo detection system
+Started: Wed 14 Jan 2026 05:27:27 PM EST
+Running typecheck to validate changes.
+

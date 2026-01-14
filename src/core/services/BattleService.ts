@@ -301,6 +301,41 @@ export function performAction(
     });
   // }
 
+  // Combo detection: basic system that looks for combo metadata on the ability
+  // and checks recent battle log entries for required ability IDs. If detected,
+  // emit a 'combo' event and append a combo message to the battle log.
+  function detectCombo(battleState: typeof state, abilitySpec: Ability, casterId: string) {
+    if (!abilitySpec.combo) return null;
+    const comboSpec = abilitySpec.combo;
+    const requires = comboSpec.requires ?? [];
+
+    // Simple detection: ensure all required ability IDs appear somewhere in the battle log
+    const logText = (battleState.log || []).join(' ');
+    const allPresent = requires.every(req => logText.includes(req));
+    if (!allPresent) return null;
+
+    const comboEvent: Extract<BattleEvent, { type: 'combo' }> = {
+      type: 'combo',
+      comboId: comboSpec.id,
+      casters: [casterId],
+      targets: targetIds,
+      message: comboSpec.message,
+    };
+
+    return comboEvent;
+  }
+
+  const comboEvent = detectCombo(state, ability, actorId);
+  if (comboEvent) {
+    events.push(comboEvent);
+    const comboMessage = comboEvent.message ?? `Combo ${comboEvent.comboId} triggered!`;
+    const newLog = [...updatedState.log, comboMessage];
+    const finalState = updateBattleState(updatedState, { log: newLog });
+
+    transaction.commit();
+    return Ok({ state: finalState, result, events });
+  }
+
   transaction.commit();
   return Ok({ state: updatedState, result, events });
 }

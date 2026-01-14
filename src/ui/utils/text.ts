@@ -58,6 +58,9 @@ export function renderEventText(e: BattleEvent): string {
       const formatDelta = (value: number) => (value >= 0 ? `+${value}` : `${value}`);
       return `${djinnNames} ${stateText} — ${e.unitId} ATK ${formatDelta(e.atkDelta)}, DEF ${formatDelta(e.defDelta)}`;
     }
+    case 'combo': {
+      return e.message ?? `Combo ${e.comboId} activated!`;
+    }
     default: {
       // Exhaustive check - ensures all event types are handled
       const _exhaustive: never = e;
