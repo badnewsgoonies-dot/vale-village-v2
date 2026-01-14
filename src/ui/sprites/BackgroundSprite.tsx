@@ -22,6 +22,7 @@
  */
 
 import { useState, useEffect, useMemo } from 'preact/hooks';
+import { JSX } from 'preact';
 import { 
   getSpritesByCategory, 
   getRandomSprite, 
@@ -46,7 +47,7 @@ export interface BackgroundSpriteProps {
   category?: string;
   
   /** Optional custom CSS styles */
-  style?: React.CSSProperties;
+  style?: JSX.CSSProperties;
   
   /** Optional CSS class name */
   className?: string;
