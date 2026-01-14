@@ -3,7 +3,7 @@ import { z } from 'zod';
 /**
  * Tower floor types
  */
-export const TowerFloorTypeSchema = z.enum(['normal', 'rest', 'boss', 'elemental', 'survival']);
+export const TowerFloorTypeSchema = z.enum(['normal', 'rest', 'boss', 'boss_rush', 'elemental', 'survival', 'puzzle']);
 
 /**
  * Base metadata shared by every tower floor entry
@@ -17,7 +17,7 @@ const TowerFloorBaseSchema = z.object({
 });
 
 const BattleFloorSchema = TowerFloorBaseSchema.extend({
-  type: z.union([z.literal('normal'), z.literal('boss'), z.literal('elemental'), z.literal('survival')]),
+  type: z.union([z.literal('normal'), z.literal('boss'), z.literal('boss_rush'), z.literal('elemental'), z.literal('survival'), z.literal('puzzle')]),
   encounterId: z.string().min(1),
 });
 
