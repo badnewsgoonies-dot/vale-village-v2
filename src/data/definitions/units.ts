@@ -231,14 +231,13 @@ export const ADEPT: UnitDefinition = {
   },
   abilities: [
     { ...STRIKE, unlockLevel: 1 },
-    // Same element (Venus): 1 damage, 1 utility
+    // Same element (Venus): primary damage start
     { ...EARTH_SPIKE_DAMAGE, unlockLevel: 1 },
-    { ...STONE_SKIN_UTILITY, unlockLevel: 1 },
-    // Counter element (Mercury counters Venus): 1 damage, 1 utility
-    { ...ICE_LANCE_DAMAGE, unlockLevel: 1 },
-    { ...AQUA_HEAL_UTILITY, unlockLevel: 1 },
-    // Neutral
-    { ...FOCUS_STRIKE_NEUTRAL, unlockLevel: 1 },
+    // Neutral/early progression
+    { ...FOCUS_STRIKE_NEUTRAL, unlockLevel: 2 },
+    { ...STONE_SKIN_UTILITY, unlockLevel: 3 },
+    { ...ICE_LANCE_DAMAGE, unlockLevel: 5 },
+    { ...AQUA_HEAL_UTILITY, unlockLevel: 6 },
     // Level Progression (7-20)
     { ...FORTIFY, unlockLevel: 7 },
     { ...TREMOR, unlockLevel: 8 },
@@ -282,14 +281,14 @@ export const WAR_MAGE: UnitDefinition = {
   },
   abilities: [
     { ...STRIKE, unlockLevel: 1 },
-    // Same element (Mars): 1 damage, 1 utility
+    // Same element (Mars): primary damage start
     { ...FLAME_BURST_DAMAGE, unlockLevel: 1 },
-    { ...FIRE_WARD_UTILITY, unlockLevel: 1 },
-    // Counter element (Jupiter counters Mars): 1 damage, 1 utility
-    { ...GALE_FORCE_DAMAGE, unlockLevel: 1 },
-    { ...WIND_BARRIER_UTILITY, unlockLevel: 1 },
+    { ...FIRE_WARD_UTILITY, unlockLevel: 2 },
+    // Counter element (Jupiter counters Mars)
+    { ...GALE_FORCE_DAMAGE, unlockLevel: 3 },
+    { ...WIND_BARRIER_UTILITY, unlockLevel: 4 },
     // Neutral
-    { ...FOCUS_STRIKE_NEUTRAL, unlockLevel: 1 },
+    { ...FOCUS_STRIKE_NEUTRAL, unlockLevel: 5 },
     // Level Progression (7-20)
     { ...IGNITE, unlockLevel: 7 },
     { ...FLAME_WALL, unlockLevel: 8 },
@@ -333,14 +332,14 @@ export const MYSTIC: UnitDefinition = {
   },
   abilities: [
     { ...STRIKE, unlockLevel: 1 },
-    // Same element (Mercury): 1 damage, 1 utility
+    // Same element (Mercury): primary damage start
     { ...ICE_LANCE_DAMAGE, unlockLevel: 1 },
-    { ...AQUA_HEAL_UTILITY, unlockLevel: 1 },
-    // Counter element (Venus counters Mercury): 1 damage, 1 utility
-    { ...EARTH_SPIKE_DAMAGE, unlockLevel: 1 },
-    { ...STONE_SKIN_UTILITY, unlockLevel: 1 },
+    { ...AQUA_HEAL_UTILITY, unlockLevel: 2 },
+    // Counter element (Venus counters Mercury)
+    { ...EARTH_SPIKE_DAMAGE, unlockLevel: 3 },
+    { ...STONE_SKIN_UTILITY, unlockLevel: 4 },
     // Neutral
-    { ...FOCUS_STRIKE_NEUTRAL, unlockLevel: 1 },
+    { ...FOCUS_STRIKE_NEUTRAL, unlockLevel: 5 },
     // Level Progression (7-20)
     { ...CLEANSE, unlockLevel: 7 },
     { ...FROST_WAVE, unlockLevel: 8 },
@@ -384,14 +383,14 @@ export const RANGER: UnitDefinition = {
   },
   abilities: [
     { ...STRIKE, unlockLevel: 1 },
-    // Same element (Jupiter): 1 damage, 1 utility
+    // Same element (Jupiter): primary damage start
     { ...GALE_FORCE_DAMAGE, unlockLevel: 1 },
-    { ...WIND_BARRIER_UTILITY, unlockLevel: 1 },
-    // Counter element (Mars counters Jupiter): 1 damage, 1 utility
-    { ...FLAME_BURST_DAMAGE, unlockLevel: 1 },
-    { ...FIRE_WARD_UTILITY, unlockLevel: 1 },
+    { ...WIND_BARRIER_UTILITY, unlockLevel: 2 },
+    // Counter element (Mars counters Jupiter)
+    { ...FLAME_BURST_DAMAGE, unlockLevel: 3 },
+    { ...FIRE_WARD_UTILITY, unlockLevel: 4 },
     // Neutral
-    { ...FOCUS_STRIKE_NEUTRAL, unlockLevel: 1 },
+    { ...FOCUS_STRIKE_NEUTRAL, unlockLevel: 5 },
     // Level Progression (7-20)
     { ...SWIFT_STRIKE, unlockLevel: 7 },
     { ...SHOCK_BOLT, unlockLevel: 8 },
