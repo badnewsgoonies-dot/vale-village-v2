@@ -55,6 +55,7 @@ export const EquipmentSchema = z.object({
   equipmentUnlocksPermanent: z.boolean().optional(),
   alwaysFirstTurn: z.boolean().optional(),
   availableIn: ContentAvailabilitySchema.optional().readonly(),
+  setId: z.string().optional(),
 });
 
 export type Equipment = z.infer<typeof EquipmentSchema>;
