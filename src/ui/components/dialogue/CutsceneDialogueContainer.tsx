@@ -91,6 +91,7 @@ export function CutsceneDialogueContainer(): JSX.Element | null {
           text={currentNode.text}
           speaker={currentNode.speaker}
           onComplete={handleBoxComplete}
+          pause={currentNode.pause}
         />
 
         {hasChoices && (
