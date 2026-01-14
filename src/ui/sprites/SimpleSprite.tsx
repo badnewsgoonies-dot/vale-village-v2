@@ -40,6 +40,7 @@
  */
 
 import { useState, useEffect } from 'preact/hooks';
+import { JSX, ComponentChildren } from 'preact';
 import { getSpriteById, getSpriteByPath, type SpriteEntry } from './catalog';
 
 export interface SimpleSpriteProps {
@@ -58,7 +59,7 @@ export interface SimpleSpriteProps {
   height: number;
   
   /** Optional custom CSS styles */
-  style?: React.CSSProperties;
+  style?: JSX.CSSProperties;
   
   /** Optional CSS class name */
   className?: string;
@@ -73,7 +74,7 @@ export interface SimpleSpriteProps {
    * Fallback component when sprite not found
    * Default: colored placeholder with sprite ID
    */
-  fallback?: React.ReactNode;
+  fallback?: ComponentChildren;
   
   /** Alt text for accessibility */
   alt?: string;
@@ -105,7 +106,7 @@ export interface SimpleSpriteProps {
  * Generate a colored placeholder based on sprite ID
  * Useful for debugging and fallbacks
  */
-function generatePlaceholder(id: string, width: number, height: number): React.ReactNode {
+function generatePlaceholder(id: string, width: number, height: number): ComponentChildren {
   // Generate a consistent color from the ID
   let hash = 0;
   for (let i = 0; i < id.length; i++) {
@@ -316,7 +317,7 @@ export function SimpleSprite({
           width: '100%',
           height: '100%',
           objectFit,
-          imageRendering: imageRendering as React.CSSProperties['imageRendering'],
+          imageRendering: imageRendering as JSX.CSSProperties['imageRendering'],
           display: 'block',
         }}
         onLoad={handleLoad}
