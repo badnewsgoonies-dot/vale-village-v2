@@ -3521,6 +3521,82 @@ export const ZEPHYR_BURST: Ability = {
   aiHints: { priority: 2.1, target: 'weakest', avoidOverkill: false },
 };
 
+// ---------------------------------------------------------------------------
+// New Light / Dark themed abilities (Phase 18 additions)
+// ---------------------------------------------------------------------------
+
+export const LUMINOUS_RAY: Ability = {
+  id: 'luminous-ray',
+  name: 'Luminous Ray',
+  type: 'psynergy',
+  element: 'Neutral',
+  manaCost: 3,
+  basePower: 36,
+  targets: 'single-enemy',
+  unlockLevel: 10,
+  description: 'A focused beam of pure light that pierces darkness.',
+  aiHints: { priority: 2.5, target: 'lowestRes' },
+};
+
+export const RADIANT_BLESSING: Ability = {
+  id: 'radiant-blessing',
+  name: 'Radiant Blessing',
+  type: 'buff',
+  element: 'Neutral',
+  manaCost: 2,
+  basePower: 0,
+  targets: 'single-ally',
+  unlockLevel: 8,
+  description: 'Bathes an ally in healing light, restoring HP over time.',
+  healOverTime: { amount: 8, duration: 3 },
+  aiHints: { priority: 2.2, target: 'healerFirst' },
+};
+
+export const HOLY_LANCE: Ability = {
+  id: 'holy-lance',
+  name: 'Holy Lance',
+  type: 'psynergy',
+  element: 'Neutral',
+  manaCost: 4,
+  basePower: 48,
+  targets: 'single-enemy',
+  unlockLevel: 14,
+  description: 'A piercing lance of light that deals massive damage to a single foe.',
+  ignoreDefensePercent: 0.25,
+  aiHints: { priority: 3.0, target: 'weakest' },
+};
+
+export const SHADOW_BOLT: Ability = {
+  id: 'shadow-bolt',
+  name: 'Shadow Bolt',
+  type: 'psynergy',
+  element: 'Neutral',
+  manaCost: 3,
+  basePower: 34,
+  targets: 'single-enemy',
+  unlockLevel: 9,
+  description: "A bolt of dark energy that can sap an enemy's magic power.",
+  debuffEffect: { mag: -10 },
+  duration: 3,
+  aiHints: { priority: 2.1, target: 'lowestRes' },
+};
+
+export const UMBRA_CURSE: Ability = {
+  id: 'umbra-curse',
+  name: 'Umbra Curse',
+  type: 'debuff',
+  element: 'Neutral',
+  manaCost: 2,
+  basePower: 0,
+  targets: 'all-enemies',
+  unlockLevel: 12,
+  description: 'Envelop enemies in shadow, reducing their magic and speed.',
+  debuffEffect: { mag: -8, spd: -5 },
+  duration: 3,
+  aiHints: { priority: 1.8, target: 'random' },
+};
+
+
 // ============================================================================
 // Export all abilities
 // ============================================================================
@@ -3540,6 +3616,12 @@ export const ABILITIES: Record<string, Ability> = {
   gust: GUST,
   'chain-lightning': CHAIN_LIGHTNING,
   'burn-touch': BURN_TOUCH,
+  // Phase 18: Light/Dark additions
+  'luminous-ray': LUMINOUS_RAY,
+  'radiant-blessing': RADIANT_BLESSING,
+  'holy-lance': HOLY_LANCE,
+  'shadow-bolt': SHADOW_BOLT,
+  'umbra-curse': UMBRA_CURSE,
   'freeze-blast': FREEZE_BLAST,
   'paralyze-shock': PARALYZE_SHOCK,
   // Healing
