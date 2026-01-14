@@ -3,6 +3,8 @@ import {
   STRIKE,
   ICE_SHARD,
 } from './abilities';
+import { CLOTH_CAP, JESTERS_ARMLET } from './equipment';
+import { BATTLE_CONSTANTS } from '../../core/constants';
 
 export const MIRE_TOAD: Enemy = {
   id: 'mire-toad',
@@ -24,5 +26,8 @@ export const MIRE_TOAD: Enemy = {
   ],
   baseXp: 15,
   baseGold: 8,
-  drops: [],
+  drops: [
+    { equipment: CLOTH_CAP, chance: BATTLE_CONSTANTS.EQUIPMENT_DROP_RATE_NORMAL },
+    { equipment: JESTERS_ARMLET, chance: 0.03 },
+  ],
 };

@@ -160,3 +160,25 @@ Running repository search to find encounter-related sources so group composition
 
 Running typecheck to surface any type or missing-reference errors so encounters and enemy IDs can be validated before edits.
 
+Added enemy group compositions and made EncounterService expand groups before creating enemy units; typecheck passed and changes committed.
+
+[PHASE 13] Completed: Wed 14 Jan 2026 05:09:40 PM EST
+---
+[PHASE 14] Add special attack patterns per enemy type
+Started: Wed 14 Jan 2026 05:09:45 PM EST
+Applying minimal edits to add attackPattern support and elemental bonus in AI constants and AIService. Making three file edits in one operation.
+
+Applying edits (reporting intent included). Running three precise file replacements.
+
+Running typecheck to ensure edits are type-safe.
+
+Typecheck passed. Changes added: support for per-enemy attackPattern in EnemySchema and an elemental attack-pattern bonus applied in AI scoring (constant added). If you'd like, can add patterns to individual enemy definitions (e.g., elemental specialists) or extend other pattern behaviors.
+
+[PHASE 14] Completed: Wed 14 Jan 2026 05:12:38 PM EST
+---
+[PHASE 15] Create enemy loot tables and drop rates
+Started: Wed 14 Jan 2026 05:12:43 PM EST
+Searching the codebase for existing loot/drop mentions to find where to add loot tables and drop rates. Running multiple content searches in parallel with an intent report.
+
+Running typecheck to validate changes.
+
