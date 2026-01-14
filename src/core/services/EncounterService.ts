@@ -10,6 +10,7 @@ import type { Stats } from '../models/types';
 import type { Unit } from '../models/Unit';
 import type { PRNG } from '../random/prng';
 import { ENEMIES } from '../../data/definitions/enemies';
+import { ENEMY_GROUPS } from '../../data/definitions/enemyGroups';
 import { ENCOUNTERS } from '../../data/definitions/encounters';
 import { enemyToUnit } from '../utils/enemyToUnit';
 import { startBattle } from './BattleService';
@@ -96,8 +97,9 @@ export function createBattleFromEncounter(
     return null;
   }
 
-  // Convert enemy IDs to Unit instances with unique IDs
-  const enemyUnits = encounter.enemies
+  // Convert enemy IDs to Unit instances with unique IDs, expanding any enemy groups
+  const rawEnemyIds = encounter.enemies.flatMap((id) => ENEMY_GROUPS[id] ?? [id]);
+  const enemyUnits = rawEnemyIds
     .map((enemyId, index) => {
       const enemyDef = ENEMIES[enemyId];
       if (!enemyDef) {
