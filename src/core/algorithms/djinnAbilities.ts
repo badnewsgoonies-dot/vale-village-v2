@@ -1,9 +1,10 @@
 import type { Team } from '../models/Team';
 import type { Unit } from '../models/Unit';
 import type { Stats, Element } from '../models/types';
-import { getSetDjinnIds } from './djinn';
+import { getSetDjinnIds, calculateDjinnSynergy } from './djinn';
 import { DJINN } from '../../data/definitions/djinn';
 import { DJINN_ABILITIES } from '../../data/definitions/djinnAbilities';
+import { ABILITIES } from '../../data/definitions/abilities';
 
 export type ElementCompatibility = 'same' | 'counter' | 'neutral';
 
@@ -151,13 +152,25 @@ export function mergeDjinnAbilitiesIntoUnit(unit: Unit, team: Team): Unit {
     id => !DJINN_ABILITIES[id] || abilityIds.includes(id)
   );
 
+  // Djinn-granted abilities from individual Djinn
   const djinnAbilities = abilityIds
     .map((id) => DJINN_ABILITIES[id])
     .filter((ability): ability is typeof DJINN_ABILITIES[string] => ability !== undefined)
     .filter((ability) => !existingIds.has(ability.id));
 
-  const mergedAbilities = [...baseAbilities, ...djinnAbilities];
-  const mergedUnlocked = Array.from(new Set([...baseUnlocked, ...abilityIds]));
+  // Team-level synergy abilities (e.g., element-Ultimate) unlocked when full set of Djinn present
+  const setDjinnIds = getSetDjinnIds(team);
+  const setElements = setDjinnIds.map(id => DJINN[id]?.element).filter((e): e is Element => Boolean(e));
+  const synergy = calculateDjinnSynergy(setElements);
+  const synergyAbilityIds = synergy.abilitiesUnlocked ?? [];
+
+  const synergyAbilities = synergyAbilityIds
+    .map(id => ABILITIES[id])
+    .filter((ability): ability is typeof ABILITIES[string] => ability !== undefined)
+    .filter((ability) => !existingIds.has(ability.id));
+
+  const mergedAbilities = [...baseAbilities, ...djinnAbilities, ...synergyAbilities];
+  const mergedUnlocked = Array.from(new Set([...baseUnlocked, ...abilityIds, ...synergyAbilityIds]));
 
   return {
     ...unit,
