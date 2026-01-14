@@ -100,3 +100,30 @@ Typecheck passed. Committing changes with a descriptive message.
 Started: Wed 14 Jan 2026 04:56:50 PM EST
 Running a quick script to compare enemy IDs used in ENCOUNTERS to those mapped in battleSprites to find which new enemies lack sprite mappings.
 
+Added missing battle sprite mappings for new enemies and ran typecheck.
+
+Changes committed: sprites: add mappings for new enemies (bandit, scavenger, merchant-guard, carrion-bird, wild-boar, jupiter-vortex-sentry, the-golden-sun).
+
+[PHASE 8] Completed: Wed 14 Jan 2026 04:58:41 PM EST
+---
+[PHASE 9] Implement aggressive AI pattern for combat enemies
+Started: Wed 14 Jan 2026 04:58:46 PM EST
+Applying focused edits to add an "aggressive" AI style and bias offensive choices for aggressive enemies; running edits now.
+
+Typecheck passed. Changes made:
+- Added aiStyle enum to EnemySchema (optional).
+- Added AGGRESSIVE_OFFENSE_MULTIPLIER to AI_CONSTANTS.
+- AIService now biases offensive (physical/psynergy) ability utility when enemy aiStyle === 'aggressive'.
+
+Commit message suggestion: "feat(ai): add aggressive enemy AI style and bias offensive abilities"
+
+Would you like me to run tests or commit these changes?
+
+[PHASE 9] Completed: Wed 14 Jan 2026 05:00:18 PM EST
+---
+[PHASE 10] Implement defensive AI pattern for support enemies
+Started: Wed 14 Jan 2026 05:00:23 PM EST
+Reading AI service and enemy AI source to find where support enemy behavior should be added; will open AIService.ts and enemyAI.ts to locate decision points.
+
+Applying minimal edits: add SUPPORT_UTILITY_MULTIPLIER to AI_CONSTANTS and bias scoreAbility toward healing/buff/debuff when enemy aiStyle is 'support' or 'defensive'. Running edits now.
+
