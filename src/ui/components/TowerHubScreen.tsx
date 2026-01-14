@@ -354,9 +354,9 @@ function renderFloor(floor: TowerFloor | null): JSX.Element {
     return <p class="value">No remaining floors</p>;
   }
 
-  const badgeClass = floor.type === 'boss' ? 'boss' : floor.type === 'rest' ? 'rest' : floor.type === 'survival' ? 'survival' : 'normal';
+  const badgeClass = floor.type === 'boss' || floor.type === 'boss_rush' ? 'boss' : floor.type === 'rest' ? 'rest' : floor.type === 'survival' ? 'survival' : 'normal';
   const badgeLabel =
-    floor.type === 'boss' ? 'Boss' : floor.type === 'rest' ? 'Rest' : floor.type === 'survival' ? 'Survival' : 'Battle';
+    floor.type === 'boss' || floor.type === 'boss_rush' ? 'Boss' : floor.type === 'rest' ? 'Rest' : floor.type === 'survival' ? 'Survival' : 'Battle';
 
   return (
     <div class="floor-display" data-testid="tower-current-floor">

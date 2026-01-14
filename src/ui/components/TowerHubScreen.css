@@ -48,6 +48,10 @@
   color: #7db7ff;
 }
 
+.tower-card .value.elemental {
+  color: #c58cff;
+}
+
 .tower-card .timeline {
   background: rgba(255, 255, 255, 0.03);
   border-radius: 8px;
@@ -99,6 +103,11 @@
 .floor-pill.normal {
   background: rgba(125, 183, 255, 0.16);
   color: #7db7ff;
+}
+
+.floor-pill.elemental {
+  background: rgba(197, 140, 255, 0.16);
+  color: #c58cff;
 }
 
 .floor-pill.reward {
