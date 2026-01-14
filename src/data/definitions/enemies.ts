@@ -3036,4 +3036,38 @@ export const ENEMIES: Record<string, Enemy> = {
   'thunder-hawk': THUNDER_HAWK,
   'earth-wyrm': EARTH_WYRM,
   'shadow-wisp': SHADOW_WISP,
+
+  // Tower-specific elite enemies (Phase 31 additions)
+  'tower-elite-mercury-lich': {
+    id: 'tower-elite-mercury-lich',
+    name: 'Arctic Lich',
+    level: 25,
+    element: 'Mercury',
+    stats: { hp: 2200, pp: 180, atk: 40, def: 60, mag: 140, spd: 60 },
+    abilities: [{ ...FREEZE_BLAST, unlockLevel: 1 }, { ...PARTY_HEAL, unlockLevel: 1 }],
+    baseXp: 1500,
+    baseGold: 600,
+  },
+
+  'tower-elite-jupiter-void': {
+    id: 'tower-elite-jupiter-void',
+    name: 'Void Tempest',
+    level: 25,
+    element: 'Jupiter',
+    stats: { hp: 2400, pp: 160, atk: 60, def: 50, mag: 120, spd: 90 },
+    abilities: [{ ...CHAIN_LIGHTNING, unlockLevel: 1 }, { ...PARALYZE_SHOCK, unlockLevel: 1 }],
+    baseXp: 1600,
+    baseGold: 650,
+  },
+
+  'tower-elite-hybrid-golem': {
+    id: 'tower-elite-hybrid-golem',
+    name: 'Titanium Colossus',
+    level: 25,
+    element: 'Mars',
+    stats: { hp: 3000, pp: 60, atk: 120, def: 150, mag: 40, spd: 30 },
+    abilities: [{ ...QUAKE, unlockLevel: 1 }, { ...BOOST_DEF, unlockLevel: 1 }],
+    baseXp: 1800,
+    baseGold: 900,
+  },
 };
