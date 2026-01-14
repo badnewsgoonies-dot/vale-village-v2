@@ -176,7 +176,7 @@ export const createTowerSlice: StateCreator<
 
     const previousHighestFloorEver = get().towerRecord.highestFloorEver;
     const isNewPersonalBestFloor = currentFloor.floorNumber > previousHighestFloorEver;
-    const rewardEntries = isNewPersonalBestFloor ? getRewardsForFloor(currentFloor.floorNumber) : [];
+    const rewardEntries = isNewPersonalBestFloor ? getRewardsForFloor(currentFloor.floorNumber, previousHighestFloorEver) : [];
     const recordedRun = recordBattleResult({
       run,
       floors: TOWER_FLOORS,
@@ -321,9 +321,11 @@ export const createTowerSlice: StateCreator<
   },
 });
 
-function getRewardsForFloor(floorNumber: number): TowerRewardEntry[] {
-  const entry = TOWER_REWARDS.find((reward) => reward.floorNumber === floorNumber);
-  return entry ? entry.rewards : [];
+function getRewardsForFloor(floorNumber: number, previousHighestFloorEver: number = 0): TowerRewardEntry[] {
+  // Return all milestone rewards with floorNumber in (previousHighestFloorEver, floorNumber]
+  return TOWER_REWARDS
+    .filter((reward) => reward.floorNumber > previousHighestFloorEver && reward.floorNumber <= floorNumber)
+    .flatMap((reward) => reward.rewards);
 }
 
 function sumUnitStat(units: readonly Unit[], key: 'damageDealt' | 'damageTaken'): number {
