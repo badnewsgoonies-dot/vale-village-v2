@@ -1,4 +1,5 @@
 import { ENCOUNTERS } from '@/data/definitions/encounters';
+import type { Encounter } from '@/data/schemas/EncounterSchema';
 
 /**
  * Battle sprite mappings
@@ -25,7 +26,7 @@ function isEarlyEncounterId(encounterId: string): boolean {
 
 function collectEarlyEnemyIds(): string[] {
   const ids = new Set<string>();
-  for (const [encounterId, encounter] of Object.entries(ENCOUNTERS)) {
+  for (const [encounterId, encounter] of Object.entries(ENCOUNTERS) as [string, Encounter][]) {
     if (!isEarlyEncounterId(encounterId)) {
       continue;
     }
