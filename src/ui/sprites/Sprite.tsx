@@ -4,6 +4,7 @@
  */
 
 import { useEffect, useState, useRef } from 'preact/hooks';
+import { JSX } from 'preact';
 import { loadSprite } from './loader';
 import { getSpriteDef } from './manifest';
 import { getSpriteByPath, getSpriteById } from './catalog';
@@ -26,7 +27,7 @@ interface SpriteProps {
   className?: string;
   
   /** Custom style */
-  style?: React.CSSProperties;
+  style?: JSX.CSSProperties;
   
   /** Event handlers */
   onLoad?: () => void;
