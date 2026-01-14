@@ -2667,10 +2667,35 @@ export const THUNDER_HAWK: Enemy = { ...THUNDERBIRD, id: 'thunder-hawk', name: '
 export const EARTH_WYRM: Enemy = { ...GLACIER_WYRM, id: 'earth-wyrm', name: 'Earth Wyrm', element: 'Venus' };
 export const SHADOW_WISP: Enemy = { ...GHOST_WISP, id: 'shadow-wisp', name: 'Shadow Wisp' };
 
+// Helper: create mini-boss variants with 2x HP and optional extra abilities
+function createMiniBoss(base: Enemy, extraAbilities: any[] = []): Enemy {
+  return {
+    ...base,
+    id: `${base.id}-mini-boss`,
+    name: `${base.name} (Mini-Boss)`,
+    // Double HP for mini-boss variants; keep other stats identical
+    stats: { ...base.stats, hp: Math.floor(base.stats.hp * 2) },
+    // Append extra abilities to provide special moves
+    abilities: [...base.abilities, ...extraAbilities],
+    // Slightly increased rewards for mini-bosses
+    baseXp: Math.floor((base.baseXp || 0) * 1.5),
+    baseGold: Math.floor((base.baseGold || 0) * 1.5),
+    aiStyle: (base as any).aiStyle ?? 'aggressive',
+  };
+}
+
+// Create a few canonical mini-bosses used by encounters/tower floors
+export const VENUS_WOLF_MINI_BOSS: Enemy = createMiniBoss(VENUS_WOLF, [{ ...HEAVY_STRIKE, unlockLevel: 1 }, { ...GUARD_BREAK, unlockLevel: 1 }]);
+export const MARS_BANDIT_MINI_BOSS: Enemy = createMiniBoss(MARS_BANDIT, [{ ...FIREBALL, unlockLevel: 1 }, { ...BURN_TOUCH, unlockLevel: 1 }]);
+export const STONE_GUARDIAN_MINI_BOSS: Enemy = createMiniBoss(STONE_GUARDIAN, [{ ...WEAKEN_DEF, unlockLevel: 1 }, { ...BOOST_DEF, unlockLevel: 1 }]);
+
 export const ENEMIES: Record<string, Enemy> = {
   // Enslaved Beasts - Redesigned Originals
   'mercury-slime': MERCURY_SLIME,
   'venus-wolf': VENUS_WOLF,
+  'venus-wolf-mini-boss': VENUS_WOLF_MINI_BOSS,
+  'mars-bandit-mini-boss': MARS_BANDIT_MINI_BOSS,
+  'stone-guardian-mini-boss': STONE_GUARDIAN_MINI_BOSS,
   // Legacy/test-friendly aliases
   slime: MERCURY_SLIME,
   wolf: VENUS_WOLF,
