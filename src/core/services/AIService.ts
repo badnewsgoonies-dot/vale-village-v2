@@ -184,6 +184,20 @@ function scoreAbility(
     score += 1.0; // Small bonus for opener abilities
   }
 
+  // Aggressive AI preference: enemies marked as aggressive should favor offensive abilities
+  const enemyDef = ENEMIES[caster.id];
+  if (enemyDef?.aiStyle === 'aggressive' && (ability.type === 'physical' || ability.type === 'psynergy')) {
+    estimatedValue *= AI_CONSTANTS.AGGRESSIVE_OFFENSE_MULTIPLIER;
+  }
+
+  // Support/defensive AI preference: favor healing and utility (buff/debuff) abilities
+  if (enemyDef?.aiStyle === 'defensive' &&
+      (ability.type === 'healing' || ability.type === 'buff' || ability.type === 'debuff')) {
+    estimatedValue *= AI_CONSTANTS.SUPPORT_UTILITY_MULTIPLIER;
+    // Small base score bump so these abilities are preferred even if estimatedValue is low
+    score += 1.0;
+  }
+
   return score;
 }
 
