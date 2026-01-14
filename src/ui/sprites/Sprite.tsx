@@ -4,7 +4,7 @@
  */
 
 import { useEffect, useState, useRef } from 'preact/hooks';
-import { JSX } from 'preact';
+import type { JSX } from 'preact';
 import { loadSprite } from './loader';
 import { getSpriteDef } from './manifest';
 import { getSpriteByPath, getSpriteById } from './catalog';
