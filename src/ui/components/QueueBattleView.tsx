@@ -141,6 +141,8 @@ export function QueueBattleView() {
   const [floatingNumbers, setFloatingNumbers] = useState<FNumber[]>([]);
   const [floatingActions, setFloatingActions] = useState<FAction[]>([]);
   const [showBattleTips, setShowBattleTips] = useState<boolean>(false);
+  // transient battle start ceremony overlay
+  const [showBattleStart, setShowBattleStart] = useState(false);
   const floatingIdRef = useRef(0);
   const floatingActionIdRef = useRef(0);
   const [shakingUnits, setShakingUnits] = useState<Set<string>>(new Set());
@@ -272,6 +274,14 @@ export function QueueBattleView() {
       setFloatingActions([]);
     };
   }, []);
+
+  // Battle start ceremony: show a brief overlay and allow enemy sprites to fade in
+  useEffect(() => {
+    if (!battle) return;
+    setShowBattleStart(true);
+    const t = setTimeout(() => setShowBattleStart(false), 1000);
+    return () => clearTimeout(t);
+  }, [battle]);
 
   // Spawn floating damage/heal numbers and trigger shake when events resolve
   useEffect(() => {
@@ -864,6 +874,25 @@ export function QueueBattleView() {
         }}
       >
         <ToolboxHelpers title="Battle" position="top-right" actions={toolboxActions} />
+        {currentActorId && (() => {
+          const actorUnit = battle.playerTeam?.units.find(u => u.id === currentActorId) || battle.enemies?.find(e => e.id === currentActorId);
+          return actorUnit ? (
+            <div style={{
+              position: 'absolute',
+              top: 12,
+              left: '50%',
+              transform: 'translateX(-50%)',
+              zIndex: 130,
+              background: 'rgba(0,0,0,0.6)',
+              padding: '6px 10px',
+              borderRadius: 8,
+              border: '1px solid rgba(255,216,127,0.24)',
+              color: '#FFD87F',
+              fontWeight: 900,
+              letterSpacing: 0.6,
+            }}>{actorUnit.name}</div>
+          ) : null;
+        })()}
         {showTowerBattleTutorial && (
           <div
             data-testid="battle-tutorial"
@@ -998,6 +1027,11 @@ export function QueueBattleView() {
               50% { transform: scale(1.05); filter: brightness(1.2) drop-shadow(0 0 6px rgba(255,216,127,0.5)); }
               100% { transform: scale(1); filter: brightness(1); }
             }
+            @keyframes activePulse {
+              0% { transform: scale(1); filter: drop-shadow(0 0 6px rgba(255,216,127,0.6)); }
+              50% { transform: scale(1.03); filter: drop-shadow(0 0 14px rgba(255,216,127,0.95)); }
+              100% { transform: scale(1); filter: drop-shadow(0 0 6px rgba(255,216,127,0.6)); }
+            }
           `}
         </style>
         {/* Battlefield Area */}
@@ -1036,7 +1070,17 @@ export function QueueBattleView() {
               onOpenSummonMenu={() => setMenuMode('summon')}
               djinnSpriteByElement={DJINN_SPRITE_BY_ELEMENT}
               djinnData={DJINN}
+              battleStarting={showBattleStart}
             />
+
+            {/* Battle Start overlay — brief, prominent, fades quickly */}
+            {showBattleStart && (
+              <div style={{ position: 'absolute', inset: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 200, pointerEvents: 'none' }}>
+                <div style={{ background: 'rgba(0,0,0,0.66)', padding: '18px 28px', borderRadius: 10, boxShadow: '0 8px 24px rgba(0,0,0,0.6)', color: '#FFD87F', fontSize: '1.6rem', fontWeight: 900, letterSpacing: 2, textTransform: 'uppercase' }}>
+                  Battle Start
+                </div>
+              </div>
+            )}
           </div>
         )}
 

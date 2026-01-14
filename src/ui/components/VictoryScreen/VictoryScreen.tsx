@@ -52,6 +52,11 @@ export function VictoryScreen({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
 
+  const baseDelay = 200; // ms between reveals
+  const titleDelay = 0;
+  const xpDelay = baseDelay * 1;
+  const goldDelay = baseDelay * 2;
+
   return (
     <div class="victory-overlay">
       {/* Sparkle Effects */}
@@ -63,7 +68,7 @@ export function VictoryScreen({
 
       {/* Victory Banner */}
       <div class="victory-banner">
-        <div class="victory-title">VICTORY</div>
+        <div class="victory-title reveal-line" style={{ animationDelay: `${titleDelay}ms` }}>VICTORY</div>
         <div class="victory-subtitle">Battle Complete</div>
       </div>
 
@@ -88,7 +93,7 @@ export function VictoryScreen({
         <div class="victory-rewards-header">Battle Rewards</div>
 
         <div class="victory-rewards-grid">
-          <div class="victory-reward-item">
+          <div class="victory-reward-item reveal-line" style={{ animationDelay: `${xpDelay}ms` }}>
             <div class="victory-reward-icon">⭐</div>
             <div class="victory-reward-details">
               <div class="victory-reward-label">Experience</div>
@@ -96,7 +101,7 @@ export function VictoryScreen({
             </div>
           </div>
 
-          <div class="victory-reward-item">
+          <div class="victory-reward-item reveal-line" style={{ animationDelay: `${goldDelay}ms` }}>
             <div class="victory-reward-icon">💰</div>
             <div class="victory-reward-details">
               <div class="victory-reward-label">Gold</div>
@@ -105,7 +110,7 @@ export function VictoryScreen({
           </div>
 
           {rewards.items?.map((item, i) => (
-            <div key={i} class="victory-reward-item">
+            <div key={i} class="victory-reward-item reveal-line" style={{ animationDelay: `${baseDelay * (3 + i)}ms` }}>
               <div class="victory-reward-icon">📦</div>
               <div class="victory-reward-details">
                 <div class="victory-reward-label">Item Found</div>
