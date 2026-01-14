@@ -29,7 +29,7 @@ function collectEarlyEnemyIds(): string[] {
     if (!isEarlyEncounterId(encounterId)) {
       continue;
     }
-    encounter.enemies.forEach(enemyId => ids.add(enemyId));
+    encounter.enemies.forEach((enemyId: string) => ids.add(enemyId));
   }
   return Array.from(ids).sort();
 }
