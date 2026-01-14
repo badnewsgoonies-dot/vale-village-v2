@@ -40,6 +40,7 @@ export const DialogueNodeSchema = z.object({
   nextNodeId: z.string().optional(),
   condition: DialogueConditionSchema.optional(),
   effects: DialogueEffectsSchema.optional(),
+  pause: z.number().optional(),
 });
 
 export const DialogueTreeSchema = z.object({

@@ -70,6 +70,7 @@ export const DJINN_INTRO_DIALOGUE: DialogueTree = {
       speaker: 'Flint',
       text: "Hey Isaac! I'm Flint, your first Djinn. Mind if I explain how my power works?",
       portrait: 'djinn-venus',
+      pause: 400,
       nextNodeId: 'djinn-explain-pool',
     },
     {
@@ -98,6 +99,7 @@ export const DJINN_INTRO_DIALOGUE: DialogueTree = {
       speaker: 'Flint',
       text: "That's all you need for now. I'll handle the rest—just remember to keep an eye on those three slots!",
       portrait: 'djinn-venus',
+      pause: 400,
       effects: {
         // Use story flag for tutorial completion; Djinn is already present from the starting team setup
         grantDjinn: 'flint',
@@ -118,6 +120,7 @@ export const TOWER_GUIDE_DIALOGUE: DialogueTree = {
       speaker: 'Tower Guide',
       portrait: 'elder',
       text: 'Welcome to the Battle Tower. If the journey feels unclear, I can explain rewards, abilities, and Djinn.',
+      pause: 400,
       nextNodeId: 'rewards',
     },
     {
@@ -160,6 +163,7 @@ export const TOWER_GUIDE_DIALOGUE: DialogueTree = {
       speaker: 'Tower Guide',
       portrait: 'elder',
       text: 'If you want the Tower to act as a true catch-up path (campaign XP/gold), tell me and I will tune it.',
+      pause: 400,
     },
   ],
 };
