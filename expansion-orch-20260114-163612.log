@@ -374,3 +374,21 @@ If you want puzzle floors to behave differently (non-battle UI, custom rest-like
 Started: Wed 14 Jan 2026 06:01:38 PM EST
 Editing TowerFloorSchema and then running typecheck.
 
+Added new tower floor type 'resource_scarcity' to src/data/schemas/TowerFloorSchema.ts and included it in the discriminated union. Typecheck passed (pnpm typecheck), and changes recorded in commits 6d258fb (descriptive) and 9aba31a (previous). Ready for next steps (e.g., add floor behavior/UI) or run tests if desired.
+
+[PHASE 30] Completed: Wed 14 Jan 2026 06:03:38 PM EST
+---
+[PHASE 31] Create tower-specific elite enemies
+Started: Wed 14 Jan 2026 06:03:43 PM EST
+Running targeted searches for Tower service and enemy/elite definitions to find where to add tower-specific elite enemies.
+
+Running typecheck to validate the new enemy definitions against TypeScript types.
+
+Added three tower-specific elite enemies, typechecked, and committed the change.
+
+[PHASE 31] Completed: Wed 14 Jan 2026 06:06:16 PM EST
+---
+[PHASE 32] Implement tower progression rewards scaling
+Started: Wed 14 Jan 2026 06:06:21 PM EST
+Running typecheck to see current errors and identify where reward scaling should be implemented.
+

@@ -1,0 +1,44 @@
+=== VALE VILLAGE V2 JUICE ORCHESTRATOR ===
+Started: Wed 14 Jan 2026 06:10:13 PM EST
+Focus: FEEL & POLISH - not new content
+Model: gpt-5-mini
+Phases: 1-10
+
+Starting 10-phase juice polish...
+[PHASE 1] Ability Visual Distinction - In BattleActionMenu.tsx AbilityGrid, replace ACTION_ICONS.abilities with element-based icons from ELEMENT_ICONS. Add colored border based on ability.element (Venus=amber, Mars=red, Mercury=blue, Jupiter=purple)
+Started: Wed 14 Jan 2026 06:10:13 PM EST
+Reading BattleActionMenu.tsx to locate AbilityGrid and icon constants, and reporting intent to edit battle visuals.
+
+Running typecheck and tests to validate the visual changes.
+
+Made a surgical update to AbilityGrid to use element-based icons and colored borders for abilities. All typechecks and tests passed: 77 files tested, 77 passed, 8 skipped; 303 tests passed.
+
+
+[PHASE 1] Completed: Wed 14 Jan 2026 06:12:23 PM EST
+---
+[PHASE 2] Reduce Starter Abilities - In units.ts, change unlockLevel so each unit starts with only 2 abilities at L1. Spread remaining abilities across levels 2-6. Adept: Strike L1, Earth Spike L1, Stone Skin L3, Ice Lance L5, Aqua Heal L6
+Started: Wed 14 Jan 2026 06:12:28 PM EST
+Reading units.ts to locate ability unlockLevel entries; will update unlockLevel values so each unit has only two L1 abilities and spread remaining abilities across levels 2–6. Running file read now and reporting intent.
+
+Applying minimal edits to units.ts to set two L1 abilities per unit and spread others across levels 2–6 for starter units (Adept, War Mage, Mystic, Ranger). Making four surgical replacements now.
+
+Running typecheck and test suites to validate the minimal unit definition edits didn't introduce type or test failures. Executing pnpm typecheck && pnpm test --run.
+
+Staging and committing the minimal changes to units.ts with a clear message about reducing starter abilities and Adept mapping.
+
+Done — edits committed. Tests and typecheck passed.
+
+
+[PHASE 2] Completed: Wed 14 Jan 2026 06:16:07 PM EST
+---
+[PHASE 3] Ability Menu Grouping - In BattleActionMenu.tsx, group abilities by element with headers. Add element star icon before each group header. Better spacing between groups
+Started: Wed 14 Jan 2026 06:16:12 PM EST
+Running quick reads of BattleActionMenu, unit definitions, and battle styles to locate grouping points and existing icons; reporting intent "Exploring codebase".
+
+Running typecheck and tests, then committing the small UI change if all looks fine.
+
+T
+Running quick reads of BattleActionMenu, unit definitions, and battle styles to locate grouping points and existing icons; reporting intent "Exploring codebase".
+
+Running typecheck and tests, then committing the small UI change if all looks fine.
+
