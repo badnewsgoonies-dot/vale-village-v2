@@ -43,4 +43,5 @@ export type BattleEvent =
       djinnIds: readonly string[];
       atkDelta: number;
       defDelta: number;
-    };
+    }
+  | { type: 'combo'; comboId: string; casters: readonly string[]; targets: readonly string[]; message?: string };
