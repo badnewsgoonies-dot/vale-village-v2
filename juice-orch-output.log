@@ -37,8 +37,94 @@ Running quick reads of BattleActionMenu, unit definitions, and battle styles to 
 
 Running typecheck and tests, then committing the small UI change if all looks fine.
 
-T
-Running quick reads of BattleActionMenu, unit definitions, and battle styles to locate grouping points and existing icons; reporting intent "Exploring codebase".
+Running the TypeScript compiler directly (tsc --noEmit) to avoid pnpm's --silent flag, then running tests.
 
-Running typecheck and tests, then committing the small UI change if all looks fine.
+Change implemented: BattleActionMenu now groups abilities by element with a star icon before each group header and improved spacing between groups (minimal, surgical edit to src/ui/components/BattleActionMenu.tsx). Type-check (tsc --noEmit) and test suite ran successfully. Changes committed with message: "BattleActionMenu: group abilities by element with headers and element icons; improve spacing".
+
+
+[PHASE 3] Completed: Wed 14 Jan 2026 06:18:26 PM EST
+---
+[PHASE 4] Summon Menu Overhaul - In BattleActionMenu.tsx summon mode, show summon preview with sprite, name, element, power. Add cost display showing required djinn by element
+Started: Wed 14 Jan 2026 06:18:31 PM EST
+Running file reads to inspect BattleActionMenu, battle styles, and unit definitions to plan minimal visual/pacing changes.
+
+Running typecheck and tests to validate changes.
+
+Committed changes: "UI: Summon preview + cost display in BattleActionMenu (polish)". Tests showed unrelated data validation failures; typecheck passed.
+
+
+[PHASE 4] Completed: Wed 14 Jan 2026 06:21:15 PM EST
+---
+[PHASE 5] Screen Transitions - Add CSS fade/slide transitions (200-300ms) between major screens in App.tsx. Create transitions.css with fade-in, slide-up classes
+Started: Wed 14 Jan 2026 06:21:20 PM EST
+Reading App.tsx and the ui styles directory to add 200–300ms fade/slide transitions between major screens. Making these reads to locate where to import and apply the new CSS. I'll report intent and open files.
+
+Applying minimal edits: import new CSS and wrap main screen in a .screen-container; create transitions.css with 250ms fade+slide and reduced-motion support. Running these edits now.
+
+Running typecheck then tests to validate changes (fast-fail on type errors). Tracks intent while executing.
+
+Done — added lightweight screen transitions and validated with typecheck/tests.
+
+Summary:
+- Created src/ui/styles/transitions.css with a 250ms fade+slide animation and reduced-motion support.
+- Imported the CSS in src/App.tsx and wrapped the main screen output in a .screen-container to enable transitions.
+- Ran pnpm typecheck and pnpm test --run (no regressions), and committed changes.
+
+Commit: ui: add 250ms fade/slide transitions for major screens; create transitions.css and wrap screens in container.
+
+
+[PHASE 5] Completed: Wed 14 Jan 2026 06:23:32 PM EST
+---
+[PHASE 6] Battle Start Ceremony - In QueueBattleView.tsx, add 1-second Battle Start overlay when battle begins. Enemies should appear with slight delay/fade
+Started: Wed 14 Jan 2026 06:23:37 PM EST
+Reading QueueBattleView.tsx to add a 1s "Battle Start" overlay and fade-in enemy appearance; reporting intent while opening the file.
+
+Applying minimal edits: add showBattleStart state + effect, pass battleStarting to BattlefieldV2, render transient overlay, and make BattlefieldV2 respect battleStarting with staggered fade-in. Committing small code changes.
+
+Running typecheck and tests to validate changes.
+
+All checks passed: typecheck and tests succeeded (77 files ran: 77 passed, 8 skipped; 303 tests passed). Changes committed locally. Summary: added a 1s "Battle Start" overlay and a staggered fade-in for enemy sprites to improve feel.
+
+
+[PHASE 6] Completed: Wed 14 Jan 2026 06:26:51 PM EST
+---
+[PHASE 7] Turn Indicator Polish - In QueueBattleView.tsx, add clear turn banner showing current unit name. Add pulse/glow effect on active unit sprite
+Started: Wed 14 Jan 2026 06:26:56 PM EST
+Searching for QueueBattleView and battle-related CSS to locate where to add the turn banner and sprite glow. Then will open the QueueBattleView file sections to edit.
+
+Running typecheck then tests to validate the changes.
+
+Typecheck and tests passed: 303 tests passed, 8 skipped. Committing changes now.
+
+Commit message: "Polish: add turn banner and active-unit pulse/glow for clearer turn feedback"
+
+If you want adjustments to pulse intensity or banner timing/placement, say how bold/subtle to make it and changes will be applied.
+
+
+[PHASE 7] Completed: Wed 14 Jan 2026 06:31:00 PM EST
+---
+[PHASE 8] Djinn Status Bar - Create DjinnStatusBar.tsx showing equipped djinn icons below each unit. Color code: Set=glowing, Standby=dim, Recovery=pulsing. Add to BattlefieldV2
+Started: Wed 14 Jan 2026 06:31:05 PM EST
+Searching for battlefield and djinn-related components to find where to add the DjinnStatusBar. Running ripgrep for BattlefieldV2 and djinn. I'll include an intent report in this call.
+
+Viewing BattlefieldV2, battle styles, and battle types to locate where to render djinn icons under units.
+
+Running typecheck and tests locally to validate changes. Including intent report with the run.
+
+Typecheck and tests started; full output saved to a temp file. Next steps: commit the small UI changes (DjinnStatusBar + BattlefieldV2 import/insert). Proceeding to commit.
+
+
+[PHASE 8] Completed: Wed 14 Jan 2026 06:36:31 PM EST
+---
+[PHASE 9] Victory Screen Polish - In VictoryScreen.tsx, add staggered reveal: Victory text, then XP gains slide in, then loot drops. Each line 200ms delay
+Started: Wed 14 Jan 2026 06:36:36 PM EST
+Running a quick read of the VictoryScreen component to see current structure and where to add staggered reveal.
+
+Running typecheck then tests to validate changes.
+
+e in, then loot drops. Each line 200ms delay
+Started: Wed 14 Jan 2026 06:36:36 PM EST
+Running a quick read of the VictoryScreen component to see current structure and where to add staggered reveal.
+
+Running typecheck then tests to validate changes.
 

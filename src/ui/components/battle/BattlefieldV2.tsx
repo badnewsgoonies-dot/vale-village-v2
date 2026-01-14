@@ -6,6 +6,7 @@ import { isUnitKO } from '../../../core/models/Unit';
 import { getEnemyBattleSprite, getEnemyBattleSpriteWithOverride } from '../../sprites/mappings/battleSprites';
 import { SimpleSprite } from '../../sprites/SimpleSprite';
 import { BattleUnitSprite } from '../BattleUnitSprite';
+import { DjinnStatusBar } from './DjinnStatusBar';
 import type { FloatingNumber, FloatingAction } from '../../state/types';
 
 interface BattlefieldV2Props {
@@ -26,6 +27,8 @@ interface BattlefieldV2Props {
   onOpenSummonMenu: () => void;
   djinnSpriteByElement: Record<string, string>;
   djinnData: Record<string, any>;
+  // When true, the battle has just started and enemies should fade in with a slight stagger
+  battleStarting?: boolean;
 }
 
 export function BattlefieldV2({
@@ -45,7 +48,8 @@ export function BattlefieldV2({
   equippedDjinn,
   onOpenSummonMenu,
   djinnSpriteByElement,
-  djinnData
+  djinnData,
+  battleStarting
 }: BattlefieldV2Props) {
   
   // Helper to check if unit should be visible (alive or has pending event)
@@ -149,14 +153,19 @@ export function BattlefieldV2({
               <div
                 style={{
                   position: 'relative',
-                  transform: isActor ? 'scale(3.2)' : 'scale(3)',
+                  // Start slightly offset and invisible when battleStarting is true, then transition to normal scale
+                  transform: (battleStarting ? 'translateY(8px) ' : '') + (isActor ? 'scale(3.2)' : 'scale(3)'),
                   zIndex: 1,
                   filter: isResolvingTarget
                     ? 'drop-shadow(0 0 14px rgba(255,216,127,0.9))'
-                    : isTargetCandidate
-                      ? 'drop-shadow(0 0 8px rgba(255,216,127,0.7))'
-                      : 'none',
-                  animation: spriteAnimation,
+                    : isActor
+                      ? 'drop-shadow(0 0 12px rgba(255,216,127,0.9))'
+                      : isTargetCandidate
+                        ? 'drop-shadow(0 0 8px rgba(255,216,127,0.7))'
+                        : 'none',
+                  animation: spriteAnimation + (isActor ? ', activePulse 900ms ease-in-out infinite' : ''),
+                  opacity: battleStarting ? 0 : 1,
+                  transition: `opacity 300ms ease ${enemyIndex * 120}ms, transform 320ms cubic-bezier(.2,.9,.2,1) ${enemyIndex * 120}ms`,
                 }}
               >
                 <SimpleSprite
@@ -331,8 +340,8 @@ export function BattlefieldV2({
                   position: 'relative',
                   transform: isActor ? 'scale(2.7)' : 'scale(2.5)',
                   zIndex: 1,
-                  filter: isTarget ? 'drop-shadow(0 0 12px rgba(255,216,127,0.8))' : 'none',
-                  animation: spriteAnimation,
+                  filter: isActor ? 'drop-shadow(0 0 14px rgba(255,216,127,0.9))' : isTarget ? 'drop-shadow(0 0 12px rgba(255,216,127,0.8))' : 'none',
+                  animation: spriteAnimation + (isActor ? ', activePulse 900ms ease-in-out infinite' : ''),
                 }}
               >
                 <BattleUnitSprite unitId={unit.id} state={spriteState} size="large" />
@@ -409,6 +418,9 @@ export function BattlefieldV2({
                     {action.text}
                   </div>
                 ))}
+
+              {/* Djinn status icons (below each player unit) */}
+              <DjinnStatusBar unit={unit} djinnData={djinnData} djinnSpriteByElement={djinnSpriteByElement} />
             </div>
           );
         })}
