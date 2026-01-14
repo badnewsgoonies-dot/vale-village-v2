@@ -290,3 +290,21 @@ If you'd like, next steps can wire actual set-bonus effects into battle calculat
 Started: Wed 14 Jan 2026 05:40:53 PM EST
 Running repository searches for accessory-related symbols to locate where to add an accessory slot and passive effects. Including intent update and parallel searches for "accessory", "Accessory", and "passive".
 
+Made minimal changes to add accessory passive effects and apply them in read-only calculations.
+
+What changed
+- Added optional passiveEffects to Equipment (schema + model).
+- Added getCombinedStatusEffects(unit) to include equipment passives.
+- Updated reads to use combined status effects in effective stat and damage modifier calculations (stats.ts, damage.ts).
+- Ran pnpm typecheck (passed) and committed the changes: "Phase 24: Add accessory passive effects and include equipment passives in status calculations".
+
+Next steps or questions: Should equipment passive effects be editable/mutable (consumable shields, decrementing uses) or remain read-only while equipped?
+
+[PHASE 24] Completed: Wed 14 Jan 2026 05:45:23 PM EST
+---
+[PHASE 25] Test ability and item balance in battles
+Started: Wed 14 Jan 2026 05:45:28 PM EST
+Searching the codebase for battle, ability, and balance-related files so the most relevant sources can be inspected next; running multiple repository searches in parallel with intent update.
+
+Running the repository typecheck to validate current types after inspecting balance code; include intent update.
+

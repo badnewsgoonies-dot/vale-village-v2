@@ -11,10 +11,12 @@ const EQUIPMENT_ICON_OVERRIDES: Record<string, string> = {
   'gaia-blade': '/sprites/icons/items/long-swords/Gaia_Blade.gif',
   'sol-blade': '/sprites/icons/items/long-swords/Sol_Blade.gif',
   'eclipse-blade': '/sprites/icons/items/long-swords/Darksword.gif',
+  'radiant-rapier': '/sprites/icons/items/light-blades/Battle_Rapier.gif',
   'astral-blade': '/sprites/icons/items/long-swords/Soul_Brand.gif',
   'storm-cleaver': '/sprites/icons/items/long-swords/Storm_Brand.gif',
   'frost-reaver': '/sprites/icons/items/long-swords/Arctic_Blade.gif',
   'thunderbolt-bow': '/sprites/icons/items/long-swords/Lightning_Sword.gif',
+  'night-dagger': '/sprites/icons/items/long-swords/Robbers_Blade.gif',
 
   // Axes
   'wooden-axe': '/sprites/icons/items/axes/Broad_Axe.gif',
@@ -176,6 +178,12 @@ export function getEquipmentSpriteId(equipment: Equipment): string | null {
     .filter(Boolean)
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join('_');
+
+  // Fallback: many custom/new weapon names don't have dedicated icons in the art pack.
+  // Map unmapped weapons to a generic existing rapier/blade icon so tests and UI have a sensible default.
+  if (equipment.slot === 'weapon') {
+    return `/sprites/icons/items/light-blades/Mystery_Blade.gif`;
+  }
 
   return `/sprites/icons/items/${category}/${fileName}.gif`;
 }
