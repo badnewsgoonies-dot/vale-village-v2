@@ -223,6 +223,7 @@ import { CreditsScreen } from './ui/components/CreditsScreen';
 import { EpilogueScreen } from './ui/components/EpilogueScreen';
 
 import './index.css';
+import './ui/styles/transitions.css';
 
 function useStoreSync() {
   const mode = useStore((s) => s.mode);
@@ -437,7 +438,9 @@ const App: FunctionComponent = () => {
 
   return (
     <div className={`app-root${isTransitioning ? ' app-root--transitioning' : ''}`}>
-      {renderScreen()}
+      <div className="screen-container">
+        {renderScreen()}
+      </div>
       {renderModal()}
       <TransitionSpiral isVisible={isTransitioning && screen === 'battle'} />
       <CutsceneDialogueContainer />
