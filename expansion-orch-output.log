@@ -309,3 +309,69 @@ Searching the codebase for battle, ability, and balance-related files so the mos
 
 Running the repository typecheck to validate current types after inspecting balance code; include intent update.
 
+Actions taken: searched battle/ability code, ran typecheck, ran the test suite, fixed failing equipment sprite mappings by adding explicit overrides for night-dagger and radiant-rapier and a sensible fallback for unmapped weapons, re-ran tests (all passing), and committed the changes.  
+Tests: 303 passed, 8 todo; commit: 6996b31 — "fix(sprites): add equipment sprite overrides and fallback for unmapped weapons (night-dagger, radiant-rapier)".
+
+[PHASE 25] Completed: Wed 14 Jan 2026 05:53:48 PM EST
+---
+[PHASE 26] Add tower floor type - Elemental Challenge
+Started: Wed 14 Jan 2026 05:53:53 PM EST
+Searching the codebase for tower- and elemental-related symbols to find where to add the new floor type. Running repository searches for "tower", "Elemental", and "floorType".
+
+Opening the Tower floor schema to add a new 'elemental' floor type so tower floors can be classified as Elemental Challenge.
+
+Applying four small edits: add 'elemental' to the Tower floor enum and battle schema, and add matching CSS for .value.elemental and .floor-pill.elemental, then run typecheck.
+
+Typecheck passed (tsc --noEmit exited with code 0).
+
+[PHASE 26] Completed: Wed 14 Jan 2026 05:55:21 PM EST
+---
+[PHASE 27] Add tower floor type - Survival Wave
+Started: Wed 14 Jan 2026 05:55:26 PM EST
+Planned: add a new "survival" tower floor type to schemas and display it in the Tower UI badge; then run typecheck and commit.
+
+Changes made:
+- src/data/schemas/TowerFloorSchema.ts
+  - Added 'survival' to TowerFloorTypeSchema enum.
+  - Included 'survival' in the BattleFloorSchema discriminated union so survival floors behave like battle floors (require encounterId).
+- src/ui/components/TowerHubScreen.tsx
+  - Render survival floors with a distinct badge class and label ("Survival").
+
+Validation:
+- Ran pnpm typecheck (tsc --noEmit) — passed.
+- Committed changes: "Add survival tower floor type and UI badge".
+
+If you want survival floors to have additional metadata (waves, time limits, rewards), specify the schema fields and example floors and I can add them next.
+
+[PHASE 27] Completed: Wed 14 Jan 2026 05:57:19 PM EST
+---
+[PHASE 28] Add tower floor type - Boss Rush
+Started: Wed 14 Jan 2026 05:57:24 PM EST
+Searching the codebase for tower-related files, floor types, and "boss" mentions to locate where to add the new Boss Rush floor type. Running parallel searches and reporting intent.
+
+Reading schema and tower files to find all places that need the new floor type added before making minimal edits. Running parallel file reads and reporting intent.
+
+Running typecheck to validate the schema and UI changes compile correctly.
+
+Typecheck passed with no errors.
+
+[PHASE 28] Completed: Wed 14 Jan 2026 05:59:23 PM EST
+---
+[PHASE 29] Add tower floor type - Puzzle Room
+Started: Wed 14 Jan 2026 05:59:28 PM EST
+Searching the codebase for tower, floor types, and puzzle-room references to locate where to add the new floor type. Running several ripgrep searches in parallel.
+
+Editing the TowerFloor schema to add the new 'puzzle' floor type and then running typecheck to validate changes.
+
+Done — added 'puzzle' as a Tower floor type in the schema and committed the change (Phase 29). Typecheck succeeded and the change is committed as:
+
+Commit: Phase 29: Add 'puzzle' tower floor type (TowerFloorSchema)
+
+If you want puzzle floors to behave differently (non-battle UI, custom rest-like handling, or new schema fields), say what behavior/fields are needed and I will make the minimal additional changes.
+
+[PHASE 29] Completed: Wed 14 Jan 2026 06:01:33 PM EST
+---
+[PHASE 30] Add tower floor type - Resource Scarcity
+Started: Wed 14 Jan 2026 06:01:38 PM EST
+Editing TowerFloorSchema and then running typecheck.
+
