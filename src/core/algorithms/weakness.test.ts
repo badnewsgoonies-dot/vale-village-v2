@@ -1,7 +1,6 @@
 
 import { applyBreakDamage, isWeakness } from './weakness';
 import { createUnit, Unit } from '../models/Unit';
-import { Element } from '../models/types';
 
 describe('Weakness & Break System', () => {
   const baseUnit = createUnit({
