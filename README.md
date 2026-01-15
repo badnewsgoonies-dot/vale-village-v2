@@ -14,3 +14,5 @@ Quickstart
 - pnpm dev
 
 See DOCUMENTATION.md for contribution guidelines and memory usage notes.
+
+Scaffolding verified: src/, tests/, and analysis/ directories present (verified 2026-01-15).
