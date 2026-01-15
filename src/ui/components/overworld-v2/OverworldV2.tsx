@@ -53,6 +53,8 @@ import { audio } from '../../../core/services/AudioService';
 import { OVERWORLD_CONSTANTS } from '../../../core/constants';
 
 
+import { IntrospectionContract, GameInput, TelemetryEvent } from '../../../core/contracts/introspection';
+
 interface OverworldV2Props {
   width?: number;
   height?: number;
@@ -64,6 +66,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<OverworldEngineV2 | null>(null);
   const playerLayerRef = useRef<PlayerLayer | null>(null);
+  // ... (keep existing refs)
   const villageLayerRef = useRef<VillageLayer | null>(null);
   const interiorFloorRef = useRef<InteriorFloorLayer | null>(null);
   const interiorFurnitureRef = useRef<InteriorFurnitureLayer | null>(null);
@@ -77,7 +80,78 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
   const lastGamepadStartRef = useRef(false);
   const lastGamepadActionRef = useRef(false);
   
-  // DOM Player Overlay Refs
+  // Introspection Event Listeners
+  const introspectionListenersRef = useRef<Set<(e: TelemetryEvent) => void>>(new Set());
+
+  // ... (rest of component)
+  
+  // --------------------------------------------------------------------------
+  // INTROSPECTION IMPLEMENTATION
+  // --------------------------------------------------------------------------
+  useEffect(() => {
+    const introspector: IntrospectionContract = {
+      getMetaData: () => ({
+        name: 'Vale Village V2',
+        version: '2.0.0',
+        supportedFeatures: ['overworld', 'interior', 'teleport']
+      }),
+
+      getState: () => {
+        const pos = playerLayerRef.current?.getPosition() ?? { x: 0, y: 0 };
+        const isMoving = playerLayerRef.current?.getPlayerState().isMoving ?? false;
+        
+        return {
+          timestamp: Date.now(),
+          player: {
+            position: pos,
+            health: 100, // Placeholder
+            maxHealth: 100,
+            status: isMoving ? 'moving' : 'idle',
+            inventoryCount: 0
+          },
+          level: {
+            id: currentMapId,
+            activeEnemies: 0, // TODO: Count from encountersLayer
+            isCompleted: false
+          },
+          debug: {
+            scene: sceneTypeRef.current,
+            house: currentHouseNumRef.current
+          }
+        };
+      },
+
+      sendInput: (input: GameInput) => {
+        if (input.type === 'keydown') {
+          keysRef.current.add(input.key);
+        } else if (input.type === 'keyup') {
+          keysRef.current.delete(input.key);
+        } else if (input.type === 'click') {
+          // TODO: Implement click
+        }
+      },
+
+      reset: async (options) => {
+        if (options?.levelId) {
+           // Use the internal transition logic if possible, or just console log for now
+           console.log("Agent requested reset to", options.levelId);
+        }
+      },
+
+      onEvent: (callback) => {
+        introspectionListenersRef.current.add(callback);
+        return () => introspectionListenersRef.current.delete(callback);
+      }
+    };
+
+    window.__GAME_INTROSPECTION__ = introspector;
+
+    return () => {
+      delete window.__GAME_INTROSPECTION__;
+    };
+  }, [currentMapId]); // Re-bind if necessary, though refs are stable
+
+  // ... (existing code)
   const playerDomRef = useRef<HTMLImageElement>(null);
   const playerDomContainerRef = useRef<HTMLDivElement>(null);
 
