@@ -137,3 +137,17 @@ export function simStep(
   next.tick += 1;
   return { state: next, terminal: next.terminal };
 }
+
+export function getLegalActions(state: GameState, env: SimEnvironment): GameAction[] {
+  // Standard set of actions for this game mode
+  // In a more complex game, we might filter 'INTERACT' based on proximity
+  // or remove 'MOVE' if stunned/locked.
+  return [
+    { type: 'NOOP' },
+    { type: 'MOVE', dx: 0, dy: -1 }, // Up
+    { type: 'MOVE', dx: 0, dy: 1 },  // Down
+    { type: 'MOVE', dx: -1, dy: 0 }, // Left
+    { type: 'MOVE', dx: 1, dy: 0 },  // Right
+    { type: 'INTERACT' }
+  ];
+}
