@@ -1,3 +1,13 @@
+# Project Phase Plan — High-level outline
+
+This document provides a concise phase plan for the Vale Village v2 project:
+- Phase 0: Scaffolding & baseline (setup repo, CI, directories, README)
+- Phase 1: Core systems (combat, overworld rendering, state slices)
+- Phase 2: Content import (assets, sprites, dialogues, localization)
+- Phase 3: Integration & polish (bugfixes, balance, tests)
+- Phase 4: Release prep (build, performance tuning, packaging)
+- Phase 5: Constants refactor (detailed plan follows)
+
 # Vale Village v2 - Phase 5: Core Constants Refactor
 
 **Date:** January 12, 2026
@@ -28,3 +38,11 @@ The Strategic Orchestrator audit (Session `strat-b7dcebc0`) identified numeric l
 
 ## Launch Command
 We will use the Strategic Orchestrator to execute this entire flow autonomously.
+
+## High-level Phase Outline
+- Phase 0: Scaffolding and baseline setup (project structure, docs, memory integration)
+- Phase 1: Core constants refactor and tests
+- Phase 2: Overworld rendering rebuild
+- Phase 3: Battle system stabilization and balancing
+- Phase 4: E2E tests and release prep
+
