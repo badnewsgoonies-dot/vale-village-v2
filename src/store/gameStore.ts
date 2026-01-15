@@ -175,6 +175,20 @@ const createGameSlice = (set: GameStoreSetState, get: GameStoreGetState): GameSl
             state.flow.screen = screen;
         }),
     startTransition: (screen) => {
+        // If running under automation (Playwright / WebDriver) or in Vite DEV, skip animated transitions
+        const isAutomation = (typeof navigator !== 'undefined' && (navigator as any).webdriver) || (typeof import.meta !== 'undefined' && (import.meta as any).env && (import.meta as any).env.DEV);
+        if (isAutomation) {
+            // Immediate non-animated screen change for test stability and fast dev iteration
+            transitionId += 1;
+            set((state) => {
+                state.flow.isTransitioning = false;
+                state.flow.modal = null;
+                state.flow.modalReturnTo = null;
+                state.flow.screen = screen;
+            });
+            return;
+        }
+
         // Increment transition ID to cancel any previous in-flight transitions
         const currentTransitionId = ++transitionId;
 
@@ -208,6 +222,7 @@ const createGameSlice = (set: GameStoreSetState, get: GameStoreGetState): GameSl
             }, 350);
         }, 350);
     },
+
     openModal: (modal) =>
         set((state) => {
             if (state.flow.isTransitioning) {

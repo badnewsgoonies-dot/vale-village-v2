@@ -38,7 +38,6 @@ function isBasicAttack(action: QueuedAction): boolean {
 
 function shouldGenerateMana(
   action: QueuedAction,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   __actionResult: PerformActionValue
 ): boolean {
   return isBasicAttack(action);
@@ -418,7 +417,6 @@ export function executeRound(
   if (!validation.ok) {
     // In development, surface a warning but do not throw to avoid crashing the UI
     if (process.env.NODE_ENV !== 'production') {
-      // eslint-disable-next-line no-console
       // [REMOVED] console.warn(validation.error);
     }
     return { state, events: [] };

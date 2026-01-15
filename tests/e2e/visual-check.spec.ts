@@ -6,6 +6,8 @@ test.skip(!process.env.RUN_HEAVY, 'Skipping heavy visual-check unless RUN_HEAVY=
 
 test('Visual check - all screens', async ({ page }) => {
   await page.goto('/');
+  await page.waitForLoadState('networkidle').catch(() => {});
+  await page.waitForSelector('canvas, #app, .game-root, [data-testid="game-root"]', { timeout: 5000 }).catch(() => {});
   
   // Title screen
   await page.waitForTimeout(1000);

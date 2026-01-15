@@ -4,6 +4,8 @@ test.skip(!process.env.RUN_HEAVY, 'Skipping heavy e2e tests by default');
 
 test('Compendium Djinn Section has sprites', async ({ page }) => {
   await page.goto('/');
+  await page.waitForLoadState('networkidle').catch(() => {});
+  await page.waitForSelector('canvas, #app, .game-root, [data-testid="game-root"]', { timeout: 5000 }).catch(() => {});
 
   // Title -> Menu
   await page.keyboard.press('Enter');

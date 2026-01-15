@@ -5,6 +5,8 @@ test('Enemy animations appear during battle', async ({ page }) => {
   test.setTimeout(120000); // 2 minutes
 
   await page.goto('/');
+  await page.waitForLoadState('networkidle').catch(() => {});
+  await page.waitForSelector('canvas, #app, .game-root, [data-testid="game-root"]', { timeout: 5000 }).catch(() => {});
 
   // Title -> Menu
   await page.keyboard.press('Enter');

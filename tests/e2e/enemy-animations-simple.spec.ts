@@ -12,6 +12,8 @@ test.describe('Enemy Animations (Simplified Verification)', () => {
 
     // Navigate to app
     await page.goto('/');
+    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForSelector('canvas, #app, .game-root, [data-testid="game-root"]', { timeout: 5000 }).catch(() => {});
     await expect(page.locator('.title-screen')).toBeVisible();
 
     // Go to menu
@@ -102,6 +104,8 @@ test.describe('Enemy Animations (Simplified Verification)', () => {
 
     // Navigate to battle (same as above)
     await page.goto('/');
+    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForSelector('canvas, #app, .game-root, [data-testid="game-root"]', { timeout: 5000 }).catch(() => {});
     await page.keyboard.press('Enter');
     await expect(page.locator('.main-menu')).toBeVisible();
     await page.keyboard.press('ArrowDown');

@@ -1,0 +1,693 @@
+
+> vale-village-v2@0.1.0 test:e2e
+> playwright test
+
+
+Running 40 tests using 2 workers
+
+  ✓   2 [chromium] › tests/e2e/acquisition-fanfare.e2e.spec.ts:3:1 › acquisition fanfare - e2e placeholder (28.5s)
+  -   3 [chromium] › tests/e2e/battle-animations.spec.ts:4:1 › Enemy animations appear during battle
+  ✘   1 [chromium] › tests/e2e/agent_navigation.spec.ts:11:1 › Agent navigation via bridge (stub LLM) (35.8s)
+  -   5 [chromium] › tests/e2e/compendium-djinn.spec.ts:5:1 › Compendium Djinn Section has sprites
+  -   6 [chromium] › tests/e2e/djinn-sprites-simple.spec.ts:10:3 › Djinn Sprites - Direct Component Test › should render Djinn sprites when accessing DjinnCollectionScreen with mock data
+  -   7 [chromium] › tests/e2e/djinn-sprites.spec.ts:15:3 › Djinn Sprites Rendering › should render Djinn sprites in DjinnCollectionScreen
+  -   8 [chromium] › tests/e2e/enemy-animations-simple.spec.ts:10:3 › Enemy Animations (Simplified Verification) › should load battle and verify enemy sprites are rendered
+  -   9 [chromium] › tests/e2e/enemy-animations-simple.spec.ts:100:3 › Enemy Animations (Simplified Verification) › should detect BattleUnit component renders with isPlayer prop
+  -  10 [chromium] › tests/e2e/enemy-animations.spec.ts:73:3 › Enemy Animations E2E › should apply enemy-lunge and enemy-shake CSS classes during battle
+  -  11 [chromium] › tests/e2e/enemy-animations.spec.ts:234:3 › Enemy Animations E2E › should verify enemy sprites exist in DOM during battle
+  -  12 [chromium] › tests/e2e/equip-check.spec.ts:5:1 › Equipment sprites check
+  ✓  13 [chromium] › tests/e2e/feature_parity_accessories.e2e.spec.ts:3:1 › Feature parity E2E: Accessories placeholder (9ms)
+  ✓  14 [chromium] › tests/e2e/feature_parity_menu.e2e.spec.ts:3:1 › Feature parity E2E: Menu navigation placeholder (4ms)
+  -  15 [chromium] › tests/e2e/gameplay-all-houses.spec.ts:60:1 › Gray-box: Play through all Houses
+  ✘   4 [chromium] › tests/e2e/boot-purple-page.spec.ts:4:1 › Boot: game canvas is visible (13.5s)
+  -  17 [chromium] › tests/e2e/gameplay-demo.spec.ts:252:1 › Gameplay demo - watch the game play through automatically
+  -  18 [chromium] › tests/e2e/gameplay-full-game.spec.ts:9:1 › Full Game Flow - Fast Start
+  -  19 [chromium] › tests/e2e/gameplay-full-tower.spec.ts:89:1 › Full Tower Run - Complete all 30 floors
+  -  20 [chromium] › tests/e2e/gameplay-graybox.spec.ts:4:1 › Gray-box: Direct Battle Injection
+  -  21 [chromium] › tests/e2e/gameplay-journey.spec.ts:235:1 › Gameplay journey (title -> tower run -> rewards)
+  -  22 [chromium] › tests/e2e/gameplay-tour.spec.ts:17:1 › Gameplay tour (screens + overworld)
+  ✘  16 [chromium] › tests/e2e/gameplay-authentic.spec.ts:91:1 › Authentic Gameplay: Start to Finish (Houses 1-50) (7.5s)
+  ✘  24 [chromium] › tests/e2e/menu-polish.spec.ts:26:3 › Menu polish P0/P1 › P1 Menu test: toolbox action has testid (MENU-TOOLBOX-TESTID) - toolbox action should have testid for automation (6.8s)
+  ✓  25 [chromium] › tests/e2e/parity/playwright_ci_parity.spec.ts:3:1 › parity - playwright smoke (9ms)
+  ✘  26 [chromium] › tests/e2e/smoke.spec.ts:13:3 › Game Flow Smoke Tests › should display title screen on load (7.0s)
+  ✘  27 [chromium] › tests/e2e/smoke.spec.ts:20:3 › Game Flow Smoke Tests › should navigate from title to menu on keypress (7.2s)
+  ✘  28 [chromium] › tests/e2e/smoke.spec.ts:32:3 › Game Flow Smoke Tests › should navigate from title to menu on click (7.3s)
+  ✘  23 [chromium] › tests/e2e/menu-polish.spec.ts:9:3 › Menu polish P0/P1 › P0 SaveMenu focus restore (MENU-FOCUS-RESTORE) - should restore focus to pause button after closing SaveMenu (36.6s)
+  ✘  29 [chromium] › tests/e2e/smoke.spec.ts:43:3 › Game Flow Smoke Tests › should display menu options (7.3s)
+  ✘  30 [chromium] › tests/e2e/smoke.spec.ts:55:3 › Game Flow Smoke Tests › should highlight menu options with keyboard navigation (7.8s)
+  ✘  31 [chromium] › tests/e2e/smoke.spec.ts:71:3 › Game Flow Smoke Tests › should start new game and go to overworld (7.7s)
+  ✘  32 [chromium] › tests/e2e/smoke.spec.ts:83:3 › Game Flow Smoke Tests › should go to team select from Battle Tower option (7.0s)
+  ✘  33 [chromium] › tests/e2e/smoke.spec.ts:111:3 › Game Flow Smoke Tests › should return to title screen with Escape from menu (7.0s)
+  ✘  34 [chromium] › tests/e2e/smoke.spec.ts:125:3 › Keyboard Navigation › should wrap around menu options (7.1s)
+  -  36 [chromium] › tests/e2e/smoke.spec.ts:154:8 › Visual Regression › title screen matches snapshot
+  -  37 [chromium] › tests/e2e/smoke.spec.ts:167:8 › Visual Regression › main menu matches snapshot
+  -  38 [chromium] › tests/e2e/tabs-check.spec.ts:6:1 › Click tabs to check sprites
+  -  39 [chromium] › tests/e2e/visual-check.spec.ts:7:1 › Visual check - all screens
+  -  40 [chromium] › tests/e2e/visual-verify.spec.ts:19:3 › Djinn Sprites E2E Test › should display djinn sprites in DjinnCollectionScreen
+  ✘  35 [chromium] › tests/e2e/smoke.spec.ts:142:3 › Keyboard Navigation › should ignore disabled menu options during navigation (6.7s)
+
+
+  1) [chromium] › tests/e2e/agent_navigation.spec.ts:11:1 › Agent navigation via bridge (stub LLM) ─
+
+    TimeoutError: page.waitForFunction: Timeout 10000ms exceeded.
+
+      13 |
+      14 |   // Ensure test hooks exist and initialize telemetry (do not clobber InputManager's buffer)
+    > 15 |   await page.waitForFunction(() => (window as any).gameStore && (window as any).__TELEMETRY__ !== undefined && (window as any).__INPUT_BUFFER__ !== undefined);
+         |              ^
+      16 |   await page.evaluate(() => {
+      17 |     (window as any).__TELEMETRY__ = (window as any).__TELEMETRY__ || [];
+      18 |     // If InputManager hasn't initialized a buffer, provide a best-effort shim that implements push/drain
+        at /home/geni/Documents/vale-village-v2/tests/e2e/agent_navigation.spec.ts:15:14
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/agent_navigation-Agent-navigation-via-bridge-stub-LLM--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/agent_navigation-Agent-navigation-via-bridge-stub-LLM--chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/agent_navigation-Agent-navigation-via-bridge-stub-LLM--chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/agent_navigation-Agent-navigation-via-bridge-stub-LLM--chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/agent_navigation-Agent-navigation-via-bridge-stub-LLM--chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chromium] › tests/e2e/boot-purple-page.spec.ts:4:1 › Boot: game canvas is visible ────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('canvas').first()
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for locator('canvas').first()[22m
+
+
+      5 |   await page.goto('/');
+      6 |   const canvas = page.locator('canvas');
+    > 7 |   await expect(canvas.first()).toBeVisible({ timeout: 10000 });
+        |                                ^
+      8 | });
+      9 |
+        at /home/geni/Documents/vale-village-v2/tests/e2e/boot-purple-page.spec.ts:7:32
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/boot-purple-page-Boot-game-canvas-is-visible-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/boot-purple-page-Boot-game-canvas-is-visible-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/boot-purple-page-Boot-game-canvas-is-visible-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/boot-purple-page-Boot-game-canvas-is-visible-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/boot-purple-page-Boot-game-canvas-is-visible-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [chromium] › tests/e2e/gameplay-authentic.spec.ts:91:1 › Authentic Gameplay: Start to Finish (Houses 1-50) 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator:  locator('.title-screen')
+    Expected: visible
+    Received: hidden
+    Timeout:  5000ms
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for locator('.title-screen')[22m
+    [2m    9 × locator resolved to <div class="title-screen">…</div>[22m
+    [2m      - unexpected value "hidden"[22m
+
+
+      94 |   
+      95 |   // 2. Handle Title Screen
+    > 96 |   await expect(page.locator('.title-screen')).toBeVisible();
+         |                                               ^
+      97 |   await page.keyboard.press('Space'); // Start Game
+      98 |   
+      99 |   // 3. Handle Intro Dialogue
+        at /home/geni/Documents/vale-village-v2/tests/e2e/gameplay-authentic.spec.ts:96:47
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/gameplay-authentic-Authent-6d100-tart-to-Finish-Houses-1-50--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/gameplay-authentic-Authent-6d100-tart-to-Finish-Houses-1-50--chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/gameplay-authentic-Authent-6d100-tart-to-Finish-Houses-1-50--chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/gameplay-authentic-Authent-6d100-tart-to-Finish-Houses-1-50--chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/gameplay-authentic-Authent-6d100-tart-to-Finish-Houses-1-50--chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [chromium] › tests/e2e/menu-polish.spec.ts:9:3 › Menu polish P0/P1 › P0 SaveMenu focus restore (MENU-FOCUS-RESTORE) - should restore focus to pause button after closing SaveMenu 
+
+    Error: SaveMenu should restore focus to pause button (see MENU-FOCUS-RESTORE, src/ui/components/SaveMenu.tsx)
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m"pause-button"[39m
+    Received: [31mnull[39m
+
+      21 |     // Assert focus restored to pause button. If focus-restore is broken this will fail (desired).
+      22 |     const active = await page.evaluate(() => document.activeElement?.getAttribute('data-testid') || null);
+    > 23 |     expect(active, 'SaveMenu should restore focus to pause button (see MENU-FOCUS-RESTORE, src/ui/components/SaveMenu.tsx)').toBe('pause-button');
+         |                                                                                                                              ^
+      24 |   });
+      25 |
+      26 |   test('P1 Menu test: toolbox action has testid (MENU-TOOLBOX-TESTID) - toolbox action should have testid for automation', async ({ page }) => {
+        at /home/geni/Documents/vale-village-v2/tests/e2e/menu-polish.spec.ts:23:126
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/menu-polish-Menu-polish-P0-b1082-tton-after-closing-SaveMenu-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/menu-polish-Menu-polish-P0-b1082-tton-after-closing-SaveMenu-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/menu-polish-Menu-polish-P0-b1082-tton-after-closing-SaveMenu-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/menu-polish-Menu-polish-P0-b1082-tton-after-closing-SaveMenu-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/menu-polish-Menu-polish-P0-b1082-tton-after-closing-SaveMenu-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [chromium] › tests/e2e/menu-polish.spec.ts:26:3 › Menu polish P0/P1 › P1 Menu test: toolbox action has testid (MENU-TOOLBOX-TESTID) - toolbox action should have testid for automation 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('[data-testid="toolbox-action-button"]')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for locator('[data-testid="toolbox-action-button"]')[22m
+
+
+      29 |     const toolbox = page.locator('[data-testid="toolbox-action-button"]');
+      30 |     // This assertion intentionally fails if the testid is not present, surfacing the P1 polish item.
+    > 31 |     await expect(toolbox).toBeVisible();
+         |                           ^
+      32 |   });
+      33 | });
+      34 |
+        at /home/geni/Documents/vale-village-v2/tests/e2e/menu-polish.spec.ts:31:27
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/menu-polish-Menu-polish-P0-2e927--have-testid-for-automation-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/menu-polish-Menu-polish-P0-2e927--have-testid-for-automation-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/menu-polish-Menu-polish-P0-2e927--have-testid-for-automation-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/menu-polish-Menu-polish-P0-2e927--have-testid-for-automation-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/menu-polish-Menu-polish-P0-2e927--have-testid-for-automation-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [chromium] › tests/e2e/smoke.spec.ts:13:3 › Game Flow Smoke Tests › should display title screen on load 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator:  locator('.title-screen')
+    Expected: visible
+    Received: hidden
+    Timeout:  5000ms
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for locator('.title-screen')[22m
+    [2m    9 × locator resolved to <div class="title-screen">…</div>[22m
+    [2m      - unexpected value "hidden"[22m
+
+
+      13 |   test('should display title screen on load', async ({ page }) => {
+      14 |     // Check for title screen elements
+    > 15 |     await expect(page.locator('.title-screen')).toBeVisible();
+         |                                                 ^
+      16 |     await expect(page.locator('.title-screen-logo')).toContainText('Vale Chronicles');
+      17 |     await expect(page.locator('.title-screen-subtitle')).toHaveText(/Press any key|Tap to continue/i);
+      18 |   });
+        at /home/geni/Documents/vale-village-v2/tests/e2e/smoke.spec.ts:15:49
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/smoke-Game-Flow-Smoke-Test-da4cd-isplay-title-screen-on-load-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/smoke-Game-Flow-Smoke-Test-da4cd-isplay-title-screen-on-load-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/smoke-Game-Flow-Smoke-Test-da4cd-isplay-title-screen-on-load-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/smoke-Game-Flow-Smoke-Test-da4cd-isplay-title-screen-on-load-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/smoke-Game-Flow-Smoke-Test-da4cd-isplay-title-screen-on-load-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7) [chromium] › tests/e2e/smoke.spec.ts:20:3 › Game Flow Smoke Tests › should navigate from title to menu on keypress 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator:  locator('.title-screen')
+    Expected: visible
+    Received: hidden
+    Timeout:  5000ms
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for locator('.title-screen')[22m
+    [2m    9 × locator resolved to <div class="title-screen">…</div>[22m
+    [2m      - unexpected value "hidden"[22m
+
+
+      20 |   test('should navigate from title to menu on keypress', async ({ page }) => {
+      21 |     // Start on title screen
+    > 22 |     await expect(page.locator('.title-screen')).toBeVisible();
+         |                                                 ^
+      23 |
+      24 |     // Press any key to continue
+      25 |     await page.keyboard.press('Enter');
+        at /home/geni/Documents/vale-village-v2/tests/e2e/smoke.spec.ts:22:49
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/smoke-Game-Flow-Smoke-Test-d0015-m-title-to-menu-on-keypress-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/smoke-Game-Flow-Smoke-Test-d0015-m-title-to-menu-on-keypress-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/smoke-Game-Flow-Smoke-Test-d0015-m-title-to-menu-on-keypress-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/smoke-Game-Flow-Smoke-Test-d0015-m-title-to-menu-on-keypress-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/smoke-Game-Flow-Smoke-Test-d0015-m-title-to-menu-on-keypress-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8) [chromium] › tests/e2e/smoke.spec.ts:32:3 › Game Flow Smoke Tests › should navigate from title to menu on click 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator:  locator('.title-screen')
+    Expected: visible
+    Received: hidden
+    Timeout:  5000ms
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for locator('.title-screen')[22m
+    [2m    9 × locator resolved to <div class="title-screen">…</div>[22m
+    [2m      - unexpected value "hidden"[22m
+
+
+      32 |   test('should navigate from title to menu on click', async ({ page }) => {
+      33 |     // Start on title screen
+    > 34 |     await expect(page.locator('.title-screen')).toBeVisible();
+         |                                                 ^
+      35 |
+      36 |     // Click to continue
+      37 |     await page.click('.title-screen');
+        at /home/geni/Documents/vale-village-v2/tests/e2e/smoke.spec.ts:34:49
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/smoke-Game-Flow-Smoke-Test-9f935-from-title-to-menu-on-click-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/smoke-Game-Flow-Smoke-Test-9f935-from-title-to-menu-on-click-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/smoke-Game-Flow-Smoke-Test-9f935-from-title-to-menu-on-click-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/smoke-Game-Flow-Smoke-Test-9f935-from-title-to-menu-on-click-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/smoke-Game-Flow-Smoke-Test-9f935-from-title-to-menu-on-click-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  9) [chromium] › tests/e2e/smoke.spec.ts:43:3 › Game Flow Smoke Tests › should display menu options 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator:  locator('.main-menu')
+    Expected: visible
+    Received: hidden
+    Timeout:  5000ms
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for locator('.main-menu')[22m
+    [2m    5 × locator resolved to <div role="navigation" class="main-menu" aria-label="Main Menu" data-testid="main-menu">…</div>[22m
+    [2m      - unexpected value "hidden"[22m
+
+
+      44 |     // Navigate to menu
+      45 |     await page.keyboard.press('Enter');
+    > 46 |     await expect(page.locator('.main-menu')).toBeVisible();
+         |                                              ^
+      47 |
+      48 |     // Check menu options
+      49 |     await expect(page.locator('.main-menu-option').filter({ hasText: 'New Game' })).toBeVisible();
+        at /home/geni/Documents/vale-village-v2/tests/e2e/smoke.spec.ts:46:46
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/smoke-Game-Flow-Smoke-Tests-should-display-menu-options-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/smoke-Game-Flow-Smoke-Tests-should-display-menu-options-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/smoke-Game-Flow-Smoke-Tests-should-display-menu-options-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/smoke-Game-Flow-Smoke-Tests-should-display-menu-options-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/smoke-Game-Flow-Smoke-Tests-should-display-menu-options-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  10) [chromium] › tests/e2e/smoke.spec.ts:55:3 › Game Flow Smoke Tests › should highlight menu options with keyboard navigation 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator:  locator('.main-menu')
+    Expected: visible
+    Received: hidden
+    Timeout:  5000ms
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for locator('.main-menu')[22m
+    [2m    6 × locator resolved to <div role="navigation" class="main-menu" aria-label="Main Menu" data-testid="main-menu">…</div>[22m
+    [2m      - unexpected value "hidden"[22m
+
+
+      56 |     // Navigate to menu
+      57 |     await page.keyboard.press('Enter');
+    > 58 |     await expect(page.locator('.main-menu')).toBeVisible();
+         |                                              ^
+      59 |
+      60 |     // First option should be selected by default
+      61 |     const newGameOption = page.locator('.main-menu-option').filter({ hasText: 'New Game' });
+        at /home/geni/Documents/vale-village-v2/tests/e2e/smoke.spec.ts:58:46
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/smoke-Game-Flow-Smoke-Test-fc254-ns-with-keyboard-navigation-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/smoke-Game-Flow-Smoke-Test-fc254-ns-with-keyboard-navigation-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/smoke-Game-Flow-Smoke-Test-fc254-ns-with-keyboard-navigation-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/smoke-Game-Flow-Smoke-Test-fc254-ns-with-keyboard-navigation-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/smoke-Game-Flow-Smoke-Test-fc254-ns-with-keyboard-navigation-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  11) [chromium] › tests/e2e/smoke.spec.ts:71:3 › Game Flow Smoke Tests › should start new game and go to overworld 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator:  locator('.main-menu')
+    Expected: visible
+    Received: hidden
+    Timeout:  5000ms
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for locator('.main-menu')[22m
+    [2m    6 × locator resolved to <div role="navigation" class="main-menu" aria-label="Main Menu" data-testid="main-menu">…</div>[22m
+    [2m      - unexpected value "hidden"[22m
+
+
+      72 |     // Navigate to menu
+      73 |     await page.keyboard.press('Enter');
+    > 74 |     await expect(page.locator('.main-menu')).toBeVisible();
+         |                                              ^
+      75 |
+      76 |     // Select "New Game" and press Enter
+      77 |     await page.keyboard.press('Enter');
+        at /home/geni/Documents/vale-village-v2/tests/e2e/smoke.spec.ts:74:46
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/smoke-Game-Flow-Smoke-Test-f3b72-ew-game-and-go-to-overworld-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/smoke-Game-Flow-Smoke-Test-f3b72-ew-game-and-go-to-overworld-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/smoke-Game-Flow-Smoke-Test-f3b72-ew-game-and-go-to-overworld-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/smoke-Game-Flow-Smoke-Test-f3b72-ew-game-and-go-to-overworld-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/smoke-Game-Flow-Smoke-Test-f3b72-ew-game-and-go-to-overworld-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  12) [chromium] › tests/e2e/smoke.spec.ts:83:3 › Game Flow Smoke Tests › should go to team select from Battle Tower option 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator:  locator('.main-menu')
+    Expected: visible
+    Received: hidden
+    Timeout:  5000ms
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for locator('.main-menu')[22m
+    [2m    6 × locator resolved to <div role="navigation" class="main-menu" aria-label="Main Menu" data-testid="main-menu">…</div>[22m
+    [2m      - unexpected value "hidden"[22m
+
+
+      84 |     // Navigate to menu
+      85 |     await page.keyboard.press('Enter');
+    > 86 |     await expect(page.locator('.main-menu')).toBeVisible();
+         |                                              ^
+      87 |
+      88 |     // Navigate to Battle Tower option
+      89 |     // Menu order: New Game, Continue (disabled), Shop, Compendium, Settings, How to Play, Battle Tower
+        at /home/geni/Documents/vale-village-v2/tests/e2e/smoke.spec.ts:86:46
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/smoke-Game-Flow-Smoke-Test-3e0cf-ct-from-Battle-Tower-option-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/smoke-Game-Flow-Smoke-Test-3e0cf-ct-from-Battle-Tower-option-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/smoke-Game-Flow-Smoke-Test-3e0cf-ct-from-Battle-Tower-option-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/smoke-Game-Flow-Smoke-Test-3e0cf-ct-from-Battle-Tower-option-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/smoke-Game-Flow-Smoke-Test-3e0cf-ct-from-Battle-Tower-option-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  13) [chromium] › tests/e2e/smoke.spec.ts:111:3 › Game Flow Smoke Tests › should return to title screen with Escape from menu 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator:  locator('.main-menu')
+    Expected: visible
+    Received: hidden
+    Timeout:  5000ms
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for locator('.main-menu')[22m
+    [2m    6 × locator resolved to <div role="navigation" class="main-menu" aria-label="Main Menu" data-testid="main-menu">…</div>[22m
+    [2m      - unexpected value "hidden"[22m
+
+
+      112 |     // Navigate to menu
+      113 |     await page.keyboard.press('Enter');
+    > 114 |     await expect(page.locator('.main-menu')).toBeVisible();
+          |                                              ^
+      115 |
+      116 |     // Press Escape to go back
+      117 |     await page.keyboard.press('Escape');
+        at /home/geni/Documents/vale-village-v2/tests/e2e/smoke.spec.ts:114:46
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/smoke-Game-Flow-Smoke-Test-43784-creen-with-Escape-from-menu-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/smoke-Game-Flow-Smoke-Test-43784-creen-with-Escape-from-menu-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/smoke-Game-Flow-Smoke-Test-43784-creen-with-Escape-from-menu-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/smoke-Game-Flow-Smoke-Test-43784-creen-with-Escape-from-menu-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/smoke-Game-Flow-Smoke-Test-43784-creen-with-Escape-from-menu-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  14) [chromium] › tests/e2e/smoke.spec.ts:125:3 › Keyboard Navigation › should wrap around menu options 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator:  locator('.main-menu')
+    Expected: visible
+    Received: hidden
+    Timeout:  5000ms
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for locator('.main-menu')[22m
+    [2m    6 × locator resolved to <div role="navigation" class="main-menu" aria-label="Main Menu" data-testid="main-menu">…</div>[22m
+    [2m      - unexpected value "hidden"[22m
+
+
+      126 |     await page.goto('/');
+      127 |     await page.keyboard.press('Enter');
+    > 128 |     await expect(page.locator('.main-menu')).toBeVisible();
+          |                                              ^
+      129 |
+      130 |     // Count enabled options
+      131 |     const enabledOptions = page.locator('.main-menu-option:not(.disabled)');
+        at /home/geni/Documents/vale-village-v2/tests/e2e/smoke.spec.ts:128:46
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/smoke-Keyboard-Navigation-should-wrap-around-menu-options-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/smoke-Keyboard-Navigation-should-wrap-around-menu-options-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/smoke-Keyboard-Navigation-should-wrap-around-menu-options-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/smoke-Keyboard-Navigation-should-wrap-around-menu-options-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/smoke-Keyboard-Navigation-should-wrap-around-menu-options-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  15) [chromium] › tests/e2e/smoke.spec.ts:142:3 › Keyboard Navigation › should ignore disabled menu options during navigation 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator:  locator('.main-menu')
+    Expected: visible
+    Received: hidden
+    Timeout:  5000ms
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for locator('.main-menu')[22m
+    [2m    6 × locator resolved to <div role="navigation" class="main-menu" aria-label="Main Menu" data-testid="main-menu">…</div>[22m
+    [2m      - unexpected value "hidden"[22m
+
+
+      143 |     await page.goto('/');
+      144 |     await page.keyboard.press('Enter');
+    > 145 |     await expect(page.locator('.main-menu')).toBeVisible();
+          |                                              ^
+      146 |
+      147 |     // Continue option should be disabled (no save file)
+      148 |     const continueOption = page.locator('.main-menu-option').filter({ hasText: 'Continue' });
+        at /home/geni/Documents/vale-village-v2/tests/e2e/smoke.spec.ts:145:46
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/smoke-Keyboard-Navigation--e0283-u-options-during-navigation-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/smoke-Keyboard-Navigation--e0283-u-options-during-navigation-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/smoke-Keyboard-Navigation--e0283-u-options-during-navigation-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/smoke-Keyboard-Navigation--e0283-u-options-during-navigation-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/smoke-Keyboard-Navigation--e0283-u-options-during-navigation-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  15 failed
+    [chromium] › tests/e2e/agent_navigation.spec.ts:11:1 › Agent navigation via bridge (stub LLM) ──
+    [chromium] › tests/e2e/boot-purple-page.spec.ts:4:1 › Boot: game canvas is visible ─────────────
+    [chromium] › tests/e2e/gameplay-authentic.spec.ts:91:1 › Authentic Gameplay: Start to Finish (Houses 1-50) 
+    [chromium] › tests/e2e/menu-polish.spec.ts:9:3 › Menu polish P0/P1 › P0 SaveMenu focus restore (MENU-FOCUS-RESTORE) - should restore focus to pause button after closing SaveMenu 
+    [chromium] › tests/e2e/menu-polish.spec.ts:26:3 › Menu polish P0/P1 › P1 Menu test: toolbox action has testid (MENU-TOOLBOX-TESTID) - toolbox action should have testid for automation 
+    [chromium] › tests/e2e/smoke.spec.ts:13:3 › Game Flow Smoke Tests › should display title screen on load 
+    [chromium] › tests/e2e/smoke.spec.ts:20:3 › Game Flow Smoke Tests › should navigate from title to menu on keypress 
+    [chromium] › tests/e2e/smoke.spec.ts:32:3 › Game Flow Smoke Tests › should navigate from title to menu on click 
+    [chromium] › tests/e2e/smoke.spec.ts:43:3 › Game Flow Smoke Tests › should display menu options 
+    [chromium] › tests/e2e/smoke.spec.ts:55:3 › Game Flow Smoke Tests › should highlight menu options with keyboard navigation 
+    [chromium] › tests/e2e/smoke.spec.ts:71:3 › Game Flow Smoke Tests › should start new game and go to overworld 
+    [chromium] › tests/e2e/smoke.spec.ts:83:3 › Game Flow Smoke Tests › should go to team select from Battle Tower option 
+    [chromium] › tests/e2e/smoke.spec.ts:111:3 › Game Flow Smoke Tests › should return to title screen with Escape from menu 
+    [chromium] › tests/e2e/smoke.spec.ts:125:3 › Keyboard Navigation › should wrap around menu options 
+    [chromium] › tests/e2e/smoke.spec.ts:142:3 › Keyboard Navigation › should ignore disabled menu options during navigation 
+  21 skipped
+  4 passed (2.1m)
+
+To open last HTML report run:
+[36m[39m
+[36m  npx playwright show-report[39m
+[36m[39m
