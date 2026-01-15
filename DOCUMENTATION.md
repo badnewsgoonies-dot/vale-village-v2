@@ -38,6 +38,16 @@ Prompt tuning and bridge loading
   Verify the bridge handshake response before issuing commands.
 - Safety: ensure the bridge runs in an isolated environment and that God Mode requires an explicit APPROVAL_TOKEN; log approvals to memory.
 
+## Contributing
+- Fork the repo and create feature branches named `feat/<short-desc>` or `fix/<short-desc>`.
+- Follow commit message conventions and include a concise description and issue reference where applicable.
+- Run `pnpm typecheck` and tests before opening a PR; include unit/e2e results in the PR description.
+
+## Memory usage
+- Before starting work, run the memory briefing: `python3 /home/geni/swarm/memory/mem-briefing.py`.
+- Use semantic search to find related decisions: `python3 /home/geni/swarm/memory/mem-semantic.py "<topic>" --limit 10`.
+- Record decisions and results with: `/home/geni/swarm/memory/mem-db.sh write type=d topic=VV2 text="Decided X because Y" choice=X`.
+
 ## Contribution and Memory Usage
 - Session startup: run `python3 /home/geni/swarm/memory/mem-briefing.py` to get the current briefing.
 - Semantic search: use `python3 /home/geni/swarm/memory/mem-semantic.py "<topic>" --limit 10` to find related memory entries.

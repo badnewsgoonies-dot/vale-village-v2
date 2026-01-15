@@ -8,6 +8,14 @@ This document provides a concise phase plan for the Vale Village v2 project:
 - Phase 4: Release prep (build, performance tuning, packaging)
 - Phase 5: Constants refactor (detailed plan follows)
 
+# PHASE_PLAN - High-level Phase Outline
+This file contains phase plans. High-level phases:
+- Phase 1: Project scaffolding and baseline setup
+- Phase 2: Core constants refactor
+- Phase 3: Overworld rebuild
+- Phase 4: Battle system stabilization
+- Phase 5: Release prep and balance
+
 # Vale Village v2 - Phase 5: Core Constants Refactor
 
 **Date:** January 12, 2026
