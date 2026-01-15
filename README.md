@@ -1,12 +1,16 @@
-Vale Village v2
+# Vale Village v2
 
-This directory was extracted from Documents/vale-village-v2.tar.gz and contains the Vale Village v2 game UI/source.
+Vale Village v2 is a Preact port of a Golden Sun-inspired RPG. This repository contains the game source, assets, tests, and documentation used to develop and maintain the project.
 
-Top-level: agents.sh, src/ (TypeScript/React code), and related assets.
+Project structure
+- src/ — TypeScript source code and UI components (Overworld, battle systems, store slices)
+- tests/ — unit, integration, and e2e tests (Playwright + unit tests)
+- analysis/ — design notes, phase plans, and reports
+- docs/ — extended design documents and migration guides
+- public/, assets/ — static assets and sprite sheets
 
-Quick start:
-- cd Documents/vale-village-v2
-- Inspect package.json (if present), then run npm install and npm run dev or equivalent.
+Quickstart
+- pnpm install
+- pnpm dev
 
-Notes:
-- No README existed in the archive, so this file was added to document the extracted contents.
+See DOCUMENTATION.md for contribution guidelines and memory usage notes.
