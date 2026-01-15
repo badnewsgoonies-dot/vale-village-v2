@@ -133,7 +133,34 @@ Running code search to find dialogue sources and the DialogueBox component so mi
 
 Reading dialogue definitions and locating DialogueBox components to implement pause handling; running file lookups and reading the dialogues file.
 
- code search to find dialogue sources and the DialogueBox component so minimal edits can be applied.
+Made minimal changes to add dramatic pauses to tutorial dialogues and have the dialogue UI respect them.
 
-Reading dialogue definitions and locating DialogueBox components to implement pause handling; running file lookups and reading the dialogues file.
+What changed
+- Added optional pause (ms) to DialogueNodeSchema (src/data/schemas/DialogueSchema.ts).
+- Added pause values (400ms) to tutorial nodes in src/data/definitions/dialogues.ts (Flint intro/outro and Tower guide intro/outro).
+- DialogueBoxV3 now accepts a pause prop and waits before calling onComplete when provided (src/ui/components/dialogue/DialogueBoxV3.tsx).
+- CutsceneDialogueContainer passes the current node's pause into DialogueBoxV3 (src/ui/components/dialogue/CutsceneDialogueContainer.tsx).
 
+Validation
+- Ran typecheck: pnpm typecheck — passed.
+- Ran tests: pnpm test --run — all tests passed (77 files, 303 tests passed; 8 skipped).
+
+Committed as:
+polish(dialogue): add pause support and tutorial pauses for dramatic beats; DialogueBox respects pause before advancing
+
+If you want different pause durations or additional tutorial nodes to receive pauses, specify which lines should feel more dramatic and a preferred ms value.
+
+
+[PHASE 10] Completed: Wed 14 Jan 2026 06:44:43 PM EST
+---
+
+=== JUICE POLISH COMPLETE ===
+Finished: Wed 14 Jan 2026 06:44:48 PM EST
+additional tutorial nodes to receive pauses, specify which lines should feel more dramatic and a preferred ms value.
+
+
+[PHASE 10] Completed: Wed 14 Jan 2026 06:44:43 PM EST
+---
+
+=== JUICE POLISH COMPLETE ===
+Finished: Wed 14 Jan 2026 06:44:48 PM EST
