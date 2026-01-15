@@ -14,10 +14,10 @@ import {
   TOWER_LOBBY_HEIGHT,
   EXIT_ZONE_WIDTH,
   EXIT_ZONE_HEIGHT,
-  VILLAGE_WORLD_WIDTH,
   PLAYER_Y_MIN,
   PLAYER_Y_MAX
 } from '../../ui/components/overworld-v2/data/constants';
+import { VILLAGE_WORLD_WIDTH } from '../../ui/components/overworld-v2/data/villageLayout';
 
 // Minimal Environment Interface needed for collision
 export interface SimEnvironment {
