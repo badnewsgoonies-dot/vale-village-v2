@@ -53,105 +53,120 @@ import { audio } from '../../../core/services/AudioService';
 import { OVERWORLD_CONSTANTS } from '../../../core/constants';
 
 
-import { IntrospectionContract, GameInput, TelemetryEvent } from '../../../core/contracts/introspection';
+import { simStep, SimEnvironment } from '../../../core/simulation/simStep';
 
-interface OverworldV2Props {
-  width?: number;
-  height?: number;
-}
-
-type SceneType = 'overworld' | 'interior';
+// ... (existing imports)
 
 export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }: OverworldV2Props) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const engineRef = useRef<OverworldEngineV2 | null>(null);
-  const playerLayerRef = useRef<PlayerLayer | null>(null);
-  // ... (keep existing refs)
-  const villageLayerRef = useRef<VillageLayer | null>(null);
-  const interiorFloorRef = useRef<InteriorFloorLayer | null>(null);
-  const interiorFurnitureRef = useRef<InteriorFurnitureLayer | null>(null);
-  const interiorNpcRef = useRef<InteriorNpcLayer | null>(null);
-  const interiorBattleTriggeredRef = useRef(false);
-  const encountersLayerRef = useRef<any>(null);
-  const encounterTriggeredRef = useRef<Record<string, boolean>>({});
+  // ... (existing code)
 
-  const keysRef = useRef<Set<string>>(new Set());
-  const touchInputRef = useRef<{ h: number; v: number; action: boolean }>({ h: 0, v: 0, action: false });
-  const lastGamepadStartRef = useRef(false);
-  const lastGamepadActionRef = useRef(false);
-  
-  // Introspection Event Listeners
-  const introspectionListenersRef = useRef<Set<(e: TelemetryEvent) => void>>(new Set());
-
-  // ... (rest of component)
-  
   // --------------------------------------------------------------------------
-  // INTROSPECTION IMPLEMENTATION
+  // GAME DRIVER v1.0 INSTALLATION
   // --------------------------------------------------------------------------
   useEffect(() => {
-    const introspector: IntrospectionContract = {
-      getMetaData: () => ({
-        name: 'Vale Village V2',
-        version: '2.0.0',
-        supportedFeatures: ['overworld', 'interior', 'teleport']
-      }),
+    if (driverInstalledRef.current) return;
+    driverInstalledRef.current = true;
 
-      getState: () => {
-        const pos = playerLayerRef.current?.getPosition() ?? { x: 0, y: 0 };
-        const isMoving = playerLayerRef.current?.getPlayerState().isMoving ?? false;
+    installGameDriver({
+      getState: (): GameState => {
+        // ... (existing getState implementation)
+        const player = playerLayerRef.current;
+        const pos = player?.getPosition() ?? { x: 0, y: 0 };
+        const state = player?.getPlayerState();
         
         return {
-          timestamp: Date.now(),
+          tick: tickRef.current,
           player: {
+            hp: 100, 
+            maxHp: 100,
             position: pos,
-            health: 100, // Placeholder
-            maxHealth: 100,
-            status: isMoving ? 'moving' : 'idle',
-            inventoryCount: 0
+            deaths: 0 
           },
-          level: {
-            id: currentMapId,
-            activeEnemies: 0, // TODO: Count from encountersLayer
-            isCompleted: false
+          world: {
+            levelId: currentMapId,
+            timeElapsed: performance.now() / 1000,
+            enemies: [] 
           },
-          debug: {
-            scene: sceneTypeRef.current,
-            house: currentHouseNumRef.current
+          terminal: { kind: 'running' },
+          flags: {
+            isMoving: state?.isMoving ?? false,
+            scene: sceneTypeRef.current
           }
         };
       },
 
-      sendInput: (input: GameInput) => {
-        if (input.type === 'keydown') {
-          keysRef.current.add(input.key);
-        } else if (input.type === 'keyup') {
-          keysRef.current.delete(input.key);
-        } else if (input.type === 'click') {
-          // TODO: Implement click
+      dispatch: (action: GameAction): DispatchResult => {
+        // 1. Get Current State
+        const currentState = window.__GAME_DRIVER__!.getState(); // Self-reference safe here
+        
+        // 2. Build Environment Context
+        const env: SimEnvironment = {
+            isOverworld: sceneTypeRef.current === 'overworld',
+            isTowerLobby: currentMapId.includes('tower-lobby'),
+            furniture: interiorFurnitureRef.current ?? undefined
+        };
+
+        // 3. Run Simulation Step (Pure Logic)
+        const { state: nextState, terminal } = simStep(currentState, action, env);
+
+        // 4. Apply State (Side Effects)
+        if (playerLayerRef.current) {
+            playerLayerRef.current.setPlayerState({ 
+                x: nextState.player.position.x, 
+                y: nextState.player.position.y 
+            });
+            
+            // Visuals: Facing / Animation
+            if (action.type === 'MOVE') {
+                const { dx, dy } = action;
+                if (dx !== 0 || dy !== 0) {
+                    playerLayerRef.current.setPlayerState({ isMoving: true });
+                    if (dx > 0) playerLayerRef.current.setPlayerState({ facing: 'right' });
+                    else if (dx < 0) playerLayerRef.current.setPlayerState({ facing: 'left' });
+                    else if (dy < 0) playerLayerRef.current.setPlayerState({ facing: 'up' });
+                    else if (dy > 0) playerLayerRef.current.setPlayerState({ facing: 'down' });
+                } else {
+                    playerLayerRef.current.setPlayerState({ isMoving: false });
+                }
+            } else if (action.type === 'NOOP') {
+                playerLayerRef.current.setPlayerState({ isMoving: false });
+            }
         }
+        
+        // Sync Tick
+        tickRef.current = nextState.tick;
+
+        // Sync Joystick (Visual Feedback)
+        if (action.type === 'MOVE') {
+             touchInputRef.current.h = Math.max(-1, Math.min(1, action.dx));
+             touchInputRef.current.v = Math.max(-1, Math.min(1, action.dy));
+        } else if (action.type === 'NOOP') {
+             touchInputRef.current.h = 0;
+             touchInputRef.current.v = 0;
+        }
+
+        // Handle Trigger Flags from Sim
+        if (nextState.flags && nextState.flags['exited_interior']) {
+            exitInterior();
+        }
+
+        // Handle Interact (Separate from SimStep for now, until Interact logic is purified)
+        if (action.type === 'INTERACT') {
+           keysRef.current.add(' ');
+           setTimeout(() => keysRef.current.delete(' '), 100);
+        }
+
+        return { ok: true, terminal };
       },
 
-      reset: async (options) => {
-        if (options?.levelId) {
-           // Use the internal transition logic if possible, or just console log for now
-           console.log("Agent requested reset to", options.levelId);
-        }
-      },
-
-      onEvent: (callback) => {
-        introspectionListenersRef.current.add(callback);
-        return () => introspectionListenersRef.current.delete(callback);
+      resetRun: (seed) => {
+        console.log('[Driver] Resetting run with seed:', seed);
+        window.location.reload();
       }
-    };
+    });
+  }, [currentMapId, exitInterior]); // Added exitInterior dependency
 
-    window.__GAME_INTROSPECTION__ = introspector;
-
-    return () => {
-      delete window.__GAME_INTROSPECTION__;
-    };
-  }, [currentMapId]); // Re-bind if necessary, though refs are stable
-
-  // ... (existing code)
+  // ... (rest of component)
   const playerDomRef = useRef<HTMLImageElement>(null);
   const playerDomContainerRef = useRef<HTMLDivElement>(null);
 
