@@ -4,6 +4,8 @@ test.skip(!process.env.RUN_HEAVY, 'Skipping heavy e2e tests by default');
 test('Gray-box: Direct Battle Injection', async ({ page }) => {
   // 1. Load the game (at root, so we have the environment)
   await page.goto('/');
+  await page.waitForLoadState('networkidle').catch(() => {});
+  await page.waitForSelector('canvas, #app, .game-root, [data-testid="game-root"]', { timeout: 5000 }).catch(() => {});
 
   // 2. Wait for the test hooks to be available
   await page.waitForFunction(() => 

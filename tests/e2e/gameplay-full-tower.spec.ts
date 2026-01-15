@@ -98,6 +98,8 @@ test('Full Tower Run - Complete all 30 floors', async ({ page }) => {
 
   try {
     await page.goto('/');
+    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForSelector('canvas, #app, .game-root, [data-testid="game-root"]', { timeout: 5000 }).catch(() => {});
     await expect(page.locator('.title-screen')).toBeVisible({ timeout: DEFAULT_TIMEOUT });
     await delay(page, 1000);
 

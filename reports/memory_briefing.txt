@@ -1,0 +1,202 @@
+Memory Briefing Report - Thu 15 Jan 2026 10:01:35 AM UTC
+=== mem-briefing.py output ===
+    # Session Briefing
+    _Generated: 2026-01-15 05:01_
+    ## Recent Decisions (24h)
+    - [ci-harness] Building CI validation harness with sim↔driver differential checks. Three guarantees: (1) Determinism lock - same seed+policy produces identical state -> ci-harness-next (1h)
+    - [strategic-orch] Driver v1.0 FROZEN - do not touch except v1.1 additive or v2 breaking. Next: Simulator v1 with interface: reset(seed)->GameState, step(state,action)-> -> simulator-v1-next (5h)
+    - [strategic-orch] Froze Game Driver Contract v1.0 with critical fixes: (1) State is pure data, no methods mixed in (2) Explicit terminal signal {kind: running|win|lose} -> driver-v1-frozen (5h)
+    - [strategic-orch] Updated game-web archetype to Driver v1 pattern: HIGH-LEVEL ACTIONS (dispatch MOVE/ATTACK) instead of input simulation (keydown events). Episode-based -> driver-v1-pattern (6h)
+    - [strategic-orch] Updated game-web archetype to v2.0 incorporating full Upgrades.txt spec: Fun Metrics (Pacing, Novelty, Failure Rate) with scoring/assessment, 30-phase -> archetype-v2-with-fun-metrics (6h)
+    
+    ## Infrastructure
+    - Linux box (10.0.0.52) has NO GPU - CPU only. Previous RTX 4090 entry was incorrect. Windows PC (10.0.0.122) has GTX 1060 6GB. (2025-12-08)
+    - Codex CLI working with local Ollama. Use qwen2.5-coder:7b for tool support. Command: codex --oss. Models: qwen2.5-coder:7b (4.7GB, tools), llama3.2:3b (2GB, tools), gemma3:4b (3.3GB, no tools), deepse (2025-12-02)
+    - Codex CLI v0.63.0 configured for local Ollama: oss_provider=ollama, oss_model=deepseek-coder:6.7b. Use 'codex --oss' to run with local models. Default mode still uses gpt-5.1-codex-max. (2025-12-02)
+    - Windows Ollama setup complete: v0.13.0, gemma3:4b loaded, 63% GPU / 37% CPU offload on GTX 1060 6GB. Generation speed: 21.34 tok/s. LAN IP: 10.0.0.122:11434. OLLAMA_HOST=0.0.0.0 set for network access (2025-12-02)
+    - Ollama v0.13.0 installed on Windows with GPU acceleration. GTX 1060 6GB detected (6144 MiB VRAM, driver 581.57). gemma3:4b model (3.3GB) pulled and ready for inference. (2025-12-02)
+    
+    ## Known Bugs & Issues (7d)
+    - [H][batch-rotation-lane3] {   "lane": 3,   "from_worker": "a",   "thread_id": null,   "decisions": [],   "todos": [],   "risks": [],   "commands_r [@all] (1h)
+    - [H][batch-rotation-lane2] {   "lane": 2,   "from_worker": "a",   "thread_id": null,   "decisions": [],   "todos": [],   "risks": [],   "commands_r [@all] (1h)
+    - [H][batch-rotation-lane1] {   "lane": 1,   "from_worker": "a",   "thread_id": null,   "decisions": [],   "todos": [],   "risks": [],   "commands_r [@all] (1h)
+    - [H][batch-rotation-lane3] {   "lane": 3,   "from_worker": "a",   "thread_id": null,   "decisions": [],   "todos": [],   "risks": [],   "commands_r [@all] (1h)
+    - [H][batch-rotation-lane2] {   "lane": 2,   "from_worker": "b",   "thread_id": null,   "decisions": [],   "todos": [],   "risks": [],   "commands_r [@all] (1h)
+    
+    ## Recent Actions (6h)
+    - [ci-harness] Built CI validation harness v1.0 with: (1) Simulator v1 interface (reset/step, pure state machine) (2) MinimalSimulator reference impl (3) State diffe (1h)
+    
+    ## Recent Handoffs (6h)
+    - [batch-rotation-lane1] {   "lane": 1,   "from_worker": "a",   "thread_id": null,   "decisions": [],   "todos": [],   "risks": [],   "commands_run": 0,   "last_mess [@all] (3m)
+    - [batch-rotation-lane3] {   "lane": 3,   "from_worker": "a",   "thread_id": null,   "decisions": [],   "todos": [],   "risks": [],   "commands_run": 0,   "last_mess [@all] (1h)
+    - [batch-rotation-lane2] {   "lane": 2,   "from_worker": "a",   "thread_id": null,   "decisions": [],   "todos": [],   "risks": [],   "commands_run": 0,   "last_mess [@all] (1h)
+    - [batch-rotation-lane1] {   "lane": 1,   "from_worker": "a",   "thread_id": null,   "decisions": [],   "todos": [],   "risks": [],   "commands_run": 0,   "last_mess [@all] (1h)
+    - [batch-rotation-lane3] {   "lane": 3,   "from_worker": "a",   "thread_id": null,   "decisions": [],   "todos": [],   "risks": [],   "commands_run": 0,   "last_mess [@all] (1h)
+    
+    ## Known Bugs
+    - [FAIL][bug] Blocked on watch_vision run due to missing Steam URL and prompt. (5d)
+    
+    ## Memory Stats
+    - Total entries: 10012
+    - Last 24h: 1924 new entries
+
+=== mem-semantic results ===
+    [1;36m[0.71][0m [1;33mACTION: compression[0m
+      Implement SeCom-style KMeans clustering for old chunks
+      [90m? | research_session[0m
+    
+    [1;36m[0.70][0m [1;33mL: orch_7f6d3a4d[0m
+      Subtask subtask-1 succeeded. Approach: Create `src/game/flow/EarlyGameFlowController.ts` to centralize early-game progression flags (first  Files: /home/geni/Documents/vale-village-v2/src/game/flow/EarlyGameFlowController.ts
+      [90m2025-12-21[0m
+    
+    [1;36m[0.60][0m [1;33mL: orch_8eb9e6de[0m
+      Subtask subtask-1 succeeded. Approach: Create `tools/repo_walk.py` CLI that walks the repo and emits a deterministic JSON summary (tree, fi Files: /home/geni/swarm/memory/tools/repo_walk.py
+      [90m2025-12-21[0m
+    
+    [1;36m[0.60][0m [1;33mL: orch_8eb9e6de[0m
+      Task orch-8eb9e6de lessons: Subtask subtask-1 succeeded. Approach: Create `tools/repo_walk.py` CLI that walks the repo and emits a deterministic JSON summary (tree, fi Files: /home/geni/swarm/memory/tools/repo_walk.py; Subtask subtask-2 succeeded. Approach: Create `tools/repo_walk_test.py` (stdlib `unittest`) to validate JSON shape, determinism, and edge c Files: /home/geni/swarm/memory/tools/repo_walk_test.py
+      [90m2025-12-21[0m
+    
+    [1;36m[0.59][0m [1;33mL: orch_2c8d76d6[0m
+      Task orch-2c8d76d6 lessons: Subtask subtask-1 succeeded. Approach: Modify `src/scenes/MainMenuScene.ts` to make Settings + How-To-Play navigation reliable (no flash),  Files: /home/geni/Documents/vale-village-v2/src/scenes/MainMenuScene.ts; Subtask subtask-2 succeeded. Approach: Modify `src/systems/SceneTransitionManager.ts` to persist and restore player spawn/position across i Files: /home/geni/Documents/vale-village-v2/src/systems/SceneTransitionManager.ts; Subtask subtask-3 succeeded. Approach: Modify `src/scenes/OverworldScene.ts` to use `SceneTransitionManager` when entering/exiting the firs Files: /home/geni/Documents/vale-village-v2/src/scenes/OverworldScene.ts
+      [90m2025-12-21[0m
+    
+    [1;36m[0.59][0m [1;33mL: orch_7f6d3a4d[0m
+      Task orch-7f6d3a4d lessons: Subtask subtask-2 succeeded. Approach: Create `src/game/menus/MenuStackRouter.ts` to fix Settings/How-To-Play navigation (push/pop stack, c Files: /home/geni/Documents/vale-village-v2/src/game/menus/MenuStackRouter.ts; Subtask subtask-3 succeeded. Approach: Update `src/game/menus/PauseMenu.ts` to use `MenuStackRouter` for Settings/How-To-Play open/close an Files: /home/geni/Documents/vale-village-v2/src/game/menus/PauseMenu.ts; Subtask subtask-4 failed. Error: Codex CLI timeout [sig:ad3f7ff4]; Subtask subtask-4 succeeded. Approach: Update `src/game/scenes/HouseInteriorScene.ts` to fix first house entry spawn/position reset (determ Files: /home/geni/Documents/vale-village-v2/src/game/scenes/HouseInteriorScene.ts; Subtask subtask-5 succeeded. Approach: Update `src/game/systems/InputLock.ts` to make input locking reference-counted with scoped acquire/r Files: /home/geni/Documents/vale-village-v2/src/game/systems/InputLock.ts, /home/geni/Documents/vale-village-v2/src/input/InputLock.ts
+      [90m2025-12-21[0m
+    
+    [1;36m[0.58][0m [1;33mL: orch_2c8d76d6[0m
+      Subtask subtask-1 succeeded. Approach: Modify `src/scenes/MainMenuScene.ts` to make Settings + How-To-Play navigation reliable (no flash),  Files: /home/geni/Documents/vale-village-v2/src/scenes/MainMenuScene.ts
+      [90m2025-12-21[0m
+    
+    [1;36m[0.57][0m [1;33mL: orch_7f6d3a4d[0m
+      Subtask subtask-2 succeeded. Approach: Create `src/game/menus/MenuStackRouter.ts` to fix Settings/How-To-Play navigation (push/pop stack, c Files: /home/geni/Documents/vale-village-v2/src/game/menus/MenuStackRouter.ts
+      [90m2025-12-21[0m
+    
+    [1;36m[0.57][0m [1;33mL: orch_7f6d3a4d[0m
+      Subtask subtask-5 succeeded. Approach: Update `src/game/systems/InputLock.ts` to make input locking reference-counted with scoped acquire/r Files: /home/geni/Documents/vale-village-v2/src/game/systems/InputLock.ts, /home/geni/Documents/vale-village-v2/src/input/InputLock.ts
+      [90m2025-12-21[0m
+    
+    [1;36m[0.57][0m [1;33mL: orch_2c8d76d6[0m
+      Subtask subtask-3 succeeded. Approach: Modify `src/scenes/OverworldScene.ts` to use `SceneTransitionManager` when entering/exiting the firs Files: /home/geni/Documents/vale-village-v2/src/scenes/OverworldScene.ts
+      [90m2025-12-21[0m
+    
+
+=== mem-db recent decisions ===
+    [DECISION] ci-harness
+      Building CI validation harness with sim↔driver differential checks. Three guarantees: (1) Determinism lock - same seed+policy produces identical state in both sim and driver (2) Sim↔Driver differential oracle - detect when engine and driver disagree about reality (3) Policy-agnostic execution - harness doesn't care what policy is used
+      Choice: ci-harness-next
+      1h ago | ?
+    
+    [DECISION] strategic-orch
+      Driver v1.0 FROZEN - do not touch except v1.1 additive or v2 breaking. Next: Simulator v1 with interface: reset(seed)->GameState, step(state,action)->{state,terminal,reward}, legalActions(state)->GameAction[]. Must be: pure (no mutation), deterministic (same seed = same trajectory), shared logic (same reducer as live game), fast (no rendering/DOM/async), compatible (exact same schemas). This is the unlock for MCTS/self-play.
+      Choice: simulator-v1-next
+      5h ago | ? | imp=H
+    
+    [DECISION] strategic-orch
+      Froze Game Driver Contract v1.0 with critical fixes: (1) State is pure data, no methods mixed in (2) Explicit terminal signal {kind: running|win|lose} (3) dispatch() returns DispatchResult envelope, not void (4) Tick increments after each dispatch. Agent renamed to "stress tester" - true MCTS requires Simulator layer (pure, cloneable state).
+      Choice: driver-v1-frozen
+      5h ago | ? | imp=H
+    
+    [DECISION] strategic-orch
+      Updated game-web archetype to Driver v1 pattern: HIGH-LEVEL ACTIONS (dispatch MOVE/ATTACK) instead of input simulation (keydown events). Episode-based runs with seeds for reproducibility. State-first (no pixels). This is the "boringly dependable" approach from the critique. Old introspection_contract.ts replaced with driver.ts.
+      Choice: driver-v1-pattern
+      6h ago | ? | imp=H
+    
+    [DECISION] strategic-orch
+      Updated game-web archetype to v2.0 incorporating full Upgrades.txt spec: Fun Metrics (Pacing, Novelty, Failure Rate) with scoring/assessment, 30-phase map reference, balancing guidance, enhanced worker instructions. run_agent.py now computes and reports Fun Metrics with actionable assessments.
+      Choice: archetype-v2-with-fun-metrics
+      6h ago | ? | imp=H
+    
+    [DECISION] strategic-orch
+      Implemented archetype system for strategic orchestrator. Archetypes provide project templates with built-in autonomous testing (Playwright). game-web archetype scaffolds introspection contract, injects bootstrap phase-0-introspect, and appends verification playtest phase. Auto-detects based on goal keywords or package.json deps.
+      Choice: archetype-system-implemented
+      6h ago | ? | imp=H
+    
+    [DECISION] vale-village-v2
+      Stopped expansion orchestrator (phase 28/50). Starting JUICE orchestrator focused on feel/polish: ability icons, reduced starter abilities, transitions, summon UI, djinn display, tutorial pacing.
+      Choice: juice-over-content
+      10h ago | ?
+    
+    [DECISION] mcp-tools
+      Added strategic orchestrator tools to MCP server: strategic_orch_start (background launch), strategic_orch_status (state/progress), strategic_orch_stop (graceful shutdown)
+      Choice: implemented
+      11h ago | ?
+    
+    [DECISION] vision-pipeline
+      Replaced vision pipeline scripts with v2.1 gold-standard implementations: watch_vision.py, batch_watch_vision.py, synthesize_vision.py, update_manifesto_from_vision.py, fetch_100_indies.py. New features: idempotent chunked processing, schema-validated outputs, risk detector, panic fallback mode.
+      Choice: v2.1-gold-standard
+      16h ago | ? | imp=H
+    
+    [DECISION] orchestrator
+      Added Claude Haiku workers as alternative to Copilot/GPT workers in batch orchestration. New scripts/claude_agent.sh supports LANE_RUNNER=claude|claude-haiku|haiku|claude-sonnet|sonnet|claude-opus|opus. Uses claude -p (headless mode) with same interface as copilot_agent_v21.sh: handoffs, memory context, CAPSULE output format.
+      Choice: claude-workers-implemented
+      17h ago | ?
+    
+
+=== Repo Integration Points ===
+
+package.json scripts:
+    {
+      "dev": "vite",
+      "build": "vite build",
+      "build:typecheck": "tsc && vite build",
+      "preview": "vite preview",
+      "typecheck": "tsc --noEmit",
+      "lint": "eslint src --ext .ts,.tsx",
+      "test": "vitest run",
+      "test:watch": "vitest",
+      "test:coverage": "vitest run --coverage",
+      "test:e2e": "playwright test",
+      "test:e2e:headed": "playwright test --headed",
+      "test:e2e:ui": "playwright test --ui",
+      "test:e2e:journey": "playwright test tests/e2e/gameplay-journey.spec.ts",
+      "test:e2e:demo": "DEMO_MODE=true playwright test --headed tests/e2e/gameplay-demo.spec.ts",
+      "test:e2e:demo:ui": "DEMO_MODE=true playwright test --ui tests/e2e/gameplay-demo.spec.ts",
+      "test:all": "pnpm test && pnpm test:e2e",
+      "test:e2e:tower": "playwright test --headed tests/e2e/gameplay-full-tower.spec.ts",
+      "test:e2e:tower:demo": "DEMO_MODE=true playwright test --headed tests/e2e/gameplay-full-tower.spec.ts"
+    }
+
+tsconfig.json summary:
+
+Test folders:
+    total 40
+    drwxrwxr-x  5 geni geni 4096 Jan 15 04:55 .
+    drwxrwxr-x 27 geni geni 4096 Jan 15 04:56 ..
+    drwxrwxr-x  6 geni geni 4096 Jan 15 03:19 e2e
+    drwxrwxr-x  2 geni geni 4096 Jan 14 23:06 integration
+    -rw-rw-r--  1 geni geni 2274 Jan 14 23:06 replay.spec.ts
+    -rw-rw-r--  1 geni geni   45 Jan 14 11:45 repro_bug_003.test.ts
+    -rw-rw-r--  1 geni geni 2915 Jan 14 11:45 repro_bug_011.test.ts
+    -rw-rw-r--  1 geni geni  269 Jan 14 11:45 setup.ts
+    -rw-rw-r--  1 geni geni 1675 Jan 15 04:44 simulator.test.ts
+    drwxrwxr-x 12 geni geni 4096 Jan 14 23:06 unit
+
+src/ui/state slices:
+    total 168
+    drwxrwxr-x  3 geni geni  4096 Jan 14 23:06 .
+    drwxrwxr-x 11 geni geni  4096 Jan 14 23:06 ..
+    -rw-rw-r--  1 geni geni   481 Jan 14 23:06 ambient-zustand.d.ts
+    -rw-rw-r--  1 geni geni  5291 Jan 14 11:45 battleConfig.ts
+    -rw-rw-r--  1 geni geni 10841 Jan 14 23:06 battleSlice.ts
+    -rw-rw-r--  1 geni geni  1562 Jan 14 23:06 devModeSlice.ts
+    -rw-rw-r--  1 geni geni 13642 Jan 14 23:06 dialogueSlice.ts
+    -rw-rw-r--  1 geni geni  2358 Jan 14 23:06 fanfareSlice.ts
+    -rw-rw-r--  1 geni geni 15724 Jan 14 23:06 gameFlowSlice.ts
+    -rw-rw-r--  1 geni geni  1499 Jan 14 11:45 inventorySlice.ts
+    -rw-rw-r--  1 geni geni  3251 Jan 14 11:45 overworldSlice.ts
+    -rw-rw-r--  1 geni geni 16592 Jan 14 23:06 queueBattleSlice.ts
+    -rw-rw-r--  1 geni geni  4982 Jan 14 11:45 rewardsSlice.ts
+    -rw-rw-r--  1 geni geni 16608 Jan 14 23:06 saveSlice.ts
+    -rw-rw-r--  1 geni geni  2410 Jan 14 23:06 store.ts
+    -rw-rw-r--  1 geni geni  3889 Jan 14 11:45 storySlice.ts
+    -rw-rw-r--  1 geni geni  5545 Jan 14 11:45 teamSlice.ts
+    drwxrwxr-x  2 geni geni  4096 Jan 14 23:06 __tests__
+    -rw-rw-r--  1 geni geni 13812 Jan 14 23:06 towerSlice.ts
+    -rw-rw-r--  1 geni geni  1801 Jan 14 23:06 types.ts
+
+CI/validation-relevant decisions (3-item summary):
+    - [DECISION] ci-harness
+    -   Building CI validation harness with sim↔driver differential checks. Three guarantees: (1) Determinism lock - same seed+policy produces identical state in both sim and driver (2) Sim↔Driver differential oracle - detect when engine and driver disagree about reality (3) Policy-agnostic execution - harness doesn't care what policy is used
+    -   Choice: ci-harness-next

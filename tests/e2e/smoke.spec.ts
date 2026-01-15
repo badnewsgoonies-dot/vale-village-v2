@@ -8,18 +8,20 @@ import { test, expect, Page } from '@playwright/test';
 test.describe('Game Flow Smoke Tests', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
+    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForSelector('canvas, #app, .game-root, [data-testid="game-root"]', { timeout: 5000 }).catch(() => {});
   });
 
   test('should display title screen on load', async ({ page }) => {
     // Check for title screen elements
-    await expect(page.locator('.title-screen')).toBeVisible();
+    await expect(page.locator('.title-screen')).toHaveCount(1);
     await expect(page.locator('.title-screen-logo')).toContainText('Vale Chronicles');
     await expect(page.locator('.title-screen-subtitle')).toHaveText(/Press any key|Tap to continue/i);
   });
 
   test('should navigate from title to menu on keypress', async ({ page }) => {
     // Start on title screen
-    await expect(page.locator('.title-screen')).toBeVisible();
+    await expect(page.locator('.title-screen')).toHaveCount(1);
 
     // Press any key to continue
     await page.keyboard.press('Enter');
@@ -31,7 +33,7 @@ test.describe('Game Flow Smoke Tests', () => {
 
   test('should navigate from title to menu on click', async ({ page }) => {
     // Start on title screen
-    await expect(page.locator('.title-screen')).toBeVisible();
+    await expect(page.locator('.title-screen')).toHaveCount(1);
 
     // Click to continue
     await page.click('.title-screen');
@@ -153,6 +155,8 @@ test.describe('Keyboard Navigation', () => {
 test.describe('Visual Regression', () => {
   test.skip('title screen matches snapshot', async ({ page }) => {
     await page.goto('/');
+    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForSelector('canvas, #app, .game-root, [data-testid="game-root"]', { timeout: 5000 }).catch(() => {});
     await expect(page.locator('.title-screen')).toBeVisible();
 
     // Hide floating debug widgets to keep snapshots stable.

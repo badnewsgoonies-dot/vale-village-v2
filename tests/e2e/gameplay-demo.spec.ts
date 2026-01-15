@@ -258,6 +258,8 @@ test('Gameplay demo - watch the game play through automatically', async ({ page 
   }
 
   await page.goto('/');
+  await page.waitForLoadState('networkidle').catch(() => {});
+  await page.waitForSelector('canvas, #app, .game-root, [data-testid="game-root"]', { timeout: 5000 }).catch(() => {});
   await expect(page.locator('.title-screen')).toBeVisible({ timeout: DEFAULT_TIMEOUT });
   await demoDelay(page, 2000); // Pause on title screen
 
