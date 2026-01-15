@@ -138,7 +138,7 @@ export function simStep(
   return { state: next, terminal: next.terminal };
 }
 
-export function getLegalActions(state: GameState, env: SimEnvironment): GameAction[] {
+export function getLegalActions(_state: GameState, _env: SimEnvironment): GameAction[] {
   // Standard set of actions for this game mode
   // In a more complex game, we might filter 'INTERACT' based on proximity
   // or remove 'MOVE' if stunned/locked.
