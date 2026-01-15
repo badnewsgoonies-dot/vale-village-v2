@@ -38,7 +38,6 @@ export class GameLoop {
 
   processCommand(cmd: string) {
     // Minimal deterministic handler: log for smoke tests and future wiring
-    // eslint-disable-next-line no-console
     console.info("[GameLoop] processed command:", String(cmd));
   }
 }
