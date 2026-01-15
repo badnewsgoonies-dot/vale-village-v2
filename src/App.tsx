@@ -20,6 +20,7 @@ import { ENCOUNTER_TO_POST_BATTLE_DIALOGUE } from '@/data/definitions/postBattle
 import type { GameFlowSlice } from './ui/state/gameFlowSlice';
 import { TransitionSpiral } from './ui/components/TransitionSpiral';
 import { DevModeOverlay } from './ui/components/debug/DevModeOverlay';
+import { installGameDriver, GameState, GameAction, DispatchResult } from './dev/driver';
 
 // Wrapper that reads team-select props from V1 store
 const TeamSelectWrapper: FunctionComponent = () => {
@@ -374,6 +375,30 @@ function useStoreSync() {
 
 const App: FunctionComponent = () => {
   useStoreSync();
+
+  // --------------------------------------------------------------------------
+  // GLOBAL DRIVER INSTALLATION (Fallback/Menu)
+  // --------------------------------------------------------------------------
+  useEffect(() => {
+    // Only install if not already present (OverworldV2 might have installed a specific one)
+    if (typeof window !== 'undefined' && !(window as any).__GAME_DRIVER__) {
+       installGameDriver({
+         getState: (): GameState => ({
+           tick: Date.now(),
+           player: { hp: 100, maxHp: 100, position: { x: 0, y: 0 }, deaths: 0 },
+           world: { levelId: 'menu', timeElapsed: 0, enemies: [] },
+           terminal: { kind: 'running' },
+           flags: { menu: true }
+         }),
+         dispatch: (action: GameAction): DispatchResult => {
+           console.log('[MenuDriver] Dispatch:', action);
+           // Simple key simulation for menus could go here
+           return { ok: true, terminal: { kind: 'running' } };
+         },
+         resetRun: () => window.location.reload()
+       });
+    }
+  }, []);
 
   const setMode = useStore((s) => s.setMode);
 
