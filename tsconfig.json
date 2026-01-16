@@ -33,6 +33,6 @@
       "@state/*": ["src/state/*"]
     }
   },
-  "include": ["validation"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src"],
+  "exclude": ["node_modules", "dist", "src/core/stateManager.ts", "src/core/loader.ts", "src/core/simulator.ts", "validation"]
 }

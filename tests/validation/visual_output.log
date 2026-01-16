@@ -1,0 +1,4 @@
+--- Running visual: pnpm run visual --silent ---
+ ERR_PNPM_NO_SCRIPT  Missing script: visual
+
+Command "visual" not found.

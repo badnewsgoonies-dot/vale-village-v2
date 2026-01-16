@@ -1,0 +1,15 @@
+{
+  "bucket": "anchor",
+  "timestamp": "2026-01-16T03:55:52Z",
+  "text": "CI-local run: unit tests passed (343), typecheck failed, coverage generation failed (ENOENT), e2e partially executed; see tests/validation for logs",
+  "anchor_type": "R",
+  "anchor_topic": "VV2",
+  "anchor_choice": "partial",
+  "anchor_hash": "569b123d87dec52f2f0e8d1c7053d9dc0cd288b64b5cfa7f85db086fba55425b",
+  "scope": "shared",
+  "visibility": "public",
+  "trust_level": "untrusted",
+  "id": 19740,
+  "deduped": false,
+  "safety_result": null
+}

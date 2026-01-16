@@ -1,0 +1,34 @@
+{
+  "timestamp": "2026-01-16T03:08:18.482Z",
+  "overallPass": true,
+  "results": [
+    {
+      "name": "main-menu.png",
+      "baseline": {
+        "file": "main-menu.png",
+        "size": 400988,
+        "sha256": "ba3a9d7888710529c0e6e676991ed84ecea87815feb36b2a7b9d09abe51ad2d3"
+      },
+      "other": {
+        "file": "main-menu-chromium-linux.png",
+        "size": 400988,
+        "sha256": "ba3a9d7888710529c0e6e676991ed84ecea87815feb36b2a7b9d09abe51ad2d3"
+      },
+      "equal": true
+    },
+    {
+      "name": "title-screen.png",
+      "baseline": {
+        "file": "title-screen.png",
+        "size": 476717,
+        "sha256": "222ae27867116e87e3da904a630ef864d638f9298428f8e1604be2bef0ae3fdc"
+      },
+      "other": {
+        "file": "title-screen-chromium-linux.png",
+        "size": 476717,
+        "sha256": "222ae27867116e87e3da904a630ef864d638f9298428f8e1604be2bef0ae3fdc"
+      },
+      "equal": true
+    }
+  ]
+}

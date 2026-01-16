@@ -1,6 +1,14 @@
-import { GameState, GameAction, TerminalState } from '../../dev/driver';
+import { GameState, GameAction, TerminalState } from '../../driver';
 import { clamp } from '../../ui/components/overworld-v2/engine/math';
 import { clampPlayerXToWorldBounds } from '../../ui/components/overworld-v2/engine/playerBounds';
+
+// Shared combat logic (SINGLE SOURCE OF TRUTH)
+import {
+  resolvePlayerAttack,
+  processEnemyAttacks,
+  processEnemyMovement,
+  checkTerminal,
+} from '../logic';
 import { 
   PLAYER_MOVE_SPEED, 
   INTERIOR_PLAYER_SPEED, 
@@ -48,11 +56,20 @@ export function simStep(
     dy = action.dy;
   }
 
-  const isMoving = dx !== 0 || dy !== 0;
-  // TODO: Update player.status = 'moving' | 'idle' in schema? 
-  // For now just position.
+  // Handle ATTACK action (uses shared combat logic)
+  if (action.type === 'ATTACK' && env.isOverworld) {
+    resolvePlayerAttack(next, action.targetId);
+  }
 
-  if (!isMoving) {
+  const isMoving = dx !== 0 || dy !== 0;
+
+  if (!isMoving && action.type !== 'ATTACK') {
+    // NOOP or INTERACT - still process enemy turn
+    if (env.isOverworld && next.world.enemies.length > 0) {
+      processEnemyMovement(next);
+      processEnemyAttacks(next);
+      next.terminal = checkTerminal(next);
+    }
     next.tick += 1;
     return { state: next, terminal: next.terminal };
   }
@@ -134,6 +151,15 @@ export function simStep(
      }
   }
 
+  // 7. Combat Processing (overworld only)
+  if (env.isOverworld && next.world.enemies.length > 0) {
+    processEnemyMovement(next);
+    processEnemyAttacks(next);
+  }
+
+  // 8. Check terminal conditions
+  next.terminal = checkTerminal(next);
+
   next.tick += 1;
   return { state: next, terminal: next.terminal };
 }
@@ -148,6 +174,7 @@ export function getLegalActions(_state: GameState, _env: SimEnvironment): GameAc
     { type: 'MOVE', dx: 0, dy: 1 },  // Down
     { type: 'MOVE', dx: -1, dy: 0 }, // Left
     { type: 'MOVE', dx: 1, dy: 0 },  // Right
+    { type: 'ATTACK' },  // Combat action
     { type: 'INTERACT' }
   ];
 }
