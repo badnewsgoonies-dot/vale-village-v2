@@ -36,9 +36,8 @@ export class HudLayer implements Layer {
     const w = 32;
     const h = 4;
     
-    // Determine maxHP based on type (simple heuristic until maxHP is in EnemyState)
-    const maxHp = enemy.type === 'skeleton' ? 45 : 30;
-    const pct = Math.max(0, Math.min(1, enemy.hp / maxHp));
+    // Use real maxHp from state
+    const pct = Math.max(0, Math.min(1, enemy.hp / enemy.maxHp));
 
     // Background
     ctx.fillStyle = 'rgba(0,0,0,0.5)';
