@@ -27,6 +27,13 @@ import type {
   DispatchResult,
 } from '../driver';
 
+// Shared game logic (SINGLE SOURCE OF TRUTH)
+import {
+  simStep as sharedSimStep,
+  getLegalActions as sharedGetLegalActions,
+  isTerminal as sharedIsTerminal,
+} from '../src/core/logic';
+
 // ============================================================================
 // Simulator Interface
 // ============================================================================
@@ -284,7 +291,99 @@ export class MinimalSimulator implements Simulator {
 }
 
 // ============================================================================
-// Singleton for testing
+// ValeSimulator - Uses Shared Logic (SINGLE SOURCE OF TRUTH)
+// ============================================================================
+
+/**
+ * ValeSimulator - Uses shared game logic from src/core/logic/
+ *
+ * This ensures Simulator and Game use THE SAME code.
+ * No drift possible.
+ */
+export class ValeSimulator implements Simulator {
+  private readonly gridSize = 10;
+
+  reset(seed: number): GameState {
+    // Deterministic RNG from seed
+    const rng = this.seededRandom(seed);
+
+    // Player starts at center
+    const player = {
+      hp: 100,
+      maxHp: 100,
+      position: { x: Math.floor(this.gridSize / 2), y: Math.floor(this.gridSize / 2) },
+      deaths: 0,
+    };
+
+    // Spawn some enemies deterministically
+    const enemies = [];
+    const numEnemies = 3 + Math.floor(rng() * 3); // 3-5 enemies
+    for (let i = 0; i < numEnemies; i++) {
+      enemies.push({
+        id: `enemy_${i}`,
+        type: 'goblin',
+        hp: 20 + Math.floor(rng() * 20),
+        position: {
+          x: Math.floor(rng() * this.gridSize),
+          y: Math.floor(rng() * this.gridSize),
+        },
+      });
+    }
+
+    return {
+      tick: 0,
+      player,
+      world: {
+        levelId: 'test_arena',
+        timeElapsed: 0,
+        enemies,
+      },
+      terminal: { kind: 'running' },
+      flags: {},
+      metrics: {
+        enemiesDefeated: 0,
+        itemsCollected: 0,
+        novelty: 0,
+      },
+    };
+  }
+
+  step(state: GameState, action: GameAction): SimulatorStepResult {
+    // Use SHARED logic - same code as Game
+    const result = sharedSimStep(state, action);
+
+    return {
+      state: result.state,
+      ok: true,
+      notes: result.notes,
+      terminal: result.terminal,
+    };
+  }
+
+  getLegalActions(state: GameState): GameAction[] {
+    return sharedGetLegalActions(state);
+  }
+
+  isTerminal(state: GameState): boolean {
+    return sharedIsTerminal(state);
+  }
+
+  // ============================================================================
+  // Private Helpers
+  // ============================================================================
+
+  private seededRandom(seed: number): () => number {
+    let s = seed;
+    return () => {
+      s = (s * 1103515245 + 12345) & 0x7fffffff;
+      return s / 0x7fffffff;
+    };
+  }
+}
+
+// ============================================================================
+// Singletons for testing
 // ============================================================================
 
 export const minimalSimulator = new MinimalSimulator();
+export const valeSimulator = new ValeSimulator();

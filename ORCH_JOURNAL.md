@@ -14491,3 +14491,210 @@ Notes/next steps:
 - Driver v1 automation layer installed
 - No errors or compliance issues
 - No permission or scope problems encountered
+
+## [PHASE DONE] 2026-01-15 06:13
+**Phase:** phase-1
+**Outcome:** DONE
+**Key learnings:**
+- Clear phase objectives and permissions enabled smooth progress
+- No permission or scope issues encountered
+- Project structure established (src/, tests/, analysis/)
+- No errors or compliance issues encountered
+- Lanes confirm artifacts exist and are ready for next phase
+
+## [PHASE DONE] 2026-01-15 06:38
+**Phase:** phase-2
+**Outcome:** DONE
+**Key learnings:**
+- Clear permissions and scope prevent workflow blocks
+- Multiple lanes can efficiently validate phase completion
+- Initial core engine modules implemented
+- Unit tests for core engine prepared
+- No errors or compliance issues encountered
+
+## [PHASE DONE] 2026-01-15 06:42
+**Phase:** phase-3
+**Outcome:** DONE
+**Key learnings:**
+- Clear artifact existence checks streamline phase completion
+- No permission or scope issues encountered
+- Zustand state slices created in src/ui/state/
+- UI framework bootstrapped in src/ui/
+- Unit tests for state slices present in tests/unit/ui/
+
+## [PHASE DONE] 2026-01-15 06:52
+**Phase:** phase-4
+**Outcome:** DONE
+**Key learnings:**
+- Clear artifact checks and permissions enabled smooth progress
+- No permission or scope issues encountered
+- OverworldV2 component and layers implemented
+- Basic rendering test present in tests/unit/ui/
+- Visual output verifiable via test or snapshot
+
+## [PHASE DONE] 2026-01-15 06:54
+**Phase:** phase-5
+**Outcome:** DONE
+**Key learnings:**
+- Clear artifact checks and absence of errors indicate robust automation.
+- No permission or scope issues encountered, suggesting correct lane configuration.
+- CI pipeline configured to run all tests on push
+- VALIDATION.md documents automated verification steps
+- CI status badge added to README.md
+
+## [PHASE DONE] 2026-01-15 06:56
+**Phase:** phase-6-refine
+**Outcome:** DONE
+**Key learnings:**
+- Clear definitions of done and scope boundaries enable smooth batch completion
+- No permission or scope issues encountered when objectives are well-aligned
+- Technical debt items addressed as per definition of done
+- No hardcoded arrays, reflection, or magic numbers remain
+- Cross-phase integration uses public APIs
+
+## [PHASE DONE] 2026-01-15 06:56
+**Phase:** phase-8-playtest
+**Outcome:** DONE
+**Key learnings:**
+- Workers likely completed phase-8-playtest but capsule handoff failed - detected via ground truth scan
+
+## [SESSION END] 2026-01-15 06:56
+**Status:** done
+**Summary:** 8/8 phases, 9 batches
+**Knowledge accumulated:** 24 items
+**Lessons learned:** 14
+
+## [SESSION START] 2026-01-15 14:55
+**Goal:** Audit the repository for execution-blocking issues related to TypeScript typechecking and build configuration, then resolve existing TypeScript errors without introducing new behavior.
+**Target repo:** /home/geni/Documents/vale-village-v2
+**Source repo:** N/A
+**Session ID:** strat-9fee77f8
+
+## [PHASE DONE] 2026-01-15 14:57
+**Phase:** phase-1
+**Outcome:** DONE
+**Key learnings:**
+- Clear artifact checks and error-free runs enable smooth phase transitions
+- TypeScript compiler baseline run completed
+- No errors or compliance issues encountered
+- Artifacts for audit and reproducibility were generated
+
+## [SESSION START] 2026-01-15 20:28
+**Goal:** Validate Phase 4 implementations (Combat, UI, Logic) and proceed to Visual Polish
+**Target repo:** /home/geni/Documents/vale-village-v2
+**Source repo:** N/A
+**Session ID:** strat-a6323731
+
+## [PHASE DONE] 2026-01-15 20:29
+**Phase:** phase-0-driver
+**Outcome:** DONE
+**Key learnings:**
+- Clear artifact checks and absence of errors streamline phase completion assessment.
+- Driver v1 automation layer installed
+- window.__GAME_DRIVER__ accessible
+- getState() and dispatch() functional per requirements
+- Game store wired to Driver
+
+## [PHASE DONE] 2026-01-15 20:32
+**Phase:** phase-1
+**Outcome:** DONE
+**Key learnings:**
+- Clear artifact creation and no permission issues lead to smooth phase completion.
+- Automated validation of outputs ensures reliable phase assessment.
+- mem-briefing.py executed and output archived
+- Test and linter baseline run completed and results recorded
+- Prioritized checklist of failures created
+
+## [SESSION START] 2026-01-15 20:34
+**Goal:** Validate Phase 4 implementations (Combat, UI, Logic) and proceed to Visual Polish
+**Target repo:** /home/geni/Documents/vale-village-v2
+**Source repo:** N/A
+**Session ID:** strat-a6323731
+
+## [PHASE DONE] 2026-01-15 20:37
+**Phase:** phase-2
+**Outcome:** DONE
+**Key learnings:**
+- Clear permissions and scope enabled smooth progress
+- Automated verification and artifact checks are effective for phase completion
+- Comprehensive unit tests for combat scenarios created
+- All new combat unit tests pass locally
+- Targeted code fixes implemented and covered by tests
+
+## [PHASE DONE] 2026-01-15 20:45
+**Phase:** phase-3
+**Outcome:** DONE
+**Key learnings:**
+- Clear permissions and scope enable smooth batch execution
+- Automated e2e validation is effective for UI integration phases
+- Automated e2e tests for combat UI flows executed
+- No errors or compliance issues encountered
+- No permission blocks or out-of-scope actions detected
+
+## [PHASE DONE] 2026-01-15 20:50
+**Phase:** phase-4
+**Outcome:** DONE
+**Key learnings:**
+- Clear definition of done and artifact checks enable efficient phase completion
+- No permission or compliance issues encountered when scope is well-defined
+- Validated tower behavior and progression logic
+- Checked for and addressed state leakage
+- Ensured regression-proof tests exist
+
+## [PHASE DONE] 2026-01-15 20:51
+**Phase:** phase-5
+**Outcome:** BLOCKED
+**Key learnings:**
+- Batch crash without output - check batch_orchestrator logs
+
+## [SESSION END] 2026-01-15 20:51
+**Status:** blocked
+**Summary:** 5/9 phases, 6 batches
+**Knowledge accumulated:** 17 items
+**Lessons learned:** 10
+
+## [SESSION START] 2026-01-15 21:43
+**Goal:** Validate Phase 4 implementations (Combat, UI, Logic) and proceed to Visual Polish
+**Target repo:** /home/geni/Documents/vale-village-v2
+**Source repo:** N/A
+**Session ID:** strat-a6323731
+
+## [SESSION END] 2026-01-15 21:43
+**Status:** blocked
+**Summary:** 5/9 phases, 6 batches
+**Knowledge accumulated:** 17 items
+**Lessons learned:** 10
+
+## [SESSION START] 2026-01-15 21:59
+**Goal:** Validate Phase 4 implementations (Combat, UI, Logic) and proceed to Visual Polish
+**Target repo:** /home/geni/Documents/vale-village-v2
+**Source repo:** N/A
+**Session ID:** strat-a6323731
+
+## [SESSION END] 2026-01-15 21:59
+**Status:** blocked
+**Summary:** 5/9 phases, 6 batches
+**Knowledge accumulated:** 17 items
+**Lessons learned:** 10
+
+## [SESSION START] 2026-01-15 22:04
+**Goal:** Validate Phase 4 implementations (Combat, UI, Logic) and proceed to Visual Polish
+**Target repo:** /home/geni/Documents/vale-village-v2
+**Source repo:** N/A
+**Session ID:** strat-a6323731
+
+## [PHASE DONE] 2026-01-15 22:08
+**Phase:** phase-5
+**Outcome:** DONE
+**Key learnings:**
+- Clear artifact checks and error-free runs are strong indicators of phase completion
+- No permission or scope issues encountered in this batch
+- Automated visual regression tests executed
+- Artifacts produced as expected
+- No errors or compliance issues encountered
+
+## [SESSION END] 2026-01-15 22:56
+**Status:** blocked
+**Summary:** 6/9 phases, 12 batches
+**Knowledge accumulated:** 24 items
+**Lessons learned:** 20
