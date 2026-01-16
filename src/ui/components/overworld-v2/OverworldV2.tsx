@@ -55,6 +55,9 @@ import { OVERWORLD_CONSTANTS } from '../../../core/constants';
 
 import { simStep, SimEnvironment } from '../../../core/simulation/simStep';
 import type { SceneType } from '../overworld/systems/SceneTransition';
+import { installGameDriver } from '../../../driver';
+import { spawnEnemies, type EnemyState } from '../../../core/logic';
+import { HudLayer } from './layers/HudLayer';
 
 // Minimal props for this component
 type OverworldV2Props = { width?: number; height?: number };
@@ -75,6 +78,10 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
   const interiorBattleTriggeredRef = useRef<boolean>(false);
   const encounterTriggeredRef = useRef<Record<string, boolean>>({});
   const tickRef = useRef<number>(0);
+  const startTimeRef = useRef<number>(0);
+  const enemiesRef = useRef<EnemyState[]>([]);
+  const playerStatsRef = useRef({ hp: 100, maxHp: 100 });
+  const metricsRef = useRef({ enemiesDefeated: 0, itemsCollected: 0, novelty: 0 });
   const touchInputRef = useRef<{ h: number; v: number; action: boolean }>({ h: 0, v: 0, action: false });
   const keysRef = useRef<Set<string>>(new Set());
   const lastGamepadStartRef = useRef<boolean>(false);
@@ -123,6 +130,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
   // Audio: Play Overworld BGM
   useEffect(() => {
     audio.playBGM('overworld');
+    enemiesRef.current = spawnEnemies();
   }, []);
 
   // ... (existing code)
@@ -136,12 +144,8 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
     if (driverInstalledRef.current) return;
     driverInstalledRef.current = true;
 
-    const installer = (window as any).installGameDriver;
-    if (!installer) return;
-
-    installer({
+    installGameDriver({
         getState: (): any => {
-          // ... (existing getState implementation)
           const player = playerLayerRef.current;
           const pos = player?.getPosition() ?? { x: 0, y: 0 };
           const state = player?.getPlayerState();
@@ -149,21 +153,22 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
           return {
             tick: tickRef.current,
             player: {
-              hp: 100, 
-              maxHp: 100,
+              hp: playerStatsRef.current.hp, 
+              maxHp: playerStatsRef.current.maxHp,
               position: pos,
               deaths: 0 
             },
             world: {
               levelId: currentMapId,
-              timeElapsed: performance.now() / 1000,
-              enemies: [] 
+              timeElapsed: (performance.now() - startTimeRef.current) / 1000,
+              enemies: enemiesRef.current 
             },
             terminal: { kind: 'running' },
             flags: {
               isMoving: state?.isMoving ?? false,
-              scene: sceneTypeRef.current
-            }
+              isOverworld: sceneTypeRef.current === 'overworld'
+            },
+            metrics: metricsRef.current
           };
         },
 
@@ -182,6 +187,11 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
           const { state: nextState, terminal } = simStep(currentState, action, env);
 
           // 4. Apply State (Side Effects)
+          enemiesRef.current = nextState.world.enemies;
+          playerStatsRef.current.hp = nextState.player.hp;
+          playerStatsRef.current.maxHp = nextState.player.maxHp;
+          if (nextState.metrics) metricsRef.current = nextState.metrics;
+
           if (playerLayerRef.current) {
               playerLayerRef.current.setPlayerState({ 
                   x: nextState.player.position.x, 
@@ -233,7 +243,18 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
 
         resetRun: (seed?: number) => {
           console.log('[Driver] Resetting run with seed:', seed);
-          window.location.reload();
+          // Soft reset for CI
+          tickRef.current = 0;
+          startTimeRef.current = performance.now();
+          playerStatsRef.current = { hp: 100, maxHp: 100 };
+          metricsRef.current = { enemiesDefeated: 0, itemsCollected: 0, novelty: 0 };
+          if (playerLayerRef.current) {
+              // Reset to default start position (approx)
+              playerLayerRef.current.setPlayerState({ x: 200, y: 450 }); 
+          }
+          // Reset internal flags
+          sceneTypeRef.current = 'overworld';
+          currentHouseNumRef.current = 1;
         }
     });
   }, []); // Added exitInterior dependency
@@ -340,6 +361,11 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
 
     villageLayer.setPlayerPosition(savedOverworldXRef.current, OVERWORLD_CONSTANTS.INTERIOR_PLAYER_Y);
 
+    const hudLayer = new HudLayer(
+      () => enemiesRef.current,
+      () => playerStatsRef.current
+    );
+
     return [
       new SkyLayer(),
       new BackgroundLayer(),
@@ -349,6 +375,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
       villageLayer,
       encountersLayer,
       playerLayer,
+      hudLayer,
     ];
   }, [getUnlockedBuildingIds, handleTrigger]);
 
