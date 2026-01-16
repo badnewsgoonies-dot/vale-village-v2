@@ -1,47 +1,3 @@
-# Validation Report
-
-Date: 2026-01-16T03:46:28.610Z
-
-Automated CI-local run summary:
-- mem_briefing: completed (see tests/validation/memory_briefing.txt)
-- pnpm_install: partial/unknown (see tests/validation/pnpm_install.log)
-- typecheck: failed (exit code 2) — see tests/validation/typecheck.log
-- lint: passed (exit code 0) — see tests/validation/lint.log
-- unit tests: passed (343 passed | 8 skipped | 13 todo) — see tests/validation/unit_test.log
-- coverage: generation failed (ENOENT: coverage/.tmp/coverage-*.json) — see tests/validation/unit_test.log
-- e2e: partial (Playwright executed partially; see tests/validation/e2e.log)
-- visual-regression: not-run (see tests/validation/visual-regression.txt)
-
-Latest run artifact: tests/validation/memory_result.json (updated 2026-01-16T03:46:28.610Z); memory recorded: tests/validation/mem_db_write.txt
-
-Summary:
-- CI-local run: PARTIAL - unit tests passed; typecheck/lint reported issues; coverage failed; e2e incomplete. See tests/validation/ for logs.
-- Run metadata: Lane 2, Round 1, Worker a
-- Unit tests: 343 passed | 8 skipped | 13 todo
-- Coverage: generation failed due to remapping error (see tests/validation/unit_tests.txt)
-- Next actions:
-  1. Fix coverage remapping error by investigating @ampproject/remapping and vitest coverage-v8 integration.
-  2. Address TypeScript errors surfaced by pnpm typecheck (see tests/validation/typecheck.txt).
-  3. Re-run full CI-local sequence and confirm e2e and visual regression completion.
-
-Artifacts:
-- CI run logs: tests/validation/*.log
-- CI results JSON: tests/validation/summary.json
-- Memory-ready summary: tests/validation/memory_result.json
-- Memory file: tests/validation/memory_result.json (created 2026-01-16T03:46:23.567Z)
-
-Artifacts:
-- CI run log: tests/validation/ci_run.log
-- CI results JSON: tests/validation/ci_results.json
-- Memory-ready summary: tests/validation/memory_result.json
-
-Key failure (excerpt from ci run):
-
-=== typecheck ===
-
-> vale-village-v2@0.1.0 typecheck /home/geni/Documents/vale-village-v2
-> tsc --noEmit
-
 src/core/algorithms/damage.ts(101,79): error TS2339: Property 'percent' does not exist on type 'never'.
 src/core/algorithms/damage.ts(384,56): error TS2339: Property 'hpPercent' does not exist on type 'never'.
 src/core/algorithms/status.ts(173,63): error TS2345: Argument of type '{ type?: "buff"; duration?: number; stat?: "hp" | "pp" | "atk" | "def" | "mag" | "spd"; modifier?: number; } | { type?: "debuff"; duration?: number; stat?: "hp" | "pp" | "atk" | "def" | "mag" | "spd"; modifier?: number; } | ... 6 more ... | { ...; }' is not assignable to parameter of type '{ [key: string]: any; type: string; }'.
@@ -157,63 +113,32 @@ src/ui/components/ShopEquipScreen.tsx(334,48): error TS2322: Type '{ id?: string
   Property 'id' is optional in type '{ id?: string; name?: string; slot?: "weapon" | "armor" | "helm" | "boots" | "accessory"; tier?: "basic" | "bronze" | "iron" | "steel" | "silver" | "mythril" | "legendary" | "artifact"; ... 8 more ...; setId?: string; }' but required in type 'Equipment'.
 src/ui/components/TowerHubScreen.tsx(406,3): error TS2322: Type '{ rewards?: { type?: "equipment" | "djinn" | "recruit"; ids?: string[]; notes?: string; }[]; floorNumber?: number; }' is not assignable to type '{ floorNumber: number; rewards: { type?: "equipment" | "djinn" | "recruit"; ids?: string[]; notes?: string; }[]; }'.
   Property 'floorNumber' is optional in type '{ rewards?: { type?: "equipment" | "djinn" | "recruit"; ids?: string[]; notes?: string; }[]; floorNumber?: number; }' but required in type '{ floorNumber: number; rewards: { type?: "equipment" | "djinn" | "recruit"; ids?: string[]; notes?: string; }[]; }'.
-
-Coverage summary:
-- Vitest coverage was not collected (test:coverage not run). See unit test section of log for details.
-
-Next actions (priority order):
-1. Fix TypeScript errors reported in src/core/ (see log excerpt above). These are the root cause blocking a green CI.
-2. Re-run `pnpm run typecheck` locally and iterate until no tsc errors remain.
-3. Once typecheck is clean, run `pnpm run lint` and `pnpm run test` to resolve any remaining failures.
-4. Run `pnpm run test:e2e` and `pnpm run test:coverage` to complete full validation and update VALIDATION.md with coverage numbers.
-
-Notes:
-- No source code changes were made by this worker; only validation artifacts were produced under tests/validation and VALIDATION.md was updated to reflect the run.
-- If permission is granted to patch src/, proceed to fix the TypeScript issues at src/core/algorithms/damage.ts and src/core/algorithms/status.ts (see log excerpt).
-
-
-
-## CI Validation run - 2026-01-16T03:43:37.889Z
-
-Results:
-- lint: 0
-- test: 0
-- e2e: 1
-- visreg: 1
-
-Logs: tests/validation/lint.log, tests/validation/test.log, tests/validation/e2e.log, tests/validation/visreg.log
-
-Next actions:
-- Investigate any non-zero exit codes by reviewing corresponding logs and opening issues.
-
-Coverage summary: see tests/validation/test.log for coverage output if present.
-
-## CI run summary - 2026-01-16T03:57:21Z
-
-- ci log: tests/validation/ci_run.log
-- typecheck exit: 0
-- lint exit: 0
-- unit tests exit: 0
-- e2e exit: null
-
-Notes:
-- TypeScript errors detected in src/core/*; see tests/validation/ci_run.log for samples and stack traces.
-
-Next actions:
-- Investigate and fix TypeScript type issues (core algorithms/save/services).
-- Re-run CI after fixes; aim for all exit codes 0 and coverage >= previous baseline.
-
-
-## Automated CI-local append (timestamp: ${TS})
-- pnpm version: see tests/validation/pnpm_version.txt
-- typecheck: failed (exit code 2) — see tests/validation/typecheck.log
-- lint: passed (exit code 0) — see tests/validation/lint.log
-- unit tests: partial pass (343 passed | 8 skipped | 13 todo), coverage generation failed — see tests/validation/unit_test.log
-- coverage error: ENOENT: coverage/.tmp/coverage-*.json — investigate coverage provider
-- e2e: not completed or interrupted — see tests/validation/e2e.log
-
-Next actions:
-- Fix TS errors (see tests/validation/typecheck.log)
-- Ensure coverage provider writes temporary files (check permissions/path)
-- Install Playwright browsers and re-run e2e: `npx playwright install` then `pnpm run test:e2e`
-- After fixes, re-run full CI-local and update VALIDATION.md and tests/validation/memory_result.json
+src/ui/components/overworld/OverworldCanvas.tsx(208,5): error TS2322: Type '{ x?: number; y?: number; }' is not assignable to type 'TilePosition'.
+  Property 'x' is optional in type '{ x?: number; y?: number; }' but required in type 'TilePosition'.
+src/ui/components/overworld/engine/OverworldEngine.ts(132,3): error TS2578: Unused '@ts-expect-error' directive.
+src/ui/components/overworld/engine/OverworldEngine.ts(137,3): error TS2578: Unused '@ts-expect-error' directive.
+src/ui/components/overworld/engine/OverworldEngine.ts(330,34): error TS2345: Argument of type '{ x?: number; y?: number; }' is not assignable to parameter of type 'TilePosition'.
+  Property 'x' is optional in type '{ x?: number; y?: number; }' but required in type 'TilePosition'.
+src/ui/hooks/useShopController.ts(25,23): error TS2339: Property 'error' does not exist on type 'Result<{ success: boolean; newGold: number; item: Equipment; }, string>'.
+  Property 'error' does not exist on type '{ ok: true; value: { success: boolean; newGold: number; item: Equipment; }; }'.
+src/ui/hooks/useShopController.ts(41,23): error TS2339: Property 'error' does not exist on type 'Result<{ newGold: number; equipment: Equipment[]; }, string>'.
+  Property 'error' does not exist on type '{ ok: true; value: { newGold: number; equipment: Equipment[]; }; }'.
+src/ui/hooks/useShopController.ts(58,23): error TS2339: Property 'error' does not exist on type 'Result<{ newGold: number; item: Equipment; }, string>'.
+  Property 'error' does not exist on type '{ ok: true; value: { newGold: number; item: Equipment; }; }'.
+src/ui/state/battleSlice.ts(88,53): error TS2339: Property 'error' does not exist on type 'Result<{ state: BattleState; result: ActionResult; events: readonly BattleEvent[]; }, string>'.
+  Property 'error' does not exist on type '{ ok: true; value: { state: BattleState; result: ActionResult; events: readonly BattleEvent[]; }; }'.
+src/ui/state/battleSlice.ts(136,52): error TS2339: Property 'error' does not exist on type 'Result<BattleState, string>'.
+  Property 'error' does not exist on type '{ ok: true; value: BattleState; }'.
+src/ui/state/battleSlice.ts(157,47): error TS2339: Property 'error' does not exist on type 'Result<BattleState, string>'.
+  Property 'error' does not exist on type '{ ok: true; value: BattleState; }'.
+src/ui/state/battleSlice.ts(189,58): error TS2339: Property 'error' does not exist on type 'Result<{ state: BattleState; result: ActionResult; events: readonly BattleEvent[]; }, string>'.
+  Property 'error' does not exist on type '{ ok: true; value: { state: BattleState; result: ActionResult; events: readonly BattleEvent[]; }; }'.
+src/ui/state/battleSlice.ts(234,57): error TS2339: Property 'error' does not exist on type 'Result<BattleState, string>'.
+  Property 'error' does not exist on type '{ ok: true; value: BattleState; }'.
+src/ui/state/rewardsSlice.ts(109,20): error TS2345: Argument of type '{ id?: string; name?: string; slot?: "weapon" | "armor" | "helm" | "boots" | "accessory"; tier?: "basic" | "bronze" | "iron" | "steel" | "silver" | "mythril" | "legendary" | "artifact"; ... 8 more ...; setId?: string; }[]' is not assignable to parameter of type 'Equipment[]'.
+  Type '{ id?: string; name?: string; slot?: "weapon" | "armor" | "helm" | "boots" | "accessory"; tier?: "basic" | "bronze" | "iron" | "steel" | "silver" | "mythril" | "legendary" | "artifact"; ... 8 more ...; setId?: string; }' is not assignable to type 'Equipment'.
+    Property 'id' is optional in type '{ id?: string; name?: string; slot?: "weapon" | "armor" | "helm" | "boots" | "accessory"; tier?: "basic" | "bronze" | "iron" | "steel" | "silver" | "mythril" | "legendary" | "artifact"; ... 8 more ...; setId?: string; }' but required in type 'Equipment'.
+src/ui/state/teamSlice.ts(138,24): error TS2345: Argument of type '{ id?: string; name?: string; availableIn?: readonly ("campaign" | "tower")[]; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; description?: string; role?: "Balanced Warrior" | "Pure DPS" | ... 7 more ... | "Master Warrior"; ... 4 more ...; autoAttackTiming?: "same-turn" | "next-turn"; }' is not assignable to parameter of type 'UnitDefinition'.
+  Property 'id' is optional in type '{ id?: string; name?: string; availableIn?: readonly ("campaign" | "tower")[]; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; description?: string; role?: "Balanced Warrior" | "Pure DPS" | ... 7 more ... | "Master Warrior"; ... 4 more ...; autoAttackTiming?: "same-turn" | "next-turn"; }' but required in type 'UnitDefinition'.
+src/ui/state/teamSlice.ts(139,24): error TS2345: Argument of type '{ id?: string; name?: string; availableIn?: readonly ("campaign" | "tower")[]; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; description?: string; role?: "Balanced Warrior" | "Pure DPS" | ... 7 more ... | "Master Warrior"; ... 4 more ...; autoAttackTiming?: "same-turn" | "next-turn"; }' is not assignable to parameter of type 'UnitDefinition'.
+  Property 'id' is optional in type '{ id?: string; name?: string; availableIn?: readonly ("campaign" | "tower")[]; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; description?: string; role?: "Balanced Warrior" | "Pure DPS" | ... 7 more ... | "Master Warrior"; ... 4 more ...; autoAttackTiming?: "same-turn" | "next-turn"; }' but required in type 'UnitDefinition'.

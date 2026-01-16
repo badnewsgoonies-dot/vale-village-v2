@@ -1,4 +1,4 @@
-import { installGameDriver } from './dev/driver';
+import { installGameDriver } from './driver';
 import { store } from './state/store';
 
 // Wire the game store to the driver contract so agents can control the game
