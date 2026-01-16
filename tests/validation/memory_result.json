@@ -1,0 +1,15 @@
+{
+  "timestamp": "${TS}",
+  "typecheck": { "exit": 2, "log": "tests/validation/typecheck.log" },
+  "lint": { "exit": 0, "log": "tests/validation/lint.log" },
+  "unit_tests": { "exit": 1, "summary": "343 passed | 8 skipped | 13 todo", "log": "tests/validation/unit_test.log" },
+  "coverage": { "status": "failed", "error": "ENOENT: coverage/.tmp/coverage-38.json" },
+  "e2e": { "status": "not_run_or_incomplete", "log": "tests/validation/e2e.log" },
+  "decision": "Partial CI success: lint and most unit tests passed; typecheck and coverage need fixes; e2e needs playwright/browser install",
+  "next_actions": [
+    "Fix TypeScript errors reported in tests/validation/typecheck.log",
+    "Investigate coverage `.tmp` generation: ensure coverage directory writable and provider works",
+    "Install Playwright browsers (npx playwright install) and re-run e2e",
+    "Record decision to swarm memory via mem-db.sh or memory_write"
+  ]
+}

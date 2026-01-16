@@ -1,0 +1,7 @@
+{
+  "baselineDir": "tests/e2e/visual/baseline",
+  "latestDir": "tests/e2e/visual/latest",
+  "diffDir": "tests/e2e/visual/diff",
+  "threshold": 0.02,
+  "note": "Baselines exist. Capture latest screenshots into latestDir (e.g., with Playwright) and compare with pixelmatch or Playwright snapshot matcher."
+}

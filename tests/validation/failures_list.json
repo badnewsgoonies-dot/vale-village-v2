@@ -1,0 +1,10 @@
+[
+  {
+    "line": "FAIL  tests/unit/ui/OverworldV2.test.tsx > OverworldV2 > renders a canvas element",
+    "category": "ui"
+  },
+  {
+    "line": "FAIL  tests/unit/ui/skyLayer.test.ts > SkyLayer rendering > renders to a 2D canvas without throwing",
+    "category": "ui"
+  }
+]

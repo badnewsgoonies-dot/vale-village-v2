@@ -1,0 +1,1097 @@
+CI_RUN_START: Fri 16 Jan 2026 03:46:49 AM UTC
+src/core/algorithms/damage.ts(101,79): error TS2339: Property 'percent' does not exist on type 'never'.
+src/core/algorithms/damage.ts(384,56): error TS2339: Property 'hpPercent' does not exist on type 'never'.
+src/core/algorithms/status.ts(173,63): error TS2345: Argument of type '{ type?: "buff"; duration?: number; stat?: "hp" | "pp" | "atk" | "def" | "mag" | "spd"; modifier?: number; } | { type?: "debuff"; duration?: number; stat?: "hp" | "pp" | "atk" | "def" | "mag" | "spd"; modifier?: number; } | ... 6 more ... | { ...; }' is not assignable to parameter of type '{ [key: string]: any; type: string; }'.
+  Type '{ type?: "buff"; duration?: number; stat?: "hp" | "pp" | "atk" | "def" | "mag" | "spd"; modifier?: number; }' is not assignable to type '{ [key: string]: any; type: string; }'.
+    Property 'type' is optional in type '{ type?: "buff"; duration?: number; stat?: "hp" | "pp" | "atk" | "def" | "mag" | "spd"; modifier?: number; }' but required in type '{ [key: string]: any; type: string; }'.
+src/core/save/ReplayService.ts(54,48): error TS2339: Property 'error' does not exist on type 'Result<{ state: BattleState; result: ActionResult; events: readonly BattleEvent[]; }, string>'.
+  Property 'error' does not exist on type '{ ok: true; value: { state: BattleState; result: ActionResult; events: readonly BattleEvent[]; }; }'.
+src/core/save/ReplayService.ts(80,53): error TS2339: Property 'error' does not exist on type 'Result<BattleState, string>'.
+  Property 'error' does not exist on type '{ ok: true; value: BattleState; }'.
+src/core/save/ReplayService.ts(139,51): error TS2339: Property 'error' does not exist on type 'Result<{ state: BattleState; result: ActionResult; events: readonly BattleEvent[]; }, string>'.
+  Property 'error' does not exist on type '{ ok: true; value: { state: BattleState; result: ActionResult; events: readonly BattleEvent[]; }; }'.
+src/core/save/SaveService.ts(72,31): error TS2352: Conversion of type '{ state?: { battle?: { status?: "PLAYER_VICTORY" | "PLAYER_DEFEAT" | "ongoing"; currentTurn?: number; playerTeam?: { djinnStates?: Record<string, "Set" | "Standby" | "Recovery">; ... 5 more ...; activationsThisTurn?: Record<...>; }; ... 16 more ...; meta?: { ...; }; }; story?: { ...; }; gold?: number; team?: { ...; ...' to type 'SaveEnvelope' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  The types of 'state.battle' are incompatible between these types.
+    Property 'unitById' is missing in type '{ status?: "PLAYER_VICTORY" | "PLAYER_DEFEAT" | "ongoing"; currentTurn?: number; playerTeam?: { djinnStates?: Record<string, "Set" | "Standby" | "Recovery">; equippedDjinn?: string[]; ... 4 more ...; activationsThisTurn?: Record<...>; }; ... 16 more ...; meta?: { ...; }; }' but required in type 'BattleState'.
+src/core/save/SaveService.ts(145,31): error TS2352: Conversion of type '{ seed?: number; initial?: { battle?: { status?: "PLAYER_VICTORY" | "PLAYER_DEFEAT" | "ongoing"; currentTurn?: number; playerTeam?: { djinnStates?: Record<string, "Set" | "Standby" | "Recovery">; ... 5 more ...; activationsThisTurn?: Record<...>; }; ... 16 more ...; meta?: { ...; }; }; story?: { ...; }; gold?: numbe...' to type 'ReplayTape' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  The types of 'initial.battle' are incompatible between these types.
+    Property 'unitById' is missing in type '{ status?: "PLAYER_VICTORY" | "PLAYER_DEFEAT" | "ongoing"; currentTurn?: number; playerTeam?: { djinnStates?: Record<string, "Set" | "Standby" | "Recovery">; equippedDjinn?: string[]; ... 4 more ...; activationsThisTurn?: Record<...>; }; ... 16 more ...; meta?: { ...; }; }' but required in type 'BattleState'.
+src/core/services/BattleService.ts(189,30): error TS2339: Property 'error' does not exist on type 'Result<ActionResult, string>'.
+  Property 'error' does not exist on type '{ ok: true; value: ActionResult; }'.
+src/core/services/BattleService.ts(356,13): error TS2322: Type '{ type: string; remainingCharges: number; duration: number; }' is not assignable to type 'never'.
+src/core/services/BattleService.ts(370,13): error TS2322: Type '{ type: string; percent: number; duration: number; }' is not assignable to type 'never'.
+src/core/services/BattleService.ts(385,13): error TS2322: Type '{ type: string; all: boolean; types: ("debuff" | "poison" | "burn" | "freeze" | "paralyze" | "stun")[]; duration: number; }' is not assignable to type 'never'.
+src/core/services/BattleService.ts(408,75): error TS2345: Argument of type '{ type?: "buff"; duration?: number; stat?: "hp" | "pp" | "atk" | "def" | "mag" | "spd"; modifier?: number; } | { type?: "debuff"; duration?: number; stat?: "hp" | "pp" | "atk" | "def" | "mag" | "spd"; modifier?: number; } | ... 7 more ... | { ...; }' is not assignable to parameter of type '{ [key: string]: any; type: string; }'.
+  Type '{ type?: "buff"; duration?: number; stat?: "hp" | "pp" | "atk" | "def" | "mag" | "spd"; modifier?: number; }' is not assignable to type '{ [key: string]: any; type: string; }'.
+    Property 'type' is optional in type '{ type?: "buff"; duration?: number; stat?: "hp" | "pp" | "atk" | "def" | "mag" | "spd"; modifier?: number; }' but required in type '{ [key: string]: any; type: string; }'.
+src/core/services/BattleService.ts(693,17): error TS2322: Type '{ type: string; healPerTurn: number; duration: number; }' is not assignable to type 'never'.
+src/core/services/DevModeService.ts(139,33): error TS2345: Argument of type '{ id?: string; name?: string; availableIn?: readonly ("campaign" | "tower")[]; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; description?: string; role?: "Balanced Warrior" | "Pure DPS" | ... 7 more ... | "Master Warrior"; ... 4 more ...; autoAttackTiming?: "same-turn" | "next-turn"; }' is not assignable to parameter of type 'UnitDefinition'.
+  Property 'id' is optional in type '{ id?: string; name?: string; availableIn?: readonly ("campaign" | "tower")[]; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; description?: string; role?: "Balanced Warrior" | "Pure DPS" | ... 7 more ... | "Master Warrior"; ... 4 more ...; autoAttackTiming?: "same-turn" | "next-turn"; }' but required in type 'UnitDefinition'.
+src/core/services/DevModeService.ts(149,33): error TS2345: Argument of type '{ id?: string; name?: string; availableIn?: readonly ("campaign" | "tower")[]; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; description?: string; role?: "Balanced Warrior" | "Pure DPS" | ... 7 more ... | "Master Warrior"; ... 4 more ...; autoAttackTiming?: "same-turn" | "next-turn"; }' is not assignable to parameter of type 'UnitDefinition'.
+  Property 'id' is optional in type '{ id?: string; name?: string; availableIn?: readonly ("campaign" | "tower")[]; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; description?: string; role?: "Balanced Warrior" | "Pure DPS" | ... 7 more ... | "Master Warrior"; ... 4 more ...; autoAttackTiming?: "same-turn" | "next-turn"; }' but required in type 'UnitDefinition'.
+src/core/services/EncounterService.ts(126,59): error TS2339: Property 'error' does not exist on type 'Result<BattleState, string>'.
+  Property 'error' does not exist on type '{ ok: true; value: BattleState; }'.
+src/core/services/GameInitializationService.ts(11,30): error TS2345: Argument of type '{ id?: string; name?: string; availableIn?: readonly ("campaign" | "tower")[]; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; description?: string; role?: "Balanced Warrior" | "Pure DPS" | ... 7 more ... | "Master Warrior"; ... 4 more ...; autoAttackTiming?: "same-turn" | "next-turn"; }' is not assignable to parameter of type 'UnitDefinition'.
+  Property 'id' is optional in type '{ id?: string; name?: string; availableIn?: readonly ("campaign" | "tower")[]; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; description?: string; role?: "Balanced Warrior" | "Pure DPS" | ... 7 more ... | "Master Warrior"; ... 4 more ...; autoAttackTiming?: "same-turn" | "next-turn"; }' but required in type 'UnitDefinition'.
+src/core/services/GameInitializationService.ts(15,30): error TS2345: Argument of type '{ id?: string; name?: string; availableIn?: readonly ("campaign" | "tower")[]; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; description?: string; role?: "Balanced Warrior" | "Pure DPS" | ... 7 more ... | "Master Warrior"; ... 4 more ...; autoAttackTiming?: "same-turn" | "next-turn"; }' is not assignable to parameter of type 'UnitDefinition'.
+  Property 'id' is optional in type '{ id?: string; name?: string; availableIn?: readonly ("campaign" | "tower")[]; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; description?: string; role?: "Balanced Warrior" | "Pure DPS" | ... 7 more ... | "Master Warrior"; ... 4 more ...; autoAttackTiming?: "same-turn" | "next-turn"; }' but required in type 'UnitDefinition'.
+src/core/services/GameInitializationService.ts(18,29): error TS2345: Argument of type '{ id?: string; name?: string; availableIn?: readonly ("campaign" | "tower")[]; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; description?: string; role?: "Balanced Warrior" | "Pure DPS" | ... 7 more ... | "Master Warrior"; ... 4 more ...; autoAttackTiming?: "same-turn" | "next-turn"; }' is not assignable to parameter of type 'UnitDefinition'.
+  Property 'id' is optional in type '{ id?: string; name?: string; availableIn?: readonly ("campaign" | "tower")[]; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; description?: string; role?: "Balanced Warrior" | "Pure DPS" | ... 7 more ... | "Master Warrior"; ... 4 more ...; autoAttackTiming?: "same-turn" | "next-turn"; }' but required in type 'UnitDefinition'.
+src/core/services/GameInitializationService.ts(21,28): error TS2345: Argument of type '{ id?: string; name?: string; availableIn?: readonly ("campaign" | "tower")[]; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; description?: string; role?: "Balanced Warrior" | "Pure DPS" | ... 7 more ... | "Master Warrior"; ... 4 more ...; autoAttackTiming?: "same-turn" | "next-turn"; }' is not assignable to parameter of type 'UnitDefinition'.
+  Property 'id' is optional in type '{ id?: string; name?: string; availableIn?: readonly ("campaign" | "tower")[]; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; description?: string; role?: "Balanced Warrior" | "Pure DPS" | ... 7 more ... | "Master Warrior"; ... 4 more ...; autoAttackTiming?: "same-turn" | "next-turn"; }' but required in type 'UnitDefinition'.
+src/core/services/QueueBattleService.test.ts(34,19): error TS2345: Argument of type '{ id?: string; name?: string; availableIn?: readonly ("campaign" | "tower")[]; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; description?: string; role?: "Balanced Warrior" | "Pure DPS" | ... 7 more ... | "Master Warrior"; ... 4 more ...; autoAttackTiming?: "same-turn" | "next-turn"; }' is not assignable to parameter of type 'UnitDefinition'.
+  Property 'id' is optional in type '{ id?: string; name?: string; availableIn?: readonly ("campaign" | "tower")[]; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; description?: string; role?: "Balanced Warrior" | "Pure DPS" | ... 7 more ... | "Master Warrior"; ... 4 more ...; autoAttackTiming?: "same-turn" | "next-turn"; }' but required in type 'UnitDefinition'.
+src/core/services/QueueBattleService.test.ts(39,19): error TS2345: Argument of type '{ id?: string; name?: string; availableIn?: readonly ("campaign" | "tower")[]; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; description?: string; role?: "Balanced Warrior" | "Pure DPS" | ... 7 more ... | "Master Warrior"; ... 4 more ...; autoAttackTiming?: "same-turn" | "next-turn"; }' is not assignable to parameter of type 'UnitDefinition'.
+  Property 'id' is optional in type '{ id?: string; name?: string; availableIn?: readonly ("campaign" | "tower")[]; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; description?: string; role?: "Balanced Warrior" | "Pure DPS" | ... 7 more ... | "Master Warrior"; ... 4 more ...; autoAttackTiming?: "same-turn" | "next-turn"; }' but required in type 'UnitDefinition'.
+src/core/services/QueueBattleService.test.ts(46,40): error TS2345: Argument of type '{ id: string; baseStats: { def: number; hp?: number; pp?: number; atk?: number; mag?: number; spd?: number; }; name: string; element: Element; role: UnitRole; growthRates: Stats; ... 17 more ...; isBroken?: boolean; }[]' is not assignable to parameter of type 'readonly Unit[]'.
+  Type '{ id: string; baseStats: { def: number; hp?: number; pp?: number; atk?: number; mag?: number; spd?: number; }; name: string; element: Element; role: UnitRole; growthRates: GrowthRates; ... 17 more ...; isBroken?: boolean; }' is not assignable to type 'Unit'.
+    Types of property 'baseStats' are incompatible.
+      Type '{ def: number; hp?: number; pp?: number; atk?: number; mag?: number; spd?: number; }' is not assignable to type 'Stats'.
+        Property 'hp' is optional in type '{ def: number; hp?: number; pp?: number; atk?: number; mag?: number; spd?: number; }' but required in type 'Stats'.
+src/core/services/QueueBattleService.test.ts(58,55): error TS2339: Property 'error' does not exist on type 'Result<BattleState, string>'.
+  Property 'error' does not exist on type '{ ok: true; value: BattleState; }'.
+src/core/services/QueueBattleService.test.ts(80,23): error TS2339: Property 'error' does not exist on type 'Result<BattleState, string>'.
+  Property 'error' does not exist on type '{ ok: true; value: BattleState; }'.
+src/core/services/QueueBattleService.test.ts(103,56): error TS2339: Property 'error' does not exist on type 'Result<BattleState, string>'.
+  Property 'error' does not exist on type '{ ok: true; value: BattleState; }'.
+src/core/services/QueueBattleService.test.ts(127,34): error TS2345: Argument of type '{ baseStats: { spd: number; hp?: number; pp?: number; atk?: number; def?: number; mag?: number; }; id?: string; name?: string; availableIn?: readonly ("campaign" | "tower")[]; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; ... 5 more ...; autoAttackTiming?: "same-turn" | "next-turn"; }' is not assignable to parameter of type 'UnitDefinition'.
+  Property 'id' is optional in type '{ baseStats: { spd: number; hp?: number; pp?: number; atk?: number; def?: number; mag?: number; }; id?: string; name?: string; availableIn?: readonly ("campaign" | "tower")[]; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; ... 5 more ...; autoAttackTiming?: "same-turn" | "next-turn"; }' but required in type 'UnitDefinition'.
+src/core/services/QueueBattleService.test.ts(128,34): error TS2345: Argument of type '{ baseStats: { spd: number; hp?: number; pp?: number; atk?: number; def?: number; mag?: number; }; id?: string; name?: string; availableIn?: readonly ("campaign" | "tower")[]; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; ... 5 more ...; autoAttackTiming?: "same-turn" | "next-turn"; }' is not assignable to parameter of type 'UnitDefinition'.
+  Property 'id' is optional in type '{ baseStats: { spd: number; hp?: number; pp?: number; atk?: number; def?: number; mag?: number; }; id?: string; name?: string; availableIn?: readonly ("campaign" | "tower")[]; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; ... 5 more ...; autoAttackTiming?: "same-turn" | "next-turn"; }' but required in type 'UnitDefinition'.
+src/core/services/QueueBattleService.test.ts(131,37): error TS2345: Argument of type '{ baseStats: { spd: number; hp?: number; pp?: number; atk?: number; def?: number; mag?: number; }; id?: string; name?: string; availableIn?: readonly ("campaign" | "tower")[]; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; ... 5 more ...; autoAttackTiming?: "same-turn" | "next-turn"; }' is not assignable to parameter of type 'UnitDefinition'.
+  Property 'id' is optional in type '{ baseStats: { spd: number; hp?: number; pp?: number; atk?: number; def?: number; mag?: number; }; id?: string; name?: string; availableIn?: readonly ("campaign" | "tower")[]; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; ... 5 more ...; autoAttackTiming?: "same-turn" | "next-turn"; }' but required in type 'UnitDefinition'.
+src/core/services/QueueBattleService.test.ts(138,77): error TS2339: Property 'error' does not exist on type 'Result<BattleState, string>'.
+  Property 'error' does not exist on type '{ ok: true; value: BattleState; }'.
+src/core/services/QueueBattleService.test.ts(142,77): error TS2339: Property 'error' does not exist on type 'Result<BattleState, string>'.
+  Property 'error' does not exist on type '{ ok: true; value: BattleState; }'.
+src/core/services/QueueBattleService.test.ts(162,38): error TS2345: Argument of type '{ id?: string; name?: string; availableIn?: readonly ("campaign" | "tower")[]; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; description?: string; role?: "Balanced Warrior" | "Pure DPS" | ... 7 more ... | "Master Warrior"; ... 4 more ...; autoAttackTiming?: "same-turn" | "next-turn"; }' is not assignable to parameter of type 'UnitDefinition'.
+  Property 'id' is optional in type '{ id?: string; name?: string; availableIn?: readonly ("campaign" | "tower")[]; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; description?: string; role?: "Balanced Warrior" | "Pure DPS" | ... 7 more ... | "Master Warrior"; ... 4 more ...; autoAttackTiming?: "same-turn" | "next-turn"; }' but required in type 'UnitDefinition'.
+src/core/services/QueueBattleService.test.ts(174,56): error TS2339: Property 'error' does not exist on type 'Result<BattleState, string>'.
+  Property 'error' does not exist on type '{ ok: true; value: BattleState; }'.
+src/core/services/SaveService.ts(267,37): error TS2339: Property 'error' does not exist on type 'Result<{ playerData?: { inventory?: { id?: string; name?: string; slot?: "weapon" | "armor" | "helm" | "boots" | "accessory"; tier?: "basic" | "bronze" | "iron" | "steel" | "silver" | "mythril" | "legendary" | "artifact"; ... 8 more ...; setId?: string; }[]; ... 7 more ...; storyFlags?: Record<...>; }; ... 5 more .....'.
+  Property 'error' does not exist on type '{ ok: true; value: { playerData?: { inventory?: { id?: string; name?: string; slot?: "weapon" | "armor" | "helm" | "boots" | "accessory"; tier?: "basic" | "bronze" | "iron" | "steel" | "silver" | "mythril" | "legendary" | "artifact"; ... 8 more ...; setId?: string; }[]; ... 7 more ...; storyFlags?: Record<...>; }; ....'.
+src/core/services/SaveService.ts(392,7): error TS2345: Argument of type '{ id?: string; name?: string; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; description?: string; role?: "Balanced Warrior" | "Pure DPS" | "Elemental Mage" | "Healer" | ... 5 more ... | "Master Warrior"; ... 15 more ...; battleStats?: { ...; }; }[]' is not assignable to parameter of type 'readonly Unit[]'.
+  Type '{ id?: string; name?: string; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; description?: string; role?: "Balanced Warrior" | "Pure DPS" | "Elemental Mage" | "Healer" | ... 5 more ... | "Master Warrior"; ... 15 more ...; battleStats?: { ...; }; }' is not assignable to type 'Unit'.
+    Property 'id' is optional in type '{ id?: string; name?: string; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; description?: string; role?: "Balanced Warrior" | "Pure DPS" | "Elemental Mage" | "Healer" | ... 5 more ... | "Master Warrior"; ... 15 more ...; battleStats?: { ...; }; }' but required in type 'Unit'.
+src/core/services/ShopService.ts(41,3): error TS2322: Type 'Result<{ success: true; newGold: number; item: { id?: string; name?: string; slot?: "weapon" | "armor" | "helm" | "boots" | "accessory"; tier?: "basic" | "bronze" | "iron" | "steel" | "silver" | "mythril" | "legendary" | "artifact"; ... 8 more ...; setId?: string; }; }, never>' is not assignable to type 'Result<{ success: boolean; newGold: number; item: Equipment; }, string>'.
+  Type '{ ok: true; value: { success: true; newGold: number; item: { id?: string; name?: string; slot?: "weapon" | "armor" | "helm" | "boots" | "accessory"; tier?: "basic" | "bronze" | "iron" | "steel" | "silver" | "mythril" | "legendary" | "artifact"; ... 8 more ...; setId?: string; }; }; }' is not assignable to type 'Result<{ success: boolean; newGold: number; item: Equipment; }, string>'.
+    Type '{ ok: true; value: { success: true; newGold: number; item: { id?: string; name?: string; slot?: "weapon" | "armor" | "helm" | "boots" | "accessory"; tier?: "basic" | "bronze" | "iron" | "steel" | "silver" | "mythril" | "legendary" | "artifact"; ... 8 more ...; setId?: string; }; }; }' is not assignable to type '{ ok: true; value: { success: boolean; newGold: number; item: Equipment; }; }'.
+      The types of 'value.item' are incompatible between these types.
+        Type '{ id?: string; name?: string; slot?: "weapon" | "armor" | "helm" | "boots" | "accessory"; tier?: "basic" | "bronze" | "iron" | "steel" | "silver" | "mythril" | "legendary" | "artifact"; ... 8 more ...; setId?: string; }' is not assignable to type 'Equipment'.
+          Property 'id' is optional in type '{ id?: string; name?: string; slot?: "weapon" | "armor" | "helm" | "boots" | "accessory"; tier?: "basic" | "bronze" | "iron" | "steel" | "silver" | "mythril" | "legendary" | "artifact"; ... 8 more ...; setId?: string; }' but required in type 'Equipment'.
+src/core/services/ShopService.ts(69,24): error TS2345: Argument of type '{ id?: string; name?: string; slot?: "weapon" | "armor" | "helm" | "boots" | "accessory"; tier?: "basic" | "bronze" | "iron" | "steel" | "silver" | "mythril" | "legendary" | "artifact"; ... 8 more ...; setId?: string; }' is not assignable to parameter of type 'Equipment'.
+  Property 'id' is optional in type '{ id?: string; name?: string; slot?: "weapon" | "armor" | "helm" | "boots" | "accessory"; tier?: "basic" | "bronze" | "iron" | "steel" | "silver" | "mythril" | "legendary" | "artifact"; ... 8 more ...; setId?: string; }' but required in type 'Equipment'.
+src/core/services/ShopService.ts(96,3): error TS2322: Type 'Result<{ newGold: number; item: { id?: string; name?: string; slot?: "weapon" | "armor" | "helm" | "boots" | "accessory"; tier?: "basic" | "bronze" | "iron" | "steel" | "silver" | "mythril" | "legendary" | "artifact"; ... 8 more ...; setId?: string; }; }, never>' is not assignable to type 'Result<{ newGold: number; item: Equipment; }, string>'.
+  Type '{ ok: true; value: { newGold: number; item: { id?: string; name?: string; slot?: "weapon" | "armor" | "helm" | "boots" | "accessory"; tier?: "basic" | "bronze" | "iron" | "steel" | "silver" | "mythril" | "legendary" | "artifact"; ... 8 more ...; setId?: string; }; }; }' is not assignable to type 'Result<{ newGold: number; item: Equipment; }, string>'.
+    Type '{ ok: true; value: { newGold: number; item: { id?: string; name?: string; slot?: "weapon" | "armor" | "helm" | "boots" | "accessory"; tier?: "basic" | "bronze" | "iron" | "steel" | "silver" | "mythril" | "legendary" | "artifact"; ... 8 more ...; setId?: string; }; }; }' is not assignable to type '{ ok: true; value: { newGold: number; item: Equipment; }; }'.
+      The types of 'value.item' are incompatible between these types.
+        Type '{ id?: string; name?: string; slot?: "weapon" | "armor" | "helm" | "boots" | "accessory"; tier?: "basic" | "bronze" | "iron" | "steel" | "silver" | "mythril" | "legendary" | "artifact"; ... 8 more ...; setId?: string; }' is not assignable to type 'Equipment'.
+          Property 'id' is optional in type '{ id?: string; name?: string; slot?: "weapon" | "armor" | "helm" | "boots" | "accessory"; tier?: "basic" | "bronze" | "iron" | "steel" | "silver" | "mythril" | "legendary" | "artifact"; ... 8 more ...; setId?: string; }' but required in type 'Equipment'.
+src/core/services/StoryService.ts(258,36): error TS2345: Argument of type '{ id?: string; name?: string; availableIn?: readonly ("campaign" | "tower")[]; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; description?: string; role?: "Balanced Warrior" | "Pure DPS" | ... 7 more ... | "Master Warrior"; ... 4 more ...; autoAttackTiming?: "same-turn" | "next-turn"; }' is not assignable to parameter of type 'UnitDefinition'.
+  Property 'id' is optional in type '{ id?: string; name?: string; availableIn?: readonly ("campaign" | "tower")[]; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; description?: string; role?: "Balanced Warrior" | "Pure DPS" | ... 7 more ... | "Master Warrior"; ... 4 more ...; autoAttackTiming?: "same-turn" | "next-turn"; }' but required in type 'UnitDefinition'.
+src/core/utils/enemyToUnit.ts(35,21): error TS2345: Argument of type '{ id?: string; name?: string; availableIn?: readonly ("campaign" | "tower")[]; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; description?: string; role?: "Balanced Warrior" | "Pure DPS" | ... 7 more ... | "Master Warrior"; ... 4 more ...; autoAttackTiming?: "same-turn" | "next-turn"; }' is not assignable to parameter of type 'UnitDefinition'.
+  Property 'id' is optional in type '{ id?: string; name?: string; availableIn?: readonly ("campaign" | "tower")[]; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; description?: string; role?: "Balanced Warrior" | "Pure DPS" | ... 7 more ... | "Master Warrior"; ... 4 more ...; autoAttackTiming?: "same-turn" | "next-turn"; }' but required in type 'UnitDefinition'.
+src/input/InputManager.ts(27,11): error TS2339: Property 'drain' does not exist on type 'any[]'.
+src/input/InputManager.ts(33,7): error TS2741: Property 'drain' is missing in type 'any[]' but required in type '{ push: (cmd: string) => void; drain: () => string[]; }'.
+src/state/store.ts(1,43): error TS2307: Cannot find module '../dev/driver' or its corresponding type declarations.
+src/ui/components/CompendiumScreen.tsx(219,40): error TS2322: Type '{ id?: string; name?: string; slot?: "weapon" | "armor" | "helm" | "boots" | "accessory"; tier?: "basic" | "bronze" | "iron" | "steel" | "silver" | "mythril" | "legendary" | "artifact"; ... 8 more ...; setId?: string; }' is not assignable to type 'Equipment'.
+  Property 'id' is optional in type '{ id?: string; name?: string; slot?: "weapon" | "armor" | "helm" | "boots" | "accessory"; tier?: "basic" | "bronze" | "iron" | "steel" | "silver" | "mythril" | "legendary" | "artifact"; ... 8 more ...; setId?: string; }' but required in type 'Equipment'.
+src/ui/components/EquipmentChoicePicker.tsx(56,28): error TS2322: Type '{ id?: string; name?: string; slot?: "weapon" | "armor" | "helm" | "boots" | "accessory"; tier?: "basic" | "bronze" | "iron" | "steel" | "silver" | "mythril" | "legendary" | "artifact"; ... 8 more ...; setId?: string; }' is not assignable to type 'Equipment'.
+  Property 'id' is optional in type '{ id?: string; name?: string; slot?: "weapon" | "armor" | "helm" | "boots" | "accessory"; tier?: "basic" | "bronze" | "iron" | "steel" | "silver" | "mythril" | "legendary" | "artifact"; ... 8 more ...; setId?: string; }' but required in type 'Equipment'.
+src/ui/components/RewardsScreen.tsx(218,34): error TS2322: Type '{ id?: string; name?: string; slot?: "weapon" | "armor" | "helm" | "boots" | "accessory"; tier?: "basic" | "bronze" | "iron" | "steel" | "silver" | "mythril" | "legendary" | "artifact"; ... 8 more ...; setId?: string; }' is not assignable to type 'Equipment'.
+  Property 'id' is optional in type '{ id?: string; name?: string; slot?: "weapon" | "armor" | "helm" | "boots" | "accessory"; tier?: "basic" | "bronze" | "iron" | "steel" | "silver" | "mythril" | "legendary" | "artifact"; ... 8 more ...; setId?: string; }' but required in type 'Equipment'.
+src/ui/components/RewardsScreen.tsx(233,34): error TS2322: Type '{ id?: string; name?: string; slot?: "weapon" | "armor" | "helm" | "boots" | "accessory"; tier?: "basic" | "bronze" | "iron" | "steel" | "silver" | "mythril" | "legendary" | "artifact"; ... 8 more ...; setId?: string; }' is not assignable to type 'Equipment'.
+  Property 'id' is optional in type '{ id?: string; name?: string; slot?: "weapon" | "armor" | "helm" | "boots" | "accessory"; tier?: "basic" | "bronze" | "iron" | "steel" | "silver" | "mythril" | "legendary" | "artifact"; ... 8 more ...; setId?: string; }' but required in type 'Equipment'.
+src/ui/components/ShopEquipScreen.tsx(92,23): error TS2339: Property 'error' does not exist on type 'Result<{ success: boolean; newGold: number; item: Equipment; }, string>'.
+  Property 'error' does not exist on type '{ ok: true; value: { success: boolean; newGold: number; item: Equipment; }; }'.
+src/ui/components/ShopEquipScreen.tsx(107,23): error TS2339: Property 'error' does not exist on type 'Result<{ newGold: number; equipment: Equipment[]; }, string>'.
+  Property 'error' does not exist on type '{ ok: true; value: { newGold: number; equipment: Equipment[]; }; }'.
+src/ui/components/ShopEquipScreen.tsx(124,23): error TS2339: Property 'error' does not exist on type 'Result<{ newGold: number; item: Equipment; }, string>'.
+  Property 'error' does not exist on type '{ ok: true; value: { newGold: number; item: Equipment; }; }'.
+src/ui/components/ShopEquipScreen.tsx(293,52): error TS2322: Type '{ id?: string; name?: string; slot?: "weapon" | "armor" | "helm" | "boots" | "accessory"; tier?: "basic" | "bronze" | "iron" | "steel" | "silver" | "mythril" | "legendary" | "artifact"; ... 8 more ...; setId?: string; }' is not assignable to type 'Equipment'.
+  Property 'id' is optional in type '{ id?: string; name?: string; slot?: "weapon" | "armor" | "helm" | "boots" | "accessory"; tier?: "basic" | "bronze" | "iron" | "steel" | "silver" | "mythril" | "legendary" | "artifact"; ... 8 more ...; setId?: string; }' but required in type 'Equipment'.
+src/ui/components/ShopEquipScreen.tsx(334,48): error TS2322: Type '{ id?: string; name?: string; slot?: "weapon" | "armor" | "helm" | "boots" | "accessory"; tier?: "basic" | "bronze" | "iron" | "steel" | "silver" | "mythril" | "legendary" | "artifact"; ... 8 more ...; setId?: string; }' is not assignable to type 'Equipment'.
+  Property 'id' is optional in type '{ id?: string; name?: string; slot?: "weapon" | "armor" | "helm" | "boots" | "accessory"; tier?: "basic" | "bronze" | "iron" | "steel" | "silver" | "mythril" | "legendary" | "artifact"; ... 8 more ...; setId?: string; }' but required in type 'Equipment'.
+src/ui/components/TowerHubScreen.tsx(406,3): error TS2322: Type '{ rewards?: { type?: "equipment" | "djinn" | "recruit"; ids?: string[]; notes?: string; }[]; floorNumber?: number; }' is not assignable to type '{ floorNumber: number; rewards: { type?: "equipment" | "djinn" | "recruit"; ids?: string[]; notes?: string; }[]; }'.
+  Property 'floorNumber' is optional in type '{ rewards?: { type?: "equipment" | "djinn" | "recruit"; ids?: string[]; notes?: string; }[]; floorNumber?: number; }' but required in type '{ floorNumber: number; rewards: { type?: "equipment" | "djinn" | "recruit"; ids?: string[]; notes?: string; }[]; }'.
+src/ui/components/overworld/OverworldCanvas.tsx(208,5): error TS2322: Type '{ x?: number; y?: number; }' is not assignable to type 'TilePosition'.
+  Property 'x' is optional in type '{ x?: number; y?: number; }' but required in type 'TilePosition'.
+src/ui/components/overworld/engine/OverworldEngine.ts(132,3): error TS2578: Unused '@ts-expect-error' directive.
+src/ui/components/overworld/engine/OverworldEngine.ts(137,3): error TS2578: Unused '@ts-expect-error' directive.
+src/ui/components/overworld/engine/OverworldEngine.ts(330,34): error TS2345: Argument of type '{ x?: number; y?: number; }' is not assignable to parameter of type 'TilePosition'.
+  Property 'x' is optional in type '{ x?: number; y?: number; }' but required in type 'TilePosition'.
+src/ui/hooks/useShopController.ts(25,23): error TS2339: Property 'error' does not exist on type 'Result<{ success: boolean; newGold: number; item: Equipment; }, string>'.
+  Property 'error' does not exist on type '{ ok: true; value: { success: boolean; newGold: number; item: Equipment; }; }'.
+src/ui/hooks/useShopController.ts(41,23): error TS2339: Property 'error' does not exist on type 'Result<{ newGold: number; equipment: Equipment[]; }, string>'.
+  Property 'error' does not exist on type '{ ok: true; value: { newGold: number; equipment: Equipment[]; }; }'.
+src/ui/hooks/useShopController.ts(58,23): error TS2339: Property 'error' does not exist on type 'Result<{ newGold: number; item: Equipment; }, string>'.
+  Property 'error' does not exist on type '{ ok: true; value: { newGold: number; item: Equipment; }; }'.
+src/ui/state/battleSlice.ts(88,53): error TS2339: Property 'error' does not exist on type 'Result<{ state: BattleState; result: ActionResult; events: readonly BattleEvent[]; }, string>'.
+  Property 'error' does not exist on type '{ ok: true; value: { state: BattleState; result: ActionResult; events: readonly BattleEvent[]; }; }'.
+src/ui/state/battleSlice.ts(136,52): error TS2339: Property 'error' does not exist on type 'Result<BattleState, string>'.
+  Property 'error' does not exist on type '{ ok: true; value: BattleState; }'.
+src/ui/state/battleSlice.ts(157,47): error TS2339: Property 'error' does not exist on type 'Result<BattleState, string>'.
+  Property 'error' does not exist on type '{ ok: true; value: BattleState; }'.
+src/ui/state/battleSlice.ts(189,58): error TS2339: Property 'error' does not exist on type 'Result<{ state: BattleState; result: ActionResult; events: readonly BattleEvent[]; }, string>'.
+  Property 'error' does not exist on type '{ ok: true; value: { state: BattleState; result: ActionResult; events: readonly BattleEvent[]; }; }'.
+src/ui/state/battleSlice.ts(234,57): error TS2339: Property 'error' does not exist on type 'Result<BattleState, string>'.
+  Property 'error' does not exist on type '{ ok: true; value: BattleState; }'.
+src/ui/state/rewardsSlice.ts(109,20): error TS2345: Argument of type '{ id?: string; name?: string; slot?: "weapon" | "armor" | "helm" | "boots" | "accessory"; tier?: "basic" | "bronze" | "iron" | "steel" | "silver" | "mythril" | "legendary" | "artifact"; ... 8 more ...; setId?: string; }[]' is not assignable to parameter of type 'Equipment[]'.
+  Type '{ id?: string; name?: string; slot?: "weapon" | "armor" | "helm" | "boots" | "accessory"; tier?: "basic" | "bronze" | "iron" | "steel" | "silver" | "mythril" | "legendary" | "artifact"; ... 8 more ...; setId?: string; }' is not assignable to type 'Equipment'.
+    Property 'id' is optional in type '{ id?: string; name?: string; slot?: "weapon" | "armor" | "helm" | "boots" | "accessory"; tier?: "basic" | "bronze" | "iron" | "steel" | "silver" | "mythril" | "legendary" | "artifact"; ... 8 more ...; setId?: string; }' but required in type 'Equipment'.
+src/ui/state/teamSlice.ts(138,24): error TS2345: Argument of type '{ id?: string; name?: string; availableIn?: readonly ("campaign" | "tower")[]; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; description?: string; role?: "Balanced Warrior" | "Pure DPS" | ... 7 more ... | "Master Warrior"; ... 4 more ...; autoAttackTiming?: "same-turn" | "next-turn"; }' is not assignable to parameter of type 'UnitDefinition'.
+  Property 'id' is optional in type '{ id?: string; name?: string; availableIn?: readonly ("campaign" | "tower")[]; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; description?: string; role?: "Balanced Warrior" | "Pure DPS" | ... 7 more ... | "Master Warrior"; ... 4 more ...; autoAttackTiming?: "same-turn" | "next-turn"; }' but required in type 'UnitDefinition'.
+src/ui/state/teamSlice.ts(139,24): error TS2345: Argument of type '{ id?: string; name?: string; availableIn?: readonly ("campaign" | "tower")[]; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; description?: string; role?: "Balanced Warrior" | "Pure DPS" | ... 7 more ... | "Master Warrior"; ... 4 more ...; autoAttackTiming?: "same-turn" | "next-turn"; }' is not assignable to parameter of type 'UnitDefinition'.
+  Property 'id' is optional in type '{ id?: string; name?: string; availableIn?: readonly ("campaign" | "tower")[]; element?: "Venus" | "Mars" | "Mercury" | "Jupiter" | "Neutral"; description?: string; role?: "Balanced Warrior" | "Pure DPS" | ... 7 more ... | "Master Warrior"; ... 4 more ...; autoAttackTiming?: "same-turn" | "next-turn"; }' but required in type 'UnitDefinition'.
+TYPECHECK_EXIT:0
+LINT_EXIT:0
+
+ RUN  v1.6.1 /home/geni/Documents/vale-village-v2
+      Coverage enabled with v8
+
+ ✓ tests/unit/services/DialogueService.test.ts  (20 tests) 136ms
+ ✓ tests/unit/validation/battleStateInvariants.test.ts  (33 tests) 141ms
+ ✓ tests/unit/services/DjinnService.test.ts  (22 tests) 179ms
+ ✓ tests/unit/gameStore.test.ts  (36 tests) 342ms
+ ✓ tests/unit/services/RewardsService.test.ts  (22 tests) 160ms
+ ✓ tests/unit/services/AIService.test.ts  (9 tests) 82ms
+ ✓ tests/unit/integration/gameFlow.test.ts  (21 tests) 659ms
+ ✓ tests/unit/components.test.tsx  (14 tests) 451ms
+ ✓ src/core/services/QueueBattleService.test.ts  (6 tests) 381ms
+ ✓ tests/unit/ui/towerSlice.test.ts  (10 tests) 121ms
+ ✓ tests/unit/turn-order.test.ts  (4 tests) 164ms
+ ✓ tests/unit/state/dialogueSlice.test.ts  (5 tests) 208ms
+ ✓ tests/unit/core/services/manaPersistence.test.ts  (4 tests) 266ms
+ ✓ tests/unit/replay.determinism.test.ts  (2 tests) 233ms
+ ✓ tests/unit/combat/combat.test.ts  (7 tests) 98ms
+ ✓ tests/unit/components/ErrorBoundary.test.tsx  (7 tests) 483ms
+ ✓ tests/unit/modalStack.test.ts  (7 tests) 80ms
+ ✓ tests/unit/core/algorithms/damage.test.ts  (4 tests) 138ms
+ ✓ tests/unit/replay.test.ts  (2 tests) 105ms
+ ✓ tests/unit/core/services/BattleService.test.ts  (1 test) 198ms
+stdout | tests/unit/ui/overworldV2.test.tsx > OverworldV2 basic render > renders canvas and player image with given size
+[driver] __GAME_DRIVER__ v1 installed
+[OverworldV2] Uninstalled driver
+
+ ✓ tests/unit/ui/overworldV2.test.tsx  (1 test) 408ms
+stdout | tests/unit/repro_bug_007.test.ts > BUG-007: Summon Healing Revive > should NOT revive KOd units with a healing summon
+Dead ally HP after healing summon: 0
+
+ ✓ tests/unit/repro_bug_007.test.ts  (1 test) 173ms
+ ✓ tests/unit/queueBattleSlice.test.ts  (2 tests) 51ms
+ ✓ tests/unit/bugs/bug_011_revival_targeting.test.ts  (1 test) 135ms
+ ✓ tests/unit/bug_011_revival_targeting.test.ts  (1 test) 139ms
+ ✓ tests/unit/parity/accessories_elemental_resist.test.ts  (1 test) 10ms
+ ✓ src/core/algorithms/weakness.test.ts  (5 tests) 46ms
+stderr | tests/unit/repro_bug_010.test.ts > BUG-010: Unstable Turn Order Tie-break > should maintain relative turn order of B and C when A dies
+Could not find a flipping seed in 100 tries
+
+ ✓ tests/unit/repro_bug_010.test.ts  (1 test) 169ms
+ ✓ tests/unit/ui/overworldLayers.test.ts  (3 tests) 146ms
+ ✓ tests/unit/state/gameFlowSlice.test.ts  (4 tests) 94ms
+ ✓ tests/unit/components/DialogueChatOverlay.test.tsx  (1 test) 423ms
+ ✓ tests/unit/ui/battleSlice.test.ts  (7 tests) 104ms
+ ✓ tests/unit/components/TowerHubScreen.test.tsx  (1 test) 6169ms
+stdout | tests/unit/repro_bug_005.test.ts > BUG-005: AI AoE Overkill Restriction > should target all enemies with an AoE ability even with avoidOverkill hint
+AI Decision ability: quake-overkill
+AI Decision targets: [ 'enemy1', 'enemy2' ]
+
+ ✓ tests/unit/repro_bug_005.test.ts  (1 test) 88ms
+stdout | tests/unit/repro_bug_006.test.ts > BUG-006: AI Ignores Debuffs > should give a non-zero score to debuff abilities
+AI Decision ability: weaken
+
+ ✓ tests/unit/repro_bug_006.test.ts  (1 test) 102ms
+ ✓ tests/unit/bugs/bug011_revival_targeting.test.ts  (1 test) 13ms
+ ✓ tests/unit/repro_bug_002.test.ts  (1 test) 32ms
+ ✓ tests/unit/state/queueBattleSlice.test.ts  (1 test) 49ms
+ ✓ tests/unit/core/algorithms/status.test.ts  (4 tests) 32ms
+ ✓ tests/unit/components/menu.test.tsx  (2 tests) 960ms
+ ✓ tests/unit/services/EncounterService.test.ts  (1 test) 26ms
+ ✓ tests/unit/repro_bug_003.test.ts  (1 test) 17ms
+ ✓ tests/unit/repro_bug_003_v2.test.ts  (1 test) 12ms
+ ✓ tests/unit/queuedActions.immutable.test.ts  (1 test) 27ms
+ ✓ tests/unit/mainLoop.determinism.test.ts  (1 test) 57ms
+stdout | tests/unit/repro_bug_014.test.ts > BUG-014: Missing Status Events > should emit status-applied event for buff abilities
+Events: [ 'ability', 'status-applied' ]
+
+ ✓ tests/unit/repro_bug_014.test.ts  (1 test) 57ms
+ ✓ tests/unit/repro_bug_011.test.ts  (1 test) 23ms
+stdout | tests/unit/overworld_repro.test.ts > Overworld V2 Logic > should enforce reasonable walking bounds
+{ PLAYER_Y_MIN: 460, ROAD_Y_TOP: 460 }
+
+ ✓ tests/unit/overworld_repro.test.ts  (2 tests) 26ms
+ ✓ tests/unit/bugs/bug_015_overworld_collision.test.ts  (2 tests) 32ms
+ ✓ tests/unit/components/RewardsScreen.test.tsx  (1 test) 221ms
+ ✓ tests/unit/overworld/playerBoundsV2.test.ts  (2 tests) 20ms
+ ✓ tests/unit/components/MainMenu.test.tsx  (1 test) 1108ms
+ ✓ tests/unit/repro_bug_001.test.ts  (2 tests) 115ms
+ ✓ src/ui/state/__tests__/fanfareSlice.test.ts  (2 tests) 74ms
+ ✓ tests/unit/ui/skyLayer.test.ts  (1 test) 63ms
+ ✓ tests/unit/validation/towerRewards.test.ts  (2 tests) 30ms
+ ✓ tests/unit/asset-loader.test.ts  (6 tests | 5 skipped) 38ms
+ ✓ tests/unit/core/StateManager.test.ts  (3 tests) 43ms
+ ✓ tests/unit/breakIntegration.test.ts  (2 tests) 38ms
+ ✓ src/core/services/SaveService.test.ts  (1 test) 30ms
+ ✓ tests/unit/sim/determinism.test.ts  (2 tests) 198ms
+ ✓ tests/unit/services/StoryService.test.ts  (1 test) 66ms
+ ✓ tests/unit/overworld/camera.test.ts  (3 tests) 28ms
+ ✓ tests/unit/core/battleEngine.test.ts  (2 tests) 33ms
+ ✓ tests/unit/validation/equipmentSprites.test.ts  (1 test) 100ms
+ ✓ tests/unit/validation/towerFloors.test.ts  (2 tests) 27ms
+ ✓ tests/unit/breakGauge.test.ts  (3 tests) 27ms
+ ✓ tests/unit/core/GameLoop.test.ts  (1 test) 37ms
+ ✓ tests/unit/hitPopup.test.ts  (1 test) 13ms
+ ✓ tests/unit/game_init_smoke.test.ts  (1 test) 25ms
+ ✓ tests/unit/hitstop.test.ts  (1 test) 41ms
+ ✓ tests/unit/ui/OverworldV2.test.tsx  (1 test) 41ms
+ ✓ tests/unit/core/engine.test.ts  (2 tests) 14ms
+ ✓ tests/unit/core/stateManager.test.ts  (1 test) 18ms
+ ✓ tests/unit/overworld/villageLayoutV2.test.ts  (1 test) 13ms
+ ✓ src/ui/components/window-classes.test.ts  (1 test) 17ms
+ ✓ tests/unit/validation/mireToad.test.ts  (1 test) 28ms
+ ✓ tests/unit/lumen_fawn.test.ts  (1 test) 19ms
+stdout | tests/unit/validateData.test.ts > validateData-run
+All game data validated successfully.
+
+ ✓ tests/unit/validateData.test.ts  (1 test) 883ms
+ ✓ tests/unit/parity/accessories_parity.test.ts  (1 test) 40ms
+ ✓ tests/unit/useBattleController-null-undefined.test.ts  (1 test) 33ms
+ ✓ tests/unit/queue-battle-null-undefined.test.ts  (1 test) 39ms
+ ✓ tests/unit/feature_parity_menu.test.ts  (1 test) 24ms
+ ↓ src/core/services/LevelNormalizationService.test.ts  (1 test | 1 skipped)
+ ✓ tests/unit/feature_parity_accessories.test.ts  (1 test) 15ms
+ ✓ tests/unit/parity/menu_focus_parity.test.ts  (1 test) 29ms
+ ✓ tests/unit/feature_parity_battle.test.ts  (1 test) 11ms
+ ✓ tests/unit/parity/battle_state_parity.test.ts  (1 test) 7ms
+ ✓ tests/unit/acquisition-fanfare.unit.test.ts  (1 test) 27ms
+ ↓ src/core/services/DevModeService.test.ts  (1 test | 1 skipped)
+ ✓ tests/unit/feature_parity_save_load.test.ts  (1 test) 17ms
+ ↓ src/core/services/BattleService.test.ts  (1 test | 1 skipped)
+ ✓ tests/unit/parity/save_replay_parity.test.ts  (1 test) 26ms
+ ↓ src/core/services/StoryService.test.ts  (1 test | 1 skipped)
+ ↓ src/core/services/TowerService.test.ts  (1 test | 1 skipped)
+ ↓ src/core/services/RngService.test.ts  (1 test | 1 skipped)
+ ↓ src/core/services/ShopService.test.ts  (1 test | 1 skipped)
+ ↓ src/core/services/AIService.test.ts  (1 test | 1 skipped)
+
+ Test Files  90 passed | 8 skipped (98)
+      Tests  343 passed | 13 todo (356)
+   Start at  22:49:29
+   Duration  292.88s (transform 64.06s, setup 140.77s, collect 104.69s, tests 17.92s, environment 324.55s, prepare 99.53s)
+
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+TypeError: Cannot read properties of undefined (reading 'map')
+ ❯ originalPositionFor node_modules/.pnpm/@ampproject+remapping@2.3.0/node_modules/@ampproject/remapping/dist/remapping.mjs:74:17
+ ❯ originalPositionFor node_modules/.pnpm/@ampproject+remapping@2.3.0/node_modules/@ampproject/remapping/dist/remapping.mjs:85:12
+ ❯ traceMappings node_modules/.pnpm/@ampproject+remapping@2.3.0/node_modules/@ampproject/remapping/dist/remapping.mjs:53:26
+ ❯ remapping node_modules/.pnpm/@ampproject+remapping@2.3.0/node_modules/@ampproject/remapping/dist/remapping.mjs:193:26
+ ❯ excludeGeneratedCode node_modules/.pnpm/@vitest+coverage-v8@1.6.1_vitest@1.6.1_@types+node@24.10.1_happy-dom@20.0.11_/node_modules/@vitest/coverage-v8/dist/provider.js:2479:23
+ ❯ V8CoverageProvider.getSources node_modules/.pnpm/@vitest+coverage-v8@1.6.1_vitest@1.6.1_@types+node@24.10.1_happy-dom@20.0.11_/node_modules/@vitest/coverage-v8/dist/provider.js:2433:20
+ ❯ async file:/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@vitest+coverage-v8@1.6.1_vitest@1.6.1_@types+node@24.10.1_happy-dom@20.0.11_/node_modules/@vitest/coverage-v8/dist/provider.js:2377:44
+ ❯ V8CoverageProvider.getUntestedFiles node_modules/.pnpm/@vitest+coverage-v8@1.6.1_vitest@1.6.1_@types+node@24.10.1_happy-dom@20.0.11_/node_modules/@vitest/coverage-v8/dist/provider.js:2376:25
+ ❯ V8CoverageProvider.reportCoverage node_modules/.pnpm/@vitest+coverage-v8@1.6.1_vitest@1.6.1_@types+node@24.10.1_happy-dom@20.0.11_/node_modules/@vitest/coverage-v8/dist/provider.js:2314:32
+ ❯ Vitest.reportCoverage node_modules/.pnpm/vitest@1.6.1_@types+node@24.10.1_happy-dom@20.0.11/node_modules/vitest/dist/vendor/cli-api.OdDWuB7Y.js:11475:7
+ ❯ async file:/home/geni/Documents/vale-village-v2/node_modules/.pnpm/vitest@1.6.1_@types+node@24.10.1_happy-dom@20.0.11/node_modules/vitest/dist/vendor/cli-api.OdDWuB7Y.js:11238:7
+ ❯ Vitest.runFiles node_modules/.pnpm/vitest@1.6.1_@types+node@24.10.1_happy-dom@20.0.11/node_modules/vitest/dist/vendor/cli-api.OdDWuB7Y.js:11244:12
+ ❯ Vitest.start node_modules/.pnpm/vitest@1.6.1_@types+node@24.10.1_happy-dom@20.0.11/node_modules/vitest/dist/vendor/cli-api.OdDWuB7Y.js:11111:7
+ ❯ startVitest node_modules/.pnpm/vitest@1.6.1_@types+node@24.10.1_happy-dom@20.0.11/node_modules/vitest/dist/vendor/cli-api.OdDWuB7Y.js:18364:7
+ ❯ start node_modules/.pnpm/vitest@1.6.1_@types+node@24.10.1_happy-dom@20.0.11/node_modules/vitest/dist/vendor/cac.cdAtVkJZ.js:1415:17
+ ❯ CAC.run node_modules/.pnpm/vitest@1.6.1_@types+node@24.10.1_happy-dom@20.0.11/node_modules/vitest/dist/vendor/cac.cdAtVkJZ.js:1395:3
+
+
+
+
+UNIT_TESTS_EXIT:0
+
+Running 45 tests using 1 worker
+
+  ✓   1 [chromium] › tests/e2e/acquisition-fanfare.e2e.spec.ts:3:1 › acquisition fanfare - e2e placeholder (5.2s)
+  ✓   2 [chromium] › tests/e2e/agent_navigation.spec.ts:11:1 › Agent navigation via bridge (stub LLM) (5.2s)
+  -   3 [chromium] › tests/e2e/battle-animations.spec.ts:4:1 › Enemy animations appear during battle
+  ✓   4 [chromium] › tests/e2e/boot-purple-page.spec.ts:4:1 › Boot: game canvas is visible (5.2s)
+  ✘   5 [chromium] › tests/e2e/combat/combat-flow.spec.ts:23:1 › Combat UI flow completes and shows rewards (1.2m)
+  -   6 [chromium] › tests/e2e/combat/combat-ui.spec.ts:11:1 › Combat UI integration: action menu and abilities open/close
+  -   7 [chromium] › tests/e2e/compendium-djinn.spec.ts:5:1 › Compendium Djinn Section has sprites
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/main.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/@vite/client
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/node_modules/.vite/deps/preact.js?v=035d58d7
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/node_modules/.vite/deps/preact_debug.js?v=035d58d7
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/App.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/ErrorBoundary.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/data/validateData.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/store/gameStore.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/random/prng.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/models/Team.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/models/Unit.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/state/store.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/data/definitions/units.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/services/EncounterService.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/data/definitions/encounters.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/input/InputManager.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/services/TelemetryService.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/index.css
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/node_modules/.vite/deps/preact_jsx-dev-runtime.js?v=035d58d7
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/node_modules/.pnpm/vite@5.4.21_@types+node@24.10.1/node_modules/vite/dist/client/env.mjs
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/node_modules/.vite/deps/chunk-QHOBANBR.js?v=035d58d7
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/node_modules/.vite/deps/chunk-V4OQ3NZ2.js?v=035d58d7
+PAGE_CONSOLE debug [vite] connecting...
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/node_modules/.vite/deps/chunk-KBENNU62.js?v=035d58d7
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/node_modules/.pnpm/@prefresh+core@1.5.9_preact@10.27.2/node_modules/@prefresh/core/src/index.js?v=035d58d7
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/node_modules/.vite/deps/preact_hooks.js?v=035d58d7
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/node_modules/.pnpm/@prefresh+utils@1.2.1/node_modules/@prefresh/utils/src/index.js?v=035d58d7
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/node_modules/.vite/deps/zustand_shallow.js?v=035d58d7
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/screens/TitleScreen.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/PreBattleTeamSelectScreenV2.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/screens/OverworldMap.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/screens/QueueBattleView.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/screens/MainMenu.tsx
+PAGE_CONSOLE debug [vite] connected.
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/RewardsScreen.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/ShopScreen.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/TowerHubScreen.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/CompendiumScreen.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/IntroScreen.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/data/definitions/dialogues.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/modals/PauseMenu.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/data/definitions/postBattleDialogues.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/debug/DevModeOverlay.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/TransitionSpiral.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/driver.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/modals/InventoryModal.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/SaveMenu.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/PartyManagementScreen.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/modals/SettingsModal.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/dialogue/CutsceneDialogueContainer.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/modals/HowToPlay.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/styles/transitions.css
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/DjinnCollectionScreen.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/CreditsScreen.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/EpilogueScreen.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/node_modules/.vite/deps/zustand_traditional.js?v=035d58d7
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/node_modules/.vite/deps/zustand_middleware_immer.js?v=035d58d7
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/node_modules/.vite/deps/zod.js?v=035d58d7
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/models/Equipment.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/node_modules/.vite/deps/zustand_middleware.js?v=035d58d7
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/constants.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/state/queueBattleSlice.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/state/teamSlice.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/state/saveSlice.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/state/storySlice.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/state/inventorySlice.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/state/rewardsSlice.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/state/gameFlowSlice.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/state/overworldSlice.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/state/dialogueSlice.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/state/devModeSlice.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/state/towerSlice.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/state/fanfareSlice.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/data/definitions/enemyGroups.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/utils/enemyToUnit.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/data/definitions/enemies.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/node_modules/.vite/deps/chunk-ZHOSNT5J.js?v=035d58d7
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/services/BattleService.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/data/definitions/abilities.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/node_modules/.pnpm/@prefresh+core@1.5.9_preact@10.27.2/node_modules/@prefresh/core/src/runtime/vnode.js?v=035d58d7
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/node_modules/.pnpm/@prefresh+core@1.5.9_preact@10.27.2/node_modules/@prefresh/core/src/runtime/debounceRendering.js?v=035d58d7
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/node_modules/.pnpm/@prefresh+core@1.5.9_preact@10.27.2/node_modules/@prefresh/core/src/runtime/unmount.js?v=035d58d7
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/node_modules/.pnpm/@prefresh+core@1.5.9_preact@10.27.2/node_modules/@prefresh/core/src/runtime/catchError.js?v=035d58d7
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/node_modules/.pnpm/@prefresh+core@1.5.9_preact@10.27.2/node_modules/@prefresh/core/src/constants.js?v=035d58d7
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/node_modules/.pnpm/@prefresh+core@1.5.9_preact@10.27.2/node_modules/@prefresh/core/src/computeKey.js?v=035d58d7
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/node_modules/.pnpm/@prefresh+core@1.5.9_preact@10.27.2/node_modules/@prefresh/core/src/runtime/vnodesForComponent.js?v=035d58d7
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/node_modules/.pnpm/@prefresh+core@1.5.9_preact@10.27.2/node_modules/@prefresh/core/src/runtime/signaturesForType.js?v=035d58d7
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/node_modules/.vite/deps/chunk-RUKZIBH7.js?v=035d58d7
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/TitleScreen.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/node_modules/.vite/deps/preact_devtools.js?v=035d58d7
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/state/battleConfig.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/EnemyPortalTile.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/sprites/mappings/index.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/sprites/SimpleSprite.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/debug/ToolboxHelpers.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/data/definitions/djinn.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/PreBattleTeamSelectScreenV2.css
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/overworld-v2/OverworldV2.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/MainMenu.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/RewardsScreen.css
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/QueueBattleView.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/BattleUnitSprite.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/EquipmentChoicePicker.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/EquipmentIcon.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/data/definitions/shops.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/data/definitions/djinnAbilities.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/data/definitions/equipment.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/services/ShopService.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/utils/contentAvailability.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/config/towerConfig.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/data/definitions/starterKits.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/TowerHubScreen.css
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/hooks/useShopController.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/ShopScreen.css
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/IntroScreen.css
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/algorithms/stats.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/data/definitions/towerRewards.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/CompendiumScreen.css
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/sprites/utils/warnIfPlaceholderSprite.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/ShopEquipScreen.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/story/vs1Constants.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/data/definitions/recruitmentDialogues.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/debug/DevModeOverlay.css
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/modals/modals.css
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/PauseMenu.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/SaveMenu.css
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/data/definitions/houseEnemyDialogues.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/data/definitions/maps.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/PartyManagementScreen.css
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/hooks/useSettings.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/dialogue/CutsceneDialogueContainer.css
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/dialogue/DialogueBoxV3.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/sprites/backgrounds.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/DjinnDetailModal.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/data/credits.json?import
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/node_modules/.vite/deps/chunk-V52RTZRZ.js?v=035d58d7
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/DjinnCollectionScreen.css
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/constants/game.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/node_modules/.vite/deps/chunk-G3A6E2SI.js?v=035d58d7
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/algorithms/healing.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/models/BattleState.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/services/QueueBattleService.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/services/StoryService.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/models/story.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/services/RewardsService.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/services/SaveService.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/data/definitions/preBattleDialogues.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/battle/normalizeBattleState.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/services/TowerService.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/services/OverworldService.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/services/DialogueService.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/services/DjinnService.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/utils/unitToEnemy.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/data/definitions/mireToad.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/data/definitions/lumenFawn.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/algorithms/damage.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/algorithms/turn-order.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/data/definitions/towerFloors.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/algorithms/weakness.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/algorithms/xp.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/utils/result.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/services/BattleTransaction.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/node_modules/.pnpm/@prefresh+core@1.5.9_preact@10.27.2/node_modules/@prefresh/core/src/utils.js?v=035d58d7
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/algorithms/targeting.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/TitleScreen.css
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/sprites/mappings/statusIcons.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/algorithms/status.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/sprites/mappings/overworldSprites.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/sprites/mappings/abilityIcons.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/sprites/mappings/portraits.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/sprites/mappings/battleSprites.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/debug/ToolboxHelpers.css
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/sprites/catalog.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/overworld-v2/layers/BackgroundLayer.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/overworld-v2/layers/TerrainLayer.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/overworld-v2/layers/TreeLayer.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/overworld-v2/engine/playerBounds.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/overworld-v2/layers/SkyLayer.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/overworld-v2/engine/OverworldEngineV2.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/overworld-v2/layers/RoadLayer.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/overworld-v2/layers/VillageLayer.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/overworld-v2/layers/encountersLayer.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/overworld-v2/layers/InteriorNpcLayer.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/overworld/layers/InteriorFloorLayer.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/overworld-v2/data/constants.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/overworld-v2/layers/PlayerLayer.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/overworld/OverworldCanvas.css
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/VirtualJoystick.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/overworld/layers/InteriorFurnitureLayer.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/services/AudioService.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/overworld-v2/engine/math.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/logic/index.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/simulation/simStep.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/overworld-v2/layers/HudLayer.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/overworld-v2/data/villageLayout.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/services/GameInitializationService.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/MainMenu.css
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/PostBattleCutscene.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/VictoryOverlay.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/DefeatOverlay.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/BattleManaBar.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/BattlePortraitRow.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/battle/BattlefieldV2.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/hooks/useBattleController.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/BattleActionMenu.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/sprites/mappings/equipmentSprites.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/state/types.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/hooks/useBattleOrchestrator.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/algorithms/equipment.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/algorithms/djinnAbilities.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/ShopEquipScreen.css
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/PauseMenu.css
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/dialogue/DialogueBoxV3.css
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/algorithms/djinn.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/DjinnDetailModal.css
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/algorithms/mana.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/data/schemas/SaveV1Schema.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/services/AIService.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/data/definitions/storyFlags.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/algorithms/rewards.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/data/schemas/BattleStateSchema.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/migrations/index.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/validation/saveFileValidation.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/services/LevelNormalizationService.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/data/definitions/liberationDialogues.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/sprites/loader.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/VirtualJoystick.css
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/overworld-v2/engine/Camera.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/sprites/sprite-list-generated.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/constants/input.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/logic/types.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/node_modules/.vite/deps/howler.js?v=035d58d7
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/logic/simStep.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/PostBattleCutscene.css
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/logic/terminal.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/VictoryOverlay.css
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/logic/combat.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/core/logic/spawn.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/DefeatOverlay.css
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/node_modules/.vite/deps/preact_compat.js?v=035d58d7
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/components/battle/DjinnStatusBar.tsx
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/hooks/useBattleSpeed.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/constants/animationTiming.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/types/BattleUIPhase.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/data/schemas/UnitSchema.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/data/schemas/EquipmentSchema.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/data/schemas/TeamSchema.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/ui/sprites/manifest.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/node_modules/.vite/deps/immer.js?v=035d58d7
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/data/schemas/StatsSchema.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/data/schemas/AbilitySchema.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/data/schemas/ContentAvailabilitySchema.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/data/schemas/EnemySchema.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/data/schemas/DjinnSchema.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/data/schemas/ShopSchema.ts
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/src/data/schemas/EncounterSchema.ts
+PAGE_RESPONSE [33m200[39m https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/sprites/overworld/protagonists/Isaac_Walk.gif
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/sprites/overworld/protagonists/Garet_Right.gif
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/sprites/overworld/protagonists/Ivan_Right.gif
+PAGE_RESPONSE [33m200[39m http://127.0.0.1:5173/sprites/overworld/protagonists/Mia_Right.gif
+PAGE_CONSOLE log [driver] __GAME_DRIVER__ v1 installed
+PAGE_RESPONSE [33m200[39m https://fonts.gstatic.com/s/pressstart2p/v16/e3t4euO8T-267oIAQAu6jDQyK3nVivM.woff2
+ROOT_HTML_SNIPPET <div class="app-root"><div class="screen-container"><div class="title-screen"><div class="title-screen-content"><h1 class="title-screen-logo">Vale Chronicles</h1><p class="title-screen-subtitle">Tap to continue</p></div><div class="title-screen-parade"><div class="title-screen-character" style="animation-delay: 0s;"><img src="/sprites/overworld/protagonists/Isaac_Walk.gif" alt="Isaac" class="title-screen-sprite"></div><div class="title-screen-character" style="animation-delay: 0.8s;"><img src="/sprites/overworld/protagonists/Garet_Right.gif" alt="Garet" class="title-screen-sprite"></div><div class="title-screen-character" style="animation-delay: 1.6s;"><img src="/sprites/overworld/protagonists/Ivan_Right.gif" alt="Ivan" class="title-screen-sprite"></div><div class="title-screen-character" style="animation-delay: 2.4s;"><img src="/sprites/overworld/protagonists/Mia_Right.gif" alt="Mia" class="title-screen-sprite"></div></div></div></div><canvas id="boot-canvas" width="1" height="1" styl
+  ✓   8 [chromium] › tests/e2e/debug-boot.spec.ts:3:1 › debug boot (6.5s)
+===PAGE_HTML_START===
+<!DOCTYPE html><html lang="en"><head>
+    <script type="module" src="/@vite/client"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vale Village v2</title>
+  <style type="text/css" data-vite-dev-id="/home/geni/Documents/vale-village-v2/src/ui/components/TitleScreen.css">.title-screen {
+  position: fixed;
+  inset: 0;
+  /* Ensure full viewport size for reliable e2e visibility checks */
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255, 216, 127, 0.08), transparent 32%),
+    radial-gradient(circle at 82% 12%, rgba(116, 186, 255, 0.08), transparent 30%),
+    radial-gradient(circle at 30% 78%, rgba(255, 144, 104, 0.05), transparent 34%),
+    linear-gradient(180deg, #080b14 0%, #0c1223 45%, #05070d 100%);
+  color: #f6e9d7;
+  cursor: pointer;
+  overflow: hidden;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.title-screen::before {
+  content: '';
+  position: absolute;
+  inset: -18%;
+  background:
+    radial-gradient(circle at 35% 40%, rgba(104, 186, 255, 0.14), transparent 42%),
+    radial-gradient(circle at 70% 75%, rgba(255, 216, 127, 0.12), transparent 40%);
+  filter: blur(18px);
+  opacity: 0.85;
+  animation: menuAurora 18s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.title-screen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 20% 30%, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1px 1px at 55% 80%, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1px 1px at 80% 25%, rgba(255, 255, 255, 0.55), transparent),
+    radial-gradient(1px 1px at 40% 65%, rgba(255, 255, 255, 0.45), transparent);
+  opacity: 0.4;
+  animation: starField 26s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.title-screen-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 3rem 3.25rem;
+  border-radius: 20px;
+  background: linear-gradient(145deg, rgba(22, 25, 36, 0.94), rgba(12, 14, 24, 0.96));
+  border: 1px solid rgba(255, 216, 127, 0.28);
+  box-shadow:
+    0 26px 60px rgba(0, 0, 0, 0.55),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(6px);
+}
+
+.title-screen-content::before {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  pointer-events: none;
+}
+
+.title-screen-logo {
+  font-size: 4.2rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  margin: 0 0 1.2rem 0;
+  display: inline-block;
+  padding: 0.9rem 1.5rem;
+  border-radius: 18px;
+  text-transform: uppercase;
+  background: linear-gradient(125deg, #f9e4b2 0%, #f2c572 45%, #ffe7a4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.55),
+    0 0 30px rgba(249, 214, 127, 0.25);
+  box-shadow:
+    0 0 0 2px rgba(255, 216, 127, 0.45),
+    0 0 26px rgba(255, 216, 127, 0.32),
+    0 0 54px rgba(242, 197, 114, 0.28);
+}
+
+.title-screen-subtitle {
+  margin: 0;
+  font-size: 1.05rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #c0c8de;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.55);
+  animation: subtitlePulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes menuAurora {
+  0% {
+    transform: translate3d(-12px, -8px, 0) scale(1);
+  }
+  100% {
+    transform: translate3d(14px, 10px, 0) scale(1.05);
+  }
+}
+
+@keyframes starField {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: -220px 220px;
+  }
+}
+
+@keyframes subtitlePulse {
+  0% {
+    opacity: 0.85;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+}
+
+/* Character parade at bottom of title screen */
+.title-screen-parade {
+  position: absolute;
+  bottom: 60px;
+  left: 0;
+  right: 0;
+  height: 64px;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.title-screen-character {
+  position: absolute;
+  bottom: 0;
+  animation: characterWalk 12s linear infinite;
+  opacity: 0;
+}
+
+.title-screen-sprite {
+  width: 48px;
+  height: 48px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+}
+
+@keyframes characterWalk {
+  0% {
+    left: -60px;
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 1;
+  }
+  100% {
+    left: calc(100% + 60px);
+    opacity: 0;
+  }
+}
+</style><style type="text/css" data-vite-dev-id="/home/geni/Documents/vale-village-v2/src/ui/components/overworld/OverworldCanvas.css">/**
+ * OverworldCanvas Styles
+ * Container, canvas styling, and UI chrome for the pseudo-3D overworld
+ */
+
+/* Shell container - from OverworldMap.css */
+.overworld-shell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem 1.25rem;
+  background: #03080c;
+  min-height: 100vh;
+}
+
+/* Location banner fade animation */
+@keyframes bannerFadeInOut {
+  0% { opacity: 0; transform: translateY(-10px); }
+  15% { opacity: 1; transform: translateY(0); }
+  85% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-10px); }
+}
+
+/* Location banner */
+.location-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  background: rgba(5, 12, 17, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  border-radius: 999px;
+  padding: 0.4rem 0.75rem;
+  color: #e7f4f1;
+  backdrop-filter: blur(8px);
+  animation: bannerFadeInOut 4s ease-in-out forwards;
+}
+
+.location-title {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.location-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.location-chip {
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.85rem;
+  color: #d9e8e5;
+}
+
+.location-chip--ghost {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.15);
+  color: rgba(233, 244, 241, 0.8);
+}
+
+/* Overworld stage container */
+.overworld-stage {
+  background:
+    radial-gradient(circle at 30% 30%, rgba(79, 149, 255, 0.1), transparent 45%),
+    radial-gradient(circle at 70% 70%, rgba(255, 199, 94, 0.08), transparent 40%),
+    #03080c;
+  padding: 0.85rem;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
+}
+
+/* Canvas container */
+.overworld-canvas-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1a1a2a;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.overworld-canvas {
+  /* Pixel-perfect rendering */
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+
+  /* Prevent blurry scaling */
+  -ms-interpolation-mode: nearest-neighbor;
+
+  /* Center and scale to fit container */
+  max-width: 100%;
+  max-height: 100%;
+
+  /* Subtle shadow for depth */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+
+  /* Smooth border radius for polish */
+  border-radius: 4px;
+}
+
+/* Sprite overlay for animated GIF sprites (Phase 3) */
+.sprite-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.sprite-overlay img {
+  position: absolute;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* Loading state */
+.overworld-canvas-container.loading::after {
+  content: 'Loading...';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-family: monospace;
+  font-size: 16px;
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* Debug overlay styling */
+.overworld-canvas-container.debug .overworld-canvas {
+  outline: 2px solid #ff0;
+}
+
+/* Focus state for accessibility */
+.overworld-canvas:focus {
+  outline: 2px solid #5090d8;
+  outline-offset: 2px;
+}
+
+/* Responsive scaling */
+@media (max-width: 1024px) {
+  .overworld-canvas {
+    width: 100%;
+    height: auto;
+  }
+}
+
+/* Mobile touch area hint */
+@media (max-width: 768px) {
+  .overworld-canvas-container::before {
+    content: '';
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 120px;
+    border: 2px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+}
+</style><style type="text/css" data-vite-dev-id="/home/geni/Documents/vale-village-v2/src/ui/components/VirtualJoystick.css">.virtual-controls {
+  position: fixed;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 20px;
+  pointer-events: none;
+  z-index: 1000;
+  touch-action: none;
+}
+
+.virtual-joystick {
+  /* Use design tokens; joystick intentionally larger than button-size to provide comfortable movement area */
+  width: calc(var(--button-size-lg) * 2.5);
+  height: calc(var(--button-size-lg) * 2.5);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  min-width: calc(var(--button-size-lg) * 2);
+  min-height: calc(var(--button-size-lg) * 2);
+}
+
+.virtual-joystick-knob {
+  width: var(--button-size-lg);
+  height: var(--button-size-lg);
+  border-radius: 50%;
+  background: linear-gradient(145deg, rgba(255, 216, 127, 0.9), rgba(242, 197, 114, 0.9));
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    inset 0 2px 4px rgba(255, 255, 255, 0.3);
+  transition: transform 0.05s ease-out;
+  pointer-events: none;
+}
+
+.virtual-action-button {
+  width: var(--button-size-xl);
+  height: var(--button-size-xl);
+  border-radius: 50%;
+  background: linear-gradient(145deg, rgba(255, 216, 127, 0.9), rgba(242, 197, 114, 0.9));
+  border: 3px solid rgba(255, 255, 255, 0.5);
+  color: #1a0a00;
+  font-size: 24px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    inset 0 2px 4px rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  min-width: var(--button-size-xl);
+  min-height: var(--button-size-xl);
+}
+
+.virtual-action-button:active {
+  transform: scale(0.95);
+  background: linear-gradient(145deg, rgba(242, 197, 114, 0.9), rgba(220, 180, 100, 0.9));
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.3),
+    inset 0 1px 2px rgba(255, 255, 255, 0.2);
+}
+
+/* Hide on desktop */
+@media (hover: hover) and (pointer: fine) {
+  .virtual-controls {
+    display: none;
+  }
+}
+</style><style type="text/css" data-vite-dev-id="/home/geni/Documents/vale-village-v2/src/ui/components/debug/ToolboxHelpers.css">.toolbox-root {
+  position: fixed;
+  z-index: 1400;
+  pointer-events: none;
+}
+
+.toolbox-root.bottom-right { bottom: 12px; right: 12px; }
+.toolbox-root.bottom-left { bottom: 12px; left: 12px; }
+.toolbox-root.top-right { top: 12px; right: 12px; }
+.toolbox-root.top-left { top: 12px; left: 12px; }
+
+.toolbox-toggle {
+  pointer-events: auto;
+  background: #2d2117;
+  color: #ffd87f;
+  border: 2px solid #8b6a4a;
+  border-radius: 10px;
+  padding: 6px 10px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+
+.toolbox-panel {
+  pointer-events: auto;
+  margin-top: 8px;
+  background: linear-gradient(180deg, #1a0a00 0%, #2a1a0a 100%);
+  border: 2px solid #8b6a4a;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  min-width: 220px;
+  max-width: 320px;
+  overflow: hidden;
+  transition: opacity 120ms ease, transform 120ms ease;
+}
+
+.toolbox-panel.closed {
+  opacity: 0
+===PAGE_HTML_END===
+  ✓   9 [chromium] › tests/e2e/debug-title.spec.ts:4:1 › debug title content (4.4s)
+title-screen count: [33m1[39m
+title-screen visible: [33mtrue[39m
+title-screen box: { x: [33m0[39m, y: [33m0[39m, width: [33m1280[39m, height: [33m720[39m }
+subtitle text: TAP TO CONTINUE
+computed style and viewport: {
+  titleComputedHeight: [32m'720px'[39m,
+  screenContainerHeight: [32m'0px'[39m,
+  appRootHeight: [32m'0px'[39m,
+  clientHeight: [33m720[39m,
+  innerHeight: [33m720[39m
+}
+  ✓  10 [chromium] › tests/e2e/debug-visibility.spec.ts:3:1 › debug title visibility (4.3s)
+  -  11 [chromium] › tests/e2e/djinn-sprites-simple.spec.ts:10:3 › Djinn Sprites - Direct Component Test › should render Djinn sprites when accessing DjinnCollectionScreen with mock data
+  -  12 [chromium] › tests/e2e/djinn-sprites.spec.ts:15:3 › Djinn Sprites Rendering › should render Djinn sprites in DjinnCollectionScreen
+  -  13 [chromium] › tests/e2e/enemy-animations-simple.spec.ts:10:3 › Enemy Animations (Simplified Verification) › should load battle and verify enemy sprites are rendered
+  -  14 [chromium] › tests/e2e/enemy-animations-simple.spec.ts:102:3 › Enemy Animations (Simplified Verification) › should detect BattleUnit component renders with isPlayer prop
+  -  15 [chromium] › tests/e2e/enemy-animations.spec.ts:75:3 › Enemy Animations E2E › should apply enemy-lunge and enemy-shake CSS classes during battle
+  -  16 [chromium] › tests/e2e/enemy-animations.spec.ts:236:3 › Enemy Animations E2E › should verify enemy sprites exist in DOM during battle
+  -  17 [chromium] › tests/e2e/equip-check.spec.ts:5:1 › Equipment sprites check
+  ✓  18 [chromium] › tests/e2e/feature_parity_accessories.e2e.spec.ts:3:1 › Feature parity E2E: Accessories placeholder (4ms)
+  ✓  19 [chromium] › tests/e2e/feature_parity_menu.e2e.spec.ts:3:1 › Feature parity E2E: Menu navigation placeholder (3ms)
+  -  20 [chromium] › tests/e2e/gameplay-all-houses.spec.ts:60:1 › Gray-box: Play through all Houses
+  -  21 [chromium] › tests/e2e/gameplay-authentic.spec.ts:91:6 › Authentic Gameplay: Start to Finish (Houses 1-50)
+  -  22 [chromium] › tests/e2e/gameplay-demo.spec.ts:252:1 › Gameplay demo - watch the game play through automatically
+  -  23 [chromium] › tests/e2e/gameplay-full-game.spec.ts:9:1 › Full Game Flow - Fast Start
+  -  24 [chromium] › tests/e2e/gameplay-full-tower.spec.ts:89:1 › Full Tower Run - Complete all 30 floors
+  -  25 [chromium] › tests/e2e/gameplay-graybox.spec.ts:4:1 › Gray-box: Direct Battle Injection
+  -  26 [chromium] › tests/e2e/gameplay-journey.spec.ts:235:1 › Gameplay journey (title -> tower run -> rewards)
+  -  27 [chromium] › tests/e2e/gameplay-tour.spec.ts:17:1 › Gameplay tour (screens + overworld)

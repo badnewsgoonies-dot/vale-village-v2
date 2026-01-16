@@ -142,6 +142,10 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
   // --------------------------------------------------------------------------
   useEffect(() => {
     if (driverInstalledRef.current) return;
+    
+    // Store previous driver to restore on unmount
+    const previousDriver = (window as any).__GAME_DRIVER__;
+    
     driverInstalledRef.current = true;
 
     installGameDriver({
@@ -257,6 +261,18 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
           currentHouseNumRef.current = 1;
         }
     });
+
+    // Cleanup: Restore previous driver or uninstall
+    return () => {
+      if (previousDriver) {
+        (window as any).__GAME_DRIVER__ = previousDriver;
+        console.log('[OverworldV2] Restored previous driver');
+      } else {
+        delete (window as any).__GAME_DRIVER__;
+        console.log('[OverworldV2] Uninstalled driver');
+      }
+      driverInstalledRef.current = false;
+    };
   }, []); // Added exitInterior dependency
 
   const getUnlockedBuildingIds = useCallback((): Set<string> => {

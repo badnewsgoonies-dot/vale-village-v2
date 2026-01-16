@@ -20,7 +20,7 @@ import { ENCOUNTER_TO_POST_BATTLE_DIALOGUE } from '@/data/definitions/postBattle
 import type { GameFlowSlice } from './ui/state/gameFlowSlice';
 import { TransitionSpiral } from './ui/components/TransitionSpiral';
 import { DevModeOverlay } from './ui/components/debug/DevModeOverlay';
-import { installGameDriver, GameState, GameAction, DispatchResult } from './dev/driver';
+import { installGameDriver, GameState, GameAction, DispatchResult } from './driver';
 
 // Wrapper that reads team-select props from V1 store
 const TeamSelectWrapper: FunctionComponent = () => {
@@ -395,7 +395,7 @@ const App: FunctionComponent = () => {
            // Simple key simulation for menus could go here
            return { ok: true, terminal: { kind: 'running' } };
          },
-         resetRun: () => window.location.reload()
+         resetRun: () => { console.log('CI Force Start'); useGameStore.getState().setScreen('overworld'); }
        });
     }
   }, []);
