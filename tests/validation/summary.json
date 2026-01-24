@@ -1,0 +1,11 @@
+{
+  "exit_codes": {
+    "mem_briefing": "0",
+    "pnpm_install": "0",
+    "typecheck": "0",
+    "lint": "0",
+    "test": "0",
+    "e2e": "0",
+    "visual-regression": "0"
+  }
+}

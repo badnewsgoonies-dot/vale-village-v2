@@ -21,6 +21,8 @@ test.describe('Djinn Sprites E2E Test', () => {
     test.setTimeout(60000); // 1 minute
 
     await page.goto('/');
+    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForSelector('canvas, #app, .game-root, [data-testid="game-root"]', { timeout: 5000 }).catch(() => {});
 
     // 1. Title Screen
     await expect(page.locator('.title-screen')).toBeVisible();

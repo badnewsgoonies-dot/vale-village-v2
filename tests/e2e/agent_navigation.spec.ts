@@ -10,6 +10,8 @@ import { test, expect } from '@playwright/test';
 
 test('Agent navigation via bridge (stub LLM)', async ({ page }) => {
   await page.goto('/');
+  await page.waitForLoadState('networkidle').catch(() => {});
+  await page.waitForSelector('canvas, #app, .game-root, [data-testid="game-root"]', { timeout: 5000 }).catch(() => {});
 
   // Ensure test hooks exist and initialize telemetry (do not clobber InputManager's buffer)
   await page.waitForFunction(() => (window as any).gameStore && (window as any).__TELEMETRY__ !== undefined && (window as any).__INPUT_BUFFER__ !== undefined);

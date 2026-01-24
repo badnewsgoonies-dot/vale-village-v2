@@ -14,6 +14,8 @@ import * as path from 'path';
  */
 async function navigateToBattle(page: Page) {
   await page.goto('/');
+  await page.waitForLoadState('networkidle').catch(() => {});
+  await page.waitForSelector('canvas, #app, .game-root, [data-testid="game-root"]', { timeout: 5000 }).catch(() => {});
 
   // Wait for title screen
   await expect(page.locator('.title-screen')).toBeVisible();
