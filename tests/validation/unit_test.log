@@ -1,0 +1,161 @@
+
+> vale-village-v2@0.1.0 test:coverage /home/geni/Documents/vale-village-v2
+> vitest run --coverage
+
+
+ RUN  v1.6.1 /home/geni/Documents/vale-village-v2
+      Coverage enabled with v8
+
+ ✓ tests/unit/services/DialogueService.test.ts  (20 tests) 220ms
+ ✓ tests/unit/validation/battleStateInvariants.test.ts  (33 tests) 268ms
+ ✓ tests/unit/services/DjinnService.test.ts  (22 tests) 100ms
+ ✓ tests/unit/gameStore.test.ts  (36 tests) 362ms
+ ✓ tests/unit/services/RewardsService.test.ts  (22 tests) 175ms
+ ✓ tests/unit/services/AIService.test.ts  (9 tests) 144ms
+ ✓ tests/unit/integration/gameFlow.test.ts  (21 tests) 1072ms
+ ✓ tests/unit/components.test.tsx  (14 tests) 350ms
+ ✓ src/core/services/QueueBattleService.test.ts  (6 tests) 310ms
+ ✓ tests/unit/ui/towerSlice.test.ts  (10 tests) 132ms
+ ✓ tests/unit/turn-order.test.ts  (4 tests) 131ms
+ ✓ tests/unit/state/dialogueSlice.test.ts  (5 tests) 178ms
+ ✓ tests/unit/core/services/manaPersistence.test.ts  (4 tests) 129ms
+ ✓ tests/unit/combat/combat.test.ts  (7 tests) 81ms
+ ✓ tests/unit/replay.determinism.test.ts  (2 tests) 119ms
+ ✓ tests/unit/components/ErrorBoundary.test.tsx  (7 tests) 385ms
+ ✓ tests/unit/modalStack.test.ts  (7 tests) 83ms
+ ✓ tests/unit/core/algorithms/damage.test.ts  (4 tests) 64ms
+ ✓ tests/unit/core/services/BattleService.test.ts  (1 test) 110ms
+ ✓ tests/unit/replay.test.ts  (2 tests) 89ms
+stdout | tests/unit/ui/overworldV2.test.tsx > OverworldV2 basic render > renders canvas and player image with given size
+[driver] __GAME_DRIVER__ v1 installed
+[OverworldV2] Uninstalled driver
+
+ ✓ tests/unit/ui/overworldV2.test.tsx  (1 test) 263ms
+stdout | tests/unit/repro_bug_007.test.ts > BUG-007: Summon Healing Revive > should NOT revive KOd units with a healing summon
+Dead ally HP after healing summon: 0
+
+ ✓ tests/unit/repro_bug_007.test.ts  (1 test) 127ms
+ ✓ tests/unit/queueBattleSlice.test.ts  (2 tests) 21ms
+ ✓ tests/unit/bugs/bug_011_revival_targeting.test.ts  (1 test) 103ms
+ ✓ src/core/algorithms/weakness.test.ts  (5 tests) 43ms
+ ✓ tests/unit/bug_011_revival_targeting.test.ts  (1 test) 27ms
+ ✓ tests/unit/parity/accessories_elemental_resist.test.ts  (1 test) 31ms
+stderr | tests/unit/repro_bug_010.test.ts > BUG-010: Unstable Turn Order Tie-break > should maintain relative turn order of B and C when A dies
+Could not find a flipping seed in 100 tries
+
+ ✓ tests/unit/repro_bug_010.test.ts  (1 test) 62ms
+ ✓ tests/unit/ui/overworldLayers.test.ts  (3 tests) 80ms
+ ✓ tests/unit/state/gameFlowSlice.test.ts  (4 tests) 30ms
+ ✓ tests/unit/ui/battleSlice.test.ts  (7 tests) 37ms
+ ✓ tests/unit/components/DialogueChatOverlay.test.tsx  (1 test) 424ms
+ ✓ tests/unit/components/TowerHubScreen.test.tsx  (1 test) 5450ms
+ ✓ tests/unit/repro_bug_005.test.ts  (1 test) 28ms
+stdout | tests/unit/repro_bug_005.test.ts > BUG-005: AI AoE Overkill Restriction > should target all enemies with an AoE ability even with avoidOverkill hint
+AI Decision ability: quake-overkill
+AI Decision targets: [ 'enemy1', 'enemy2' ]
+
+stdout | tests/unit/repro_bug_006.test.ts > BUG-006: AI Ignores Debuffs > should give a non-zero score to debuff abilities
+AI Decision ability: weaken
+
+ ✓ tests/unit/repro_bug_006.test.ts  (1 test) 46ms
+ ✓ tests/unit/bugs/bug011_revival_targeting.test.ts  (1 test) 20ms
+ ✓ tests/unit/repro_bug_002.test.ts  (1 test) 77ms
+ ✓ tests/unit/state/queueBattleSlice.test.ts  (1 test) 95ms
+ ✓ tests/unit/core/algorithms/status.test.ts  (4 tests) 67ms
+ ✓ tests/unit/components/menu.test.tsx  (2 tests) 1410ms
+ ✓ tests/unit/services/EncounterService.test.ts  (1 test) 78ms
+ ✓ tests/unit/repro_bug_003.test.ts  (1 test) 37ms
+ ✓ tests/unit/repro_bug_003_v2.test.ts  (1 test) 29ms
+ ✓ tests/unit/queuedActions.immutable.test.ts  (1 test) 56ms
+stdout | tests/unit/repro_bug_014.test.ts > BUG-014: Missing Status Events > should emit status-applied event for buff abilities
+Events: [ 'ability', 'status-applied' ]
+
+ ✓ tests/unit/repro_bug_014.test.ts  (1 test) 92ms
+ ✓ tests/unit/mainLoop.determinism.test.ts  (1 test) 89ms
+ ✓ tests/unit/repro_bug_011.test.ts  (1 test) 92ms
+stdout | tests/unit/overworld_repro.test.ts > Overworld V2 Logic > should enforce reasonable walking bounds
+{ PLAYER_Y_MIN: 460, ROAD_Y_TOP: 460 }
+
+ ✓ tests/unit/overworld_repro.test.ts  (2 tests) 22ms
+ ✓ tests/unit/components/RewardsScreen.test.tsx  (1 test) 137ms
+ ✓ tests/unit/bugs/bug_015_overworld_collision.test.ts  (2 tests) 18ms
+ ✓ tests/unit/components/MainMenu.test.tsx  (1 test) 782ms
+ ✓ tests/unit/overworld/playerBoundsV2.test.ts  (2 tests) 44ms
+ ✓ tests/unit/repro_bug_001.test.ts  (2 tests) 35ms
+ ✓ src/ui/state/__tests__/fanfareSlice.test.ts  (2 tests) 53ms
+ ✓ tests/unit/ui/skyLayer.test.ts  (1 test) 18ms
+ ✓ tests/unit/validation/towerRewards.test.ts  (2 tests) 24ms
+ ✓ tests/unit/asset-loader.test.ts  (6 tests | 5 skipped) 35ms
+ ✓ tests/unit/core/StateManager.test.ts  (3 tests) 29ms
+ ✓ tests/unit/breakIntegration.test.ts  (2 tests) 22ms
+ ✓ src/core/services/SaveService.test.ts  (1 test) 32ms
+ ✓ tests/unit/sim/determinism.test.ts  (2 tests) 85ms
+ ✓ tests/unit/services/StoryService.test.ts  (1 test) 7ms
+ ✓ tests/unit/overworld/camera.test.ts  (3 tests) 43ms
+ ✓ tests/unit/validation/equipmentSprites.test.ts  (1 test) 50ms
+ ✓ tests/unit/core/battleEngine.test.ts  (2 tests) 9ms
+ ✓ tests/unit/breakGauge.test.ts  (3 tests) 32ms
+ ✓ tests/unit/validation/towerFloors.test.ts  (2 tests) 27ms
+ ✓ tests/unit/core/GameLoop.test.ts  (1 test) 30ms
+ ✓ tests/unit/game_init_smoke.test.ts  (1 test) 23ms
+ ✓ tests/unit/hitPopup.test.ts  (1 test) 23ms
+ ✓ tests/unit/hitstop.test.ts  (1 test) 29ms
+ ✓ tests/unit/ui/OverworldV2.test.tsx  (1 test) 6ms
+ ✓ tests/unit/core/engine.test.ts  (2 tests) 11ms
+ ✓ tests/unit/core/stateManager.test.ts  (1 test) 5ms
+ ✓ tests/unit/overworld/villageLayoutV2.test.ts  (1 test) 26ms
+ ✓ src/ui/components/window-classes.test.ts  (1 test) 26ms
+stdout | tests/unit/validateData.test.ts > validateData-run
+All game data validated successfully.
+
+ ✓ tests/unit/validateData.test.ts  (1 test) 521ms
+ ✓ tests/unit/validation/mireToad.test.ts  (1 test) 30ms
+ ✓ tests/unit/lumen_fawn.test.ts  (1 test) 11ms
+ ✓ tests/unit/useBattleController-null-undefined.test.ts  (1 test) 34ms
+ ✓ tests/unit/queue-battle-null-undefined.test.ts  (1 test) 15ms
+ ✓ tests/unit/parity/accessories_parity.test.ts  (1 test) 56ms
+ ✓ tests/unit/feature_parity_menu.test.ts  (1 test) 11ms
+ ✓ tests/unit/feature_parity_accessories.test.ts  (1 test) 8ms
+ ↓ src/core/services/LevelNormalizationService.test.ts  (1 test | 1 skipped)
+ ✓ tests/unit/parity/menu_focus_parity.test.ts  (1 test) 5ms
+ ✓ tests/unit/feature_parity_battle.test.ts  (1 test) 12ms
+ ✓ tests/unit/parity/battle_state_parity.test.ts  (1 test) 28ms
+ ✓ tests/unit/acquisition-fanfare.unit.test.ts  (1 test) 19ms
+ ✓ tests/unit/feature_parity_save_load.test.ts  (1 test) 12ms
+ ↓ src/core/services/DevModeService.test.ts  (1 test | 1 skipped)
+ ↓ src/core/services/BattleService.test.ts  (1 test | 1 skipped)
+ ✓ tests/unit/parity/save_replay_parity.test.ts  (1 test) 22ms
+ ↓ src/core/services/StoryService.test.ts  (1 test | 1 skipped)
+ ↓ src/core/services/TowerService.test.ts  (1 test | 1 skipped)
+ ↓ src/core/services/ShopService.test.ts  (1 test | 1 skipped)
+ ↓ src/core/services/RngService.test.ts  (1 test | 1 skipped)
+ ↓ src/core/services/AIService.test.ts  (1 test | 1 skipped)
+
+ Test Files  90 passed | 8 skipped (98)
+      Tests  343 passed | 13 todo (356)
+   Start at  22:50:40
+   Duration  236.06s (transform 61.06s, setup 122.83s, collect 97.42s, tests 15.88s, environment 210.47s, prepare 92.96s)
+
+)
+
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: ENOENT: no such file or directory, open '/home/geni/Documents/vale-village-v2/coverage/.tmp/coverage-38.json'
+ ❯ open node:internal/fs/promises:641:25
+ ❯ Object.readFile node:internal/fs/promises:1245:14
+ ❯ async file:/home/geni/Documents/vale-village-v2/node_modules/.pnpm/@vitest+coverage-v8@1.6.1_vitest@1.6.1_@types+node@24.10.1_happy-dom@20.0.11_/node_modules/@vitest/coverage-v8/dist/provider.js:2302:30
+ ❯ V8CoverageProvider.reportCoverage node_modules/.pnpm/@vitest+coverage-v8@1.6.1_vitest@1.6.1_@types+node@24.10.1_happy-dom@20.0.11_/node_modules/@vitest/coverage-v8/dist/provider.js:2301:11
+ ❯ Vitest.reportCoverage node_modules/.pnpm/vitest@1.6.1_@types+node@24.10.1_happy-dom@20.0.11/node_modules/vitest/dist/vendor/cli-api.OdDWuB7Y.js:11475:7
+ ❯ async file:/home/geni/Documents/vale-village-v2/node_modules/.pnpm/vitest@1.6.1_@types+node@24.10.1_happy-dom@20.0.11/node_modules/vitest/dist/vendor/cli-api.OdDWuB7Y.js:11238:7
+ ❯ Vitest.runFiles node_modules/.pnpm/vitest@1.6.1_@types+node@24.10.1_happy-dom@20.0.11/node_modules/vitest/dist/vendor/cli-api.OdDWuB7Y.js:11244:12
+ ❯ Vitest.start node_modules/.pnpm/vitest@1.6.1_@types+node@24.10.1_happy-dom@20.0.11/node_modules/vitest/dist/vendor/cli-api.OdDWuB7Y.js:11111:7
+ ❯ startVitest node_modules/.pnpm/vitest@1.6.1_@types+node@24.10.1_happy-dom@20.0.11/node_modules/vitest/dist/vendor/cli-api.OdDWuB7Y.js:18364:7
+ ❯ start node_modules/.pnpm/vitest@1.6.1_@types+node@24.10.1_happy-dom@20.0.11/node_modules/vitest/dist/vendor/cac.cdAtVkJZ.js:1415:17
+ ❯ CAC.run node_modules/.pnpm/vitest@1.6.1_@types+node@24.10.1_happy-dom@20.0.11/node_modules/vitest/dist/vendor/cac.cdAtVkJZ.js:1395:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { errno: -2, code: 'ENOENT', syscall: 'open', path: '/home/geni/Documents/vale-village-v2/coverage/.tmp/coverage-38.json' }
+
+
+
+ ELIFECYCLE  Command failed with exit code 1.

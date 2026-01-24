@@ -1,0 +1,36 @@
+# Session Briefing
+_Generated: 2026-01-15 22:47_
+## Recent Decisions (24h)
+- [VV2] Generated visual baselines and updated tests/e2e/visual/generate-baseline.js to use ES modules and correct repo root path; used --force to (re)create  -> generated (39m)
+- [vale-v2] Phase 4B complete: src/core/logic/ created with combat, terminal, simStep. ValeSimulator in validator imports from shared. -> shipped (3h)
+- [foresight] Consolidation A complete: unified foresight schema, shared parsing/scoring, replay harness, control surface -> shipped (3h)
+- [foresight] Shipped Foresight v1.2: Recon + Gameplay Simulation + Severity Scoring -> shipped (3h)
+- [foresight-layer] Designed minimal foresight layer for strategic orchestrator based on empirical validation. Single LLM call before batch launch to predict optimal lane -> minimal-foresight-at-orchestrator-level (13h)
+
+## Infrastructure
+- Linux box (10.0.0.52) has NO GPU - CPU only. Previous RTX 4090 entry was incorrect. Windows PC (10.0.0.122) has GTX 1060 6GB. (2025-12-08)
+- Codex CLI working with local Ollama. Use qwen2.5-coder:7b for tool support. Command: codex --oss. Models: qwen2.5-coder:7b (4.7GB, tools), llama3.2:3b (2GB, tools), gemma3:4b (3.3GB, no tools), deepse (2025-12-02)
+- Codex CLI v0.63.0 configured for local Ollama: oss_provider=ollama, oss_model=deepseek-coder:6.7b. Use 'codex --oss' to run with local models. Default mode still uses gpt-5.1-codex-max. (2025-12-02)
+- Windows Ollama setup complete: v0.13.0, gemma3:4b loaded, 63% GPU / 37% CPU offload on GTX 1060 6GB. Generation speed: 21.34 tok/s. LAN IP: 10.0.0.122:11434. OLLAMA_HOST=0.0.0.0 set for network access (2025-12-02)
+- Ollama v0.13.0 installed on Windows with GPU acceleration. GTX 1060 6GB detected (6144 MiB VRAM, driver 581.57). gemma3:4b model (3.3GB) pulled and ready for inference. (2025-12-02)
+
+## Known Bugs & Issues (7d)
+- [LESSON][strategic-orch] Workers likely completed phase-4 but capsule handoff failed - detected via ground truth scan (10h)
+- [H][batch-rotation-lane2] {   "lane": 2,   "from_worker": "a",   "thread_id": null,   "decisions": [     "Unit tests passed; tsc failed due to unr [@all] (11h)
+- [LESSON][strategic-orch] Workers likely completed phase-3 but capsule handoff failed - detected via ground truth scan (13h)
+- [FACT][foresight-layer] Fixed foresight implementation bug: self.brain_router → self.brain. Added null check for BrainRouter. Shadow test restar (13h)
+- [LESSON][strategic-orch] Workers likely completed phase-8-playtest but capsule handoff failed - detected via ground truth scan (15h)
+
+## Recent Handoffs (6h)
+- [batch-rotation-lane1] {   "lane": 1,   "from_worker": "a",   "thread_id": null,   "decisions": [],   "todos": [],   "risks": [],   "commands_run": 0,   "last_mess [@all] (2m)
+- [batch-rotation-lane3] {   "lane": 3,   "from_worker": "a",   "thread_id": null,   "decisions": [],   "todos": [],   "risks": [],   "commands_run": 0,   "last_mess [@all] (2m)
+- [batch-rotation-lane2] {   "lane": 2,   "from_worker": "a",   "thread_id": null,   "decisions": [],   "todos": [],   "risks": [],   "commands_run": 0,   "last_mess [@all] (2m)
+- [batch-rotation-lane2] {   "lane": 2,   "from_worker": "a",   "thread_id": null,   "decisions": [],   "todos": [],   "risks": [],   "commands_run": 0,   "last_mess [@all] (6m)
+- [batch-rotation-lane3] {   "lane": 3,   "from_worker": "a",   "thread_id": null,   "decisions": [],   "todos": [],   "risks": [],   "commands_run": 0,   "last_mess [@all] (8m)
+
+## Known Bugs
+- [FAIL][bug] Blocked on watch_vision run due to missing Steam URL and prompt. (6d)
+
+## Memory Stats
+- Total entries: 10807
+- Last 24h: 1476 new entries

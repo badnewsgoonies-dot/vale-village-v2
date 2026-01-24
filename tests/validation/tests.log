@@ -1,0 +1,133 @@
+
+ RUN  v1.6.1 /home/geni/Documents/vale-village-v2
+
+ ✓ tests/unit/services/DialogueService.test.ts  (20 tests) 48ms
+ ✓ tests/unit/validation/battleStateInvariants.test.ts  (33 tests) 60ms
+ ✓ tests/unit/services/DjinnService.test.ts  (22 tests) 51ms
+ ✓ tests/unit/gameStore.test.ts  (36 tests) 99ms
+ ✓ tests/unit/services/RewardsService.test.ts  (22 tests) 55ms
+ ✓ tests/unit/services/AIService.test.ts  (9 tests) 15ms
+ ✓ tests/unit/integration/gameFlow.test.ts  (21 tests) 208ms
+ ✓ tests/unit/components.test.tsx  (14 tests) 178ms
+ ✓ src/core/services/QueueBattleService.test.ts  (6 tests) 68ms
+ ✓ tests/unit/ui/towerSlice.test.ts  (10 tests) 32ms
+ ✓ tests/unit/turn-order.test.ts  (4 tests) 17ms
+ ✓ tests/unit/state/dialogueSlice.test.ts  (5 tests) 17ms
+ ✓ tests/unit/core/services/manaPersistence.test.ts  (4 tests) 57ms
+ ✓ tests/unit/combat/combat.test.ts  (7 tests) 28ms
+ ✓ tests/unit/replay.determinism.test.ts  (2 tests) 17ms
+ ✓ tests/unit/modalStack.test.ts  (7 tests) 43ms
+ ✓ tests/unit/components/ErrorBoundary.test.tsx  (7 tests) 171ms
+ ✓ tests/unit/core/algorithms/damage.test.ts  (4 tests) 28ms
+ ✓ tests/unit/replay.test.ts  (2 tests) 23ms
+ ✓ tests/unit/core/services/BattleService.test.ts  (1 test) 62ms
+ ✓ tests/unit/ui/overworldV2.test.tsx  (1 test) 126ms
+stdout | tests/unit/ui/overworldV2.test.tsx > OverworldV2 basic render > renders canvas and player image with given size
+[driver] __GAME_DRIVER__ v1 installed
+[OverworldV2] Uninstalled driver
+
+ ✓ tests/unit/repro_bug_007.test.ts  (1 test) 30ms
+stdout | tests/unit/repro_bug_007.test.ts > BUG-007: Summon Healing Revive > should NOT revive KOd units with a healing summon
+Dead ally HP after healing summon: 0
+
+ ✓ tests/unit/queueBattleSlice.test.ts  (2 tests) 9ms
+ ✓ tests/unit/bugs/bug_011_revival_targeting.test.ts  (1 test) 38ms
+ ✓ tests/unit/bug_011_revival_targeting.test.ts  (1 test) 22ms
+ ✓ tests/unit/parity/accessories_elemental_resist.test.ts  (1 test) 6ms
+ ✓ src/core/algorithms/weakness.test.ts  (5 tests) 40ms
+ ✓ tests/unit/repro_bug_010.test.ts  (1 test) 33ms
+stderr | tests/unit/repro_bug_010.test.ts > BUG-010: Unstable Turn Order Tie-break > should maintain relative turn order of B and C when A dies
+Could not find a flipping seed in 100 tries
+
+ ✓ tests/unit/ui/overworldLayers.test.ts  (3 tests) 27ms
+ ✓ tests/unit/state/gameFlowSlice.test.ts  (4 tests) 27ms
+ ✓ tests/unit/ui/battleSlice.test.ts  (7 tests) 27ms
+ ✓ tests/unit/components/DialogueChatOverlay.test.tsx  (1 test) 177ms
+stdout | tests/unit/repro_bug_005.test.ts > BUG-005: AI AoE Overkill Restriction > should target all enemies with an AoE ability even with avoidOverkill hint
+AI Decision ability: quake-overkill
+AI Decision targets: [ 'enemy1', 'enemy2' ]
+
+ ✓ tests/unit/repro_bug_005.test.ts  (1 test) 25ms
+ ✓ tests/unit/components/TowerHubScreen.test.tsx  (1 test) 2590ms
+ ✓ tests/unit/repro_bug_006.test.ts  (1 test) 32ms
+stdout | tests/unit/repro_bug_006.test.ts > BUG-006: AI Ignores Debuffs > should give a non-zero score to debuff abilities
+AI Decision ability: weaken
+
+ ✓ tests/unit/bugs/bug011_revival_targeting.test.ts  (1 test) 10ms
+ ✓ tests/unit/repro_bug_002.test.ts  (1 test) 17ms
+ ✓ tests/unit/state/queueBattleSlice.test.ts  (1 test) 8ms
+ ✓ tests/unit/core/algorithms/status.test.ts  (4 tests) 16ms
+ ✓ tests/unit/components/menu.test.tsx  (2 tests) 524ms
+ ✓ tests/unit/services/EncounterService.test.ts  (1 test) 11ms
+ ✓ tests/unit/repro_bug_003.test.ts  (1 test) 5ms
+ ✓ tests/unit/repro_bug_003_v2.test.ts  (1 test) 6ms
+ ✓ tests/unit/queuedActions.immutable.test.ts  (1 test) 9ms
+ ✓ tests/unit/mainLoop.determinism.test.ts  (1 test) 15ms
+ ✓ tests/unit/repro_bug_014.test.ts  (1 test) 12ms
+stdout | tests/unit/repro_bug_014.test.ts > BUG-014: Missing Status Events > should emit status-applied event for buff abilities
+Events: [ 'ability', 'status-applied' ]
+
+ ✓ tests/unit/repro_bug_011.test.ts  (1 test) 6ms
+ ✓ tests/unit/overworld_repro.test.ts  (2 tests) 7ms
+stdout | tests/unit/overworld_repro.test.ts > Overworld V2 Logic > should enforce reasonable walking bounds
+{ PLAYER_Y_MIN: 460, ROAD_Y_TOP: 460 }
+
+ ✓ tests/unit/bugs/bug_015_overworld_collision.test.ts  (2 tests) 8ms
+ ✓ tests/unit/components/RewardsScreen.test.tsx  (1 test) 128ms
+ ✓ tests/unit/components/MainMenu.test.tsx  (1 test) 161ms
+ ✓ tests/unit/overworld/playerBoundsV2.test.ts  (2 tests) 5ms
+ ✓ tests/unit/repro_bug_001.test.ts  (2 tests) 6ms
+ ✓ src/ui/state/__tests__/fanfareSlice.test.ts  (2 tests) 9ms
+ ✓ tests/unit/ui/skyLayer.test.ts  (1 test) 9ms
+ ✓ tests/unit/validation/towerRewards.test.ts  (2 tests) 10ms
+ ✓ tests/unit/asset-loader.test.ts  (6 tests | 5 skipped) 5ms
+ ✓ tests/unit/core/StateManager.test.ts  (3 tests) 7ms
+ ✓ tests/unit/breakIntegration.test.ts  (2 tests) 20ms
+ ✓ src/core/services/SaveService.test.ts  (1 test) 5ms
+ ✓ tests/unit/sim/determinism.test.ts  (2 tests) 48ms
+ ✓ tests/unit/services/StoryService.test.ts  (1 test) 7ms
+ ✓ tests/unit/overworld/camera.test.ts  (3 tests) 13ms
+ ✓ tests/unit/validation/equipmentSprites.test.ts  (1 test) 26ms
+ ✓ tests/unit/core/battleEngine.test.ts  (2 tests) 5ms
+ ✓ tests/unit/breakGauge.test.ts  (3 tests) 6ms
+ ✓ tests/unit/validation/towerFloors.test.ts  (2 tests) 7ms
+ ✓ tests/unit/core/GameLoop.test.ts  (1 test) 8ms
+ ✓ tests/unit/hitPopup.test.ts  (1 test) 7ms
+ ✓ tests/unit/game_init_smoke.test.ts  (1 test) 7ms
+ ✓ tests/unit/ui/OverworldV2.test.tsx  (1 test) 10ms
+ ✓ tests/unit/hitstop.test.ts  (1 test) 16ms
+ ✓ tests/unit/core/engine.test.ts  (2 tests) 5ms
+ ✓ tests/unit/core/stateManager.test.ts  (1 test) 5ms
+ ✓ tests/unit/overworld/villageLayoutV2.test.ts  (1 test) 6ms
+ ✓ src/ui/components/window-classes.test.ts  (1 test) 4ms
+stdout | tests/unit/validateData.test.ts > validateData-run
+All game data validated successfully.
+
+ ✓ tests/unit/validateData.test.ts  (1 test) 270ms
+ ✓ tests/unit/validation/mireToad.test.ts  (1 test) 5ms
+ ✓ tests/unit/lumen_fawn.test.ts  (1 test) 5ms
+ ✓ tests/unit/useBattleController-null-undefined.test.ts  (1 test) 14ms
+ ✓ tests/unit/queue-battle-null-undefined.test.ts  (1 test) 10ms
+ ✓ tests/unit/parity/accessories_parity.test.ts  (1 test) 21ms
+ ✓ tests/unit/feature_parity_menu.test.ts  (1 test) 7ms
+ ✓ tests/unit/feature_parity_accessories.test.ts  (1 test) 4ms
+ ↓ src/core/services/LevelNormalizationService.test.ts  (1 test | 1 skipped)
+ ✓ tests/unit/parity/menu_focus_parity.test.ts  (1 test) 4ms
+ ✓ tests/unit/feature_parity_battle.test.ts  (1 test) 4ms
+ ✓ tests/unit/parity/battle_state_parity.test.ts  (1 test) 4ms
+ ✓ tests/unit/acquisition-fanfare.unit.test.ts  (1 test) 8ms
+ ✓ tests/unit/feature_parity_save_load.test.ts  (1 test) 13ms
+ ↓ src/core/services/DevModeService.test.ts  (1 test | 1 skipped)
+ ↓ src/core/services/BattleService.test.ts  (1 test | 1 skipped)
+ ✓ tests/unit/parity/save_replay_parity.test.ts  (1 test) 4ms
+ ↓ src/core/services/StoryService.test.ts  (1 test | 1 skipped)
+ ↓ src/core/services/TowerService.test.ts  (1 test | 1 skipped)
+ ↓ src/core/services/ShopService.test.ts  (1 test | 1 skipped)
+ ↓ src/core/services/RngService.test.ts  (1 test | 1 skipped)
+ ↓ src/core/services/AIService.test.ts  (1 test | 1 skipped)
+
+ Test Files  90 passed | 8 skipped (98)
+      Tests  343 passed | 13 todo (356)
+   Start at  22:31:16
+   Duration  75.94s (transform 20.88s, setup 41.98s, collect 31.23s, tests 6.06s, environment 67.22s, prepare 30.39s)
+

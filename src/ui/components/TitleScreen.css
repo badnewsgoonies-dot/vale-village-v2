@@ -1,6 +1,9 @@
 .title-screen {
   position: fixed;
   inset: 0;
+  /* Ensure full viewport size for reliable e2e visibility checks */
+  width: 100vw;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;

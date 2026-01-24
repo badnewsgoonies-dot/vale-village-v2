@@ -13,17 +13,24 @@ class InputManager {
   init() {
     if (typeof window === 'undefined') return;
     if (!window.__INPUT_BUFFER__) {
-      window.__INPUT_BUFFER__ = {
-        push: (cmd: string) => {
-          // coerce to string to be deterministic
-          this.queue.push(String(cmd));
-        },
-        drain: () => {
-          const out = this.queue.slice();
-          this.queue.length = 0;
-          return out;
-        },
+      // expose an array-like buffer so tests can inspect by index/length while
+      // keeping a private queue for the InputManager implementation.
+      const queue: string[] = [];
+      const arr: any[] = [];
+      arr.push = (cmd: string) => {
+        const s = String(cmd);
+        queue.push(s);
+        // keep array indices in sync for tests that inspect the buffer directly
+        arr[arr.length] = s;
+        return queue.length;
       };
+      arr.drain = () => {
+        const out = queue.slice();
+        queue.length = 0;
+        arr.length = 0;
+        return out;
+      };
+      window.__INPUT_BUFFER__ = arr;
     }
   }
 

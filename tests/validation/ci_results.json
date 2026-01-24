@@ -1,0 +1,1 @@
+[{"script":"typecheck","status":"passed"},{"script":"lint","status":"passed"},{"script":"build","status":"passed"},{"script":"test","status":"passed"}

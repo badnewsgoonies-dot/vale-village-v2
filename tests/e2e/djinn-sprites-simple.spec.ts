@@ -10,6 +10,8 @@ test.describe('Djinn Sprites - Direct Component Test', () => {
   test('should render Djinn sprites when accessing DjinnCollectionScreen with mock data', async ({ page }) => {
     // Step 1: Navigate to the app
     await page.goto('/');
+    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForSelector('canvas, #app, .game-root, [data-testid="game-root"]', { timeout: 5000 }).catch(() => {});
 
     // Step 2: Inject a mock save state with collected djinn directly into localStorage
     await page.evaluate(() => {

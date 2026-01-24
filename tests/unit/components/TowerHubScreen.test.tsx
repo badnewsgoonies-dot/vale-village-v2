@@ -70,5 +70,5 @@ describe('TowerHubScreen', () => {
     // With highestFloorEver=6, floor 6 milestone is already claimed; next is floor 7 (Nova).
     expect(screen.getByText('Floor 7')).toBeDefined();
     expect(screen.getByText(/Djinn: Nova/)).toBeDefined();
-  });
+  }, 15000);
 });

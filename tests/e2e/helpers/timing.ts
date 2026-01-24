@@ -3,7 +3,13 @@ import type { Page } from '@playwright/test';
 export type DelayFn = (page: Page, ms: number) => Promise<void>;
 
 export const defaultDelay: DelayFn = async (page, ms) => {
-  await page.waitForTimeout(ms);
+  const selectors = ['canvas', '#app', '.game-root', '[data-testid="game-root"]'];
+  try {
+    // Wait for a visible root element for up to the requested ms, otherwise fall back to timeout
+    await page.waitForSelector(selectors.join(','), { timeout: ms });
+  } catch {
+    await page.waitForTimeout(ms);
+  }
 };
 
 export function createDelay(options: {
@@ -13,13 +19,15 @@ export function createDelay(options: {
 }): DelayFn {
   const multiplier = options.multiplier ?? 3;
   const fastCapMs = options.fastCapMs ?? 100;
+  const selectors = ['canvas', '#app', '.game-root', '[data-testid="game-root"]'];
 
   return async (page, ms) => {
-    if (options.demoMode) {
-      await page.waitForTimeout(ms * multiplier);
-      return;
+    const timeoutMs = options.demoMode ? ms * multiplier : Math.min(ms, fastCapMs);
+    try {
+      // Prefer waiting for a visible root element; fall back to a timeout if it doesn't appear
+      await page.waitForSelector(selectors.join(','), { timeout: timeoutMs });
+    } catch {
+      await page.waitForTimeout(timeoutMs);
     }
-
-    await page.waitForTimeout(Math.min(ms, fastCapMs));
   };
 }

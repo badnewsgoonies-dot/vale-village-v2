@@ -54,121 +54,38 @@ import { OVERWORLD_CONSTANTS } from '../../../core/constants';
 
 
 import { simStep, SimEnvironment } from '../../../core/simulation/simStep';
+import type { SceneType } from '../overworld/systems/SceneTransition';
+import { installGameDriver } from '../../../driver';
+import { spawnEnemies, type EnemyState } from '../../../core/logic';
+import { HudLayer } from './layers/HudLayer';
 
-// ... (existing imports)
+// Minimal props for this component
+type OverworldV2Props = { width?: number; height?: number };
 
 export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }: OverworldV2Props) {
-  // ... (existing code)
-
-  // --------------------------------------------------------------------------
-  // GAME DRIVER v1.0 INSTALLATION
-  // --------------------------------------------------------------------------
-  useEffect(() => {
-    if (driverInstalledRef.current) return;
-    driverInstalledRef.current = true;
-
-    installGameDriver({
-      getState: (): GameState => {
-        // ... (existing getState implementation)
-        const player = playerLayerRef.current;
-        const pos = player?.getPosition() ?? { x: 0, y: 0 };
-        const state = player?.getPlayerState();
-        
-        return {
-          tick: tickRef.current,
-          player: {
-            hp: 100, 
-            maxHp: 100,
-            position: pos,
-            deaths: 0 
-          },
-          world: {
-            levelId: currentMapId,
-            timeElapsed: performance.now() / 1000,
-            enemies: [] 
-          },
-          terminal: { kind: 'running' },
-          flags: {
-            isMoving: state?.isMoving ?? false,
-            scene: sceneTypeRef.current
-          }
-        };
-      },
-
-      dispatch: (action: GameAction): DispatchResult => {
-        // 1. Get Current State
-        const currentState = window.__GAME_DRIVER__!.getState(); // Self-reference safe here
-        
-        // 2. Build Environment Context
-        const env: SimEnvironment = {
-            isOverworld: sceneTypeRef.current === 'overworld',
-            isTowerLobby: currentMapId.includes('tower-lobby'),
-            furniture: interiorFurnitureRef.current ?? undefined
-        };
-
-        // 3. Run Simulation Step (Pure Logic)
-        const { state: nextState, terminal } = simStep(currentState, action, env);
-
-        // 4. Apply State (Side Effects)
-        if (playerLayerRef.current) {
-            playerLayerRef.current.setPlayerState({ 
-                x: nextState.player.position.x, 
-                y: nextState.player.position.y 
-            });
-            
-            // Visuals: Facing / Animation
-            if (action.type === 'MOVE') {
-                const { dx, dy } = action;
-                if (dx !== 0 || dy !== 0) {
-                    playerLayerRef.current.setPlayerState({ isMoving: true });
-                    if (dx > 0) playerLayerRef.current.setPlayerState({ facing: 'right' });
-                    else if (dx < 0) playerLayerRef.current.setPlayerState({ facing: 'left' });
-                    else if (dy < 0) playerLayerRef.current.setPlayerState({ facing: 'up' });
-                    else if (dy > 0) playerLayerRef.current.setPlayerState({ facing: 'down' });
-                } else {
-                    playerLayerRef.current.setPlayerState({ isMoving: false });
-                }
-            } else if (action.type === 'NOOP') {
-                playerLayerRef.current.setPlayerState({ isMoving: false });
-            }
-        }
-        
-        // Sync Tick
-        tickRef.current = nextState.tick;
-
-        // Sync Joystick (Visual Feedback)
-        if (action.type === 'MOVE') {
-             touchInputRef.current.h = Math.max(-1, Math.min(1, action.dx));
-             touchInputRef.current.v = Math.max(-1, Math.min(1, action.dy));
-        } else if (action.type === 'NOOP') {
-             touchInputRef.current.h = 0;
-             touchInputRef.current.v = 0;
-        }
-
-        // Handle Trigger Flags from Sim
-        if (nextState.flags && nextState.flags['exited_interior']) {
-            exitInterior();
-        }
-
-        // Handle Interact (Separate from SimStep for now, until Interact logic is purified)
-        if (action.type === 'INTERACT') {
-           keysRef.current.add(' ');
-           setTimeout(() => keysRef.current.delete(' '), 100);
-        }
-
-        return { ok: true, terminal };
-      },
-
-      resetRun: (seed) => {
-        console.log('[Driver] Resetting run with seed:', seed);
-        window.location.reload();
-      }
-    });
-  }, [currentMapId, exitInterior]); // Added exitInterior dependency
-
-  // ... (rest of component)
+  // Internal refs and state used across the component
   const playerDomRef = useRef<HTMLImageElement>(null);
   const playerDomContainerRef = useRef<HTMLDivElement>(null);
+  const driverInstalledRef = useRef<boolean>(false);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const engineRef = useRef<OverworldEngineV2 | null>(null);
+  const playerLayerRef = useRef<any>(null);
+  const villageLayerRef = useRef<any>(null);
+  const encountersLayerRef = useRef<any>(null);
+  const interiorFloorRef = useRef<any>(null);
+  const interiorFurnitureRef = useRef<any>(null);
+  const interiorNpcRef = useRef<any>(null);
+  const interiorBattleTriggeredRef = useRef<boolean>(false);
+  const encounterTriggeredRef = useRef<Record<string, boolean>>({});
+  const tickRef = useRef<number>(0);
+  const startTimeRef = useRef<number>(0);
+  const enemiesRef = useRef<EnemyState[]>([]);
+  const playerStatsRef = useRef({ hp: 100, maxHp: 100 });
+  const metricsRef = useRef({ enemiesDefeated: 0, itemsCollected: 0, novelty: 0 });
+  const touchInputRef = useRef<{ h: number; v: number; action: boolean }>({ h: 0, v: 0, action: false });
+  const keysRef = useRef<Set<string>>(new Set());
+  const lastGamepadStartRef = useRef<boolean>(false);
+  const lastGamepadActionRef = useRef<boolean>(false);
 
   // Track scene state
   const sceneTypeRef = useRef<SceneType>('overworld');
@@ -191,10 +108,11 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
   const story = useStore((s) => s.story);
   const hasSeenDjinnIntro = Boolean(story.flags.first_djinn_intro_completed);
 
-  // Audio: Play Overworld BGM
-  useEffect(() => {
-    audio.playBGM('overworld');
-  }, []);
+  // Avoid stale closures inside setInterval loops and global listeners.
+  const modeRef = useRef(mode);
+  modeRef.current = mode;
+  const storyRef = useRef(story);
+  storyRef.current = story;
 
   // gameStore subscriptions
   const startTransition = useGameStore((s) => s.startTransition);
@@ -202,13 +120,160 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
   const closeModal = useGameStore((s) => s.closeModal);
   const activeModal = useGameStore((s) => s.flow.modal);
 
-  // Avoid stale closures inside setInterval loops and global listeners.
-  const modeRef = useRef(mode);
-  modeRef.current = mode;
-  const storyRef = useRef(story);
-  storyRef.current = story;
+  // Avoid stale closures
   const activeModalRef = useRef(activeModal);
   activeModalRef.current = activeModal;
+
+  // Forward reference for exitInterior (will be assigned later)
+  const exitInteriorRef = useRef<(() => void) | null>(null);
+
+  // Audio: Play Overworld BGM
+  useEffect(() => {
+    audio.playBGM('overworld');
+    enemiesRef.current = spawnEnemies();
+  }, []);
+
+  // ... (existing code)
+
+  // --------------------------------------------------------------------------
+
+  // --------------------------------------------------------------------------
+  // GAME DRIVER v1.0 INSTALLATION
+  // --------------------------------------------------------------------------
+  useEffect(() => {
+    if (driverInstalledRef.current) return;
+    
+    // Store previous driver to restore on unmount
+    const previousDriver = (window as any).__GAME_DRIVER__;
+    
+    driverInstalledRef.current = true;
+
+    installGameDriver({
+        getState: (): any => {
+          const player = playerLayerRef.current;
+          const pos = player?.getPosition() ?? { x: 0, y: 0 };
+          const state = player?.getPlayerState();
+          
+          return {
+            tick: tickRef.current,
+            player: {
+              hp: playerStatsRef.current.hp, 
+              maxHp: playerStatsRef.current.maxHp,
+              position: pos,
+              deaths: 0 
+            },
+            world: {
+              levelId: currentMapId,
+              timeElapsed: (performance.now() - startTimeRef.current) / 1000,
+              enemies: enemiesRef.current 
+            },
+            terminal: { kind: 'running' },
+            flags: {
+              isMoving: state?.isMoving ?? false,
+              isOverworld: sceneTypeRef.current === 'overworld'
+            },
+            metrics: metricsRef.current
+          };
+        },
+
+        dispatch: (action: any): any => {
+          // 1. Get Current State
+          const currentState = (window as any).__GAME_DRIVER__!.getState(); // Self-reference safe here
+          
+          // 2. Build Environment Context
+          const env: SimEnvironment = {
+              isOverworld: sceneTypeRef.current === 'overworld',
+              isTowerLobby: currentMapId.includes('tower-lobby'),
+              furniture: interiorFurnitureRef.current ?? undefined
+          };
+
+          // 3. Run Simulation Step (Pure Logic)
+          const { state: nextState, terminal } = simStep(currentState, action, env);
+
+          // 4. Apply State (Side Effects)
+          enemiesRef.current = nextState.world.enemies;
+          playerStatsRef.current.hp = nextState.player.hp;
+          playerStatsRef.current.maxHp = nextState.player.maxHp;
+          if (nextState.metrics) metricsRef.current = nextState.metrics;
+
+          if (playerLayerRef.current) {
+              playerLayerRef.current.setPlayerState({ 
+                  x: nextState.player.position.x, 
+                  y: nextState.player.position.y 
+              });
+              
+              // Visuals: Facing / Animation
+              if (action.type === 'MOVE') {
+                  const { dx, dy } = action;
+                  if (dx !== 0 || dy !== 0) {
+                      playerLayerRef.current.setPlayerState({ isMoving: true });
+                      if (dx > 0) playerLayerRef.current.setPlayerState({ facing: 'right' });
+                      else if (dx < 0) playerLayerRef.current.setPlayerState({ facing: 'left' });
+                      else if (dy < 0) playerLayerRef.current.setPlayerState({ facing: 'up' });
+                      else if (dy > 0) playerLayerRef.current.setPlayerState({ facing: 'down' });
+                  } else {
+                      playerLayerRef.current.setPlayerState({ isMoving: false });
+                  }
+              } else if (action.type === 'NOOP') {
+                  playerLayerRef.current.setPlayerState({ isMoving: false });
+              }
+          }
+          
+          // Sync Tick
+          tickRef.current = nextState.tick;
+
+          // Sync Joystick (Visual Feedback)
+          if (action.type === 'MOVE') {
+               touchInputRef.current.h = Math.max(-1, Math.min(1, action.dx));
+               touchInputRef.current.v = Math.max(-1, Math.min(1, action.dy));
+          } else if (action.type === 'NOOP') {
+               touchInputRef.current.h = 0;
+               touchInputRef.current.v = 0;
+          }
+
+          // Handle Trigger Flags from Sim
+          if (nextState.flags && nextState.flags['exited_interior']) {
+              exitInteriorRef.current?.();
+          }
+
+          // Handle Interact (Separate from SimStep for now, until Interact logic is purified)
+          if (action.type === 'INTERACT') {
+             keysRef.current.add(' ');
+             setTimeout(() => keysRef.current.delete(' '), 100);
+          }
+
+          return { ok: true, terminal };
+        },
+
+        resetRun: (seed?: number) => {
+          console.log('[Driver] Resetting run with seed:', seed);
+          // Soft reset for CI
+          tickRef.current = 0;
+          startTimeRef.current = performance.now();
+          playerStatsRef.current = { hp: 100, maxHp: 100 };
+          metricsRef.current = { enemiesDefeated: 0, itemsCollected: 0, novelty: 0 };
+          if (playerLayerRef.current) {
+              // Reset to default start position (approx)
+              playerLayerRef.current.setPlayerState({ x: 200, y: 450 }); 
+          }
+          // Reset internal flags
+          sceneTypeRef.current = 'overworld';
+          currentHouseNumRef.current = 1;
+        }
+    });
+
+    // Cleanup: Restore previous driver or uninstall
+    return () => {
+      if (previousDriver) {
+        (window as any).__GAME_DRIVER__ = previousDriver;
+        console.log('[OverworldV2] Restored previous driver');
+      } else {
+        delete (window as any).__GAME_DRIVER__;
+        console.log('[OverworldV2] Uninstalled driver');
+      }
+      driverInstalledRef.current = false;
+    };
+  }, []); // Added exitInterior dependency
 
   const getUnlockedBuildingIds = useCallback((): Set<string> => {
     const unlocked = new Set<string>();
@@ -312,6 +377,11 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
 
     villageLayer.setPlayerPosition(savedOverworldXRef.current, OVERWORLD_CONSTANTS.INTERIOR_PLAYER_Y);
 
+    const hudLayer = new HudLayer(
+      () => enemiesRef.current,
+      () => playerStatsRef.current
+    );
+
     return [
       new SkyLayer(),
       new BackgroundLayer(),
@@ -321,6 +391,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
       villageLayer,
       encountersLayer,
       playerLayer,
+      hudLayer,
     ];
   }, [getUnlockedBuildingIds, handleTrigger]);
 
@@ -553,6 +624,7 @@ export function OverworldV2({ width = VIEWPORT_WIDTH, height = VIEWPORT_HEIGHT }
     // Transition back to overworld and teleport at scene switch
     transitionToScene('overworld', 1, { mapId: 'vale-village', position: { x: Math.floor(savedOverworldXRef.current / 32), y: 14 } });
   }, [transitionToScene, teleportPlayer]);
+  exitInteriorRef.current = exitInterior;
 
   // Check if player is in exit zone
   const isInExitZone = useCallback((): boolean => {

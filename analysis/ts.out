@@ -1,0 +1,94 @@
+
+> vale-village-v2@0.1.0 typecheck
+> tsc --noEmit
+
+src/core/simulation/simStep.ts(141,33): error TS6133: 'state' is declared but its value is never read.
+src/core/simulation/simStep.ts(141,51): error TS6133: 'env' is declared but its value is never read.
+src/ui/components/overworld-v2/OverworldV2.tsx(60,83): error TS2304: Cannot find name 'OverworldV2Props'.
+src/ui/components/overworld-v2/OverworldV2.tsx(67,9): error TS2304: Cannot find name 'driverInstalledRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(68,5): error TS2304: Cannot find name 'driverInstalledRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(70,5): error TS2304: Cannot find name 'installGameDriver'.
+src/ui/components/overworld-v2/OverworldV2.tsx(71,21): error TS2304: Cannot find name 'GameState'.
+src/ui/components/overworld-v2/OverworldV2.tsx(73,24): error TS2304: Cannot find name 'playerLayerRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(78,17): error TS2304: Cannot find name 'tickRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(98,26): error TS2304: Cannot find name 'GameAction'.
+src/ui/components/overworld-v2/OverworldV2.tsx(98,39): error TS2304: Cannot find name 'DispatchResult'.
+src/ui/components/overworld-v2/OverworldV2.tsx(106,24): error TS2304: Cannot find name 'interiorFurnitureRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(113,13): error TS2304: Cannot find name 'playerLayerRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(114,13): error TS2304: Cannot find name 'playerLayerRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(123,21): error TS2304: Cannot find name 'playerLayerRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(124,33): error TS2304: Cannot find name 'playerLayerRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(125,38): error TS2304: Cannot find name 'playerLayerRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(126,38): error TS2304: Cannot find name 'playerLayerRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(127,38): error TS2304: Cannot find name 'playerLayerRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(129,21): error TS2304: Cannot find name 'playerLayerRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(132,17): error TS2304: Cannot find name 'playerLayerRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(137,9): error TS2304: Cannot find name 'tickRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(141,14): error TS2304: Cannot find name 'touchInputRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(142,14): error TS2304: Cannot find name 'touchInputRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(144,14): error TS2304: Cannot find name 'touchInputRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(145,14): error TS2304: Cannot find name 'touchInputRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(155,12): error TS2304: Cannot find name 'keysRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(156,29): error TS2304: Cannot find name 'keysRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(162,18): error TS7006: Parameter 'seed' implicitly has an 'any' type.
+src/ui/components/overworld-v2/OverworldV2.tsx(167,7): error TS2448: Block-scoped variable 'currentMapId' used before its declaration.
+src/ui/components/overworld-v2/OverworldV2.tsx(167,7): error TS2454: Variable 'currentMapId' is used before being assigned.
+src/ui/components/overworld-v2/OverworldV2.tsx(167,21): error TS2448: Block-scoped variable 'exitInterior' used before its declaration.
+src/ui/components/overworld-v2/OverworldV2.tsx(167,21): error TS2454: Variable 'exitInterior' is used before being assigned.
+src/ui/components/overworld-v2/OverworldV2.tsx(174,31): error TS2304: Cannot find name 'SceneType'.
+src/ui/components/overworld-v2/OverworldV2.tsx(182,38): error TS2304: Cannot find name 'SceneType'.
+src/ui/components/overworld-v2/OverworldV2.tsx(243,62): error TS2304: Cannot find name 'SceneType'.
+src/ui/components/overworld-v2/OverworldV2.tsx(275,7): error TS2304: Cannot find name 'keysRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(280,5): error TS2304: Cannot find name 'keysRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(286,5): error TS2304: Cannot find name 'villageLayerRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(291,32): error TS2304: Cannot find name 'playerLayerRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(301,5): error TS2304: Cannot find name 'encountersLayerRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(311,5): error TS2304: Cannot find name 'playerLayerRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(329,5): error TS2552: Cannot find name 'villageLayerRef'. Did you mean 'VillageLayer'?
+src/ui/components/overworld-v2/OverworldV2.tsx(343,5): error TS2304: Cannot find name 'interiorFloorRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(359,5): error TS2304: Cannot find name 'interiorFurnitureRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(388,5): error TS2304: Cannot find name 'interiorNpcRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(389,5): error TS2304: Cannot find name 'interiorBattleTriggeredRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(400,5): error TS2304: Cannot find name 'playerLayerRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(409,18): error TS2304: Cannot find name 'SceneType'.
+src/ui/components/overworld-v2/OverworldV2.tsx(418,22): error TS2304: Cannot find name 'engineRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(442,23): error TS2304: Cannot find name 'playerLayerRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(459,24): error TS2304: Cannot find name 'engineRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(490,25): error TS2304: Cannot find name 'playerLayerRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(525,23): error TS2304: Cannot find name 'playerLayerRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(559,20): error TS2304: Cannot find name 'playerLayerRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(581,20): error TS2304: Cannot find name 'canvasRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(595,23): error TS2304: Cannot find name 'playerLayerRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(602,5): error TS2304: Cannot find name 'engineRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(611,22): error TS2304: Cannot find name 'playerLayerRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(612,23): error TS2304: Cannot find name 'villageLayerRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(644,20): error TS2304: Cannot find name 'keysRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(656,25): error TS2304: Cannot find name 'lastGamepadStartRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(659,9): error TS2304: Cannot find name 'lastGamepadStartRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(662,67): error TS2304: Cannot find name 'touchInputRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(662,113): error TS2304: Cannot find name 'lastGamepadActionRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(663,7): error TS2304: Cannot find name 'lastGamepadActionRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(668,13): error TS2304: Cannot find name 'touchInputRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(668,43): error TS2304: Cannot find name 'touchInputRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(678,30): error TS2304: Cannot find name 'interiorNpcRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(703,17): error TS2304: Cannot find name 'touchInputRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(764,27): error TS2304: Cannot find name 'interiorFurnitureRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(803,9): error TS2304: Cannot find name 'encountersLayerRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(819,33): error TS2304: Cannot find name 'encountersLayerRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(822,26): error TS2304: Cannot find name 'encounterTriggeredRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(823,13): error TS2304: Cannot find name 'encounterTriggeredRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(835,9): error TS2304: Cannot find name 'interiorFurnitureRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(846,28): error TS2304: Cannot find name 'interiorNpcRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(847,28): error TS2304: Cannot find name 'interiorBattleTriggeredRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(857,21): error TS2304: Cannot find name 'interiorBattleTriggeredRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(887,7): error TS2304: Cannot find name 'engineRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(888,7): error TS2304: Cannot find name 'playerLayerRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(889,7): error TS2304: Cannot find name 'villageLayerRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(890,7): error TS2304: Cannot find name 'interiorFloorRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(891,7): error TS2304: Cannot find name 'interiorFurnitureRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(892,7): error TS2304: Cannot find name 'interiorNpcRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(910,7): error TS2304: Cannot find name 'encounterTriggeredRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(943,18): error TS2304: Cannot find name 'canvasRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(980,11): error TS2304: Cannot find name 'touchInputRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(981,11): error TS2304: Cannot find name 'touchInputRef'.
+src/ui/components/overworld-v2/OverworldV2.tsx(984,11): error TS2304: Cannot find name 'touchInputRef'.
