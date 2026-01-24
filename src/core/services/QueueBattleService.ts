@@ -14,7 +14,7 @@ import type { BattleEvent } from './types';
 import { updateBattleState } from '../models/BattleState';
 import { updateTeam } from '../models/Team';
 import { isUnitKO } from '../models/Unit';
-import { createEmptyQueue } from '../constants';
+import { createEmptyQueue, BATTLE_CONSTANTS } from '../constants';
 import { getAbilityManaCost, canAffordAction, validateQueuedActions } from '../algorithms/mana';
 import { Result, Ok, Err } from '../utils/result';
 import { calculateSummonDamage, canActivateDjinn } from '../algorithms/djinn';
@@ -38,7 +38,6 @@ function isBasicAttack(action: QueuedAction): boolean {
 
 function shouldGenerateMana(
   action: QueuedAction,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   __actionResult: PerformActionValue
 ): boolean {
   return isBasicAttack(action);
@@ -299,7 +298,7 @@ function executeAllActionsPhase(
     // Only generate mana for player basic attacks
     const isPlayerAction = currentState.playerTeam.units.some(u => u.id === action.unitId);
     if (isPlayerAction && shouldGenerateMana(action, actionResult.value)) {
-      const manaGained = 1;
+      const manaGained = BATTLE_CONSTANTS.MANA_GAIN_BASIC_ATTACK;
       const newMana = Math.min(currentState.remainingMana + manaGained, currentState.maxMana);
       currentState = updateBattleState(currentState, {
         remainingMana: newMana,
@@ -418,7 +417,6 @@ export function executeRound(
   if (!validation.ok) {
     // In development, surface a warning but do not throw to avoid crashing the UI
     if (process.env.NODE_ENV !== 'production') {
-      // eslint-disable-next-line no-console
       // [REMOVED] console.warn(validation.error);
     }
     return { state, events: [] };

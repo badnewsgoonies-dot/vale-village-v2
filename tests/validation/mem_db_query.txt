@@ -1,0 +1,50 @@
+[DECISION] VV2
+  Generated visual baselines and updated tests/e2e/visual/generate-baseline.js to use ES modules and correct repo root path; used --force to (re)create baseline screenshots in tests/e2e/visual/baseline/
+  Choice: generated
+  23m ago [FRESH] | ? | imp=M
+
+[DECISION] vale-v2
+  Phase 4B complete: src/core/logic/ created with combat, terminal, simStep. ValeSimulator in validator imports from shared.
+  Choice: shipped
+  2h ago | ?
+
+[DECISION] foresight
+  Consolidation A complete: unified foresight schema, shared parsing/scoring, replay harness, control surface
+  Choice: shipped
+  3h ago | ?
+
+[DECISION] foresight
+  Shipped Foresight v1.2: Recon + Gameplay Simulation + Severity Scoring
+  Choice: shipped
+  3h ago | ?
+
+[DECISION] foresight-layer
+  Designed minimal foresight layer for strategic orchestrator based on empirical validation. Single LLM call before batch launch to predict optimal lanes and issues. 3 modes: off/shadow/active. Conservative design with shadow validation before activation.
+  Choice: minimal-foresight-at-orchestrator-level
+  13h ago | ?
+
+[DECISION] VV2
+  Initial core engine modules and unit tests created as foundation for game logic
+  Choice: create_core_modules
+  16h ago | ? | imp=H
+
+[DECISION] ci-harness
+  Building CI validation harness with sim↔driver differential checks. Three guarantees: (1) Determinism lock - same seed+policy produces identical state in both sim and driver (2) Sim↔Driver differential oracle - detect when engine and driver disagree about reality (3) Policy-agnostic execution - harness doesn't care what policy is used
+  Choice: ci-harness-next
+  18h ago | ?
+
+[DECISION] strategic-orch
+  Driver v1.0 FROZEN - do not touch except v1.1 additive or v2 breaking. Next: Simulator v1 with interface: reset(seed)->GameState, step(state,action)->{state,terminal,reward}, legalActions(state)->GameAction[]. Must be: pure (no mutation), deterministic (same seed = same trajectory), shared logic (same reducer as live game), fast (no rendering/DOM/async), compatible (exact same schemas). This is the unlock for MCTS/self-play.
+  Choice: simulator-v1-next
+  23h ago | ? | imp=H
+
+[DECISION] strategic-orch
+  Froze Game Driver Contract v1.0 with critical fixes: (1) State is pure data, no methods mixed in (2) Explicit terminal signal {kind: running|win|lose} (3) dispatch() returns DispatchResult envelope, not void (4) Tick increments after each dispatch. Agent renamed to "stress tester" - true MCTS requires Simulator layer (pure, cloneable state).
+  Choice: driver-v1-frozen
+  23h ago | ? | imp=H
+
+[DECISION] strategic-orch
+  Updated game-web archetype to Driver v1 pattern: HIGH-LEVEL ACTIONS (dispatch MOVE/ATTACK) instead of input simulation (keydown events). Episode-based runs with seeds for reproducibility. State-first (no pixels). This is the "boringly dependable" approach from the critique. Old introspection_contract.ts replaced with driver.ts.
+  Choice: driver-v1-pattern
+  23h ago | ? | imp=H
+

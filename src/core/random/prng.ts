@@ -172,7 +172,6 @@ export function makeRandomPRNG(): PRNG {
       seed = (crypto as any).getRandomValues(new Uint32Array(1))[0] >>> 0;
     } else if (typeof require === 'function') {
       // Node environment
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
       const nodeCrypto = require('crypto');
       seed = nodeCrypto.randomBytes(4).readUInt32BE(0) >>> 0;
     }

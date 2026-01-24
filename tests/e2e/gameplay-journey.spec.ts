@@ -236,6 +236,8 @@ test('Gameplay journey (title -> tower run -> rewards)', async ({ page }) => {
   test.setTimeout(180_000);
 
   await page.goto('/');
+  await page.waitForLoadState('networkidle').catch(() => {});
+  await page.waitForSelector('canvas, #app, .game-root, [data-testid="game-root"]', { timeout: 5000 }).catch(() => {});
   await expect(page.locator('.title-screen')).toBeVisible({ timeout: DEFAULT_TIMEOUT });
 
   await page.keyboard.press('Enter');

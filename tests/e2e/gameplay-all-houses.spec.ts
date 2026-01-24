@@ -60,6 +60,8 @@ const HOUSE_ENCOUNTERS = [
 test('Gray-box: Play through all Houses', async ({ page }) => {
   // 1. Load the game (at root, so we have the environment)
   await page.goto('/');
+  await page.waitForLoadState('networkidle').catch(() => {});
+  await page.waitForSelector('canvas, #app, .game-root, [data-testid="game-root"]', { timeout: 5000 }).catch(() => {});
 
   // 2. Wait for the test hooks to be available
   await page.waitForFunction(() => 

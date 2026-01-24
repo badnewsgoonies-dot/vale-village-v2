@@ -8,6 +8,11 @@ declare global {
   }
 }
 
+// Ensure telemetry global exists even if telemetry updateFrame isn't run (e.g. validation fallback UI)
+if (typeof window !== 'undefined' && (window as any).__TELEMETRY__ === undefined) {
+  (window as any).__TELEMETRY__ = [];
+}
+
 export const TelemetryService = {
   /**
    * Read public selectors from the UI store and populate window.__TELEMETRY__ with a

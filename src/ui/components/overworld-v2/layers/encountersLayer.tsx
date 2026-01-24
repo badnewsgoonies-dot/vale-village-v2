@@ -63,7 +63,6 @@ export class EncountersLayer implements Layer {
     try {
       if (this.onTrigger) this.onTrigger(nearest.id);
     } catch (e) {
-      // eslint-disable-next-line no-console
       console.error('Encounter trigger failed', e);
     }
   }
