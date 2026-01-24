@@ -109,6 +109,10 @@ export const BATTLE_CONSTANTS = {
   MINIMUM_DAMAGE: 1,
   /** Minimum healing amount (all heals restore at least this much if basePower > 0) */
   MINIMUM_HEALING: 1,
+  /** Mana gained by player basic attack (planning->execution regen) */
+  BASIC_ATTACK_MANA_GAIN: 1,
+  /** Backwards-compatible name: mana gained by player basic attack */
+  MANA_GAIN_BASIC_ATTACK: 1,
   /** God mode damage (one-hit kill) */
   GOD_MODE_DAMAGE: 9999,
   /** Break system: normal hit gauge reduction */

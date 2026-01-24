@@ -41,6 +41,7 @@ export type EnemyState = {
   id: string;
   type: string;
   hp: number;
+  maxHp: number;
   position: Position;
 };
 

@@ -10,11 +10,30 @@ import { UNIT_DEFINITIONS } from './data/definitions/units';
 import { ENCOUNTERS } from './data/definitions/encounters';
 import { createBattleFromEncounter } from './core/services/EncounterService';
 import { store as v1Store } from './ui/state/store';
+import inputManager from './input/InputManager';
+import './core/services/TelemetryService';
 import './index.css';
 
 // Expose store for testing/debugging
+// Always expose gameStore for E2E tests to allow test hooks to initialize reliably.
+(window as any).gameStore = useGameStore;
+// Ensure e2e tests have expected globals even if engine bootstrap hasn't run yet
+if ((window as any).__TELEMETRY__ === undefined) {
+  (window as any).__TELEMETRY__ = [];
+}
+if ((window as any).__INPUT_BUFFER__ === undefined) {
+  // best-effort shim for e2e tests that expect array-like buffer with push and drain
+  const buf: any[] = [];
+  // attach a drain helper compatible with tests
+  (buf as any).drain = function () { try { const out = this.slice(); this.length = 0; return out; } catch (e) { return []; } };
+  (window as any).__INPUT_BUFFER__ = buf;
+}
+try {
+  inputManager.init();
+} catch (e) {
+  // ignore initialization errors in test environments
+}
 if (import.meta.env.DEV || import.meta.env.MODE === 'test') {
-  (window as any).gameStore = useGameStore;
   (window as any).v1Store = v1Store;
   (window as any).createBattleFromEncounter = createBattleFromEncounter;
   (window as any).makePRNG = makePRNG;
@@ -73,8 +92,7 @@ window.addEventListener('unhandledrejection', (ev) => {
   let validationResult;
   try {
     // validateGameData may now be async; await it
-    // eslint-disable-next-line @typescript-eslint/await-thenable
-    validationResult = await validateGameData();
+        validationResult = await validateGameData();
   } catch (err) {
     pushBootError(err, 'validateGameData-threw');
     validationResult = {

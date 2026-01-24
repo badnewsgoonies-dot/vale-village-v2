@@ -3,7 +3,6 @@
  * Handles version upgrades for save data
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import type { SaveEnvelope, SaveVersion } from './types';
 

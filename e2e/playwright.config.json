@@ -1,0 +1,51 @@
+{
+  "game_url": "http://localhost:5173",
+  "headless": false,
+  "record_video": true,
+  "video_dir": "videos/",
+  "default_duration_seconds": 60,
+  "agent_id": "AUTO-AGENT-01",
+  "introspection_timeout_ms": 10000,
+
+  "fun_metrics": {
+    "description": "Proxy metrics for 'fun' evaluation - from Upgrades.txt spec",
+
+    "pacing": {
+      "description": "Challenge curve with peaks and troughs, ramping difficulty",
+      "measurement": "Time between significant events (deaths, level completes, discoveries)",
+      "ideal_event_interval_seconds": [5, 30],
+      "notes": "Events too close = overwhelming, too far apart = boring"
+    },
+
+    "novelty": {
+      "description": "Rate of new content introduction",
+      "min_discoveries_per_minute": 0.5,
+      "discovery_types": ["enemy", "item", "area", "mechanic", "ability"],
+      "notes": "Player should frequently say 'oh, this is new!'"
+    },
+
+    "failure_rate": {
+      "description": "Deaths/failures as percentage of attempts",
+      "target_min": 0.2,
+      "target_max": 0.4,
+      "ideal": 0.3,
+      "notes": "Sweet spot ~50% for peak engagement per Achievement Motivation Theory, but 20-40% is practical target"
+    }
+  },
+
+  "success_criteria": {
+    "min_actions_per_minute": 10,
+    "max_deaths_per_minute": 2,
+    "require_level_progress": false,
+    "require_introspection_data": true
+  },
+
+  "report_output": {
+    "format": "json",
+    "include_video_path": true,
+    "include_telemetry_log": true,
+    "include_fun_metrics_summary": true
+  },
+
+  "notes": "Config for Playwright autonomous agent. Based on Upgrades.txt architecture."
+}

@@ -15,6 +15,8 @@ test.describe('Djinn Sprites Rendering', () => {
   test('should render Djinn sprites in DjinnCollectionScreen', async ({ page }) => {
     // Step 1: Navigate to the app
     await page.goto('/');
+    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForSelector('canvas, #app, .game-root, [data-testid="game-root"]', { timeout: 5000 }).catch(() => {});
 
     // Step 2: Get past title screen to main menu
     await expect(page.locator('.title-screen')).toBeVisible();

@@ -15,6 +15,8 @@ test('Full Game Flow - Fast Start', async ({ page }) => {
 
   // 1. Direct Boot to Overworld
   await page.goto('/');
+  await page.waitForLoadState('networkidle').catch(() => {});
+  await page.waitForSelector('canvas, #app, .game-root, [data-testid="game-root"]', { timeout: 5000 }).catch(() => {});
   // Wait for store exposure
   await page.waitForFunction(() => (window as any).v1Store && (window as any).gameStore);
 

@@ -5,6 +5,8 @@ test.skip(!process.env.RUN_HEAVY, 'Skipping tabs-check in default run');
 
 test('Click tabs to check sprites', async ({ page }) => {
   await page.goto('/');
+  await page.waitForLoadState('networkidle').catch(() => {});
+  await page.waitForSelector('canvas, #app, .game-root, [data-testid="game-root"]', { timeout: 5000 }).catch(() => {});
   await page.keyboard.press('Enter');
   await page.waitForTimeout(500);
   

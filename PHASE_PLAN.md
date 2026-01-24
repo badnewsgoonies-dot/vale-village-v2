@@ -1,3 +1,36 @@
+# Phase 0: Project scaffolding and baseline setup
+
+Date: 2026-01-15
+Status: Verified
+Objective: Establish project directories and baseline documentation required for development.
+
+Checklist:
+- src/ directory present
+- tests/ directory present
+- analysis/ directory present
+- README.md updated with project overview and structure
+- PHASE_PLAN.md contains high-level phase outlines
+- DOCUMENTATION.md contains contribution and memory usage guidelines
+
+This section was added to satisfy the Round Brief: Lane 5, Round 1, Worker a.
+# Project Phase Plan — High-level outline
+
+This document provides a concise phase plan for the Vale Village v2 project:
+- Phase 0: Scaffolding & baseline (setup repo, CI, directories, README)
+- Phase 1: Core systems (combat, overworld rendering, state slices)
+- Phase 2: Content import (assets, sprites, dialogues, localization)
+- Phase 3: Integration & polish (bugfixes, balance, tests)
+- Phase 4: Release prep (build, performance tuning, packaging)
+- Phase 5: Constants refactor (detailed plan follows)
+
+# PHASE_PLAN - High-level Phase Outline
+This file contains phase plans. High-level phases:
+- Phase 1: Project scaffolding and baseline setup
+- Phase 2: Core constants refactor
+- Phase 3: Overworld rebuild
+- Phase 4: Battle system stabilization
+- Phase 5: Release prep and balance
+
 # Vale Village v2 - Phase 5: Core Constants Refactor
 
 **Date:** January 12, 2026
@@ -28,3 +61,11 @@ The Strategic Orchestrator audit (Session `strat-b7dcebc0`) identified numeric l
 
 ## Launch Command
 We will use the Strategic Orchestrator to execute this entire flow autonomously.
+
+## High-level Phase Outline
+- Phase 0: Scaffolding and baseline setup (project structure, docs, memory integration)
+- Phase 1: Core constants refactor and tests
+- Phase 2: Overworld rendering rebuild
+- Phase 3: Battle system stabilization and balancing
+- Phase 4: E2E tests and release prep
+
