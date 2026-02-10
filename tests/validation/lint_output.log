@@ -1,7 +1,0 @@
---- Running lint: pnpm run lint --silent ---
-
-> vale-village-v2@0.1.0 lint /home/geni/Documents/vale-village-v2
-> eslint src --ext .ts,.tsx --silent
-
-Invalid option '--silent' - perhaps you meant '--env'?
- ELIFECYCLE  Command failed with exit code 2.

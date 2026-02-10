@@ -1,4 +1,0 @@
---- Running e2e: pnpm run e2e --silent ---
- ERR_PNPM_NO_SCRIPT  Missing script: e2e
-
-Command "e2e" not found.
