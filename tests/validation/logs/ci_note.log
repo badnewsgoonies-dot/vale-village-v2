@@ -1,2 +1,0 @@
-CI run attempted by automation, but the full command chain was stopped due to environment timeout or long-running processes.
-To reproduce locally: run 'pnpm install' then 'pnpm typecheck && pnpm build && pnpm test && npx playwright test' and collect logs under tests/validation/logs.
