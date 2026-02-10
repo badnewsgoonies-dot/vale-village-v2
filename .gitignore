@@ -1,7 +1,20 @@
 node_modules/
 dist/
+dist-ssr/
+tmp_build/
 test-results/
 playwright-report/
 coverage/
 .vite/
 daemon_state_*.json
+*.pid
+*.log
+
+# iOS / Xcode build artifacts
+ios/App/App/public/
+ios/App/Pods/
+ios/App/build/
+ios/App/DerivedData/
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved

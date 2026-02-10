@@ -21,9 +21,13 @@
     "test:e2e:demo:ui": "DEMO_MODE=true playwright test --ui tests/e2e/gameplay-demo.spec.ts",
     "test:all": "pnpm test && pnpm test:e2e",
     "test:e2e:tower": "playwright test --headed tests/e2e/gameplay-full-tower.spec.ts",
-    "test:e2e:tower:demo": "DEMO_MODE=true playwright test --headed tests/e2e/gameplay-full-tower.spec.ts"
+    "test:e2e:tower:demo": "DEMO_MODE=true playwright test --headed tests/e2e/gameplay-full-tower.spec.ts",
+    "cap:sync": "cap sync ios",
+    "build:ios": "vite build && cap sync ios"
   },
   "dependencies": {
+    "@capacitor/core": "^8.0.2",
+    "@capacitor/ios": "^8.0.2",
     "@types/howler": "^2.2.12",
     "howler": "^2.2.4",
     "immer": "^11.0.1",
@@ -32,6 +36,7 @@
     "zustand": "^4.5.7"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.0.2",
     "@playwright/test": "^1.56.1",
     "@preact/preset-vite": "^2.8.2",
     "@testing-library/preact": "^3.2.4",
