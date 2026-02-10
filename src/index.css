@@ -20,6 +20,12 @@
   box-sizing: border-box;
 }
 
+/* --- iOS / Mobile native feel --- */
+html {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
 body {
   margin: 0;
   background-color: var(--color-bg);
@@ -27,12 +33,27 @@ body {
   min-width: 320px;
   min-height: 100vh;
   image-rendering: pixelated;
+  overflow: hidden;
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+  /* Disable text selection globally (game UI, not text input) */
+  -webkit-user-select: none;
+  user-select: none;
+  /* Disable tap highlight on iOS */
+  -webkit-tap-highlight-color: transparent;
+  /* Respect iOS safe areas (notch, home indicator) */
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 
 #root {
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
+  height: 100dvh;
   image-rendering: pixelated;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
 }
 
 /* Utility classes */
