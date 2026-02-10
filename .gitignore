@@ -10,6 +10,13 @@ daemon_state_*.json
 *.pid
 *.log
 
+# Python artifacts
+__pycache__/
+*.pyc
+
+# Analysis artifacts (generated reports, CI output, etc.)
+analysis/
+
 # iOS / Xcode build artifacts
 ios/App/App/public/
 ios/App/Pods/
