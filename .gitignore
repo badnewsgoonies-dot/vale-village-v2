@@ -17,6 +17,9 @@ __pycache__/
 # Analysis artifacts (generated reports, CI output, etc.)
 analysis/
 
+# Generated screenshots (CI/debug)
+public/screenshots/
+
 # iOS / Xcode build artifacts
 ios/App/App/public/
 ios/App/Pods/
