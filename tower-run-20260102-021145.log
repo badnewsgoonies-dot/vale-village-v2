@@ -1,9 +1,0 @@
-nohup: ignoring input
-
-> vale-village-v2@0.1.0 test:e2e:tower /home/geni/Documents/vale-village-v2
-> playwright test --headed tests/e2e/gameplay-full-tower.spec.ts
-
-
-Running 1 test using 1 worker
-
-[2026-01-02T07:11:55.574Z] 🏰 Starting Full Tower Run...
